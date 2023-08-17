@@ -1,0 +1,3 @@
+/*This is a workaround file so cppcheck does not complain about autosar directory
+not having nothing to lint
+MUST be renmove once a source .c file is added to any of the subdirectories*/

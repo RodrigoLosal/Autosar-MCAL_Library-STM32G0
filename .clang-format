@@ -1,0 +1,188 @@
+﻿---
+# Configuring Style with clang-format
+# clang-format supports two ways to provide custom style options: directly specify style configuration 
+# in the -style= command line option or use -style=file and put style configuration in the .clang-format 
+# or _clang-format file in the project directory.
+# When using -style=file, clang-format for each input file will try to find the .clang-format file located 
+# in the closest parent directory of the input file. When the standard input is used, the search is started 
+# from the current directory.
+# When using -style=file:<format_file_path>, clang-format for each input file will use the format file located 
+# at <format_file_path>. The path may be absolute or relative to the working directory.
+# The .clang-format file uses YAML format:
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+
+
+
+# The style used for all options not specifically set in the configuration.
+# Possible values: LLVM, Google, Chromium, Mozilla, WebKit, Microsoft, GNU
+BasedOnStyle: Microsoft
+
+# Style of aligning consecutive assignments. 
+# Possible values:  None, Consecutive, AcrossEmptyLines, AcrossComments, AcrossEmptyLinesAndComments
+# int a            = 1;
+# int somelongname = 2;
+# double c         = 3;
+AlignConsecutiveAssignments: 'true'
+
+# Style of aligning consecutive macro definitions.
+# Possible values:  None, Consecutive, AcrossEmptyLines, AcrossComments, AcrossEmptyLinesAndComments
+# #define SHORT_NAME       42
+# #define LONGER_NAME      0x007f
+# #define EVEN_LONGER_NAME (2)
+# #define foo(x)           (x * x)
+# #define bar(y, z)        (y + z)
+AlignConsecutiveMacros: 'AcrossEmptyLinesAndComments'
+
+# Dependent on the value, while (true) { continue; } can be put on a single line.
+# Possible values: Never, Empty, Always
+AllowShortBlocksOnASingleLine: 'false'
+
+# If true, short case labels will be contracted to a single line.
+# true:                                   false:
+# switch (a) {                    vs.     switch (a) {
+# case 1: x = 1; break;                   case 1:
+# case 2: return;                           x = 1;
+# }                                         break;
+#                                         case 2:
+#                                           return;
+#                                         }
+AllowShortCaseLabelsOnASingleLine: 'false'
+
+# Allow short enums on a single line.
+# enum { A, B } myEnum;
+# 
+# false:
+# enum {
+#   A,
+#   B
+# } myEnum;
+AllowShortEnumsOnASingleLine: 'false'
+
+# Dependent on the value, int f() { return 0; } can be put on a single line.
+# Possible values: None, Empty, InlineOnly, Inline, All
+AllowShortFunctionsOnASingleLine: None
+
+# Dependent on the value, if (a) return; can be put on a single line.
+# Possible values: Never, WithoutElse, OnlyFirstIf, AllIfAndElse
+AllowShortIfStatementsOnASingleLine: Never
+
+# If true, while (true) continue; can be put on a single line.
+AllowShortLoopsOnASingleLine: 'false'
+
+#The brace breaking style to use.
+#Possible values: Attach, Linux, Mozilla, Stroustrup, Allman, Whitesmiths, GNU, Custom
+BreakBeforeBraces: 'Allman'
+
+# The column limit.
+# A column limit of 0 means that there is no column limit. In this case, clang-format will respect 
+# the input’s line breaking decisions within statements unless they contradict other rules.
+ColumnLimit: '0'
+
+# Indent width for line continuations.
+ContinuationIndentWidth: '0'
+
+# Indent case labels one level from the switch statement.
+# When false, use the same indentation level as for the switch statement. Switch statement body is 
+# always indented one level more than case labels (except the #first block following the case label, 
+# which itself indents the code - unless IndentCaseBlocks is enabled).
+# false:                                 true:
+# switch (fool) {                vs.     switch (fool) {
+# case 1:                                  case 1:
+#   bar();                                   bar();
+#   break;                                   break;
+# default:                                 default:
+#   plop();                                  plop();
+# }                                      }
+IndentCaseLabels: 'true'
+
+# The preprocessor directive indenting style to use.
+# Possible values: None, AfterHash, BeforeHash
+IndentPPDirectives: None
+
+# The number of columns to use for indentation.
+IndentWidth: '4'
+
+# Indent if a function definition or declaration is wrapped after the type.
+# true:
+# LoooooooooooooooooooooooooooooooooooooooongReturnType
+#     LoooooooooooooooooooooooooooooooongFunctionDeclaration();
+# 
+# false:
+# LoooooooooooooooooooooooooooooooooooooooongReturnType
+# LoooooooooooooooooooooooooooooooongFunctionDeclaration();
+IndentWrappedFunctionNames: 'false'
+
+# Language, this format style is targeted at.
+Language: Cpp
+
+# The maximum number of consecutive empty lines to keep.
+# MaxEmptyLinesToKeep: 1         vs.     MaxEmptyLinesToKeep: 0
+# int f() {                              int f() {
+#   int = 1;                                 int i = 1;
+#                                            i = foo();
+#   i = foo();                               return i;
+#                                        }
+#   return i;
+# }
+MaxEmptyLinesToKeep: '2'
+
+# Pointer and reference alignment style.
+# Possible values: Left (int* a;), Right(int *a;) or Middle(int * a;)
+PointerAlignment: Right
+
+# If true, a space is inserted after C style casts.
+# true:                                  false:
+#     (int) i;                       vs.     (int)i;
+SpaceAfterCStyleCast: 'false'
+
+# SpaceAfterLogicalNot (Boolean) clang-format 9
+# If true, a space is inserted after the logical not operator (!).
+# 
+# true:                                  false:
+#     ! someExpression();            vs.     !someExpression();
+SpaceAfterLogicalNot: 'false'
+
+# If false, spaces will be removed before assignment operators.
+# true:                                  false:
+#     int a = 5;                     vs.     int a= 5;
+#     a += 42;                               a+= 42;
+SpaceBeforeAssignmentOperators: 'true'
+
+# Defines in which cases to put a space before opening parentheses.
+# Possible values: Never ControllStatements, ControlStatementsExceptControlMacros, 
+# NonEmptyParentheses, Always, Custom
+SpaceBeforeParens: Never
+
+# If false, spaces will be removed before range-based for loop colon.
+# true:                                  false:
+#     for (auto v : values) {}       vs.     for(auto v: values) {}
+SpaceBeforeRangeBasedForLoopColon: 'true'
+
+# If true, spaces may be inserted into ().
+SpaceInEmptyParentheses: 'true'
+
+# If true, spaces are inserted inside container literals (e.g. ObjC and Javascript array and dict literals).
+# true:                                  false:
+#     var arr = [ 1, 2, 3 ];         vs.     var arr = [1, 2, 3];
+#     f({a : 1, b : 2, c : 3});              f({a: 1, b: 2, c: 3});
+SpacesInContainerLiterals: 'true'
+
+# If true, spaces will be inserted after ( and before ).
+# true:                                  false:
+#     t f( Deleted & ) & = delete;   vs.     t f(Deleted &) & = delete;
+SpacesInParentheses: 'true'
+
+# If true, spaces will be inserted after [ and before ]. Lambdas without arguments or unspecified size 
+# array declarations will not be affected.
+# true:                                  false:
+#     int a[ 5 ];                    vs.     int a[5];
+#     std::unique_ptr<int[]> foo() {} // Won't be affected
+
+SpacesInSquareBrackets: 'true'
+
+# Controls if and how clang-format will sort #includes. If Never, includes are never sorted. 
+# If CaseInsensitive, includes are sorted in an ASCIIbetical or case insensitive fashion. 
+# If CaseSensitive, includes are sorted in an alphabetical or case sensitive fashion.
+SortIncludes: 'false'
+
+...

@@ -1,0 +1,53 @@
+:project:
+  :build_root: build/ceedling/
+  :release_build: TRUE
+  :test_file_prefix: test_
+
+
+:paths:
+  :test:
+    - test    # directory where the unit testing are
+    - test/support
+  :source:
+    - autosar/**      # directory where the functions to test are
+    - -:autosar/mcal/regs/** # exclude the registers from the source
+
+
+:defines:
+  :test:
+    - UTEST
+  
+
+:plugins: 
+  :load_paths:
+    - "#{Ceedling.load_path}"
+  :enabled:
+    - stdout_pretty_tests_report
+    - module_generator
+    - gcov
+ 
+:gcov:
+  :abort_on_uncovered: true
+  :uncovered_ignore_list:
+    - main.c #
+    - startup.c #
+  :utilities:
+    - gcovr
+  :reports:
+    - HtmlDetailed
+  :gcovr:
+    :report_include: 
+    
+:tools:
+  :test_compiler:
+    :executable: clang
+    :name: test_compiler
+    :arguments:
+      - -I"$": COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
+      - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
+      - -D$: COLLECTION_DEFINES_TEST_AND_VENDOR
+      - -DGNU_COMPILER
+      - -g3
+      - -c ${1}
+      - -o ${2}
+      - -O0, -pedantic, -Werror, -Wstrict-prototypes', -fsigned-char, -fomit-frame-pointer, -fverbose-asm

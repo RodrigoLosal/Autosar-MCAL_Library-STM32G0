@@ -1,0 +1,9 @@
+// cppcheck does not have a suitable way to ignore certain files if a path is not given, niether to 
+// ignore a specific misra warning in a entire file. This file was created to somehow workaraund
+// this issue
+
+// suppress all MISRA warnings in source/cmsis-st32mg0xx folder
+misra-c2012-11.8:app/app_msps.c
+misra-c2012-11.8:app/app_ints.c
+misra-c2012-11.8:app/interface.c
+misra-c2012-11.5:app/interface.c
