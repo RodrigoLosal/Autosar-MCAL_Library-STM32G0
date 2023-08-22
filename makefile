@@ -118,5 +118,6 @@ docs :
 	mkdir -p Build/sphinx/_static 
 	mkdir -p Build/sphinx/_build
 	doxygen .doxyfile
-	sphinx-build -b html Docs Build/sphinx/_build -c ./ -W
-	firefox Build/sphinx/_build/index.html
+	firefox Build/doxygen/html/index.html
+#	sphinx-build -b html Docs Build/sphinx/_build -c ./ -W
+#	firefox Build/sphinx/_build/index.html
