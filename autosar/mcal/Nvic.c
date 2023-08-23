@@ -7,12 +7,13 @@
  */
 void CDD_Nvic_SetPriority( Nvic_IrqType irq, uint32 priority )
 {
-    if( (uint32)( irq ) >= 0 )
+    if( ( (uint32)irq >= 16 ) && ( (uint32)irq <= 30 ) )
     {
-        uint32 byte_offset = (uint32)irq % 4U;
+        uint32 ip_idx    = irq / 4U;
+        uint32 bit_shift = ( irq % 4U ) * 8U;
 
-        NVIC->IP[ ( ( ( (uint32)(uint32)( irq ) ) >> 2UL ) ) ] &= ~( 0xFFU << ( byte_offset * 8U ) );           // Clear existing priority bits
-        NVIC->IP[ ( ( ( (uint32)(uint32)( irq ) ) >> 2UL ) ) ] |= ( priority & 0xFFU ) << ( byte_offset * 8U ); // Set new priority
+        NVIC->IP[ ip_idx ] &= ~( 0xFFU << bit_shift );           // Clear the current priority bits for the interrupt
+        NVIC->IP[ ip_idx ] |= ( priority & 0xFFU ) << bit_shift; // Set the new priority for the interrupt
     }
 }
 
@@ -23,15 +24,20 @@ void CDD_Nvic_SetPriority( Nvic_IrqType irq, uint32 priority )
  */
 uint32 CDD_Nvic_GetPriority( Nvic_IrqType irq )
 {
-    if( (uint32)( irq ) >= 0 )
+    uint32 priority;
+    if( ( (uint32)( irq ) ) >= 16 && ( (uint32)( irq ) <= 30 ) )
     {
-        uint32 byte_offset = (uint32)irq % 4U;
-
-        // Extract and return the priority value from NVIC_IPR
-        uint32 priority = ( NVIC->IP[ 0U ] >> ( byte_offset * 8U ) ) & 0xFFU;
-        return priority;
+        uint32 ip_idx    = irq / 4U;
+        uint32 bit_shift = ( irq % 4U ) * 8U;
+        priority         = ( NVIC->IP[ ip_idx ] >> bit_shift ) & 0xFFU;
     }
+    else
+    {
+        priority = 0xFFU;
+    }
+    return priority;
 }
+
 
 /**
  * @brief Enables a specific interrupt.
@@ -39,9 +45,9 @@ uint32 CDD_Nvic_GetPriority( Nvic_IrqType irq )
  */
 void CDD_Nvic_EnableIrq( Nvic_IrqType irq )
 {
-    if( (uint32)( irq ) >= 0 )
+    if( ( (uint32)( irq ) ) >= 16 && ( (uint32)( irq ) <= 30 ) )
     {
-        uint32 bit_offset = ( ( (uint32)irq ) & 0x1FUL );
+        uint32 bit_offset = irq % 32U;
         // Enable the interrupt by setting the corresponding bit in NVIC_ISER
         NVIC->ISER[ 0U ] = ( 1U << bit_offset );
     }
@@ -53,9 +59,9 @@ void CDD_Nvic_EnableIrq( Nvic_IrqType irq )
  */
 void CDD_Nvic_DisableIrq( Nvic_IrqType irq )
 {
-    if( (uint32)( irq ) >= 0 )
+    if( ( (uint32)( irq ) ) >= 16 && ( (uint32)( irq ) <= 30 ) )
     {
-        uint32 bit_offset = ( ( (uint32)irq ) & 0x1FUL );
+        uint32 bit_offset = irq % 32U;
         // Disable the interrupt by setting the corresponding bit in NVIC_ICER
         NVIC->ICER[ 0U ] = ( 1U << bit_offset );
     }
@@ -69,15 +75,17 @@ void CDD_Nvic_DisableIrq( Nvic_IrqType irq )
 uint32 CDD_Nvic_GetPendingIrq( Nvic_IrqType irq )
 {
 
-    if( (uint32)( irq ) >= 0 )
+    uint32 pending = 0U;
+
+    if( ( (uint32)irq >= 16 ) && ( (uint32)irq <= 30 ) )
     {
-        uint32 bit_offset = ( ( (uint32)irq ) & ( 0x1FUL ) );
-        return ( (uint32)( ( ( ( NVIC->ISPR[ 0U ] & ( 1UL << bit_offset ) ) != 0UL ) ? 1UL : 0UL ) ) );
+        uint32 bit_offset = irq % 32U; // Calculate the bit position for the interrupt
+        if( NVIC->ISPR[ 0U ] & ( 1U << bit_offset ) )
+        {
+            pending = 1U;
+        }
     }
-    else
-    {
-        return ( 0U );
-    }
+    return pending;
 }
 
 /**
@@ -86,11 +94,10 @@ uint32 CDD_Nvic_GetPendingIrq( Nvic_IrqType irq )
  */
 void CDD_Nvic_SetPendingIrq( Nvic_IrqType irq )
 {
-    if( (uint32)( irq ) >= 0 )
+    if( ( (uint32)irq >= 16 ) && ( (uint32)irq <= 30 ) )
     {
-        uint32 bit_offset = ( (uint32)irq ) & 0x1FUL;
-        // Set the interrupt as pending by setting the corresponding bit in NVIC_ISPR
-        NVIC->ISPR[ 0U ] = (uint32)( 1UL << bit_offset );
+        uint32 bit_offset = irq % 32U;            // Calculate the bit position for the interrupt
+        NVIC->ISPR[ 0U ] |= ( 1U << bit_offset ); // Set the bit to mark the interrupt as pending
     }
 }
 
@@ -100,9 +107,9 @@ void CDD_Nvic_SetPendingIrq( Nvic_IrqType irq )
  */
 void CDD_Nvic_ClearPendingIrq( Nvic_IrqType irq )
 {
-    if( (uint32)( irq ) >= 0 )
+    if( ( (uint32)( irq ) ) >= 16 && ( (uint32)( irq ) <= 30 ) )
     {
-        uint32 bit_offset = ( (uint32)irq ) & 0x1FUL;
+        uint32 bit_offset = irq % 32U;
         // Clear the pending interrupt by setting the corresponding bit in NVIC_ICPR
         NVIC->ICPR[ 0U ] = (uint32)( 1UL << bit_offset );
     }
