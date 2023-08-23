@@ -36,11 +36,11 @@
   :reports:
     - HtmlDetailed
   :gcovr:
-    :report_include: 
+    :report_exclude:
     
 :tools:
   :test_compiler:
-    :executable: clang
+    :executable: gcc
     :name: test_compiler
     :arguments:
       - -I"$": COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
