@@ -1,12 +1,10 @@
 #include "Nvic.h"
 #include <stdint.h>
 
-static void TIM7_Init( void ); // Forward declaration for Timer 7 initialization function.
+static void TIM7_Init( void );
 
-// Timer 7 Interrupt Handler.
-void TIM7_IRQHandler( void );
+void TIM7_IRQHandler( void ); // Timer 7 Interrupt Handler.
 
-// Timer 7 initialization function.
 static void TIM7_Init( void )
 {
     RCC->APBSMENR1 |= ( 0x1UL << 5U ); // Enable the Timer 7 clock.
@@ -37,7 +35,6 @@ int main( void )
 
     while( 1 )
     {
-        TIM7_IRQHandler( );
     }
 
     return 0;
