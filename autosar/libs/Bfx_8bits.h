@@ -1,3 +1,5 @@
+#include "Bfx.h"
+
 static inline void Bfx_SetBit_u8u8( uint8 *Data, uint8 BitPn )
 {
     *Data = *Data | ( 0x01 << BitPn );
@@ -14,43 +16,41 @@ static inline boolean Bfx_GetBit_u8u8_u8( uint8 *Data, uint8 BitPn )
     if( ( *Data & ( 0x01 << BitPn ) ) != 0 )
     {
         Result = TRUE;
-        Result = FALSE;
     }
     else
     {
         Result = FALSE;
     }
-    return Result; 
+    return Result;
 }
 
 static inline void Bfx_SetBits_u8u8u8u8( uint8 *Data, uint8 BitStartPn, uint8 BitLn, uint8 Status )
 {
-    for( uint8 i = BitStartPn; i <= ( BitStartPn + BitLn ); i++ )
+    for( uint8 i = BitStartPn; i < ( BitStartPn + BitLn ); i++ )
     {
         if( Status == 0 )
         {
-            Bfx_ClrBit_u8u8( Data, i );
+            *Data = ( *Data & ~( 0x01 << i ) );
         }
         else if( Status == 1 )
         {
-            Bfx_SetBit_u8u8( Data, i );
+            *Data = *Data | ( 0x01 << i );
         }
     }
 }
 
 static inline uint8 Bfx_GetBits_u8u8u8_u8( uint8 Data, uint8 BitStartPn, uint8 BitLn )
 {
-    uint32 Result = 0;
-    for( uint8 i = ( BitStartPn + BitLn ); i >= BitStartPn; i-- )
-    {
-        Result = Result + Bfx_GetBit_u8u8_u8( &Data, i );
-        Result = Result << 1;
-    }
-    Result = Result >> 1;
+    uint8 Result;
+
+    uint8 Mask = ( ( 1u << BitLn ) - 1u );
+
+    Result = ( Data >> BitStartPn ) & Mask;
+
     return Result;
 }
 
-static inline void  Bfx_SetBitMask_u8u8( uint8 *Data, uint8 Mask )
+static inline void Bfx_SetBitMask_u8u8( uint8 *Data, uint8 Mask )
 {
     *Data = *Data | Mask;
 }
@@ -90,20 +90,16 @@ static inline boolean Bfx_TstBitLnMask_u8u8_u8( uint8 Data, uint8 Mask )
 
 static inline boolean Bfx_TstParityEven_u8_u8( uint8 Data )
 {
+    boolean Parity = FALSE;
     boolean Result;
-    uint8 counter = 0;
-    for( uint8 i = 0; i <= 7; i++ )
+
+    while( Data > 0 )
     {
-        counter = counter + Bfx_GetBit_u8u8_u8( &Data, i );
+        Parity = !Parity;
+        Data   = Data & ( Data - 1 );
     }
-    if( ( counter % 2 ) == 1 )
-    {
-        Result = FALSE;
-    }
-    else
-    {
-        Result = TRUE;
-    }
+
+    Result = !Parity;
     return Result;
 }
 
@@ -114,7 +110,7 @@ static inline void Bfx_ToggleBits_u8( uint8 *Data )
 
 static inline void Bfx_ToggleBitMask_u8u8( uint8 *Data, uint8 Mask )
 {
-    *Data = ~( *Data | ~Mask );
+    *Data ^= Mask;
 }
 
 static inline void Bfx_ShiftBitRt_u8u8( uint8 *Data, uint8 ShiftCnt )
@@ -139,35 +135,68 @@ static inline void Bfx_RotBitLt_u8u8( uint8 *Data, uint8 ShiftCnt )
 
 static inline void Bfx_CopyBit_u8u8u8u8( uint8 *DestinationData, uint8 DestinationPosition, uint8 SourceData, uint8 SourcePosition )
 {
-    if( Bfx_GetBit_u8u8_u8( &SourceData, SourcePosition ) == FALSE )
+    boolean Buffer;
+    if( ( SourceData & ( 0x01 << SourcePosition ) ) != 0 )
     {
-        Bfx_ClrBit_u8u8( DestinationData, DestinationPosition );
+        Buffer = TRUE;
     }
     else
     {
-        Bfx_SetBit_u8u8( DestinationData, DestinationPosition );
+        Buffer = FALSE;
+    }
+    if( Buffer == FALSE )
+    {
+        *DestinationData = ( *DestinationData & ~( 0x01 << DestinationPosition ) );
+    }
+    else
+    {
+        *DestinationData = *DestinationData | ( 0x01 << DestinationPosition );
     }
 }
 
 static inline void Bfx_PutBits_u8u8u8u8( uint8 *Data, uint8 BitStartPn, uint8 BitLn, uint8 Pattern )
 {
-    Bfx_SetBits_u8u8u8u8( &Pattern, BitLn, ( 8 - BitLn ), 0 );
+    for( uint8 i = BitLn; i < ( BitLn + ( 8 - BitLn ) ); i++ )
+    {
+        Pattern = ( Pattern & ~( 0x01 << i ) );
+    }
     Pattern = Pattern << BitStartPn;
-    Bfx_SetBits_u8u8u8u8( Data, BitStartPn, BitLn, 0 );
+    for( uint8 i = BitStartPn; i < ( BitStartPn + BitLn ); i++ )
+    {
+        *Data = ( *Data & ~( 0x01 << i ) );
+    }
     *Data = *Data | Pattern;
 }
 
 static inline void Bfx_PutBitsMask_u8u8u8( uint8 *Data, uint8 Pattern, uint8 Mask )
 {
+    boolean Buffer;
+    boolean Buffer2;
     for( uint8 i = 0; i <= 7; i++ )
     {
-        if( ( Bfx_GetBit_u8u8_u8( &Mask, i ) == TRUE ) && ( Bfx_GetBit_u8u8_u8( &Pattern, i ) == TRUE ) )
+        if( ( Mask & ( 0x01 << i ) ) != 0 )
         {
-            Bfx_SetBit_u8u8( Data, i );
+            Buffer = TRUE;
         }
-        else if( ( Bfx_GetBit_u8u8_u8( &Mask, i ) == TRUE ) && ( Bfx_GetBit_u8u8_u8( &Pattern, i ) == FALSE ) )
+        else
         {
-            Bfx_ClrBit_u8u8( Data, i );
+            Buffer = FALSE;
+        }
+        if( ( Pattern & ( 0x01 << i ) ) != 0 )
+        {
+            Buffer2 = TRUE;
+        }
+        else
+        {
+            Buffer2 = FALSE;
+        }
+        if( ( Buffer == TRUE ) && ( Buffer2 == TRUE ) )
+        {
+            *Data = *Data | ( 0x01 << i );
+        }
+        else if( ( Buffer == TRUE ) && ( Buffer2 == FALSE ) )
+        {
+            *Data = ( *Data & ~( 0x01 << i ) );
         }
     }
 }
@@ -176,80 +205,83 @@ static inline void Bfx_PutBit_u8u8u8( uint8 *Data, uint8 BitPn, boolean Status )
 {
     if( Status == FALSE )
     {
-        Bfx_ClrBit_u8u8( Data, BitPn );
+        *Data = ( *Data & ~( 0x01 << BitPn ) );
     }
     else
     {
-        Bfx_SetBit_u8u8( Data, BitPn );
+        *Data = *Data | ( 0x01 << BitPn );
     }
 }
 
 static inline uint8 Bfx_CountLeadingOnes_u8( uint8 Data )
 {
     uint8 Counter = 0;
-    for( uint8 i = 8; i < 0; i-- )
+    for( uint8 i = 8; i > 0; i-- )
     {
-        if( Bfx_GetBit_u8u8_u8( &Data, ( i - 1 ) ) == TRUE )
+        if( ( Data & ( 0x01 << ( i - 1 ) ) ) != 0 )
         {
             Counter++;
         }
         else
         {
-            i = 0;
+            i = 1;
         }
     }
     return Counter;
 }
 
-static inline sint8 Bfx_ShiftBitSat_s8s8_s8(sint8 ShiftCnt, sint8 Data) {
-    sint8 result;
-
-    if ( ShiftCnt >= 0 )
+static inline uint8 Bfx_CountLeadingSigns_s8( sint32 Data )
+{
+    uint8 Counter = 0;
+    sint32 msb;
+    msb = Data >> 7;
+    if( msb == 0 )
     {
-        result = Data << ShiftCnt;
-        if ( ( ShiftCnt < 8 ) && ( Data < 0 ) && ( ( result & 0x80 ) != ( Data & 0x80 ) ) )
+        for( uint8 i = 8; i > 0; i-- )
         {
-            result = (Data < 0) ? -128 : 127;
+            if( ( ( Data << 1 ) & ( 0x01 << ( i - 1 ) ) ) != 0 )
+            {
+                i = 1;
+            }
+            else
+            {
+                Counter++;
+            }
+        }
+        if( Counter == 8 )
+        {
+            Counter = 7;
         }
     }
     else
     {
-        ShiftCnt = -ShiftCnt;
-        result = Data >> ShiftCnt;
-        sint8 sign_mask = ( Data < 0 ) ? ( ( 1 << ShiftCnt ) - 1 ) : 0;
-        result |= ( sign_mask << ( 8 - ShiftCnt ) );
+        for( uint8 i = 8; i > 0; i-- )
+        {
+            if( ( ( Data << 1 ) & ( 0x01 << ( i - 1 ) ) ) != 0 )
+            {
+                Counter++;
+            }
+            else
+            {
+                i = 1;
+            }
+        }
     }
-
-    return result;
-}
-
-static inline uint8 Bfx_CountLeadingSigns_s8( sint8 Data )
-{
-    uint8 Counter = 0;
-    uint8 Mask = 0x40; // Máscara para el bit de signo en un sint8:0100 0000b (Posición MSB - 1)
-
-    // Contar los bits de signo consecutivos
-    while ( (Data & Mask) == Mask )
-    {
-        Counter++;
-        Data <<= 1; // Desplazar a la izquierda para verificar el siguiente bit
-    }
-
     return Counter;
 }
 
 static inline uint8 Bfx_CountLeadingZeros_u8( uint8 Data )
 {
     uint8 Counter = 0;
-    for( uint8 i = 8; i < 0; i-- )
+    for( uint8 i = 8; i > 0; i-- )
     {
-        if( Bfx_GetBit_u8u8_u8( &Data, ( i - 1 ) ) == FALSE )
+        if( ( Data & ( 0x01 << ( i - 1 ) ) ) != 0 )
         {
-            Counter++;
+            i = 1;
         }
         else
         {
-            i = 0;
+            Counter++;
         }
     }
     return Counter;
