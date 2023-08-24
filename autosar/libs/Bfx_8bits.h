@@ -89,7 +89,7 @@ static inline boolean Bfx_TstParityEven_u8_u8( uint8 Data )
 
 static inline void Bfx_ToggleBits_u8( uint8 *Data )
 {
-    *Data ^= *Data;
+    *Data = ~*Data;
 }
 
 static inline void Bfx_ToggleBitMask_u8u8( uint8 *Data, uint8 Mask )
@@ -175,16 +175,28 @@ static inline uint8 Bfx_CountLeadingOnes_u8( uint8 Data )
 
 static inline uint8 Bfx_CountLeadingSigns_s8( sint8 Data )
 {
-    uint8 Count = 0;
-    sint8 Mask = 0x80;
+    uint8_t Count = 0;
+    int8_t Mask = 0x80;
 
-    while ( ( Data & Mask ) > 1 )
+    if ( Data >= 0 )
     {
-        Count++;
-        Mask >>= 1;
+        while( ( Data & Mask ) == 0 )
+        {
+            Count++;
+            Mask >>= 1;
+        }
+    }
+    else
+    {
+        while ( ( Data & Mask ) == Mask )
+        {
+            Count++;
+            Mask >>= 1;
+        }
     }
 
-    return Count;
+    Data = Count - 1;
+    return Data;
 }
 
 static inline uint8 Bfx_CountLeadingZeros_u8( uint8 Data )
