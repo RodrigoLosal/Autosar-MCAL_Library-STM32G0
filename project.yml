@@ -1,5 +1,5 @@
 :project:
-  :build_root: build/ceedling/
+  :build_root: Build/ceedling/
   :release_build: TRUE
   :test_file_prefix: test_
 
@@ -36,11 +36,11 @@
   :reports:
     - HtmlDetailed
   :gcovr:
-    :report_include: 
+    :report_exclude:
     
 :tools:
   :test_compiler:
-    :executable: clang
+    :executable: gcc
     :name: test_compiler
     :arguments:
       - -I"$": COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
@@ -50,4 +50,4 @@
       - -g3
       - -c ${1}
       - -o ${2}
-      - -O0, -pedantic, -Werror, -Wstrict-prototypes', -fsigned-char, -fomit-frame-pointer, -fverbose-asm
+      - -O0, -pedantic, -Werror, -Wstrict-prototypes, -fsigned-char, -fomit-frame-pointer, -fverbose-asm

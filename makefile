@@ -110,6 +110,7 @@ lint :
 test : format build 
 	ceedling clobber
 	ceedling gcov:all utils:gcov
+	firefox Build/ceedling/artifacts/gcov/GcovCoverageResults.html
 
 docs :
 	mkdir -p Build/doxygen 
