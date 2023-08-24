@@ -18,7 +18,10 @@ typedef struct _Port_ConfigType
 } Port_ConfigType;
 
 typedef uint32 Port_PinType;         /*!< Data type for the symbolic name of a port pin.*/
+
 typedef uint8 Port_PinDirectionType; /*!< Data type for the symbolic direction of a pin.*/
+
+typedef uint8 Port_PinModeType;      /*!< Data type for the symbolic mode of a pin.*/
 
 #define PORTS_A               0u /*!< Port A value */
 #define PORTS_B               1u /*!< Port B value */
@@ -64,14 +67,14 @@ typedef uint8 Port_PinDirectionType; /*!< Data type for the symbolic direction o
 #define PORTS_HIGH_SPEED      0b10u /*!< High speed value */
 #define PORTS_VERY_HIGH_SPEED 0b11u /*!< Very high speed value */
 
-#define PORT_PIN_MODE_AF0     0b0000u /*!< Alternarive funcion 0 */
-#define PORT_PIN_MODE_AF1     0b0001u /*!< Alternarive funcion 1 */
-#define PORT_PIN_MODE_AF2     0b0010u /*!< Alternarive funcion 2 */
-#define PORT_PIN_MODE_AF3     0b0011u /*!< Alternarive funcion 3 */
-#define PORT_PIN_MODE_AF4     0b0100u /*!< Alternarive funcion 4 */
-#define PORT_PIN_MODE_AF5     0b0101u /*!< Alternarive funcion 5 */
-#define PORT_PIN_MODE_AF6     0b0110u /*!< Alternarive funcion 6 */
-#define PORT_PIN_MODE_AF7     0b0111u /*!< Alternarive funcion 7 */
+#define PORT_PIN_MODE_AF0     (Port_PinModeType)0b0000u /*!< Alternarive funcion 0 */
+#define PORT_PIN_MODE_AF1     (Port_PinModeType)0b0001u /*!< Alternarive funcion 1 */
+#define PORT_PIN_MODE_AF2     (Port_PinModeType)0b0010u /*!< Alternarive funcion 2 */
+#define PORT_PIN_MODE_AF3     (Port_PinModeType)0b0011u /*!< Alternarive funcion 3 */
+#define PORT_PIN_MODE_AF4     (Port_PinModeType)0b0100u /*!< Alternarive funcion 4 */
+#define PORT_PIN_MODE_AF5     (Port_PinModeType)0b0101u /*!< Alternarive funcion 5 */
+#define PORT_PIN_MODE_AF6     (Port_PinModeType)0b0110u /*!< Alternarive funcion 6 */
+#define PORT_PIN_MODE_AF7     (Port_PinModeType)0b0111u /*!< Alternarive funcion 7 */
 
 #define PORT_PIN_PA_00        (Port_PinType)0x00u /*!< Port A pin 0 value */
 #define PORT_PIN_PA_01        (Port_PinType)0x01u /*!< Port A pin 1 value */
@@ -180,5 +183,6 @@ typedef uint8 Port_PinDirectionType; /*!< Data type for the symbolic direction o
 
 void Port_Init( const Port_ConfigType *ConfigPtr );
 void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction );
+void Port_SetPinMode (Port_PinType Pin, Port_PinModeType Mode);
 
 #endif

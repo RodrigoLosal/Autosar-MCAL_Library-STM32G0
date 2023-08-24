@@ -80,3 +80,25 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
         }
     }
 }
+
+void Port_SetPinMode (Port_PinType Pin, Port_PinModeType Mode)
+{
+    Port_RegisterType *port;
+
+    Port_RegisterType *ports[ 6 ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
+    port                          = ports[ Pin >> 4 ];
+
+    if( ( Pin & 0xFu ) < 8u )
+    {
+        /*change values on Altern*/
+        Bfx_ClrBitMask_uint32_uint32( (uint32 *)&port->AFRL, ( 0b1111 << ( ( Pin & 0xFu ) * 4 ) ) );
+        Bfx_SetBitMask_uint32_uint32( (uint32 *)&port->AFRL, ( Mode << ( ( Pin & 0xFu ) * 4 ) ) );
+    }
+    else
+    {
+        /*change values on Altern*/
+        Bfx_ClrBitMask_uint32_uint32( (uint32 *)&port->AFRH, ( 0b1111 << ( ( Pin & 0xFu ) * 4 ) ) );
+        Bfx_SetBitMask_uint32_uint32( (uint32 *)&port->AFRH, ( Mode << ( ( Pin & 0xFu ) * 4 ) ) );
+    }
+
+}
