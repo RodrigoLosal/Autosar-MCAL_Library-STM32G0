@@ -1,4 +1,4 @@
-#include "Bfx.h"
+#include "Std_Types.h"
 
 static inline void Bfx_SetBit_u8u8( uint8 *Data, uint8 BitPn )
 {
@@ -177,7 +177,7 @@ static inline uint8 Bfx_CountLeadingOnes_u8( uint8 Data )
 static inline uint8 Bfx_CountLeadingSigns_s8( sint8 Data )
 {
     uint8 Count = 0;
-    sint8 Mask = 0b10000000;
+    sint8 Mask = 0x80;
 
     while ( ( Data & Mask ) > 1 )
     {
