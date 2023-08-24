@@ -23,9 +23,12 @@ static inline void Bfx_SetBits_u8u8u8u8( uint8 *Data, uint8 BitStartPn, uint8 Bi
 {
     uint8 Mask = ( ( 1u << BitLn ) - 1u ) << BitStartPn;
     
-    if ( Status == 0 ) {
+    if ( Status == 0 )
+    {
         *Data = *Data & ~Mask;
-    } else if ( Status == 1 ) {
+    } 
+    else if ( Status == 1 )
+    {
         *Data = *Data | Mask;
     }
 }
