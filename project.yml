@@ -6,10 +6,11 @@
 
 :paths:
   :test:
-    - test    # directory where the unit testing are
-    - test/support
+    - test/**    # directory where the unit testing are
+    - test/support/**
   :source:
     - autosar/**      # directory where the functions to test are
+    - autosar/libs/**
     - -:autosar/mcal/regs/** # exclude the registers from the source
 
 
