@@ -14,7 +14,7 @@ static inline boolean Bfx_GetBit_u8u8_u8( uint8 *Data, uint8 BitPn )
 {
     boolean Result;
 
-    Result = ( *Data >> BitPn ) & 1u;
+    Result = (*Data >> BitPn) & 1u;
 
     return Result;
 }
@@ -22,12 +22,12 @@ static inline boolean Bfx_GetBit_u8u8_u8( uint8 *Data, uint8 BitPn )
 static inline void Bfx_SetBits_u8u8u8u8( uint8 *Data, uint8 BitStartPn, uint8 BitLn, uint8 Status )
 {
     uint8 Mask = ( ( 1u << BitLn ) - 1u ) << BitStartPn;
-
-    if( Status == 0 )
+    
+    if ( Status == 0 )
     {
         *Data = *Data & ~Mask;
-    }
-    else if( Status == 1 )
+    } 
+    else if ( Status == 1 )
     {
         *Data = *Data | Mask;
     }
@@ -58,7 +58,7 @@ static inline boolean Bfx_TstBitMask_u8u8_u8( uint8 Data, uint8 Mask )
 {
     boolean Result;
 
-    Result = ( Data & Mask ) == Mask;
+    Result = (Data & Mask) == Mask;
 
     return Result;
 }
@@ -135,13 +135,13 @@ static inline void Bfx_CopyBit_u8u8u8u8( uint8 *DestinationData, uint8 Destinati
 
 static inline void Bfx_PutBits_u8u8u8u8( uint8 *Data, uint8 BitStartPn, uint8 BitLn, uint8 Pattern )
 {
-    uint8 Mask = ( ( 1u << BitLn ) - 1u ) << BitStartPn;
-    *Data      = ( *Data & ~Mask ) | ( ( Pattern << BitStartPn ) & Mask );
+    uint8 Mask = ( ( 1u << BitLn) - 1u ) << BitStartPn;
+    *Data = (*Data & ~Mask) | ((Pattern << BitStartPn) & Mask);
 }
 
 static inline void Bfx_PutBitsMask_u8u8u8( uint8 *Data, uint8 Pattern, uint8 Mask )
 {
-    *Data = ( *Data & ~Mask ) | ( Pattern & Mask );
+    *Data = (*Data & ~Mask) | (Pattern & Mask);
 }
 
 static inline void Bfx_PutBit_u8u8u8( uint8 *Data, uint8 BitPn, boolean Status )
