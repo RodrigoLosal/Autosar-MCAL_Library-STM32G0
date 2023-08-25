@@ -2,10 +2,14 @@
 #define CRC_H_
 
 #include "Platform_Types.h"
+#include <stdio.h>
+#include <stdint.h>
 
 uint8 Crc_CalculateCRC8( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_StartValue8, boolean Crc_IsFirstCall );
 uint8 Crc_CalculateCRC8H2F( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_StartValue8H2F, boolean Crc_IsFirstCall );
 uint16 Crc_CalculateCRC16( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 Crc_StartValue16, boolean Crc_IsFirstCall );
+uint32 Reflect( uint32 data, uint8 bit_count );
+uint16_t Reflect16( uint16_t val );
 
 /**
  * @brief   **Crc_CalculateCRC8**
@@ -14,23 +18,23 @@ uint16 Crc_CalculateCRC16( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 C
  */
 uint8 Crc_CalculateCRC8( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_StartValue8, boolean Crc_IsFirstCall )
 {
-    const uint8 Crc_Polynomial = 0x1D; // Polynomial for CRC-8
+    const uint8 Crc_Polynomial = 0x1D; 
     uint8 crcValue             = Crc_StartValue8;
 
     if( Crc_IsFirstCall )
     {
-        crcValue = 0xFF; // Initialize the CRC value with 0xFF
+        crcValue = 0xFF; 
     }
 
     for( uint32 i = 0; i < Crc_Length; i++ )
     {
-        crcValue ^= Crc_DataPtr[ i ]; // XOR with data byte
+        crcValue ^= Crc_DataPtr[ i ]; 
 
         for( uint8 bit = 0; bit < 8; bit++ )
         {
-            if( crcValue & 0x80 ) // Check if MSB is 1
+            if( crcValue & 0x80 ) 
             {
-                crcValue = ( crcValue << 1 ) ^ Crc_Polynomial; // XOR with polynomial
+                crcValue = ( crcValue << 1 ) ^ Crc_Polynomial; 
             }
             else
             {
@@ -100,6 +104,35 @@ uint16 Crc_CalculateCRC16( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 C
     }
 
     return crcValue;
+}
+
+uint32 Reflect( uint32 data, uint8 bit_count )
+{
+    uint32 reflection = 0;
+    for( uint8 bit = 0; bit < bit_count; bit++ )
+    {
+        if( data & 0x01 )
+        {
+            reflection |= ( 1 << ( ( bit_count - 1 ) - bit ) );
+        }
+        data >>= 1;
+    }
+    return reflection;
+}
+
+uint16_t Reflect16( uint16_t val )
+{
+    uint16_t resVal = 0;
+
+    for( int i = 0; i < 16; i++ )
+    {
+        if( val & ( 1 << i ) )
+        {
+            resVal |= (uint16_t)( 1 << ( 15 - i ) );
+        }
+    }
+
+    return resVal;
 }
 
 #endif
