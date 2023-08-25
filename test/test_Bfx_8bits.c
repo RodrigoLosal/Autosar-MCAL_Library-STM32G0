@@ -1,12 +1,29 @@
+/**
+ * @file    test_Bfx_8bits.c
+ * @brief   **This file contains 2 unit testing functions per each function in the library Bfx_8bits.**
+ * 
+ * The file is designed to test the functions present in the "Bfx_8bits.c" library, which deals with 
+ * operations on 8-bit values. The unit testing file contains multiple test cases and assertions to 
+ * verify if the library functions work as expected.
+ */
+
 #include "unity.h"
 #include "Bfx_8bits.h"
 
-/*this function is required by Ceedling to run any code before the test cases*/
+/**
+ * @brief   **setUp**
+ *
+ * This function is required by Ceedling to run any code before the test cases.
+ */
 void setUp( void )
 {
 }
 
-/*this function is required by Ceedling to run any code after the test cases*/
+/**
+ * @brief   **tearDown**
+ *
+ * This function is required by Ceedling to run any code before the test cases.
+ */
 void tearDown( void )
 {
 }
@@ -580,7 +597,7 @@ void test__CountLeadingSigns_s8__2zeros( void )
  *
  * The test validates if function counts 6 zeros from left to right
  */
-void test__Bfx_CountLeadingZeros_u8__6ceros( void )
+void test__Bfx_CountLeadingZeros_u8__6zeros( void )
 {
     uint8 Data   = 0x03;
     uint8 Result = Bfx_CountLeadingZeros_u8( Data );
@@ -592,9 +609,9 @@ void test__Bfx_CountLeadingZeros_u8__6ceros( void )
  *
  * The test validates if function counts 1 zero from left to right
  */
-void test__Bfx_CountLeadingZeros_u8__1ceros( void )
+void test__Bfx_CountLeadingZeros_u8__1zero( void )
 {
     uint32 Data  = 0x40;
     uint8 Result = Bfx_CountLeadingZeros_u8( Data );
-    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0x01, "There are no 1 zeros from left to right" );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0x01, "There is no zero from left to right" );
 }
