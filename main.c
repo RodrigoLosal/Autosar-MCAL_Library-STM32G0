@@ -1,48 +1,32 @@
 #include "Nvic.h"
 #include <stdint.h>
 
-static void TIM7_Init( void );
-
-void TIM7_IRQHandler( void ); // Timer 7 Interrupt Handler.
-
-static void TIM7_Init( void )
-{
-    RCC->APBSMENR1 |= ( 0x1UL << 5U ); // Enable the Timer 7 clock.
-    RCC->APBRSTR1 |= ( 0x1UL << 5U );  // Reset the Timer 7.
-    RCC->APBRSTR1 &= ~( 0x1UL << 5U );
-
-    TIM7->PSC = 16000;
-    TIM7->ARR = 0xFFFF;            // Set the auto-reload value.
-    TIM7->SR &= ~( 0x1UL << 0U );  // Clear the update flag (UIF).
-    TIM7->DIER |= ( 0x1UL << 0U ); // Enable Timer 7 overflow interrupt.
-
-    CDD_Nvic_EnableIrq( TIM7_LPTIM2_IRQn ); // Enable Timer 7 interrupt in the NVIC.
-
-    TIM7->CR1 |= ( 0x1UL << 0U ); // Start Timer 7.
-    CDD_Nvic_SetPriority( TIM7_LPTIM2_IRQn, 2 );
-}
-
+void TIM7_LPTIM2_IRQHandler( void );
 int main( void )
 {
-    /* Enable GPIOA clock */
+    /* Enable GPIOC clock */
     RCC_GPIOA_CLK_EN( );
 
-    /* Configure pin 5 of port A as output */
+    /* Configure pin 5 of port C as output */
     GPIOA->MODER &= ~( 0x3UL << ( 5 * 2 ) );
     GPIOA->MODER |= ( 0x1UL << ( 5 * 2 ) ); // Set PA5 as output
+    // GPIOA->ODR ^= ( 0x1UL << 5 );
+    CDD_Nvic_EnableIrq( (Nvic_IrqType)TIM7_LPTIM2_IRQn ); // Enable Timer 7 interrupt in the NVIC.
+    CDD_Nvic_SetPriority( (Nvic_IrqType)TIM7_LPTIM2_IRQn, 1 );
 
-    TIM7_Init( );
 
     while( 1 )
     {
+        CDD_Nvic_SetPendingIrq( TIM7_LPTIM2_IRQn );
+
+        for( int i = 0; i < 100000; i++ )
+            ;
     }
 
     return 0;
 }
-
-// ISR
-void TIM7_IRQHandler( void )
+void TIM7_LPTIM2_IRQHandler( void )
 {
-    TIM7->SR &= ~( 0x1UL << 0U ); // Clear the TIM7 interrupt flag.
-    GPIOA->ODR ^= ( 0x1UL << 5 ); // Toggle the LED.
+    GPIOA->ODR ^= ( 0x1UL << 5 );
+    CDD_Nvic_ClearPendingIrq( TIM7_LPTIM2_IRQn );
 }
