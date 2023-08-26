@@ -35,6 +35,7 @@ static inline void Bfx_SetBits_u32u8u8u8( uint32 *Data, uint8 BitStartPn, uint8 
 static inline uint8 Bfx_GetBits_u32u8u8_u32( uint32 Data, uint8 BitStartPn, uint8 BitLn )
 {
     uint32 Result;
+
     Result = ( Data >> BitStartPn ) & ( ( 1u << BitLn ) - 1u );
     return Result;
 }
@@ -52,7 +53,6 @@ static inline void Bfx_ClrBitMask_u32u32( uint32 *Data, uint32 Mask )
 static inline boolean Bfx_TstBitMask_u32u32_u8( uint32 Data, uint32 Mask )
 {
     boolean Result;
-
     Result = ( Data & Mask ) == Mask;
     return Result;
 }
@@ -60,7 +60,6 @@ static inline boolean Bfx_TstBitMask_u32u32_u8( uint32 Data, uint32 Mask )
 static inline boolean Bfx_TstBitLnMask_u32u32_u8( uint32 Data, uint32 Mask )
 {
     boolean Result;
-
     Result = ( Data & Mask ) > 0;
     return Result;
 }
@@ -150,6 +149,7 @@ static inline void Bfx_PutBit_u32u8u8( uint32 *Data, uint8 BitPn, boolean Status
 static inline uint8 Bfx_CountLeadingOnes_u32( uint32 Data )
 {
     uint8 Counter = 0;
+
     for( uint8 i = 32; i > 0; i-- )
     {
         if( ( Data & ( 0x01 << ( i - 1 ) ) ) != 0 )
@@ -167,6 +167,7 @@ static inline uint8 Bfx_CountLeadingOnes_u32( uint32 Data )
 static inline uint8 Bfx_CountLeadingZeros_u32( uint32 Data )
 {
     uint8 Counter = 0;
+
     for( uint8 i = 32; i > 0; i-- )
     {
         if( ( Data & ( 0x01 << ( i - 1 ) ) ) != 0 )
