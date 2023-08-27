@@ -22,7 +22,7 @@ static inline boolean Bfx_GetBit_u8u8_u8( uint8 *Data, uint8 BitPn )
 static inline void Bfx_SetBits_u8u8u8u8( uint8 *Data, uint8 BitStartPn, uint8 BitLn, uint8 Status )
 {
     uint8 Mask = ( ( 1u << BitLn ) - 1u ) << BitStartPn;
-
+    
     if ( Status == 0 )
     {
         *Data = *Data & ~Mask;
