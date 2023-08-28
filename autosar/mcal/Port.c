@@ -1,5 +1,4 @@
 #include "Port.h"
-#include "Platform_Types.h"
 #include "Bfx.h"
 #include "Register.h"
 
@@ -118,12 +117,12 @@ void Port_GetVersionInfo( Std_VersionInfoType *versioninfo )
     versioninfo->vendorID         = 0;
 }
 
-void Port_RefreshPortDirection (void)
+void Port_RefreshPortDirection( void )
 {
-    PORTA->MODER = port_moder[0];
-    PORTB->MODER = port_moder[1];
-    PORTC->MODER = port_moder[2];
-    PORTD->MODER = port_moder[3];
-    PORTE->MODER = port_moder[4];
-    PORTF->MODER = port_moder[5];
+    PORTA->MODER = port_moder[ 0 ];
+    PORTB->MODER = port_moder[ 1 ];
+    PORTC->MODER = port_moder[ 2 ];
+    PORTD->MODER = port_moder[ 3 ];
+    PORTE->MODER = port_moder[ 4 ];
+    PORTF->MODER = port_moder[ 5 ];
 }
