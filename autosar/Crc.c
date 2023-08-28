@@ -7,23 +7,23 @@
  */
 uint8 Crc_CalculateCRC8( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_StartValue8, boolean Crc_IsFirstCall )
 {
-    const uint8 Crc_Polynomial = 0x1D; 
+    const uint8 Crc_Polynomial = 0x1D;
     uint8 crcValue             = Crc_StartValue8;
 
     if( Crc_IsFirstCall )
     {
-        crcValue = 0xFF; 
+        crcValue = 0xFF;
     }
 
     for( uint32 i = 0; i < Crc_Length; i++ )
     {
-        crcValue ^= Crc_DataPtr[ i ]; 
+        crcValue ^= Crc_DataPtr[ i ];
 
         for( uint8 bit = 0; bit < 8; bit++ )
         {
-            if( crcValue & 0x80 ) 
+            if( crcValue & 0x80 )
             {
-                crcValue = ( crcValue << 1 ) ^ Crc_Polynomial; 
+                crcValue = ( crcValue << 1 ) ^ Crc_Polynomial;
             }
             else
             {
