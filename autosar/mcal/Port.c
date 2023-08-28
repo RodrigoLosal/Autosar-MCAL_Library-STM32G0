@@ -1,6 +1,9 @@
 #include "Port.h"
 
 uint16 port_direction_change[ 6 ];
+uint32 port_moder[ 6 ] = {
+PORTA->MODER,
+};
 
 void Port_Init( const Port_ConfigType *ConfigPtr )
 {
@@ -62,6 +65,7 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
 
     Port_RegisterType *ports[ 6 ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
     port                          = ports[ Pin >> 4 ];
+
     if( port_direction_change[ Pin >> 4 ] & ( 1 << ( Pin & 0xFu ) ) != 0u )
     {
         switch( Direction )
@@ -100,4 +104,13 @@ void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
         Bfx_ClrBitMask_uint32_uint32( (uint32 *)&port->AFRH, ( 0b1111 << ( ( Pin & 0xFu ) * 4 ) ) );
         Bfx_SetBitMask_uint32_uint32( (uint32 *)&port->AFRH, ( Mode << ( ( Pin & 0xFu ) * 4 ) ) );
     }
+}
+
+void Port_GetVersionInfo( Std_VersionInfoType *versioninfo )
+{
+    versioninfo->moduleID         = 0;
+    versioninfo->sw_major_version = 0;
+    versioninfo->sw_minor_version = 0;
+    versioninfo->sw_patch_version = 0;
+    versioninfo->vendorID         = 0;
 }
