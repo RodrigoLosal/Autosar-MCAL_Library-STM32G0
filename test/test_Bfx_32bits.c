@@ -29,219 +29,219 @@ void tearDown( void )
 }
 
 /**
- * @brief   **Test set bit 19**
+ * @brief   **Test set bit 2**
  *
- * The test validates if bit 2 is set over a varible with value 0x00000000, to pass the test data
- * should have a value of 0x00080000.
+ * The test validates if bit 2 is set over a varible with value 0x00, to pass the test data should have
+ * a value of 0x04.
  */
-void test__Bfx_SetBit_u32u8__bit19( void )
+void test__Bfx_SetBit_u32u8__bit2( void )
 {
-    uint32 Data = 0x00000000u;
-    Bfx_SetBit_u32u8( &Data, 19u );
-    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0x00080000, "Bit 19 was not set as supposed to be" );
+    uint32 Data = 0u;
+    Bfx_SetBit_u32u8( &Data, 2u );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0x04, "Bit 2 was not set as supposed to be" );
 }
 
 /**
- * @brief   **Test set bit 10**
+ * @brief   **Test set bit 7**
  *
- * The test validates if bit 10 is set over a varible with value 0x00000000, to pass data tested
- * should have a value of 0x00000400.
+ * The test validates if bit 7 is set over a varible with value 0x00, to pass data tested should have
+ * a value of 0x80.
  */
-void test__Bfx_SetBit_u32u8__bit10( void )
+void test__Bfx_SetBit_u32u8__bit7( void )
 {
-    uint32 Data = 0x00000000u;
-    Bfx_SetBit_u32u8( &Data, 10u );
-    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0x00000400, "Bit 10 was not set as supposed to be" );
+    uint32 Data = 0u;
+    Bfx_SetBit_u32u8( &Data, 7u );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0x80, "Bit 7 was not set as supposed to be" );
 }
 
 /**
- * @brief   **Test clear bit 31**
+ * @brief   **Test clear bit 0**
  *
- * The test validates if the bit 31 of the value 0x80000005 is cleared, resulting in 0x00000005
+ * The test validates if the bit 0 of the value 0000 0101 is cleared, resulting in 0000 0100 = 0x04
  */
-void test__Bfx_ClrBit_u32u8__bit31( void )
+void test__Bfx_ClrBit_u32u8__bit0( void )
 {
-    uint32 Data = 0x80000005;
-    Bfx_ClrBit_u32u8( &Data, 31u );
-    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0x00000005, "Bit 31 was not cleared as supposed to be" );
+    uint32 Data = 0b00000101;
+    Bfx_ClrBit_u32u8( &Data, 0u );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0x04, "Bit 0 was not cleared as supposed to be" );
 }
 
 /**
- * @brief   **Test clear bit 28**
+ * @brief   **Test clear bit 6**
  *
- * The test validates if the bit 28 of the value 0xF00000FA is cleared, resulting in 0xE00000FA
+ * The test validates if the bit 6 of the value 1111 1010 is cleared, resulting in 1011 1010 = 0xBA
  */
-void test__Bfx_ClrBit_u32u8__bit28( void )
+void test__Bfx_ClrBit_u32u8__bit6( void )
 {
-    uint32 Data = 0xF00000FA;
-    Bfx_ClrBit_u32u8( &Data, 28u );
-    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0xE00000FA, "Bit 28 was not cleared as supposed to be" );
+    uint32 Data = 0b11111010;
+    Bfx_ClrBit_u32u8( &Data, 6u );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0xBA, "Bit 6 was not cleared as supposed to be" );
 }
 
 /**
- * @brief   **Test get bit 28**
+ * @brief   **Test get bit 2**
  *
- * The test validates if the bit 28 of the value 0x200000FA is read correctly, resulting in FALSE
+ * The test validates if the bit 2 of the value 1111 1010 is read correctly, resulting in FALSE
  */
-void test__Bfx_GetBit_u32u8_u8__bit28( void )
+void test__Bfx_GetBit_u32u8_u8__bit2( void )
 {
-    uint32 Data    = 0x200000FA;
-    boolean Result = Bfx_GetBit_u32u8_u8( &Data, 28u );
-    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, FALSE, "Bit 28 was not read as supposed to be" );
+    uint32 Data    = 0b11111010;
+    boolean Result = Bfx_GetBit_u32u8_u8( &Data, 2u );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, FALSE, "Bit 2 was not read as supposed to be" );
 }
 
 /**
- * @brief   **Test get bit 29**
+ * @brief   **Test get bit 1**
  *
- * The test validates if the bit 29 of the value 0x200000FA is read correctly, resulting in TRUE
+ * The test validates if the bit 1 of the value 1010 1111 is read correctly, resulting in TRUE
  */
-void test__Bfx_GetBit_u32u8_u8__bit29( void )
+void test__Bfx_GetBit_u32u8_u8__bit1( void )
 {
-    uint32 Data    = 0x200000FA;
-    boolean Result = Bfx_GetBit_u32u8_u8( &Data, 29u );
-    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, TRUE, "Bit 29 was not read as supposed to be" );
+    uint32 Data    = 0b10101111;
+    boolean Result = Bfx_GetBit_u32u8_u8( &Data, 1u );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, TRUE, "Bit 2 was not read as supposed to be" );
 }
 
 /**
- * @brief   **Test set bits 25-31 to 0**
+ * @brief   **Test set bits 3-6 to 0**
  *
- * The test validates if the bits 25 to 31 of the value 0xFF0000AF are set to 0 correctly,
- * resulting in 0x010000AF
+ * The test validates if the bits 3 to 6 of the value 1010 1111 are set to 0 correctly, resulting in
+ * 1000 0111 = 0x87
  */
-void test__Bfx_SetBits_u32u8u8u8__bits25to31( void )
+void test__Bfx_SetBits_u32u8u8u8__bits3to6( void )
 {
-    uint32 Data = 0xFF0000AF;
-    Bfx_SetBits_u32u8u8u8( &Data, 25u, 7u, 0 );
-    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0x010000AF, "Bits 25-31 were not set as supposed to be" );
+    uint32 Data = 0b10101111;
+    Bfx_SetBits_u32u8u8u8( &Data, 3u, 4u, 0 );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0x87, "Bits 3-6 were not set as supposed to be" );
 }
 
 /**
- * @brief   **Test set bits 20-23 to 1**
+ * @brief   **Test set bits 2-5 to 1**
  *
- * The test validates if the bits 20 to 23 of the value 0x000000AF are set to 1 correctly,
- * resulting in 0x00F000AF
+ * The test validates if the bits 2 to 5 of the value 1000 0001 are set to 1 correctly, resulting in
+ * 1011 1101 = 0xBD
  */
-void test__Bfx_SetBits_u32u8u8u8__bits20to23( void )
+void test__Bfx_SetBits_u32u8u8u8__bits2to5( void )
 {
-    uint32 Data = 0x000000AF;
-    Bfx_SetBits_u32u8u8u8( &Data, 20u, 4u, 1 );
-    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0x00F000AF, "Bits 20-23 were not set as supposed to be" );
+    uint32 Data = 0b10000001;
+    Bfx_SetBits_u32u8u8u8( &Data, 2u, 4u, 1u );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0xBD, "Bits 2-5 were not set as supposed to be" );
 }
 
 /**
- * @brief   **Test get bits 28-31**
+ * @brief   **Test get bits 0-3**
  *
- * The test validates if the bits 28 to 31 of the value 0x89000000 are read correctly, resulting in
- * 0x08
+ * The test validates if the bits 0 to 3 of the value 1000 1001 are read correctly, resulting in
+ * 0000 1001 = 0x09
  */
-void test__GetBits_u32u8u8_u32__bits28to31( void )
+void test__GetBits_u32u8u8_u32__bits0to3( void )
 {
-    uint32 Data   = 0x89000000;
-    uint32 Result = Bfx_GetBits_u32u8u8_u32( Data, 28, 4u );
-    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0x08, "Bits 28-31 were not read as supposed to be" );
+    uint32 Data   = 0b10001001;
+    uint32 Result = Bfx_GetBits_u32u8u8_u32( Data, 0, 4u );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0x09, "Bits 0-3 were not read as supposed to be" );
 }
 
 /**
- * @brief   **Test get bits 0-7**
+ * @brief   **Test get bits 3-7**
  *
- * The test validates if the bits 0 to 7 of the value 0x00000FB9 are read correctly, resulting in
- * 0xB9
+ * The test validates if the bits 3 to 7 of the value 1011 1001 are read correctly, resulting in
+ * 0001 0111 = 0x17
  */
-void test__GetBits_u32u8u8_u32__bits0to7( void )
+void test__GetBits_u32u8u8_u32__bits3to7( void )
 {
-    uint32 Data   = 0x00000FB9;
-    uint32 Result = Bfx_GetBits_u32u8u8_u32( Data, 0, 8u );
-    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0xB9, "Bits 0-7 were not read as supposed to be" );
+    uint32 Data   = 0b10111001;
+    uint32 Result = Bfx_GetBits_u32u8u8_u32( Data, 3, 5u );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0x17, "Bits 0-3 were not read as supposed to be" );
 }
 
 /**
- * @brief   **Test set bit mask bits 0-31**
+ * @brief   **Test set bit mask bits 2-6**
  *
- * The test validates if the bits 0 to 31 of the value 0x81000081 are getting set correctly with
- * the mask 0x7C00007C resulting in 0xFD0000FD
+ * The test validates if the bits 2 to 6 of the value 1000 0001 are getting set correctly with
+ * the mask 0111 1100 resulting in 1111 1101 = 0xFD
  */
-void test__SetBitMask_u32u32__bits0to31( void )
+void test__SetBitMask_u32u32__bits2to6( void )
 {
-    uint32 Data = 0x81000081;
-    Bfx_SetBitMask_u32u32( &Data, 0x7C0F007C );
-    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0xFD0F00FD, "Bits 0-31 were not set as supposed to be" );
+    uint32 Data = 0b10000001;
+    Bfx_SetBitMask_u32u32( &Data, 0b01111100 );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0xFD, "Bits 2-6 were not set as supposed to be" );
 }
 
 /**
- * @brief   **Test set bit mask bits 0-31**
+ * @brief   **Test set bit mask bits 2-6**
  *
- * The test validates if the bits 0 to 31 of the value 0x81000081 are getting set correctly with
- * the mask 0x81000081 resulting in 0x81000081
+ * The test validates if the bits 0 to 7 of the value 1000 0001 are getting set correctly with
+ * the mask 1000 0001 resulting in 1000 0001 = 0x81
  */
-void test__SetBitMask_u32u32__bits0to31_2( void )
+void test__SetBitMask_u32u32__bits0to7( void )
 {
-    uint32 Data = 0x81000081;
-    Bfx_SetBitMask_u32u32( &Data, 0x81000081 );
-    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0x81000081, "Bits 0-31 were not set as supposed to be" );
+    uint32 Data = 0b10000001;
+    Bfx_SetBitMask_u32u32( &Data, 0b10000001 );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0x81, "Bits 0-7 were not set as supposed to be" );
 }
 
 /**
- * @brief   **Test clear bit mask bits 0-31**
+ * @brief   **Test clear bit mask bits 0-7**
  *
- * The test validates if the bits 0 to 31 of the value 0x81000081 are getting cleared correctly with
- * the mask 0x81000081 resulting in 0000 0000 = 0x00
+ * The test validates if the bits 0 to 7 of the value 1000 0001 are getting cleared correctly with
+ * the mask 1000 0001 resulting in 0000 0000 = 0x00
  */
-void test__ClrBitMask_u32u32__bits0to31( void )
+void test__ClrBitMask_u32u32__bits0to7( void )
 {
-    uint32 Data = 0x81000081;
-    Bfx_ClrBitMask_u32u32( &Data, 0x81000081 );
-    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0x00000000, "Bits 0-31 were not cleared as supposed to be" );
+    uint32 Data = 0b10000001;
+    Bfx_ClrBitMask_u32u32( &Data, 0b10000001 );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0x00, "Bits 0-7 were not cleared as supposed to be" );
 }
 
 /**
- * @brief   **Test clear bit mask bits 24-31**
+ * @brief   **Test clear bit mask bits 3-5**
  *
- * The test validates if the bits 24 to 31 of the value 0xB9000000 are getting cleared correctly
- * with the mask 0x28000000 resulting in 0x91000000
+ * The test validates if the bits 3 to 5 of the value 1011 1001 are getting cleared correctly with
+ * the mask 0010 1000 resulting in 1001 0001 = 0x91
  */
-void test__ClrBitMask_u32u32__bits24to31( void )
+void test__ClrBitMask_u32u32__bits3to5( void )
 {
-    uint32 Data = 0xB9000000;
-    Bfx_ClrBitMask_u32u32( &Data, 0x28000000 );
-    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0x91000000, "Bits 24-31 were not cleared as supposed to be" );
+    uint32 Data = 0b10111001;
+    Bfx_ClrBitMask_u32u32( &Data, 0b00101000 );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Data, 0x91, "Bits 3-5 were not cleared as supposed to be" );
 }
 
 /**
- * @brief   **Test of test bit mask bits 3-25**
+ * @brief   **Test of test bit mask bits 4-7**
  *
- * The test validates if the bits 3 to 25 of the value 0x12345678 are already set compared to
- * the mask 0x02040608 resulting in TRUE
+ * The test validates if the bits 4 to 7 of the value 1001 0011 are already set compared to the mask
+ * the mask 1001 0000 resulting in TRUE
  */
-void test__TstBitMask_u32u32_u8__bits3to25( void )
+void test__TstBitMask_u32u32_u8__bits4to7( void )
 {
-    uint32 Data    = 0x12345678;
-    boolean Result = Bfx_TstBitMask_u32u32_u8( Data, 0x02040608 );
-    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, TRUE, "Bits 3-25 were not already set as supposed to be vs the mask" );
+    uint32 Data    = 0b10010011;
+    boolean Result = Bfx_TstBitMask_u32u32_u8( Data, 0b10010000 );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, TRUE, "Bits 4-7 were not already set as supposed to be vs the mask" );
 }
 
 /**
- * @brief   **Test of test bit mask bits 3-29**
+ * @brief   **Test of test bit mask bits 0-3**
  *
- * The test validates if the bits 3 to 29 of the value 0x12345678 are already set compared to
- * the mask 0x22040608 resulting in FALSE
+ * The test validates if the bits 0 to 3 of the value 1001 0011 are already set compared to the mask
+ * the mask 1001 0001 resulting in FALSE
  */
-void test__TstBitMask_u32u32_u8__bits3to29( void )
+void test__TstBitMask_u32u32_u8__bits0to3( void )
 {
-    uint32 Data    = 0x12345678;
-    boolean Result = Bfx_TstBitMask_u32u32_u8( Data, 0x22040608 );
-    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, FALSE, "Bits 3-29 were not already set as supposed to be vs the mask" );
+    uint32 Data    = 0b10010001;
+    boolean Result = Bfx_TstBitMask_u32u32_u8( Data, 0b10010011 );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, FALSE, "Bits 0-3 were not already set as supposed to be vs the mask" );
 }
 
 /**
- * @brief   **Test of test bit length mask bits 0-31**
+ * @brief   **Test of test bit length mask bits 0-7**
  *
- * The test validates if at least one bit of the value 0x330000CC is set as per the mask 0xCC000033
+ * The test validates if at least one bit of the value 1100 1100 is set as per the mask 0011 0011
  * resulting in a FALSE
  */
-void test__TstBitLnMask_u32u32_u8__bits0to31( void )
+void test__TstBitLnMask_u32u32_u8__bits0to7( void )
 {
-    uint32 Data    = 0x330000CC;
-    boolean Result = Bfx_TstBitLnMask_u32u32_u8( Data, 0xCC000033 );
+    uint32 Data    = 0b11001100;
+    boolean Result = Bfx_TstBitLnMask_u32u32_u8( Data, 0b00110011 );
     TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, FALSE, "At least 1 bit of bits 0-7 was not already set as supposed to be vs the mask" );
 }
 
