@@ -609,7 +609,7 @@ void test__Bfx_CountLeadingZeros_u8__6zeros( void )
  *
  * The test validates if function counts 1 zero from left to right
  */
-void test__Bfx_CountLeadingZeros_u8__1zeros( void )
+void test__Bfx_CountLeadingZeros_u8__1zero( void )
 {
     uint32 Data  = 0x40;
     uint8 Result = Bfx_CountLeadingZeros_u8( Data );
