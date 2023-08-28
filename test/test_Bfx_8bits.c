@@ -1,9 +1,9 @@
 /**
  * @file    test_Bfx_8bits.c
  * @brief   **This file contains 2 unit testing functions per each function in the library Bfx_8bits.**
- *
- * The file is designed to test the functions present in the "Bfx_8bits.c" library, which deals with
- * operations on 8-bit values. The unit testing file contains multiple test cases and assertions to
+ * 
+ * The file is designed to test the functions present in the "Bfx_8bits.c" library, which deals with 
+ * operations on 8-bit values. The unit testing file contains multiple test cases and assertions to 
  * verify if the library functions work as expected.
  */
 
