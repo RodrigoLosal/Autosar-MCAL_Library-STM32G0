@@ -17,11 +17,11 @@ typedef struct _Port_ConfigType
     uint8 Pin_direction; /*!<pin direction changeable during runtime*/
 } Port_ConfigType;
 
-typedef uint32 Port_PinType;         /*!< Data type for the symbolic name of a port pin.*/
+typedef uint32 Port_PinType; /*!< Data type for the symbolic name of a port pin.*/
 
 typedef uint8 Port_PinDirectionType; /*!< Data type for the symbolic direction of a pin.*/
 
-typedef uint8 Port_PinModeType;      /*!< Data type for the symbolic mode of a pin.*/
+typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
 
 #define PORTS_A               0u /*!< Port A value */
 #define PORTS_B               1u /*!< Port B value */
@@ -183,6 +183,6 @@ typedef uint8 Port_PinModeType;      /*!< Data type for the symbolic mode of a p
 
 void Port_Init( const Port_ConfigType *ConfigPtr );
 void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction );
-void Port_SetPinMode (Port_PinType Pin, Port_PinModeType Mode);
+void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode );
 
 #endif
