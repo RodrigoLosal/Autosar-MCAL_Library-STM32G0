@@ -48,20 +48,20 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
 
 #define PORTS_MODE_INPUT      0x00u /*!< Input mode value */
 #define PORTS_MODE_OUTPUT     0x01u /*!< General purpose output mode value */
-#define PORTS_MODE_ALT        0b10u /*!< Alternate function mode value */
-#define PORTS_MODE_ANALOG     0b11u /*!< Analog mode (reset state) value */
+#define PORTS_MODE_ALT        0x02u /*!< Alternate function mode value */
+#define PORTS_MODE_ANALOG     0x03u /*!< Analog mode (reset state) value */
 
 #define PORTS_NOPULL          0x00u /*!< No pull-up, pull-down value */
 #define PORTS_PULLUP          0x01u /*!< Pull-up */
-#define PORTS_PULLDOWN        0b10u /*!< Pull-down */
+#define PORTS_PULLDOWN        0x02u /*!< Pull-down */
 
 #define PORTS_PUSH_PULL       0x00u /*!< Output push-pull (reset state) value */
 #define PORTS_OPEN_COLECTOR   0x01u /*!< Output open-drain */
 
 #define PORTS_VERY_LOW_SPEED  0x00u /*!< Very low speed value */
 #define PORTS_LOW_SPEED       0x01u /*!< Low speed value */
-#define PORTS_HIGH_SPEED      0b10u /*!< High speed value */
-#define PORTS_VERY_HIGH_SPEED 0b11u /*!< Very high speed value */
+#define PORTS_HIGH_SPEED      0x02u /*!< High speed value */
+#define PORTS_VERY_HIGH_SPEED 0x03u /*!< Very high speed value */
 
 #define PORT_PIN_MODE_AF0     (Port_PinModeType)0x00u /*!< Alternarive funcion 0 */
 #define PORT_PIN_MODE_AF1     (Port_PinModeType)0x01u /*!< Alternarive funcion 1 */
