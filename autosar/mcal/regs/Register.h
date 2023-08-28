@@ -76,9 +76,9 @@ typedef struct
 #define RCC_GPIOA_CLK_EN( )  RCC->IOPENR |= 0x01u; /*!< GPIO PORTA clock enable*/
 #define RCC_GPIOB_CLK_EN( )  RCC->IOPENR |= 0x02u; /*!< GPIO PORTB clock enable*/
 #define RCC_GPIOC_CLK_EN( )  RCC->IOPENR |= 0x04u; /*!< GPIO PORTC clock enable*/
-#define RCC_GPIOD_CLK_EN( )  RCC->IOPENR |= 0x10u; /*!< GPIO PORTD clock enable*/
-#define RCC_GPIOE_CLK_EN( )  RCC->IOPENR |= 0x20u; /*!< GPIO PORTE clock enable*/
-#define RCC_GPIOF_CLK_EN( )  RCC->IOPENR |= 0x40u; /*!< GPIO PORTF clock enable*/
+#define RCC_GPIOD_CLK_EN( )  RCC->IOPENR |= 0x08u; /*!< GPIO PORTD clock enable*/
+#define RCC_GPIOE_CLK_EN( )  RCC->IOPENR |= 0x10u; /*!< GPIO PORTE clock enable*/
+#define RCC_GPIOF_CLK_EN( )  RCC->IOPENR |= 0x20u; /*!< GPIO PORTF clock enable*/
 
 #define RCC_GPIOA_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 0u ); /*!< GPIO PORTA clock disable*/
 #define RCC_GPIOB_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 1u ); /*!< GPIO PORTB clock disable*/
