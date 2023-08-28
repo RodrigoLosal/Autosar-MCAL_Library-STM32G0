@@ -619,12 +619,12 @@ void test__Bfx_CountLeadingZeros_u8__1zero( void )
 /**
  * @brief   **Test Shift Bit Sat (signed) - Arithmetical shift**
  *
- * The test validates if the value in Data = 0xF0 = 1111 0000 had a correct arithmetic shift when 
+ * The test validates if the value in Data = 0xF0 = 1111 0000 had a correct arithmetic shift when
  * ShiftCnt = -4 resulting in 1111 1111 = 0xFF
  */
 void test__Bfx_ShiftBitSat_s8s8_s8__arithshift( void )
 {
-    sint32 Data  = 0xF0; //1111 0000
+    sint8 Data   = 0xF0; // 1111 0000
     sint8 Result = Bfx_ShiftBitSat_s8s8_s8( -4, Data );
     TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0xFF, "The arithmetic shift wasn't performed correctly" );
 }
@@ -632,12 +632,38 @@ void test__Bfx_ShiftBitSat_s8s8_s8__arithshift( void )
 /**
  * @brief   **Test Shift Bit Sat (signed) - Saturation**
  *
- * The test validates if the value in Data = 0x55 = 0101 0101 had a correct saturation when 
- * ShiftCnt = 3 resulting in 0111 1111 = 0x40
+ * The test validates if the value in Data = 0x55 = 0101 0101 had a correct saturation when
+ * ShiftCnt = 3 resulting in 0111 1111 = 0x7F
  */
 void test__Bfx_ShiftBitSat_s8s8_s8__saturation( void )
 {
-    sint32 Data  = 0x55; //0101 0101
-    sint8 Result = Bfx_ShiftBitSat_s8s8_s8( 3 , Data );
+    sint8 Data   = 0x55; // 0101 0101
+    sint8 Result = Bfx_ShiftBitSat_s8s8_s8( 3, Data );
     TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0x7F, "The saturation wasn't performed correctly" );
+}
+
+/**
+ * @brief   **Test Shift Bit Sat (unsigned) - Saturation**
+ *
+ * The test validates if the value in Data = 0x2A = 0010 1010 had a correct saturation when
+ * ShiftCnt = 3 resulting in 1111 1111 = 0xFF
+ */
+void test__Bfx_ShiftBitSat_u8s8_u8__saturation( void )
+{
+    sint8 Data   = 0x2A; // 0010 1010
+    sint8 Result = Bfx_ShiftBitSat_u8s8_u8( 3, Data );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0xFF, "The saturation wasn't performed correctly" );
+}
+
+/**
+ * @brief   **Test Shift Bit Sat (unsigned) - No saturation**
+ *
+ * The test validates if the value in Data = 0x2A = 0010 1010 had a correct left shift when
+ * ShiftCnt = 2 resulting in 1010 1000 = 0xA8
+ */
+void test__Bfx_ShiftBitSat_u8s8_u8__nosaturation( void )
+{
+    sint8 Data   = 0x2A; // 0010 1010
+    sint8 Result = Bfx_ShiftBitSat_u8s8_u8( 2, Data );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0xA8, "The left shift wasn't performed correctly" );
 }
