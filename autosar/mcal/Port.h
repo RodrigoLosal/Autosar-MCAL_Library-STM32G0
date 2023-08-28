@@ -48,23 +48,23 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
 #define PORTS_PIN_14          ( 1 << 14U ) /*!< Pin 14 value */
 #define PORTS_PIN_15          ( 1 << 15U ) /*!< Pin 15 value */
 
-#define PORTS_CHANGEABLE      0b00u /*!< Port can be changed during runtime */
-#define PORTS_NON_CHANGEABLE  0b01u /*!< Port can not be changed during runtime */
+#define PORTS_CHANGEABLE      0x00u /*!< Port can be changed during runtime */
+#define PORTS_NON_CHANGEABLE  0x01u /*!< Port can not be changed during runtime */
 
-#define PORTS_MODE_INPUT      0b00u /*!< Input mode value */
-#define PORTS_MODE_OUTPUT     0b01u /*!< General purpose output mode value */
+#define PORTS_MODE_INPUT      0x00u /*!< Input mode value */
+#define PORTS_MODE_OUTPUT     0x01u /*!< General purpose output mode value */
 #define PORTS_MODE_ALT        0b10u /*!< Alternate function mode value */
 #define PORTS_MODE_ANALOG     0b11u /*!< Analog mode (reset state) value */
 
-#define PORTS_NOPULL          0b00u /*!< No pull-up, pull-down value */
-#define PORTS_PULLUP          0b01u /*!< Pull-up */
+#define PORTS_NOPULL          0x00u /*!< No pull-up, pull-down value */
+#define PORTS_PULLUP          0x01u /*!< Pull-up */
 #define PORTS_PULLDOWN        0b10u /*!< Pull-down */
 
-#define PORTS_PUSH_PULL       0b00u /*!< Output push-pull (reset state) value */
-#define PORTS_OPEN_COLECTOR   0b01u /*!< Output open-drain */
+#define PORTS_PUSH_PULL       0x00u /*!< Output push-pull (reset state) value */
+#define PORTS_OPEN_COLECTOR   0x01u /*!< Output open-drain */
 
-#define PORTS_VERY_LOW_SPEED  0b00u /*!< Very low speed value */
-#define PORTS_LOW_SPEED       0b01u /*!< Low speed value */
+#define PORTS_VERY_LOW_SPEED  0x00u /*!< Very low speed value */
+#define PORTS_LOW_SPEED       0x01u /*!< Low speed value */
 #define PORTS_HIGH_SPEED      0b10u /*!< High speed value */
 #define PORTS_VERY_HIGH_SPEED 0b11u /*!< Very high speed value */
 
@@ -179,8 +179,8 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
 #define PORT_PIN_PF_14        (Port_PinType)0x5Eu /*!< Port F pin 14 value */
 #define PORT_PIN_PF_15        (Port_PinType)0x5Fu /*!< Port F pin 15 value */
 
-#define PORT_PIN_IN           (Port_PinDirectionType)0b00u /*!< Input mode value */
-#define PORT_PIN_OUT          (Port_PinDirectionType)0b01u /*!< General purpose output mode value */
+#define PORT_PIN_IN           (Port_PinDirectionType)0x00u /*!< Input mode value */
+#define PORT_PIN_OUT          (Port_PinDirectionType)0x01u /*!< General purpose output mode value */
 
 void Port_Init( const Port_ConfigType *ConfigPtr );
 void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction );
