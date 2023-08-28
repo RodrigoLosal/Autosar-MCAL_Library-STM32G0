@@ -51,4 +51,8 @@
       - -g3
       - -c ${1}
       - -o ${2}
+<<<<<<< HEAD
       - -O0, -pedantic, -Werror, -Wstrict-prototypes, -fsigned-char, -fomit-frame-pointer, -fverbose-asm
+=======
+
+>>>>>>> 259cab5 (Bfx_8bits-arithmetic-shift. Function created and tested.)
