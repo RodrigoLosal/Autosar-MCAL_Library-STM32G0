@@ -215,3 +215,51 @@ static inline uint8 Bfx_CountLeadingZeros_u8( uint8 Data )
     }
     return Counter;
 }
+
+static inline sint8 Bfx_ShiftBitSat_s8s8_s8(sint8 ShiftCnt, sint8 Data)
+{
+    sint8 Mask = 0x80;
+    boolean DataIsNegative = (Data < 0);
+
+    // Perform shift left if ShiftCnt >= 0
+    if ( ShiftCnt >= 0 )
+    {
+        Data <<= ShiftCnt;
+
+        // Saturation when Data was originally positive and had a sign change after the shift
+        if ( ( DataIsNegative == FALSE ) && ( Data < 0 ) )
+        {
+            Data = 0x7F; //+127
+        }
+        // Saturation when Data was originally negative and had a sign change after the shift
+        else if ( ( DataIsNegative == TRUE ) && ( Data >= 0 ) )
+        {
+            Data = 0x80; //-128
+        }
+    }
+    // Perform right shift if ShiftCnt < 0
+    else
+    {
+        // Absolute value of ShiftCnt
+        ShiftCnt *= -1;
+
+        // Fill with 0's when Data is positive
+        if ( Data > 0 )
+        {
+            Data >>= ShiftCnt;
+        }
+        // Fill with 1's when Data is negative
+        else
+        {
+            Data >>= ShiftCnt;
+
+            for( uint8 i = 0 ; i < ShiftCnt ; i++ )
+            {
+                Data |= Mask;
+                Mask >>= 1;
+            }
+        }
+    }
+
+    return Data;
+}
