@@ -216,25 +216,25 @@ static inline uint8 Bfx_CountLeadingZeros_u8( uint8 Data )
     return Counter;
 }
 
-static inline sint8 Bfx_ShiftBitSat_s8s8_s8( sint8 ShiftCnt, sint8 Data )
+static inline sint8 Bfx_ShiftBitSat_s8s8_s8(sint8 ShiftCnt, sint8 Data)
 {
-    uint8 Mask             = 0x80;
-    boolean DataIsNegative = ( Data < 0 );
+    sint8 Mask = 0x80;
+    boolean DataIsNegative = (Data < 0);
 
     // Perform shift left if ShiftCnt >= 0
-    if( ShiftCnt >= 0 )
+    if ( ShiftCnt >= 0 )
     {
         Data <<= ShiftCnt;
 
         // Saturation when Data was originally positive and had a sign change after the shift
-        if( ( DataIsNegative == FALSE ) && ( Data < 0 ) )
+        if ( ( DataIsNegative == FALSE ) && ( Data < 0 ) )
         {
-            Data = 127;
+            Data = 0x7F; //+127
         }
         // Saturation when Data was originally negative and had a sign change after the shift
-        else if( ( DataIsNegative == TRUE ) && ( Data >= 0 ) )
+        else if ( ( DataIsNegative == TRUE ) && ( Data >= 0 ) )
         {
-            Data = -128;
+            Data = 0x80; //-128
         }
     }
     // Perform right shift if ShiftCnt < 0
@@ -244,7 +244,7 @@ static inline sint8 Bfx_ShiftBitSat_s8s8_s8( sint8 ShiftCnt, sint8 Data )
         ShiftCnt *= -1;
 
         // Fill with 0's when Data is positive
-        if( Data > 0 )
+        if ( Data > 0 )
         {
             Data >>= ShiftCnt;
         }
@@ -253,49 +253,12 @@ static inline sint8 Bfx_ShiftBitSat_s8s8_s8( sint8 ShiftCnt, sint8 Data )
         {
             Data >>= ShiftCnt;
 
-            for( uint8 i = 0; i < ShiftCnt; i++ )
+            for( uint8 i = 0 ; i < ShiftCnt ; i++ )
             {
                 Data |= Mask;
                 Mask >>= 1;
             }
         }
-    }
-
-    return Data;
-}
-
-static inline uint8 Bfx_ShiftBitSat_u8s8_u8( sint8 ShiftCnt, uint8 Data )
-{
-    uint8 Mask         = 0x80;
-    uint8 MaxShiftLeft = 0;
-
-    // Loop to check the maximum left shifts  before the leading one is shifted out
-    while( ( Data & Mask ) == 0 )
-    {
-        MaxShiftLeft++;
-        Mask >>= 1;
-    }
-
-    // Perform shift left if ShiftCnt >= 0
-    if( ShiftCnt >= 0 )
-    {
-        // Saturate if the maximum shift range is exceeded
-        if( ShiftCnt > MaxShiftLeft )
-        {
-            Data = 0xFF;
-        }
-        else
-        {
-            Data <<= ShiftCnt;
-        }
-    }
-    // Perform right shift if ShiftCnt < 0
-    else
-    {
-        // Absolute value of ShiftCnt
-        ShiftCnt *= -1;
-
-        Data >>= ShiftCnt;
     }
 
     return Data;
