@@ -187,7 +187,7 @@ static inline uint8 Bfx_CountLeadingZeros_u32( uint32 Data )
 static inline uint8 Bfx_CountLeadingSigns_s32( sint32 Data )
 {
     uint8 Count = 0;
-    sint8 Mask = 0x80000000;
+    sint32 Mask = 0x80000000;
 
     if( Data >= 0 )
     {
