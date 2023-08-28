@@ -1,12 +1,8 @@
-
-
 #ifndef REGISTERS_H
 #define REGISTERS_H
 #include "Platform_Types.h"
 
 #define PERIPH_BASE 0x40000000UL /*!< Peripherals register base address*/
-#define IOPORT_BASE 0x50000000UL /*!< IOPORT register base address*/
-
 
 typedef struct
 {
@@ -22,13 +18,6 @@ typedef struct
     volatile uint32 AFRH;
     volatile uint32 BRR;
 } GPIO_RegisterTypeDef;
-
-#define GPIOA_BASE     ( IOPORT_BASE + 0x00000000UL )
-#define GPIOB_BASE     ( IOPORT_BASE + 0x00000400UL )
-#define GPIOC_BASE     ( IOPORT_BASE + 0x00000800UL )
-#define GPIOD_BASE     ( IOPORT_BASE + 0x00000C00UL )
-#define GPIOE_BASE     ( IOPORT_BASE + 0x00001000UL )
-#define GPIOF_BASE     ( IOPORT_BASE + 0x00001400UL )
 
 #define AHBPERIPH_BASE ( PERIPH_BASE + 0x00020000UL )
 #define APBPERIPH_BASE ( PERIPH_BASE + 0x00010000UL )
@@ -63,33 +52,9 @@ typedef struct
 } RCC_RegisterTypeDef;
 
 
-#define GPIOA                ( (GPIO_RegisterTypeDef *)GPIOA_BASE )
-#define GPIOB                ( (GPIO_RegisterTypeDef *)GPIOB_BASE )
-#define GPIOC                ( (GPIO_RegisterTypeDef *)GPIOC_BASE )
-#define GPIOD                ( (GPIO_RegisterTypeDef *)GPIOD_BASE )
-#define GPIOE                ( (GPIO_RegisterTypeDef *)GPIOE_BASE )
-#define GPIOF                ( (GPIO_RegisterTypeDef *)GPIOF_BASE )
-
-
-#define RCC                  ( (RCC_RegisterTypeDef *)RCC_BASE )
-
-#define RCC_GPIOA_CLK_EN( )  ( RCC->IOPENR |= ( 1 << 0 ) )
-#define RCC_GPIOA_CLK_DIS( ) ( RCC->IOPENR &= ~( 1 << 0 ) )
-#define RCC_GPIOB_CLK_EN( )  ( RCC->IOPENR |= ( 1 << 1 ) )
-#define RCC_GPIOB_CLK_DIS( ) ( RCC->IOPENR &= ~( 1 << 1 ) )
-#define RCC_GPIOC_CLK_EN( )  ( RCC->IOPENR |= ( 1 << 2 ) )
-#define RCC_GPIOC_CLK_DIS( ) ( RCC->IOPENR &= ~( 1 << 2 ) )
-#define RCC_GPIOD_CLK_EN( )  ( RCC->IOPENR |= ( 1 << 3 ) )
-#define RCC_GPIOD_CLK_DIS( ) ( RCC->IOPENR &= ~( 1 << 3 ) )
-#define RCC_GPIOE_CLK_EN( )  ( RCC->IOPENR |= ( 1 << 4 ) )
-#define RCC_GPIOE_CLK_DIS( ) ( RCC->IOPENR &= ~( 1 << 4 ) )
-#define RCC_GPIOF_CLK_EN( )  ( RCC->IOPENR |= ( 1 << 5 ) )
-#define RCC_GPIOF_CLK_DIS( ) ( RCC->IOPENR &= ~( 1 << 5 ) )
-
-
-#define SCS_BASE             ( 0xE000E000UL )           /*!< System Control Space Base Address */
-#define NVIC_BASE            ( SCS_BASE + 0x0100UL )    /*!< NVIC Base Address */
-#define NVIC                 ( (NVIC_Type *)NVIC_BASE ) /*!< NVIC configuration struct */
+#define SCS_BASE  ( 0xE000E000UL )           /*!< System Control Space Base Address */
+#define NVIC_BASE ( SCS_BASE + 0x0100UL )    /*!< NVIC Base Address */
+#define NVIC      ( (NVIC_Type *)NVIC_BASE ) /*!< NVIC configuration struct */
 
 typedef struct
 {
