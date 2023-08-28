@@ -176,7 +176,7 @@ static inline uint8 Bfx_CountLeadingOnes_u8( uint8 Data )
 static inline uint8 Bfx_CountLeadingSigns_s8( sint8 Data )
 {
     uint8 Count = 0;
-    uint8 Mask  = 0x80;
+    sint8 Mask  = 0x80;
 
     if( Data >= 0 )
     {
