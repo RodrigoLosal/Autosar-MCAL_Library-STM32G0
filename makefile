@@ -110,6 +110,7 @@ lint :
 test : format build 
 	ceedling clobber
 	ceedling gcov:all utils:gcov
+	firefox Build/ceedling/artifacts/gcov/GcovCoverageResults.html
 
 docs :
 	mkdir -p Build/doxygen 
@@ -118,5 +119,6 @@ docs :
 	mkdir -p Build/sphinx/_static 
 	mkdir -p Build/sphinx/_build
 	doxygen .doxyfile
-	sphinx-build -b html Docs Build/sphinx/_build -c ./ -W
-	firefox Build/sphinx/_build/index.html
+	firefox Build/doxygen/html/index.html
+#	sphinx-build -b html Docs Build/sphinx/_build -c ./ -W
+#	firefox Build/sphinx/_build/index.html
