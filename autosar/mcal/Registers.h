@@ -91,10 +91,6 @@ typedef struct
 #define NVIC_BASE            ( SCS_BASE + 0x0100UL )    /*!< NVIC Base Address */
 #define NVIC                 ( (NVIC_Type *)NVIC_BASE ) /*!< NVIC configuration struct */
 
-
-/**
-  \brief  Structure type to access the Nested Vectored Interrupt Controller (NVIC).
- */
 typedef struct
 {
     uint32 ISER[ 1U ]; /*!< Offset: 0x000 (R/W)  Interrupt Set Enable Register */
