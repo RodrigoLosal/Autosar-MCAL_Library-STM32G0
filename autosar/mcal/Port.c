@@ -1,7 +1,7 @@
 #include "Port.h"
 
 uint16 port_direction_change[ 6 ];
-uint32 port_moder[ 6 ];
+uint32 port_moder[ 6 ] = { 0xEBFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 void Port_Init( const Port_ConfigType *ConfigPtr )
 {
@@ -38,6 +38,9 @@ void Port_Init( const Port_ConfigType *ConfigPtr )
             /*change values on MODER*/
             Bfx_ClrBitMask_u32u32( (uint32 *)&port->MODER, ( 0x03 << ( i * 2 ) ) );
             Bfx_SetBitMask_u32u32( (uint32 *)&port->MODER, ( (uint32)ConfigPtr->Mode << ( i * 2 ) ) );
+            Bfx_ClrBitMask_u32u32( &port_moder[ ConfigPtr->Port ], ( 0x03 << ( i * 2 ) ) );
+            Bfx_SetBitMask_u32u32( &port_moder[ ConfigPtr->Port ], ( (uint32)ConfigPtr->Mode << ( i * 2 ) ) );
+
             if( i < 8u )
             {
                 /*change values on Altern*/
@@ -110,4 +113,14 @@ void Port_GetVersionInfo( Std_VersionInfoType *versioninfo )
     versioninfo->sw_minor_version = 0;
     versioninfo->sw_patch_version = 0;
     versioninfo->vendorID         = 0;
+}
+
+void Port_RefreshPortDirection (void)
+{
+    PORTA->MODER = port_moder[0];
+    PORTB->MODER = port_moder[1];
+    PORTC->MODER = port_moder[2];
+    PORTD->MODER = port_moder[3];
+    PORTE->MODER = port_moder[4];
+    PORTF->MODER = port_moder[5];
 }
