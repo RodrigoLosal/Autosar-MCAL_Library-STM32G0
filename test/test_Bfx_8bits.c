@@ -597,7 +597,7 @@ void test__CountLeadingSigns_s8__2zeros( void )
  *
  * The test validates if function counts 6 zeros from left to right
  */
-void test__Bfx_CountLeadingZeros_u8__6ceros( void )
+void test__Bfx_CountLeadingZeros_u8__6zeros( void )
 {
     uint8 Data   = 0x03;
     uint8 Result = Bfx_CountLeadingZeros_u8( Data );
@@ -609,7 +609,7 @@ void test__Bfx_CountLeadingZeros_u8__6ceros( void )
  *
  * The test validates if function counts 1 zero from left to right
  */
-void test__Bfx_CountLeadingZeros_u8__1ceros( void )
+void test__Bfx_CountLeadingZeros_u8__1zeros( void )
 {
     uint32 Data  = 0x40;
     uint8 Result = Bfx_CountLeadingZeros_u8( Data );
