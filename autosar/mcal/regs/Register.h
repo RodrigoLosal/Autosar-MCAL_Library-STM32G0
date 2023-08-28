@@ -45,8 +45,7 @@ typedef struct
     volatile uint32 CCIPR2;    /*!< Peripherals independent clock configuration register 2*/
     volatile uint32 BDCR;      /*!< RTC domain control register*/
     volatile uint32 CSR;       /*!< control/status register*/
-
-} RCC_RegisterType;
+} Rcc_RegisterType;
 
 
 typedef struct
