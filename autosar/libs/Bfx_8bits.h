@@ -135,7 +135,7 @@ static inline void Bfx_CopyBit_u8u8u8u8( uint8 *DestinationData, uint8 Destinati
 
 static inline void Bfx_PutBits_u8u8u8u8( uint8 *Data, uint8 BitStartPn, uint8 BitLn, uint8 Pattern )
 {
-    uint8 Mask = ( ( 1u << BitLn ) - 1u ) << BitStartPn;
+    uint8 Mask = ( ( 1u << BitLn) - 1u ) << BitStartPn;
     *Data = (*Data & ~Mask) | ((Pattern << BitStartPn) & Mask);
 }
 
