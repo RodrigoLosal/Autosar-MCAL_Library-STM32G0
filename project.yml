@@ -12,7 +12,6 @@
     - autosar/**      # directory where the functions to test are
     - autosar/libs/**
     - -:autosar/mcal/regs/** # exclude the registers from the source
-    - -:autosar/mcal/regs/** # exclude the registers from the source
 
 
 :defines:
@@ -52,5 +51,4 @@
       - -g3
       - -c ${1}
       - -o ${2}
-      - -O0, -pedantic, -Werror, -Wstrict-prototypes, -fsigned-char, -fomit-frame-pointer, -fverbose-asm
       - -O0, -pedantic, -Werror, -Wstrict-prototypes, -fsigned-char, -fomit-frame-pointer, -fverbose-asm
