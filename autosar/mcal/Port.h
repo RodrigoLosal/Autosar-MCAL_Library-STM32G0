@@ -1,11 +1,6 @@
 #ifndef PORT_H__
 #define PORT_H__
 
-#include "Platform_Types.h"
-#include "Bfx.h"
-#include "Register.h"
-
-
 typedef struct _Port_ConfigType
 {
     uint8 Port;          /*!<Port where the pin to config is grouped*/
@@ -68,14 +63,14 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
 #define PORTS_HIGH_SPEED      0b10u /*!< High speed value */
 #define PORTS_VERY_HIGH_SPEED 0b11u /*!< Very high speed value */
 
-#define PORT_PIN_MODE_AF0     (Port_PinModeType)0b0000u /*!< Alternarive funcion 0 */
-#define PORT_PIN_MODE_AF1     (Port_PinModeType)0b0001u /*!< Alternarive funcion 1 */
-#define PORT_PIN_MODE_AF2     (Port_PinModeType)0b0010u /*!< Alternarive funcion 2 */
-#define PORT_PIN_MODE_AF3     (Port_PinModeType)0b0011u /*!< Alternarive funcion 3 */
-#define PORT_PIN_MODE_AF4     (Port_PinModeType)0b0100u /*!< Alternarive funcion 4 */
-#define PORT_PIN_MODE_AF5     (Port_PinModeType)0b0101u /*!< Alternarive funcion 5 */
-#define PORT_PIN_MODE_AF6     (Port_PinModeType)0b0110u /*!< Alternarive funcion 6 */
-#define PORT_PIN_MODE_AF7     (Port_PinModeType)0b0111u /*!< Alternarive funcion 7 */
+#define PORT_PIN_MODE_AF0     (Port_PinModeType)0x00u /*!< Alternarive funcion 0 */
+#define PORT_PIN_MODE_AF1     (Port_PinModeType)0x01u /*!< Alternarive funcion 1 */
+#define PORT_PIN_MODE_AF2     (Port_PinModeType)0x02u /*!< Alternarive funcion 2 */
+#define PORT_PIN_MODE_AF3     (Port_PinModeType)0x03u /*!< Alternarive funcion 3 */
+#define PORT_PIN_MODE_AF4     (Port_PinModeType)0x04u /*!< Alternarive funcion 4 */
+#define PORT_PIN_MODE_AF5     (Port_PinModeType)0x05u /*!< Alternarive funcion 5 */
+#define PORT_PIN_MODE_AF6     (Port_PinModeType)0x06u /*!< Alternarive funcion 6 */
+#define PORT_PIN_MODE_AF7     (Port_PinModeType)0x07u /*!< Alternarive funcion 7 */
 
 #define PORT_PIN_PA_00        (Port_PinType)0x00u /*!< Port A pin 0 value */
 #define PORT_PIN_PA_01        (Port_PinType)0x01u /*!< Port A pin 1 value */

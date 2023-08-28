@@ -1,4 +1,7 @@
 #include "Port.h"
+#include "Platform_Types.h"
+#include "Bfx.h"
+#include "Register.h"
 
 uint16 port_direction_change[ 6 ];
 uint32 port_moder[ 6 ] = { 0xEBFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
