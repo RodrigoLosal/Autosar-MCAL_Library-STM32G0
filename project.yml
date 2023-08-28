@@ -10,8 +10,12 @@
     - test/support/**
   :source:
     - autosar/**      # directory where the functions to test are
+<<<<<<< HEAD
     - autosar/libs/**
     - -:autosar/mcal/regs/** # exclude the registers from the source
+=======
+    #- -:autosar/mcal/regs/** # exclude the registers from the source
+>>>>>>> bc90f97 (Changes in last line)
 
 
 :defines:
