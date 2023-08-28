@@ -76,7 +76,7 @@ static inline boolean Bfx_TstParityEven_u32_u8( uint32 Data )
         parity = !parity;
         Data &= ( Data - 1 );
     }
-    Result = !parity;
+    Result = !Parity;
     return Result;
 }
 
