@@ -114,14 +114,7 @@ static inline void Bfx_CopyBit_u32u8u32u8( uint32 *DestinationData, uint8 Destin
 {
     boolean Buffer;
 
-    if( ( SourceData & ( 0x01 << SourcePosition ) ) != 0 )
-    {
-        Buffer = TRUE;
-    }
-    else
-    {
-        Buffer = FALSE;
-    }
+    Buffer = ( ( SourceData & ( 0x01 << SourcePosition ) ) != 0 ) ? TRUE : FALSE;
     if( Buffer == FALSE )
     {
         *DestinationData = ( *DestinationData & ~( 0x01 << DestinationPosition ) );
@@ -193,41 +186,25 @@ static inline uint8 Bfx_CountLeadingZeros_u32( uint32 Data )
 
 static inline uint8 Bfx_CountLeadingSigns_s32( sint32 Data )
 {
-    uint8 Counter = 0;
-    sint32 msb;
-    
-    msb = Data >> 31;
-    if( msb == 0 )
+    uint8 Count = 0;
+    sint8 Mask = 0x80000000;
+
+    if( Data >= 0 )
     {
-        for( uint8 i = 32; i > 0; i-- )
+        while( ( Data & Mask ) == 0 )
         {
-            if( ( ( Data << 1 ) & ( 0x01 << ( i - 1 ) ) ) != 0 )
-            {
-                i = 1;
-            }
-            else
-            {
-                Counter++;
-            }
-        }
-        if( Counter == 32 )
-        {
-            Counter = 31;
+            Count++;
+            Mask >>= 1;
         }
     }
     else
     {
-        for( uint8 i = 32; i > 0; i-- )
+        while( ( Data & Mask ) == Mask )
         {
-            if( ( ( Data << 1 ) & ( 0x01 << ( i - 1 ) ) ) != 0 )
-            {
-                Counter++;
-            }
-            else
-            {
-                i = 1;
-            }
+            Count++;
+            Mask >>= 1;
         }
     }
-    return Counter;
+    Data = Count - 1;
+    return Data;
 }
