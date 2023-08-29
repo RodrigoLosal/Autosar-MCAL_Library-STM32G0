@@ -45,20 +45,6 @@ typedef enum
     USART3_4_5_6_LPUART1_IRQn              = 29, /*!< USART3, USART4, USART5, USART6, LPUART1 globlal Interrupts (combined with EXTI 28) */
     CEC_IRQn                               = 30, /*!< CEC Interrupt(combined with EXTI 27)                               */
 } Nvic_IrqType;
-typedef struct
-{
-    volatile uint32 MODER;
-    volatile uint32 OTYPER;
-    volatile uint32 OSPEEDR;
-    volatile uint32 PUPDR;
-    volatile uint32 IDR;
-    volatile uint32 ODR;
-    volatile uint32 BSRR;
-    volatile uint32 LCKR;
-    volatile uint32 AFRL;
-    volatile uint32 AFRH;
-    volatile uint32 BRR;
-} GPIO_RegisterTypeDef;
 
 #define AHBPERIPH_BASE ( PERIPH_BASE + 0x00020000UL )
 #define APBPERIPH_BASE ( PERIPH_BASE + 0x00010000UL )
