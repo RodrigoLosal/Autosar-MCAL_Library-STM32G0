@@ -46,38 +46,6 @@ typedef enum
     CEC_IRQn                               = 30, /*!< CEC Interrupt(combined with EXTI 27)                               */
 } Nvic_IrqType;
 
-#define AHBPERIPH_BASE ( PERIPH_BASE + 0x00020000UL )
-#define APBPERIPH_BASE ( PERIPH_BASE + 0x00010000UL )
-#define RCC_BASE       ( AHBPERIPH_BASE + 0x00001000UL )
-
-typedef struct
-{
-    volatile uint32 CR;
-    volatile uint32 ICSCR;
-    volatile uint32 CFGR;
-    volatile uint32 PLL;
-    volatile uint32 CRRCR;
-    volatile uint32 CIER;
-    volatile uint32 CIFR;
-    volatile uint32 CICR;
-    volatile uint32 IOPRSTR;
-    volatile uint32 AHBRSTR;
-    volatile uint32 APBRSTR1;
-    volatile uint32 APBRSTR2;
-    volatile uint32 IOPENR;
-    volatile uint32 AHBENR;
-    volatile uint32 APBENR1;
-    volatile uint32 APBENR2;
-    volatile uint32 IOPSMENR;
-    volatile uint32 AHBSMENR;
-    volatile uint32 APBSMENR1;
-    volatile uint32 APBSMENR2;
-    volatile uint32 CCIPR;
-    volatile uint32 CCIPR2;
-    volatile uint32 BDCR;
-    volatile uint32 CSR;
-} RCC_RegisterTypeDef;
-
 
 #define SCS_BASE  ( 0xE000E000UL )           /*!< System Control Space Base Address */
 #define NVIC_BASE ( SCS_BASE + 0x0100UL )    /*!< NVIC Base Address */
