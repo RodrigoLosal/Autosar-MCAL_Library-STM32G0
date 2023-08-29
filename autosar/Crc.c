@@ -1,10 +1,7 @@
 #include "Crc.h"
+#include <stdio.h>
+#include <stdint.h>
 
-/**
- * @brief   **Crc_CalculateCRC8**
- *
- * This service makes a CRC8 calculation on Crc_Length data bytes, with SAE J1850 parameters
- */
 uint8 Crc_CalculateCRC8( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_StartValue8, boolean Crc_IsFirstCall )
 {
     const uint8 Crc_Polynomial = 0x1D;
