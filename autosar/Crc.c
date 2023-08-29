@@ -108,18 +108,3 @@ uint32 Reflect( uint32 data, uint8 bit_count )
     }
     return reflection;
 }
-
-uint16_t Reflect16( uint16_t val )
-{
-    uint16_t resVal = 0;
-
-    for( int i = 0; i < 16; i++ )
-    {
-        if( val & ( 1 << i ) )
-        {
-            resVal |= (uint16_t)( 1 << ( 15 - i ) );
-        }
-    }
-
-    return resVal;
-}
