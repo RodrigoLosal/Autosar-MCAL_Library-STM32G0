@@ -7,8 +7,8 @@ void CDD_Nvic_SetPriority( Nvic_IrqType irq, uint32 priority )
 {
     if( ( (uint32)irq >= 16 ) && ( (uint32)irq <= 30 ) )
     {
-        NVIC->IP[ _IP_IDX( irq ) ] &= ~( 0xFFU << _BIT_SHIFT( irq ) );           // Clear the current priority bits for the interrupt
-        NVIC->IP[ _IP_IDX( irq ) ] |= ( priority & 0xFFU ) << _BIT_SHIFT( irq ); // Set the new priority for the interrupt
+        NVIC->IP[ _IP_IDX( irq ) ] &= ~( 0xFFU << _BIT_SHIFT( irq ) );          
+        NVIC->IP[ _IP_IDX( irq ) ] |= ( priority & 0xFFU ) << _BIT_SHIFT( irq ); 
     }
 }
 
