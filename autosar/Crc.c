@@ -1,35 +1,37 @@
 #include "Crc.h"
+#include "Std_Types.h"
 
-#define CRC8             0x1D
-#define FIRSTCALLCRC8    0xFF
-#define CRC8NBITS        8
-#define CRC8MSB          0x80
+#define CRC8                 0x1D
+#define FIRSTCALLCRC8        0xFF
+#define CRC8NBITS            8
+#define CRC8MSB              0x80
 
-#define CRC8H2F          0x2F
-#define FIRSTCALLCRC8H2F 0xFF
-#define CRC8H2FNBITS     8
-#define CRC8H2NMSB       0x80
+#define CRC8H2F              0x2F
+#define FIRSTCALLCRC8H2F     0xFF
+#define CRC8H2FNBITS         8
+#define CRC8H2NMSB           0x80
 
-#define CRC16            0x1021
-#define FIRSTCALLCRC16   0xFFFF
-#define CRC16NBITS       8
-#define CRC16MSB         0x8000
-#define CRC16_8LEFT      8
+#define CRC16                0x1021
+#define FIRSTCALLCRC16       0xFFFF
+#define CRC16NBITS           8
+#define CRC16MSB             0x8000
+#define CRC16_8LEFT          8
 
-#define REFLECTLSB       0x01
+#define REFLECTLSB           0x01
 
-#define VENDOR_ID   0x0000
-#define MODULE_ID   0x0000
+#define VENDOR_ID            0x0000
+#define MODULE_ID            0x0000
 #define CRC_SW_MAJOR_VERSION 0
 #define CRC_SW_MINOR_VERSION 0
 #define CRC_SW_PATCH_VERSION 0
 
-typedef struct {
+typedef struct
+{
     uint16 vendorID;
     uint16 moduleID;
-    uint8  sw_major_version;
-    uint8  sw_minor_version;
-    uint8  sw_patch_version;
+    uint8 sw_major_version;
+    uint8 sw_minor_version;
+    uint8 sw_patch_version;
 } Std_VersionInfoType;
 
 uint8 Crc_CalculateCRC8( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_StartValue8, boolean Crc_IsFirstCall )
@@ -122,13 +124,13 @@ uint16 Crc_CalculateCRC16( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 C
     return crcValue;
 }
 
-void Crc_GetVersionInfo(Std_VersionInfoType* Versioninfo)
+void Crc_GetVersionInfo( Std_VersionInfoType *Versioninfo )
 {
-    Versioninfo -> vendorID = VENDOR_ID;
-    Versioninfo -> moduleID = MODULE_ID;
-    Versioninfo ->sw_major_version = CRC_SW_MAJOR_VERSION;
-    Versioninfo ->sw_minor_version = CRC_SW_MINOR_VERSION;
-    Versioninfo ->sw_patch_version = CRC_SW_PATCH_VERSION;
+    Versioninfo->vendorID         = VENDOR_ID;
+    Versioninfo->moduleID         = MODULE_ID;
+    Versioninfo->sw_major_version = CRC_SW_MAJOR_VERSION;
+    Versioninfo->sw_minor_version = CRC_SW_MINOR_VERSION;
+    Versioninfo->sw_patch_version = CRC_SW_PATCH_VERSION;
 }
 
 /*
