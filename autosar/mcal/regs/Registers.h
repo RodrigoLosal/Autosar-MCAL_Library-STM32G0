@@ -1,6 +1,5 @@
 #ifndef REGISTERS_H
 #define REGISTERS_H
-#include "Std_Types.h"
 
 #define PERIPH_BASE 0x40000000UL /*!< Peripherals register base address*/
 
