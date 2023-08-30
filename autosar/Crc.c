@@ -90,6 +90,26 @@ uint16 Crc_CalculateCRC16( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 C
     return crcValue;
 }
 
+typedef struct {
+    uint16 vendorID;
+    uint16 moduleID;
+    uint8  sw_major_version;
+    uint8  sw_minor_version;
+    uint8  sw_patch_version;
+} Std_VersionInfoType;
+
+void Crc_GetVersionInfo(Std_VersionInfoType* Versioninfo)
+{
+    Versioninfo -> vendorID = VENDOR_ID;
+    Versioninfo -> moduleID = MODULE_ID;
+    Versioninfo ->sw_major_version = CRC_SW_MAJOR_VERSION;
+    Versioninfo ->sw_minor_version = CRC_SW_MINOR_VERSION;
+    Versioninfo ->sw_patch_version = CRC_SW_PATCH_VERSION;
+}
+
+/*
+Auxiliary function in future implementations.
+*/
 uint32 Reflect( uint32 data, uint8 bit_count )
 {
     uint32 reflection = 0;
