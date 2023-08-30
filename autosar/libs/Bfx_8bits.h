@@ -14,7 +14,7 @@ static inline boolean Bfx_GetBit_u8u8_u8( uint8 *Data, uint8 BitPn )
 {
     boolean Result;
 
-    Result = (*Data >> BitPn) & 1u;
+    Result = ( *Data >> BitPn ) & 1u;
 
     return Result;
 }
@@ -22,12 +22,12 @@ static inline boolean Bfx_GetBit_u8u8_u8( uint8 *Data, uint8 BitPn )
 static inline void Bfx_SetBits_u8u8u8u8( uint8 *Data, uint8 BitStartPn, uint8 BitLn, uint8 Status )
 {
     uint8 Mask = ( ( 1u << BitLn ) - 1u ) << BitStartPn;
-    
-    if ( Status == 0 )
+
+    if( Status == 0 )
     {
         *Data = *Data & ~Mask;
-    } 
-    else if ( Status == 1 )
+    }
+    else if( Status == 1 )
     {
         *Data = *Data | Mask;
     }
@@ -58,7 +58,7 @@ static inline boolean Bfx_TstBitMask_u8u8_u8( uint8 Data, uint8 Mask )
 {
     boolean Result;
 
-    Result = (Data & Mask) == Mask;
+    Result = ( Data & Mask ) == Mask;
 
     return Result;
 }
@@ -135,13 +135,13 @@ static inline void Bfx_CopyBit_u8u8u8u8( uint8 *DestinationData, uint8 Destinati
 
 static inline void Bfx_PutBits_u8u8u8u8( uint8 *Data, uint8 BitStartPn, uint8 BitLn, uint8 Pattern )
 {
-    uint8 Mask = ( ( 1u << BitLn) - 1u ) << BitStartPn;
-    *Data = (*Data & ~Mask) | ((Pattern << BitStartPn) & Mask);
+    uint8 Mask = ( ( 1u << BitLn ) - 1u ) << BitStartPn;
+    *Data      = ( *Data & ~Mask ) | ( ( Pattern << BitStartPn ) & Mask );
 }
 
 static inline void Bfx_PutBitsMask_u8u8u8( uint8 *Data, uint8 Pattern, uint8 Mask )
 {
-    *Data = (*Data & ~Mask) | (Pattern & Mask);
+    *Data = ( *Data & ~Mask ) | ( Pattern & Mask );
 }
 
 static inline void Bfx_PutBit_u8u8u8( uint8 *Data, uint8 BitPn, boolean Status )
@@ -176,9 +176,9 @@ static inline uint8 Bfx_CountLeadingOnes_u8( uint8 Data )
 static inline uint8 Bfx_CountLeadingSigns_s8( sint8 Data )
 {
     uint8 Count = 0;
-    sint8 Mask = 0x80;
+    uint8 Mask  = 0x80;
 
-    if ( Data >= 0 )
+    if( Data >= 0 )
     {
         while( ( Data & Mask ) == 0 )
         {
@@ -188,7 +188,7 @@ static inline uint8 Bfx_CountLeadingSigns_s8( sint8 Data )
     }
     else
     {
-        while ( ( Data & Mask ) == Mask )
+        while( ( Data & Mask ) == Mask )
         {
             Count++;
             Mask >>= 1;
@@ -214,4 +214,89 @@ static inline uint8 Bfx_CountLeadingZeros_u8( uint8 Data )
         }
     }
     return Counter;
+}
+
+static inline sint8 Bfx_ShiftBitSat_s8s8_s8( sint8 ShiftCnt, sint8 Data )
+{
+    uint8 Mask             = 0x80;
+    boolean DataIsNegative = ( Data < 0 );
+
+    // Perform shift left if ShiftCnt >= 0
+    if( ShiftCnt >= 0 )
+    {
+        Data <<= ShiftCnt;
+
+        // Saturation when Data was originally positive and had a sign change after the shift
+        if( ( DataIsNegative == FALSE ) && ( Data < 0 ) )
+        {
+            Data = 127;
+        }
+        // Saturation when Data was originally negative and had a sign change after the shift
+        else if( ( DataIsNegative == TRUE ) && ( Data >= 0 ) )
+        {
+            Data = -128;
+        }
+    }
+    // Perform right shift if ShiftCnt < 0
+    else
+    {
+        // Absolute value of ShiftCnt
+        ShiftCnt *= -1;
+
+        // Fill with 0's when Data is positive
+        if( Data > 0 )
+        {
+            Data >>= ShiftCnt;
+        }
+        // Fill with 1's when Data is negative
+        else
+        {
+            Data >>= ShiftCnt;
+
+            for( uint8 i = 0; i < ShiftCnt; i++ )
+            {
+                Data |= Mask;
+                Mask >>= 1;
+            }
+        }
+    }
+
+    return Data;
+}
+
+static inline uint8 Bfx_ShiftBitSat_u8s8_u8( sint8 ShiftCnt, uint8 Data )
+{
+    uint8 Mask         = 0x80;
+    uint8 MaxShiftLeft = 0;
+
+    // Loop to check the maximum left shifts  before the leading one is shifted out
+    while( ( Data & Mask ) == 0 )
+    {
+        MaxShiftLeft++;
+        Mask >>= 1;
+    }
+
+    // Perform shift left if ShiftCnt >= 0
+    if( ShiftCnt >= 0 )
+    {
+        // Saturate if the maximum shift range is exceeded
+        if( ShiftCnt > MaxShiftLeft )
+        {
+            Data = 0xFF;
+        }
+        else
+        {
+            Data <<= ShiftCnt;
+        }
+    }
+    // Perform right shift if ShiftCnt < 0
+    else
+    {
+        // Absolute value of ShiftCnt
+        ShiftCnt *= -1;
+
+        Data >>= ShiftCnt;
+    }
+
+    return Data;
 }
