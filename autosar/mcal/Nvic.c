@@ -1,6 +1,6 @@
 #include "Registers.h"
 #include "Nvic.h"
-#include "Platform_Types.h"
+#include "Std_Types.h"
 
 #define _BIT_SHIFT( irq ) ( ( ( ( (uint32)irq ) ) & 0x03UL ) * 8UL )
 #define _IP_IDX( irq )    ( ( ( (uint32)irq ) >> 2UL ) )
