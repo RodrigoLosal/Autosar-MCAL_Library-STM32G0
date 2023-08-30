@@ -25,14 +25,7 @@
 #define CRC_SW_MINOR_VERSION 0
 #define CRC_SW_PATCH_VERSION 0
 
-typedef struct
-{
-    uint16 vendorID;
-    uint16 moduleID;
-    uint8 sw_major_version;
-    uint8 sw_minor_version;
-    uint8 sw_patch_version;
-} Std_VersionInfoType;
+static uint32 Reflect( uint32 data, uint8 bit_count );
 
 uint8 Crc_CalculateCRC8( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_StartValue8, boolean Crc_IsFirstCall )
 {
@@ -136,7 +129,7 @@ void Crc_GetVersionInfo( Std_VersionInfoType *Versioninfo )
 /*
 Auxiliary function in future implementations.
 */
-uint32 Reflect( uint32 data, uint8 bit_count )
+static uint32 Reflect( uint32 data, uint8 bit_count )
 {
     uint32 reflection = 0;
     for( uint8 bit = 0; bit < bit_count; bit++ )
