@@ -5,8 +5,7 @@ void CDD_Nvic_SetPriority( Nvic_IrqType irq, uint32 priority )
 {
     if( ( (uint32)irq >= NVIC_MIN_IRQ ) && ( (uint32)irq <= NVIC_MAX_IRQ ) )
     {
-        NVIC->IP[ _IP_IDX( irq ) ] &= ~( 0xFFU << _BIT_SHIFT( irq ) );          
-        NVIC->IP[ _IP_IDX( irq ) ] |= ( priority & 0xFFU ) << _BIT_SHIFT( irq ); 
+        Bfx_PutBitsMask_u32u32u32( &NVIC->IP[ _IP_IDX( irq ) ], ( priority & 0xFFU ) << _BIT_SHIFT( irq ), 0xFFU << _BIT_SHIFT( irq ) );
     }
 }
 
@@ -15,7 +14,7 @@ uint32 CDD_Nvic_GetPriority( Nvic_IrqType irq )
     uint32 priority;
     if( ( (uint32)( irq ) ) >= NVIC_MIN_IRQ && ( (uint32)( irq ) <= NVIC_MAX_IRQ ) )
     {
-        priority = ( NVIC->IP[ _IP_IDX( irq ) ] >> _BIT_SHIFT( irq ) ) & 0xFFU;
+        priority = Bfx_GetBits_u32u8u8_u32( NVIC->IP[ _IP_IDX( irq ) ], _BIT_SHIFT( irq ), 8 );
     }
     else
     {
@@ -28,7 +27,7 @@ void CDD_Nvic_EnableIrq( Nvic_IrqType irq )
 {
     if( ( (uint32)( irq ) ) >= NVIC_MIN_IRQ && ( (uint32)( irq ) <= NVIC_MAX_IRQ ) )
     {
-        NVIC->ISER[ 0U ] = (uint32)( 1UL << ( ( (uint32)irq ) & 0x1FUL ) );
+        Bfx_SetBit_u32u8( &NVIC->ISER[ 0U ], ( (uint32)irq ) & 0x1FUL );
     }
 }
 
@@ -36,7 +35,7 @@ void CDD_Nvic_DisableIrq( Nvic_IrqType irq )
 {
     if( ( (uint32)( irq ) ) >= NVIC_MIN_IRQ && ( (uint32)( irq ) <= NVIC_MAX_IRQ ) )
     {
-        NVIC->ICER[ 0U ] = (uint32)( 1UL << ( ( (uint32)irq ) & 0x1FUL ) );
+        Bfx_PutBit_u32u8u8( &NVIC->ICER[ 0U ], ( (uint32)irq ) & 0x1FUL, TRUE );
     }
 }
 
@@ -45,8 +44,8 @@ uint32 CDD_Nvic_GetPendingIrq( Nvic_IrqType irq )
     uint32 pending;
     if( ( (uint32)irq >= NVIC_MIN_IRQ ) && ( (uint32)irq <= NVIC_MAX_IRQ ) )
     {
-        
-        if( ( NVIC->ISPR[ 0U ] & ( 1UL << ( ( (uint32)irq ) & 0x1FUL ) ) ) != 0UL )
+
+        if( ( Bfx_GetBit_u32u8_u8( &NVIC->ISPR[ 0U ], ( (uint32)irq ) & 0x1FUL ) ) )
         {
             pending = 1UL;
         }
@@ -55,7 +54,8 @@ uint32 CDD_Nvic_GetPendingIrq( Nvic_IrqType irq )
             pending = 0UL;
         }
     }
-    else{
+    else
+    {
         pending = 0UL;
     }
     return pending;
@@ -65,7 +65,7 @@ void CDD_Nvic_SetPendingIrq( Nvic_IrqType irq )
 {
     if( ( (uint32)irq >= NVIC_MIN_IRQ ) && ( (uint32)irq <= NVIC_MAX_IRQ ) )
     {
-        NVIC->ISPR[ 0U ] |= (uint32)(1UL << (((uint32)irq) & 0x1FUL));
+        Bfx_SetBit_u32u8( &NVIC->ISPR[ 0U ], ( (uint32)irq ) & 0x1FUL );
     }
 }
 
@@ -73,6 +73,6 @@ void CDD_Nvic_ClearPendingIrq( Nvic_IrqType irq )
 {
     if( ( (uint32)( irq ) ) >= NVIC_MIN_IRQ && ( (uint32)( irq ) <= NVIC_MAX_IRQ ) )
     {
-         NVIC->ICPR[0U] = (uint32)(1UL << (((uint32)irq) & 0x1FUL));
+        Bfx_PutBit_u32u8u8( &NVIC->ICPR[ 0U ], ( (uint32)irq ) & 0x1FUL, TRUE );
     }
 }
