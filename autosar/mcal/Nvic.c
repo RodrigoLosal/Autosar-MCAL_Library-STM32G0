@@ -1,5 +1,6 @@
-#include "Nvic.h"
 #include "Registers.h"
+#include "Nvic.h"
+
 
 void CDD_Nvic_SetPriority( Nvic_IrqType irq, uint32 priority )
 {
