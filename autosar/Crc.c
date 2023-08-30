@@ -1,24 +1,22 @@
 #include "Crc.h"
-#include <stdio.h>
-#include <stdint.h>
 
 uint8 Crc_CalculateCRC8( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_StartValue8, boolean Crc_IsFirstCall )
 {
-    const uint8 Crc_Polynomial = 0x1D;
+    const uint8 Crc_Polynomial = CRC8;
     uint8 crcValue             = Crc_StartValue8;
 
     if( Crc_IsFirstCall )
     {
-        crcValue = 0xFF;
+        crcValue = FIRSTCALLCRC8;
     }
 
     for( uint32 i = 0; i < Crc_Length; i++ )
     {
         crcValue ^= Crc_DataPtr[ i ];
 
-        for( uint8 bit = 0; bit < 8; bit++ )
+        for( uint8 bit = 0; bit < CRC8NBITS; bit++ )
         {
-            if( crcValue & 0x80 )
+            if( crcValue & CRC8MSB )
             {
                 crcValue = ( crcValue << 1 ) ^ Crc_Polynomial;
             }
@@ -34,21 +32,21 @@ uint8 Crc_CalculateCRC8( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_
 
 uint8 Crc_CalculateCRC8H2F( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_StartValue8H2F, boolean Crc_IsFirstCall )
 {
-    const uint8 Crc_Polynomial = 0x2F;
+    const uint8 Crc_Polynomial = CRC8H2F;
     uint8 crcValue             = Crc_StartValue8H2F;
 
     if( Crc_IsFirstCall )
     {
-        crcValue = 0xFF;
+        crcValue = FIRSTCALLCRC8H2F;
     }
 
     for( uint32 i = 0; i < Crc_Length; i++ )
     {
         crcValue ^= Crc_DataPtr[ i ];
 
-        for( uint8 bit = 0; bit < 8; bit++ )
+        for( uint8 bit = 0; bit < CRC8H2FNBITS; bit++ )
         {
-            if( crcValue & 0x80 )
+            if( crcValue & CRC8H2NMSB )
             {
                 crcValue = ( crcValue << 1 ) ^ Crc_Polynomial;
             }
@@ -64,21 +62,21 @@ uint8 Crc_CalculateCRC8H2F( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 C
 
 uint16 Crc_CalculateCRC16( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 Crc_StartValue16, boolean Crc_IsFirstCall )
 {
-    const uint16 Crc_Polynomial = 0x1021;
+    const uint16 Crc_Polynomial = CRC16;
     uint16 crcValue             = Crc_StartValue16;
 
     if( Crc_IsFirstCall )
     {
-        crcValue = 0xFFFF;
+        crcValue = FIRSTCALLCRC16;
     }
 
     for( uint32 i = 0; i < Crc_Length; i++ )
     {
-        crcValue ^= (uint16)Crc_DataPtr[ i ] << 8;
+        crcValue ^= (uint16)Crc_DataPtr[ i ] << CRC16_8LEFT;
 
-        for( uint8 bit = 0; bit < 8; bit++ )
+        for( uint8 bit = 0; bit < CRC16NBITS; bit++ )
         {
-            if( crcValue & 0x8000 )
+            if( crcValue & CRC16MSB )
             {
                 crcValue = ( crcValue << 1 ) ^ Crc_Polynomial;
             }
@@ -97,7 +95,7 @@ uint32 Reflect( uint32 data, uint8 bit_count )
     uint32 reflection = 0;
     for( uint8 bit = 0; bit < bit_count; bit++ )
     {
-        if( data & 0x01 )
+        if( data & REFLECTLSB )
         {
             reflection |= ( 1 << ( ( bit_count - 1 ) - bit ) );
         }
