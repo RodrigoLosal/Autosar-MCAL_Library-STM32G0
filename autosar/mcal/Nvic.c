@@ -12,7 +12,6 @@ void CDD_Nvic_SetPriority( Nvic_IrqType irq, uint32 priority )
     }
 }
 
-
 uint32 CDD_Nvic_GetPriority( Nvic_IrqType irq )
 {
     uint32 priority;
@@ -68,7 +67,7 @@ void CDD_Nvic_SetPendingIrq( Nvic_IrqType irq )
 {
     if( ( (uint32)irq >= 16 ) && ( (uint32)irq <= 30 ) )
     {
-        NVIC->ISPR[ 0U ] |= (uint32)(1UL << (((uint32)IRQn) & 0x1FUL));
+        NVIC->ISPR[ 0U ] |= (uint32)(1UL << (((uint32)irq) & 0x1FUL));
     }
 }
 
