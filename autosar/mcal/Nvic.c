@@ -9,6 +9,9 @@
 #define IRQ_MASK          0x1FUL
 #define FIRST_INDEX       0U
 #define BYTE_MASK         0xFFU
+#define IRQ_PENDING       1UL
+#define IRQ_NOT_PENDING   0UL
+#define INVALID_PRIORITY  0xFFU
 
 void CDD_Nvic_SetPriority( Nvic_IrqType irq, uint32 priority )
 {
@@ -27,7 +30,7 @@ uint32 CDD_Nvic_GetPriority( Nvic_IrqType irq )
     }
     else
     {
-        priority = 0xFFU;
+        priority = INVALID_PRIORITY;
     }
     return priority;
 }
@@ -56,16 +59,16 @@ uint32 CDD_Nvic_GetPendingIrq( Nvic_IrqType irq )
 
         if( ( Bfx_GetBit_u32u8_u8( &NVIC->ISPR[ FIRST_INDEX ], ( (uint32)irq ) & IRQ_MASK ) ) )
         {
-            pending = 1UL;
+            pending = IRQ_PENDING;
         }
         else
         {
-            pending = 0UL;
+            pending = IRQ_NOT_PENDING;
         }
     }
     else
     {
-        pending = 0UL;
+        pending = IRQ_NOT_PENDING;
     }
     return pending;
 }
