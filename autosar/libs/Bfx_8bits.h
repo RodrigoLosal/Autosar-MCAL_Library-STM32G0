@@ -340,8 +340,6 @@ static inline void Bfx_CopyBit_u8u8u8u8( uint8 *DestinationData, uint8 Destinati
     {
         *DestinationData = *DestinationData | ( 0x01 << DestinationPosition );
     }
-    Result = Result >> 1;
-    return Result;
 }
 
 /**
@@ -451,7 +449,7 @@ static inline uint8 Bfx_CountLeadingSigns_s8( sint8 Data )
     uint8 Count = 0;
     uint8 Mask  = 0x80;
 
-    if ( Data >= 0 )
+    if( Data >= 0 )
     {
         while( ( Data & Mask ) == 0 )
         {
