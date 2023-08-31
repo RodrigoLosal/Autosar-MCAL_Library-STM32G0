@@ -219,11 +219,11 @@ static inline sint32 Bfx_ShiftBitSat_s32s8_s32( sint8 ShiftCnt, sint32 Data )
         Data <<= ShiftCnt;
         if( ( DataIsNegative == FALSE ) && ( Data < 0 ) )
         {
-            Data = 2147483647;
+            Data = 0x7FFFFFFF;
         }
         else if( ( DataIsNegative == TRUE ) && ( Data >= 0 ) )
         {
-            Data = -2147483648;
+            Data = 0xFFFFFFFF;
         }
     }
     else
