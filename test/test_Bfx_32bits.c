@@ -6,7 +6,6 @@
  * operations on 32-bit values. The unit testing file contains multiple test cases and assertions to
  * verify if the library functions work as expected.
  */
-
 #include "unity.h"
 #include "Bfx_32bits.h"
 
@@ -611,4 +610,56 @@ void test__CountLeadingSigns_s32__3zeros( void )
     sint32 Data  = 0x08000000;
     uint8 Result = Bfx_CountLeadingSigns_s32( Data );
     TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0x03, "There are no 3 zeros after de MSB" );
+}
+
+/**
+ * @brief   **Test Shift Bit Sat (signed) - Arithmetical shift**
+ *
+ * The test validates if the value in Data = 0xFFFF0000 had a correct arithmetic shift when
+ * ShiftCnt = -4 resulting in 0xFFFFFFFF
+ */
+void test__Bfx_ShiftBitSat_s32s8_s32__arithshift( void )
+{
+    sint32 Data   = 0xFFFF0000; // 1111 0000
+    sint32 Result = Bfx_ShiftBitSat_s32s8_s32( -16, Data );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0xFFFFFFFF, "The arithmetic shift wasn't performed correctly" );
+}
+
+/**
+ * @brief   **Test Shift Bit Sat (signed) - Saturation**
+ *
+ * The test validates if the value in Data = 0x55AA55AA had a correct saturation when
+ * ShiftCnt = 3 resulting in 0x7FFFFFFF
+ */
+void test__Bfx_ShiftBitSat_s32s8_s32__saturation( void )
+{
+    sint32 Data   = 0x55AA55AA; // 0101 0101
+    sint32 Result = Bfx_ShiftBitSat_s32s8_s32( 3, Data );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0x7FFFFFFF, "The saturation wasn't performed correctly" );
+}
+
+/**
+ * @brief   **Test Shift Bit Sat (unsigned) - Saturation**
+ *
+ * The test validates if the value in Data = 0x2A2A2A2A had a correct saturation when
+ * ShiftCnt = 3 resulting in 0xFFFFFFFF
+ */
+void test__Bfx_ShiftBitSat_u32s8_u32__saturation( void )
+{
+    sint32 Data   = 0x2A2A2A2A; // 0010 1010
+    sint32 Result = Bfx_ShiftBitSat_u32s8_u32( 3, Data );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0xFFFFFFFF, "The saturation wasn't performed correctly" );
+}
+
+/**
+ * @brief   **Test Shift Bit Sat (unsigned) - No saturation**
+ *
+ * The test validates if the value in Data = 0x2A2A2A2A had a correct left shift when
+ * ShiftCnt = 2 resulting in 0xA8A8A8A8
+ */
+void test__Bfx_ShiftBitSat_u32s8_u32__nosaturation( void )
+{
+    sint32 Data   = 0x2A2A2A2A; // 0010 1010
+    sint32 Result = Bfx_ShiftBitSat_u32s8_u32( 2, Data );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0xA8A8A8A8, "The left shift wasn't performed correctly" );
 }

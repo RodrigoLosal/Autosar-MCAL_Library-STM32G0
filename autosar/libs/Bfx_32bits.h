@@ -208,3 +208,69 @@ static inline uint8 Bfx_CountLeadingSigns_s32( sint32 Data )
     Data = Count - 1;
     return Data;
 }
+
+static inline sint32 Bfx_ShiftBitSat_s32s8_s32( sint8 ShiftCnt, sint32 Data )
+{
+    uint32 Mask            = 0x80000000;
+    boolean DataIsNegative = ( Data < 0 );
+
+    if( ShiftCnt >= 0 )
+    {
+        Data <<= ShiftCnt;
+        if( ( DataIsNegative == FALSE ) && ( Data < 0 ) )
+        {
+            Data = 2147483647;
+        }
+        else if( ( DataIsNegative == TRUE ) && ( Data >= 0 ) )
+        {
+            Data = -2147483648;
+        }
+    }
+    else
+    {
+        ShiftCnt *= -1;
+        if( Data > 0 )
+        {
+            Data >>= ShiftCnt;
+        }
+        else
+        {
+            Data >>= ShiftCnt;
+            for( uint8 i = 0; i < ShiftCnt; i++ )
+            {
+                Data |= Mask;
+                Mask >>= 1;
+            }
+        }
+    }
+    return Data;
+}
+
+static inline uint32 Bfx_ShiftBitSat_u32s8_u32( sint8 ShiftCnt, uint32 Data )
+{
+    uint32 Mask        = 0x80000000;
+    uint8 MaxShiftLeft = 0;
+
+    while( ( Data & Mask ) == 0 )
+    {
+        MaxShiftLeft++;
+        Mask >>= 1;
+    }
+    if( ShiftCnt >= 0 )
+    {
+        if( ShiftCnt > MaxShiftLeft )
+        {
+            Data = 0xFFFFFFFF;
+        }
+        else
+        {
+            Data <<= ShiftCnt;
+        }
+    }
+    else
+    {
+        ShiftCnt *= -1;
+        Data >>= ShiftCnt;
+    }
+    return Data;
+}
