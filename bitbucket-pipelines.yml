@@ -1,0 +1,46 @@
+pipelines:
+  branches:
+    master:
+      - step:
+          name: Deploy to production
+          deployment: production
+          runs-on:
+          - self.hosted
+          - linux.shell
+          script:
+            - make
+            - make test
+            - make docs
+          artifacts:
+            - Build/temp.*
+      - step:
+          script:
+            - pipe: atlassian/bitbucket-upload-file:0.3.3
+              variables:
+                BITBUCKET_USERNAME: $BITBUCKET_USERNAME
+                BITBUCKET_APP_PASSWORD: $BITBUCKET_APP_PASSWORD
+                FILENAME: "Build/temp.*"
+                
+  pull-requests:
+    '**':
+    - step:
+        name: Build
+        runs-on:
+          - self.hosted
+          - linux.shell
+        script:
+          - make clean && make
+    - step:
+        name: Testing
+        runs-on:
+          - self.hosted
+          - linux.shell
+        script:
+          - make test
+    - step:
+        name: Documentation
+        runs-on:
+          - self.hosted
+          - linux.shell
+        script:
+          - make docs
