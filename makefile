@@ -2,7 +2,7 @@
 TARGET = mcal
 
 #---Files to compile
-SRCS = main.c startup.c
+SRCS = main.c startup.c Nvic.c
 
 #---Linker script
 LINKER = linker.ld
@@ -16,8 +16,8 @@ SRC_PATHS += cfg
 INC_PATHS  = .
 INC_PATHS += autosar
 INC_PATHS += autosar/libs
-INC_PATHS += autosar/regs
 INC_PATHS += autosar/mcal
+INC_PATHS += autosar/mcal/regs
 INC_PATHS += cfg
 
 #---Set toolchain
