@@ -340,6 +340,8 @@ static inline void Bfx_CopyBit_u8u8u8u8( uint8 *DestinationData, uint8 Destinati
     {
         *DestinationData = *DestinationData | ( 0x01 << DestinationPosition );
     }
+    Result = Result >> 1;
+    return Result;
 }
 
 /**
