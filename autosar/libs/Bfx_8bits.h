@@ -228,7 +228,7 @@ static inline boolean Bfx_TstParityEven_u8_u8( uint8 Data )
  */
 static inline void Bfx_ToggleBits_u8( uint8 *Data )
 {
-    *Data ^= *Data;
+    *Data = ~*Data;
 }
 
 /**
