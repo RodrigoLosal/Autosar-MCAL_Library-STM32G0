@@ -157,6 +157,7 @@ static inline void Bfx_ClrBitMask_u32u32( uint32 *Data, uint32 Mask )
 static inline boolean Bfx_TstBitMask_u32u32_u8( uint32 Data, uint32 Mask )
 {
     boolean Result;
+
     Result = ( Data & Mask ) == Mask;
     return Result;
 }
@@ -177,6 +178,7 @@ static inline boolean Bfx_TstBitMask_u32u32_u8( uint32 Data, uint32 Mask )
 static inline boolean Bfx_TstBitLnMask_u32u32_u8( uint32 Data, uint32 Mask )
 {
     boolean Result;
+    
     Result = ( Data & Mask ) > 0;
     return Result;
 }
