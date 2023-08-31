@@ -449,7 +449,11 @@ static inline uint8 Bfx_CountLeadingOnes_u8( uint8 Data )
 static inline uint8 Bfx_CountLeadingSigns_s8( sint8 Data )
 {
     uint8 Count = 0;
+<<<<<<< HEAD
     uint8 Mask  = 0x80;
+=======
+    sint8 Mask = 0x80;
+>>>>>>> 08d3bb4 (Bfx_8bits-implementarion. New comments resolved.)
 
     if( Data >= 0 )
     {
