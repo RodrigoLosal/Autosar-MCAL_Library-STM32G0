@@ -19,11 +19,7 @@ void setUp( void )
 {
 }
 
-/**
- * @brief   **tearDown**
- *
- * This function is required by Ceedling to run any code before the test cases.
- */
+/*this function is required by Ceedling to run any code after the test cases*/
 void tearDown( void )
 {
 }
@@ -597,7 +593,7 @@ void test__CountLeadingSigns_s8__2zeros( void )
  *
  * The test validates if function counts 6 zeros from left to right
  */
-void test__Bfx_CountLeadingZeros_u8__6zeros( void )
+void test__Bfx_CountLeadingZeros_u8__6ceros( void )
 {
     uint8 Data   = 0x03;
     uint8 Result = Bfx_CountLeadingZeros_u8( Data );
@@ -609,7 +605,7 @@ void test__Bfx_CountLeadingZeros_u8__6zeros( void )
  *
  * The test validates if function counts 1 zero from left to right
  */
-void test__Bfx_CountLeadingZeros_u8__1zero( void )
+void test__Bfx_CountLeadingZeros_u8__1ceros( void )
 {
     uint8 Data   = 0x40;
     uint8 Result = Bfx_CountLeadingZeros_u8( Data );
