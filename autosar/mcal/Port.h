@@ -1,8 +1,6 @@
 #ifndef PORT_H__
 #define PORT_H__
 
-#include "Std_Types.h"
-
 typedef struct _Port_ConfigType
 {
     uint8 Port;          /*!<Port where the pin to config is grouped*/
