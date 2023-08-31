@@ -641,7 +641,7 @@ void test__Bfx_ShiftBitSat_s32s8_s32__saturation( void )
 /**
  * @brief   **Test Shift Bit Sat (signed) - Saturation negative**
  *
- * The test validates if the value in Data = 0x55AA55AA had a correct saturation when
+ * The test validates if the value in Data = 0xAA55AA55 had a correct saturation when
  * ShiftCnt = 3 resulting in 0xFFFFFFFF
  */
 void test__Bfx_ShiftBitSat_s32s8_s32__saturationneg( void )
@@ -654,8 +654,8 @@ void test__Bfx_ShiftBitSat_s32s8_s32__saturationneg( void )
 /**
  * @brief   **Test Shift Bit Sat (signed) - Positive data - Negative shift**
  *
- * The test validates if the value in Data = 0xFFFF0000 had a correct arithmetic shift when
- * ShiftCnt = -4 resulting in 0xFFFFFFFF
+ * The test validates if the value in Data = 0x7FFF0000 had a correct arithmetic shift when
+ * ShiftCnt = -16 resulting in 0x00007FFF
  */
 void test__Bfx_ShiftBitSat_s32s8_s32__DataPos_ShiftNeg( void )
 {
@@ -694,7 +694,7 @@ void test__Bfx_ShiftBitSat_u32s8_u32__nosaturation( void )
  * @brief   **Test Shift Bit Sat (unsigned) - Shift negative**
  *
  * The test validates if the value in Data = 0x2A2A2A2A had a correct left shift when
- * ShiftCnt = 2 resulting in 0xA8A8A8A8
+ * ShiftCnt = -2 resulting in 0x08A8A8A8
  */
 void test__Bfx_ShiftBitSat_u32s8_u32__shiftNeg( void )
 {
