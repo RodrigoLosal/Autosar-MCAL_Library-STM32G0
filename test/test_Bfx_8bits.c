@@ -10,12 +10,20 @@
 #include "unity.h"
 #include "Bfx_8bits.h"
 
-/*this function is required by Ceedling to run any code before the test cases*/
+/**
+ * @brief   **setUp**
+ *
+ * This function is required by Ceedling to run any code before the test cases.
+ */
 void setUp( void )
 {
 }
 
-/*this function is required by Ceedling to run any code after the test cases*/
+/**
+ * @brief   **tearDown**
+ *
+ * This function is required by Ceedling to run any code before the test cases.
+ */
 void tearDown( void )
 {
 }
