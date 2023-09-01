@@ -5,7 +5,6 @@
 #include "Port.h"
 
 uint16 port_direction_change[ 6 ];
-uint32 port_moder[ 6 ] = { 0xEBFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 void Port_Init( const Port_ConfigType *ConfigPtr )
 {
@@ -28,34 +27,26 @@ void Port_Init( const Port_ConfigType *ConfigPtr )
         if( Bfx_TstBitLnMask_u32u32_u8( ConfigPtr->Pins, mask ) == TRUE )
         {
             /*change values on PUPDR*/
-            Bfx_ClrBitMask_u32u32( (uint32 *)&port->PUPDR, ( 0x03 << ( i * 2 ) ) );
-            Bfx_SetBitMask_u32u32( (uint32 *)&port->PUPDR, ( (uint32)ConfigPtr->Pull << ( i * 2 ) ) );
+            Bfx_PutBits_u32u8u8u32( (uint32 *)&port->PUPDR, (uint8)(i*2u) , (uint8) 2u, (uint32)ConfigPtr->Pull);
 
             /*change values on OTYPER*/
-            Bfx_ClrBitMask_u32u32( (uint32 *)&port->OTYPER, ( 0x01 << ( i ) ) );
-            Bfx_SetBitMask_u32u32( (uint32 *)&port->OTYPER, ( (uint32)ConfigPtr->OutputDrive << ( i ) ) );
+            Bfx_PutBits_u32u8u8u32( (uint32 *)&port->OTYPER, i, 1, (uint32)ConfigPtr->OutputDrive );
 
             /*change values on OSPEEDR*/
-            Bfx_ClrBitMask_u32u32( (uint32 *)&port->OSPEEDR, ( 0x03 << ( i * 2 ) ) );
-            Bfx_SetBitMask_u32u32( (uint32 *)&port->OSPEEDR, ( (uint32)ConfigPtr->Speed << ( i * 2 ) ) );
+            Bfx_PutBits_u32u8u8u32( (uint32 *)&port->OSPEEDR, ( i * 2 ), 2, (uint32)ConfigPtr->Speed );
 
             /*change values on MODER*/
-            Bfx_ClrBitMask_u32u32( (uint32 *)&port->MODER, ( 0x03 << ( i * 2 ) ) );
-            Bfx_SetBitMask_u32u32( (uint32 *)&port->MODER, ( (uint32)ConfigPtr->Mode << ( i * 2 ) ) );
-            Bfx_ClrBitMask_u32u32( &port_moder[ ConfigPtr->Port ], ( 0x03 << ( i * 2 ) ) );
-            Bfx_SetBitMask_u32u32( &port_moder[ ConfigPtr->Port ], ( (uint32)ConfigPtr->Mode << ( i * 2 ) ) );
+            Bfx_PutBits_u32u8u8u32( (uint32 *)&port->MODER, ( i * 2 ), 2 , (uint32)ConfigPtr->Mode);
 
             if( i < 8u )
             {
                 /*change values on Altern*/
-                Bfx_ClrBitMask_u32u32( (uint32 *)&port->AFRL, ( 0x0F << ( i * 4 ) ) );
-                Bfx_SetBitMask_u32u32( (uint32 *)&port->AFRL, ( (uint32)ConfigPtr->Altern << ( i * 4 ) ) );
+                Bfx_PutBits_u32u8u8u32( (uint32 *)&port->AFRL, ( i * 4 ), 4, (uint32)ConfigPtr->Altern );
             }
             else
             {
                 /*change values on Altern*/
-                Bfx_ClrBitMask_u32u32( (uint32 *)&port->AFRH, ( 0x0F << ( i * 4 ) ) );
-                Bfx_SetBitMask_u32u32( (uint32 *)&port->AFRH, ( (uint32)ConfigPtr->Altern << ( i * 4 ) ) );
+                Bfx_PutBits_u32u8u8u32( (uint32 *)&port->AFRH, (i-8) * 4, 4, (uint32)ConfigPtr->Altern );
             }
         }
         mask = mask << 1;
@@ -70,23 +61,8 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
     Port_RegisterType *ports[ 6 ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
     port                          = ports[ Pin >> 4 ];
 
-    if( ( port_direction_change[ Pin >> 4 ] & ( 1 << ( Pin & 0xFu ) ) ) != 0u )
-    {
-        switch( Direction )
-        {
-            case PORT_PIN_IN:
-                /*change values on MODER*/
-                Bfx_ClrBitMask_u32u32( (uint32 *)&port->MODER, ( 0x03 << ( ( Pin & 0xFu ) * 2 ) ) );
-                Bfx_SetBitMask_u32u32( (uint32 *)&port->MODER, ( PORT_PIN_IN << ( ( Pin & 0xFu ) * 2 ) ) );
-                break;
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&port->MODER, (uint8)(Pin & 0xFu), 2, (uint8)Direction );
 
-            case PORT_PIN_OUT:
-                /*change values on MODER*/
-                Bfx_ClrBitMask_u32u32( (uint32 *)&port->MODER, ( 0x03 << ( ( Pin & 0xFu ) * 2 ) ) );
-                Bfx_SetBitMask_u32u32( (uint32 *)&port->MODER, ( PORT_PIN_OUT << ( ( Pin & 0xFu ) * 2 ) ) );
-                break;
-        }
-    }
 }
 
 void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
@@ -99,14 +75,12 @@ void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
     if( ( Pin & 0xFu ) < 8u )
     {
         /*change values on Altern*/
-        Bfx_ClrBitMask_u32u32( (uint32 *)&port->AFRL, ( 0x0F << ( ( Pin & 0xFu ) * 4 ) ) );
-        Bfx_SetBitMask_u32u32( (uint32 *)&port->AFRL, ( Mode << ( ( Pin & 0xFu ) * 4 ) ) );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&port->AFRL, ( Pin & 0xFu ), 4, (uint32) Mode );
     }
     else
     {
         /*change values on Altern*/
-        Bfx_ClrBitMask_u32u32( (uint32 *)&port->AFRH, ( 0x0F << ( ( Pin & 0xFu ) * 4 ) ) );
-        Bfx_SetBitMask_u32u32( (uint32 *)&port->AFRH, ( Mode << ( ( Pin & 0xFu ) * 4 ) ) );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&port->AFRH, ( (Pin & 0xFu)-8 ), 4, (uint32) Mode );
     }
 }
 
