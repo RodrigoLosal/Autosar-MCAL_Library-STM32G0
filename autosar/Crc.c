@@ -25,6 +25,10 @@
 #define CRC_32BIT_XORVALUE 0xFFFFFFFF
 #define CRC_32BIT_LSB 0x00000001u
 
+#define CRC_CRC32P4_POLYNOMIAL_REFLECTED (uint32) 0xC8DF352F
+#define CRC_32BITP4_XORVALUE 0xFFFFFFFF
+#define CRC_32BITP4_LSB 0x00000001u
+
 #define REFLECTLSB                        0x01
 
 #define VENDOR_ID                         0x0000
@@ -196,6 +200,42 @@ uint32 Crc_CalculateCRC32 (const uint8* Crc_DataPtr, uint32 Crc_Length, uint32 C
             Crc_DataPtr++;
         }
         crcValue ^= CRC_32BIT_XORVALUE;
+    }
+    return crcValue;
+}
+
+uint32 Crc_CalculateCRC32P4 (const uint8* Crc_DataPtr, uint32 Crc_Length, uint32 Crc_StartValue32, boolean Crc_IsFirstCall)
+{
+    uint8 i;
+    uint32 crcValue;
+    crcValue = Crc_StartValue32;
+    if(Crc_Length != 0)
+    {
+        if(Crc_IsFirstCall)
+        {
+            crcValue = CRC_32BITP4_XORVALUE;
+        }
+        else
+        {
+            crcValue ^= CRC_32BITP4_XORVALUE;
+        }
+        for(uint32 i = Crc_Length; i != 0; i--)
+        {
+            crcValue ^= (uint32) *Crc_DataPtr;
+            for(i = 0; i < 8; i++)
+            {
+                if((crcValue & CRC_32BITP4_LSB) != 0u)
+                {
+                    crcValue = (crcValue >> 1) ^ CRC_CRC32P4_POLYNOMIAL_REFLECTED;
+                }
+                else
+                {
+                    crcValue >>= 1;
+                }
+            }
+            Crc_DataPtr++;
+        }
+        crcValue ^= CRC_32BITP4_XORVALUE;
     }
     return crcValue;
 }
