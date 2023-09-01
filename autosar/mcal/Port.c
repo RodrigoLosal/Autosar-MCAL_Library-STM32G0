@@ -1,6 +1,7 @@
 #include "Bfx.h"
 #include "Std_Types.h"
-#include "Register.h"
+#include "Port_Cfg.h"
+#include "Registers.h"
 #include "Port.h"
 
 uint16 port_direction_change[ 6 ];
