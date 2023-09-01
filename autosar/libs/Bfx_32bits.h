@@ -53,7 +53,7 @@ static inline void Bfx_ClrBitMask_u32u32( uint32 *Data, uint32 Mask )
 static inline boolean Bfx_TstBitMask_u32u32_u8( uint32 Data, uint32 Mask )
 {
     boolean Result;
-
+    
     Result = ( Data & Mask ) == Mask;
     return Result;
 }
@@ -128,7 +128,7 @@ static inline void Bfx_CopyBit_u32u8u32u8( uint32 *DestinationData, uint8 Destin
 static inline void Bfx_PutBits_u32u8u8u32( uint32 *Data, uint8 BitStartPn, uint8 BitLn, uint32 Pattern )
 {
     uint32 Mask = ( ( 1u << BitLn ) - 1u ) << BitStartPn;
-    *Data       = ( *Data & ~Mask ) | ( ( Pattern << BitStartPn ) & Mask );
+    *Data      = ( *Data & ~Mask ) | ( ( Pattern << BitStartPn ) & Mask );
 }
 
 static inline void Bfx_PutBitsMask_u32u32u32( uint32 *Data, uint32 Pattern, uint32 Mask )
@@ -206,5 +206,71 @@ static inline uint8 Bfx_CountLeadingSigns_s32( sint32 Data )
         }
     }
     Data = Count - 1;
+    return Data;
+}
+
+static inline sint32 Bfx_ShiftBitSat_s32s8_s32( sint8 ShiftCnt, sint32 Data )
+{
+    uint32 Mask            = 0x80000000;
+    boolean DataIsNegative = ( Data < 0 );
+
+    if( ShiftCnt >= 0 )
+    {
+        Data <<= ShiftCnt;
+        if( ( DataIsNegative == FALSE ) && ( Data < 0 ) )
+        {
+            Data = 0x7FFFFFFF;
+        }
+        else if( ( DataIsNegative == TRUE ) && ( Data >= 0 ) )
+        {
+            Data = 0xFFFFFFFF;
+        }
+    }
+    else
+    {
+        ShiftCnt *= -1;
+        if( Data > 0 )
+        {
+            Data >>= ShiftCnt;
+        }
+        else
+        {
+            Data >>= ShiftCnt;
+            for( uint8 i = 0; i < ShiftCnt; i++ )
+            {
+                Data |= Mask;
+                Mask >>= 1;
+            }
+        }
+    }
+    return Data;
+}
+
+static inline uint32 Bfx_ShiftBitSat_u32s8_u32( sint8 ShiftCnt, uint32 Data )
+{
+    uint32 Mask        = 0x80000000;
+    uint8 MaxShiftLeft = 0;
+
+    while( ( Data & Mask ) == 0 )
+    {
+        MaxShiftLeft++;
+        Mask >>= 1;
+    }
+    if( ShiftCnt >= 0 )
+    {
+        if( ShiftCnt > MaxShiftLeft )
+        {
+            Data = 0xFFFFFFFF;
+        }
+        else
+        {
+            Data <<= ShiftCnt;
+        }
+    }
+    else
+    {
+        ShiftCnt *= -1;
+        Data >>= ShiftCnt;
+    }
     return Data;
 }
