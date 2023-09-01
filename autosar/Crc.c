@@ -29,6 +29,10 @@
 #define CRC_32BITP4_XORVALUE 0xFFFFFFFF
 #define CRC_32BITP4_LSB 0x00000001u
 
+#define CRC_CRC64_POLYNOMIAL_REFLECTED (uint64)  0xC96C5795D7870F42
+#define CRC_64BIT_XORVALUE 0xFFFFFFFFFFFFFFFF
+#define CRC_64BIT_LSB 0x0000000000000001UL
+
 #define REFLECTLSB                        0x01
 
 #define VENDOR_ID                         0x0000
@@ -36,8 +40,6 @@
 #define CRC_SW_MAJOR_VERSION              0
 #define CRC_SW_MINOR_VERSION              0
 #define CRC_SW_PATCH_VERSION              0
-
-static uint32 Reflect( uint32 data, uint8 bit_count );
 
 uint8 Crc_CalculateCRC8( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_StartValue8, boolean Crc_IsFirstCall )
 {
@@ -165,7 +167,7 @@ uint16 Crc_CalculateCRC16ARC(const uint8* Crc_DataPtr, uint32 Crc_Length, uint16
     return crcValue;
 }
 
-uint32 Crc_CalculateCRC32 (const uint8* Crc_DataPtr, uint32 Crc_Length, uint32 Crc_StartValue32, boolean Crc_IsFirstCall)
+uint32 Crc_CalculateCRC32(const uint8* Crc_DataPtr, uint32 Crc_Length, uint32 Crc_StartValue32, boolean Crc_IsFirstCall)
 {
     const uint32 Crc_Polynomial = CRC_32BIT_POLYNOMIAL_REFLECTED; 
     uint32 crcValue = Crc_StartValue32;
@@ -204,7 +206,7 @@ uint32 Crc_CalculateCRC32 (const uint8* Crc_DataPtr, uint32 Crc_Length, uint32 C
     return crcValue;
 }
 
-uint32 Crc_CalculateCRC32P4 (const uint8* Crc_DataPtr, uint32 Crc_Length, uint32 Crc_StartValue32, boolean Crc_IsFirstCall)
+uint32 Crc_CalculateCRC32P4(const uint8* Crc_DataPtr, uint32 Crc_Length, uint32 Crc_StartValue32, boolean Crc_IsFirstCall)
 {
     uint8 i;
     uint32 crcValue;
@@ -240,6 +242,42 @@ uint32 Crc_CalculateCRC32P4 (const uint8* Crc_DataPtr, uint32 Crc_Length, uint32
     return crcValue;
 }
 
+uint64 Crc_CalculateCRC64(const uint8* Crc_DataPtr, uint32 Crc_Length, uint64 Crc_StartValue64, boolean Crc_IsFirstCall)
+{
+    uint8 i;
+    uint64 crcValue;
+    crcValue = Crc_StartValue64;
+    if(Crc_Length != 0)
+    {
+        if(Crc_IsFirstCall)
+        {
+            crcValue = CRC_64BIT_XORVALUE;
+        }
+        else
+        {
+            crcValue ^= CRC_64BIT_XORVALUE;
+        }
+        for(uint32 i = Crc_Length; i != 0; i--)
+        {
+            crcValue ^= (uint64) *Crc_DataPtr;
+            for(i = 0; i < 8; i++)
+            {
+                if((crcValue & CRC_64BIT_LSB) != 0u)
+                {
+                    crcValue = (crcValue >> 1) ^ CRC_CRC64_POLYNOMIAL_REFLECTED;
+                }
+                else
+                {
+                    crcValue >>= 1;
+                }
+            }
+            Crc_DataPtr++;
+        }
+        crcValue ^= CRC_64BIT_XORVALUE;
+    }
+    return crcValue;
+}
+
 void Crc_GetVersionInfo( Std_VersionInfoType *Versioninfo )
 {
     Versioninfo->vendorID         = VENDOR_ID;
@@ -247,21 +285,4 @@ void Crc_GetVersionInfo( Std_VersionInfoType *Versioninfo )
     Versioninfo->sw_major_version = CRC_SW_MAJOR_VERSION;
     Versioninfo->sw_minor_version = CRC_SW_MINOR_VERSION;
     Versioninfo->sw_patch_version = CRC_SW_PATCH_VERSION;
-}
-
-/*
-Auxiliary function in future implementations.
-*/
-static uint32 Reflect( uint32 data, uint8 bit_count )
-{
-    uint32 reflection = 0;
-    for( uint8 bit = 0; bit < bit_count; bit++ )
-    {
-        if( data & REFLECTLSB )
-        {
-            reflection |= ( 1 << ( ( bit_count - 1 ) - bit ) );
-        }
-        data >>= 1;
-    }
-    return reflection;
 }
