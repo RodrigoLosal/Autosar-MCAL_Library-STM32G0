@@ -18,7 +18,7 @@
 #define CRC16MSB                          0x8000
 #define CRC16_8LEFT                       8
 
-#define CRC_CRC16ARC_POLYNOMIAL_REFLECTED (uint16)0xA001
+#define CRC_16BITARC_POLYNOMIAL_REFLECTED (uint16)0xA001
 
 #define REFLECTLSB                        0x01
 
@@ -120,71 +120,40 @@ uint16 Crc_CalculateCRC16( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 C
     return crcValue;
 }
 
-uint16 Crc_CalculateCRC16ARC( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 Crc_StartValue16, boolean Crc_IsFirstCall )
+/*
+New function of 16 bits with data reflected
+*/
+uint16 Crc_CalculateCRC16ARC(const uint8* Crc_DataPtr, uint32 Crc_Length, uint16 Crc_StartValue16, boolean Crc_IsFirstCall)
 {
-    const uint16 Crc_Polynomial = 0xA001;
+    const uint16 Crc_Polynomial = CRC_16BITARC_POLYNOMIAL_REFLECTED;
     uint16 crcValue             = Crc_StartValue16;
+    uint8 bit;
 
-    if( Crc_IsFirstCall )
-    {
-        crcValue = (uint16)0x0000; // Cast (uint16)
-    }
-
-    // for (uint32 i = Crc_Length; i >= 0; i++)
-    for( uint32 i = Crc_Length; i > 0; i-- )
-    {
-        // crcValue ^= Reflect(Crc_DataPtr[i], 8) << 8;
-        crcValue ^= (uint16)*Crc_DataPtr;
-
-        for( uint8 bit = 0; bit < 8; bit++ )
-        {
-            if( crcValue & 0x00001 ) // Change 0x00001
-            {
-                crcValue = ( crcValue >> 1 ) ^ Crc_Polynomial;
-            }
-            else
-            {
-                crcValue >>= 1;
-            }
-        }
-        Crc_DataPtr++;
-    }
-    return crcValue;
-}
-
-uint16 Crc_SwCalculateCRC16ARC( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 Crc_StartValue16, boolean Crc_IsFirstCall )
-{
-    uint8 i;
-    uint16 startValuetemp = Crc_StartValue16;
-
-    if( Crc_Length != 0 )
+    if(Crc_Length != 0)
     {
         if( Crc_IsFirstCall )
         {
-            startValuetemp = (uint16)0x0000;
+            crcValue = (uint16) 0x0000;
         }
-        else
+        for( uint32 i = Crc_Length; i != 0; i-- )
         {
-        }
-        while( Crc_Length != 0 )
-        {
-            startValuetemp ^= (uint16)*Crc_DataPtr;
-            for( i = 0; i < 8; i++ )
+            crcValue ^= (uint16) *Crc_DataPtr;
+
+            for( bit = 0; bit < 8; bit++ )
             {
-                if( ( (startValuetemp)&0x00001 ) != 0 )
+                if( ((crcValue) & 0x00001) != 0 )
                 {
-                    startValuetemp = ( startValuetemp >> 1 ) ^ CRC_CRC16ARC_POLYNOMIAL_REFLECTED;
+                    crcValue = ( crcValue >> 1 ) ^ Crc_Polynomial;
                 }
                 else
                 {
-                    startValuetemp >>= 1;
+                    crcValue >>= 1;
                 }
             }
             Crc_DataPtr++;
-            Crc_Length--;
         }
     }
-    return startValuetemp;
+    return crcValue;
 }
 
 void Crc_GetVersionInfo( Std_VersionInfoType *Versioninfo )
