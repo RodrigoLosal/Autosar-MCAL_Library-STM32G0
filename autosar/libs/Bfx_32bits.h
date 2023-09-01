@@ -545,6 +545,24 @@ static inline uint8 Bfx_CountLeadingSigns_s32( sint32 Data )
     return Data;
 }
 
+/**
+ * @brief   **Arithmetic shift with saturation**
+ *
+ * If the shift count is greater than or equal to zero, then shift the value in Data by the
+ * amount specified by shift count to left.
+ * For this function, arithmetic shift is performed. The vacated bits are filled with zeros
+ * and the result is saturated if its sign bit differs from the sign bits that are shifted out.
+ * If the shift count is less than zero, right-shift the value in Data by the absolute value of
+ * the shift count. The vacated bits are filled with the sign-bit (the most significant bit) and
+ * bits shifted out are discarded.
+ *
+ * @param   ShiftCnt[in] Shift count
+ * @param   Data[in] Signed integer to check
+ *
+ * @retval  Data
+ *
+ * @reqs   SWS_Bfx_91002, SWS_Bfx_00134, SWS_Bfx_00135
+ */
 static inline sint32 Bfx_ShiftBitSat_s32s8_s32( sint8 ShiftCnt, sint32 Data )
 {
     uint32 Mask            = 0x80000000;
@@ -582,6 +600,24 @@ static inline sint32 Bfx_ShiftBitSat_s32s8_s32( sint8 ShiftCnt, sint32 Data )
     return Data;
 }
 
+/**
+ * @brief   **Arithmetic shift with saturation**
+ *
+ * If the shift count is greater than or equal to zero, then shift the value in Data by the
+ * amount specified by shift count to left.
+ * For this function a logical shift is performed. In this case the result is saturated, if the
+ * leading one bit is shifted out.
+ * If the shift count is less than zero, right-shift the value in Data by the absolute value of
+ * the shift count. The vacated bits are filled with the sign-bit (the most significant bit) and
+ * bits shifted out are discarded.
+ *
+ * @param   ShiftCnt[in] Shift count
+ * @param   Data[in] Unsigned integer to check
+ *
+ * @retval  Data
+ *
+ * @reqs   SWS_Bfx_91002, SWS_Bfx_00134, SWS_Bfx_00135
+ */
 static inline uint32 Bfx_ShiftBitSat_u32s8_u32( sint8 ShiftCnt, uint32 Data )
 {
     uint32 Mask        = 0x80000000;
