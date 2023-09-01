@@ -16,10 +16,8 @@
  *
  * @reqs   SWS_Bfx_00001, SWS_Bfx_00002, SWS_Bfx_00008
  *
- * @param   Data[in/out] Unsigned integer to modify
- * @param   BitPn[in] Number of bit to modify
- *
- * @retval  None
+ * @param   Data Unsigned integer to modify
+ * @param   BitPn Number of bit to modify
  *
  */
 static inline void Bfx_SetBit_u32u8( uint32 *Data, uint8 BitPn )
@@ -35,10 +33,8 @@ static inline void Bfx_SetBit_u32u8( uint32 *Data, uint8 BitPn )
  *
  * @reqs   SWS_Bfx_00010, SWS_Bfx_00011, SWS_Bfx_00015
  *
- * @param   Data[in/out] Unsigned integer to modify
- * @param   BitPn[in] Number of bit to modify
- *
- * @retval  None
+ * @param   Data Unsigned integer to modify
+ * @param   BitPn Number of bit to modify
  *
  */
 static inline void Bfx_ClrBit_u32u8( uint32 *Data, uint8 BitPn )
@@ -53,8 +49,8 @@ static inline void Bfx_ClrBit_u32u8( uint32 *Data, uint8 BitPn )
  *
  * @reqs   SWS_Bfx_00016, SWS_Bfx_00017, SWS_Bfx_00020
  *
- * @param   Data[in/out] Unsigned integer containing the bit
- * @param   BitPn[in] Number of bit to obtain
+ * @param   Data Unsigned integer containing the bit
+ * @param   BitPn Number of bit to obtain
  *
  * @retval  Result
  *
@@ -75,12 +71,10 @@ static inline boolean Bfx_GetBit_u32u8_u8( uint32 *Data, uint8 BitPn )
  *
  * @reqs   SWS_Bfx_00021, SWS_Bfx_00022, SWS_Bfx_00025
  *
- * @param   Data[in/out] Unsigned integer to modify
- * @param   BitStartPn[in] Bit that indicates the start of the bits to modify
- * @param   BitLn[in] Number of bits to modify
- * @param   Status[in] Value that the bits will take
- *
- * @retval  None
+ * @param   Data Unsigned integer to modify
+ * @param   BitStartPn Bit that indicates the start of the bits to modify
+ * @param   BitLn Number of bits to modify
+ * @param   Status Value that the bits will take
  *
  */
 static inline void Bfx_SetBits_u32u8u8u8( uint32 *Data, uint8 BitStartPn, uint8 BitLn, uint8 Status )
@@ -105,9 +99,9 @@ static inline void Bfx_SetBits_u32u8u8u8( uint32 *Data, uint8 BitStartPn, uint8 
  *
  * @reqs   SWS_Bfx_00028, SWS_Bfx_00029, SWS_Bfx_00034
  *
- * @param   Data[in] Unsigned integer with the bits
- * @param   BitStartPn[in] Bit that indicates the start of the bits to obtain
- * @param   BitLn[in] Number of bits to obtain
+ * @param   Data Unsigned integer with the bits
+ * @param   BitStartPn Bit that indicates the start of the bits to obtain
+ * @param   BitLn Number of bits to obtain
  *
  * @retval  Result
  *
@@ -128,10 +122,8 @@ static inline uint8 Bfx_GetBits_u32u8u8_u32( uint32 Data, uint8 BitStartPn, uint
  *
  * @reqs   SWS_Bfx_00035, SWS_Bfx_00036, SWS_Bfx_00038
  *
- * @param   Data[in/out] Unsigned integer to modify
- * @param   Mask[in] Mask that indicates the bits to set
- *
- * @retval  None
+ * @param   Data Unsigned integer to modify
+ * @param   Mask Mask that indicates the bits to set
  *
  */
 static inline void Bfx_SetBitMask_u32u32( uint32 *Data, uint32 Mask )
@@ -147,10 +139,8 @@ static inline void Bfx_SetBitMask_u32u32( uint32 *Data, uint32 Mask )
  *
  * @reqs   SWS_Bfx_00039, SWS_Bfx_00040, SWS_Bfx_00045
  *
- * @param   Data[in/out] Unsigned integer to modify
- * @param   Mask[in] Mask that indicates the bits to clear
- *
- * @retval  None
+ * @param   Data Unsigned integer to modify
+ * @param   Mask Mask that indicates the bits to clear
  *
  */
 static inline void Bfx_ClrBitMask_u32u32( uint32 *Data, uint32 Mask )
@@ -166,8 +156,8 @@ static inline void Bfx_ClrBitMask_u32u32( uint32 *Data, uint32 Mask )
  *
  * @reqs   SWS_Bfx_00046, SWS_Bfx_00047, SWS_Bfx_00050
  *
- * @param   Data[in] Unsigned integer to compare
- * @param   Mask[in] Mask used to compare
+ * @param   Data Unsigned integer to compare
+ * @param   Mask Mask used to compare
  *
  * @retval  Result
  *
@@ -188,8 +178,8 @@ static inline boolean Bfx_TstBitMask_u32u32_u8( uint32 Data, uint32 Mask )
  *
  * @reqs   SWS_Bfx_00051, SWS_Bfx_00055
  *
- * @param   Data[in] Unsigned integer to compare
- * @param   Mask[in] Mask used to compare
+ * @param   Data Unsigned integer to compare
+ * @param   Mask Mask used to compare
  *
  * @retval  Result
  *
@@ -210,8 +200,7 @@ static inline boolean Bfx_TstBitLnMask_u32u32_u8( uint32 Data, uint32 Mask )
  *
  * @reqs   SWS_Bfx_00056, SWS_Bfx_00060,
  *
- * @param   Data[in] Unsigned integer to compare
- * @param   Mask[in] Mask used to compare
+ * @param   Data Unsigned integer to compare
  *
  * @retval  Result
  *
@@ -237,9 +226,7 @@ static inline boolean Bfx_TstParityEven_u32_u8( uint32 Data )
  *
  * @reqs   SWS_Bfx_00061, SWS_Bfx_00065
  *
- * @param   Data[in/out] Unsigned integer to modify
- *
- * @retval  None
+ * @param   Data Unsigned integer to modify
  *
  */
 static inline void Bfx_ToggleBits_u32( uint32 *Data )
@@ -255,10 +242,8 @@ static inline void Bfx_ToggleBits_u32( uint32 *Data )
  *
  * @reqs   SWS_Bfx_00066, SWS_Bfx_00069
  *
- * @param   Data[in/out] Unsigned integer to modify
- * @param   Mask[in] Mask that indicates the bits to toggle
- *
- * @retval  None
+ * @param   Data Unsigned integer to modify
+ * @param   Mask Mask that indicates the bits to toggle
  *
  */
 static inline void Bfx_ToggleBitMask_u32u32( uint32 *Data, uint32 Mask )
@@ -275,10 +260,8 @@ static inline void Bfx_ToggleBitMask_u32u32( uint32 *Data, uint32 Mask )
  *
  * @reqs   SWS_Bfx_00070, SWS_Bfx_00075
  *
- * @param   Data[in/out] Unsigned integer to modify
- * @param   ShiftCnt[in] Number of shifts to perform
- *
- * @retval  None
+ * @param   Data Unsigned integer to modify
+ * @param   ShiftCnt Number of shifts to perform
  *
  */
 static inline void Bfx_ShiftBitRt_u32u8( uint32 *Data, uint8 ShiftCnt )
@@ -295,10 +278,8 @@ static inline void Bfx_ShiftBitRt_u32u8( uint32 *Data, uint8 ShiftCnt )
  *
  * @reqs   SWS_Bfx_00076, SWS_Bfx_00080
  *
- * @param   Data[in/out] Unsigned integer to modify
- * @param   ShiftCnt[in] Number of shifts to perform
- *
- * @retval  None
+ * @param   Data Unsigned integer to modify
+ * @param   ShiftCnt Number of shifts to perform
  *
  */
 static inline void Bfx_ShiftBitLt_u32u8( uint32 *Data, uint8 ShiftCnt )
@@ -314,10 +295,8 @@ static inline void Bfx_ShiftBitLt_u32u8( uint32 *Data, uint8 ShiftCnt )
  *
  * @reqs   SWS_Bfx_00086, SWS_Bfx_00090
  *
- * @param   Data[in/out] Unsigned integer to modify
- * @param   ShiftCnt[in] Number of shifts to perform
- *
- * @retval  None
+ * @param   Data Unsigned integer to modify
+ * @param   ShiftCnt Number of shifts to perform
  *
  */
 static inline void Bfx_RotBitRt_u32u8( uint32 *Data, uint8 ShiftCnt )
@@ -333,10 +312,8 @@ static inline void Bfx_RotBitRt_u32u8( uint32 *Data, uint8 ShiftCnt )
  *
  * @reqs   SWS_Bfx_00095, SWS_Bfx_00098
  *
- * @param   Data[in/out] Unsigned integer to modify
- * @param   ShiftCnt[in] Number of shifts to perform
- *
- * @retval  None
+ * @param   Data Unsigned integer to modify
+ * @param   ShiftCnt Number of shifts to perform
  *
  */
 static inline void Bfx_RotBitLt_u32u8( uint32 *Data, uint8 ShiftCnt )
@@ -352,12 +329,10 @@ static inline void Bfx_RotBitLt_u32u8( uint32 *Data, uint8 ShiftCnt )
  *
  * @reqs   SWS_Bfx_00101, SWS_Bfx_00108
  *
- * @param   DestinationData[in/out] Unsigned integer receptor
- * @param   DestinationPosition[in] Destination bit
- * @param   SourceData[in] Unsigned integer source
- * @param   SourcePosition[in] Source bit
- *
- * @retval  None
+ * @param   DestinationData Unsigned integer receptor
+ * @param   DestinationPosition Destination bit
+ * @param   SourceData Unsigned integer source
+ * @param   SourcePosition Source bit
  *
  */
 static inline void Bfx_CopyBit_u32u8u32u8( uint32 *DestinationData, uint8 DestinationPosition, uint32 SourceData, uint8 SourcePosition )
@@ -383,12 +358,10 @@ static inline void Bfx_CopyBit_u32u8u32u8( uint32 *DestinationData, uint8 Destin
  *
  * @reqs   SWS_Bfx_00110, SWS_Bfx_00112
  *
- * @param   Data[in/out] Unsigned integer to modify
- * @param   BitStartPn[in] LSB to start
- * @param   BitLn[in] Lenght of the chain of bits
- * @param   Pattern[in] Pattern to partially copy
- *
- * @retval  None
+ * @param   Data Unsigned integer to modify
+ * @param   BitStartPn LSB to start
+ * @param   BitLn Lenght of the chain of bits
+ * @param   Pattern Pattern to partially copy
  *
  */
 static inline void Bfx_PutBits_u32u8u8u32( uint32 *Data, uint8 BitStartPn, uint8 BitLn, uint32 Pattern )
@@ -405,11 +378,9 @@ static inline void Bfx_PutBits_u32u8u8u32( uint32 *Data, uint8 BitStartPn, uint8
  *
  * @reqs   SWS_Bfx_00120, SWS_Bfx_00124
  *
- * @param   Data[in/out] Unsigned integer to modify
- * @param   Pattern[in] Pattern to partially copy
- * @param   Mask[in] Mask that indicates the bits to copy
- *
- * @retval  None
+ * @param   Data Unsigned integer to modify
+ * @param   Pattern Pattern to partially copy
+ * @param   Mask Mask that indicates the bits to copy
  *
  */
 static inline void Bfx_PutBitsMask_u32u32u32( uint32 *Data, uint32 Pattern, uint32 Mask )
@@ -425,11 +396,9 @@ static inline void Bfx_PutBitsMask_u32u32u32( uint32 *Data, uint32 Pattern, uint
  *
  * @reqs   SWS_Bfx_00130, SWS_Bfx_00132
  *
- * @param   Data[in/out] Unsigned integer to modify
- * @param   BitPn[in] Pin to modify
- * @param   Status[in] boolean value to set
- *
- * @retval  None
+ * @param   Data Unsigned integer to modify
+ * @param   BitPn Pin to modify
+ * @param   Status boolean value to set
  *
  */
 static inline void Bfx_PutBit_u32u8u8( uint32 *Data, uint8 BitPn, boolean Status )
@@ -452,7 +421,7 @@ static inline void Bfx_PutBit_u32u8u8( uint32 *Data, uint8 BitPn, boolean Status
  *
  * @reqs   SWS_Bfx_91003, SWS_Bfx_00137
  *
- * @param   Data[in] Unsigned integer to check
+ * @param   Data Unsigned integer to check
  *
  * @retval  Counter
  *
@@ -483,7 +452,7 @@ static inline uint8 Bfx_CountLeadingOnes_u32( uint32 Data )
  *
  * @reqs   SWS_Bfx_91005, SWS_Bfx_00141
  *
- * @param   Data[in] Unsigned integer to check
+ * @param   Data Unsigned integer to check
  *
  * @retval  Counter
  *
@@ -515,7 +484,7 @@ static inline uint8 Bfx_CountLeadingZeros_u32( uint32 Data )
  *
  * @reqs   SWS_Bfx_91004, SWS_Bfx_00139
  *
- * @param   Data[in] Signed integer to count from
+ * @param   Data Signed integer to count from
  *
  * @retval  Counter
  *
@@ -556,8 +525,8 @@ static inline uint8 Bfx_CountLeadingSigns_s32( sint32 Data )
  * the shift count. The vacated bits are filled with the sign-bit (the most significant bit) and
  * bits shifted out are discarded.
  *
- * @param   ShiftCnt[in] Shift count
- * @param   Data[in] Signed integer to check
+ * @param   ShiftCnt Shift count
+ * @param   Data Signed integer to check
  *
  * @retval  Data
  *
@@ -611,8 +580,8 @@ static inline sint32 Bfx_ShiftBitSat_s32s8_s32( sint8 ShiftCnt, sint32 Data )
  * the shift count. The vacated bits are filled with the sign-bit (the most significant bit) and
  * bits shifted out are discarded.
  *
- * @param   ShiftCnt[in] Shift count
- * @param   Data[in] Unsigned integer to check
+ * @param   ShiftCnt Shift count
+ * @param   Data Unsigned integer to check
  *
  * @retval  Data
  *
