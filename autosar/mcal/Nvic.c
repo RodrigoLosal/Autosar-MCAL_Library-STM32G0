@@ -14,6 +14,11 @@
 #define IRQ_NOT_PENDING  0UL
 #define INVALID_PRIORITY 0xFFU
 
+/**
+ * @brief Set the priority of a given NVIC interrupt.
+ * @param irq is the interrupt to be configured.
+ * @param priority is the priority to be set.
+ */
 void CDD_Nvic_SetPriority( Nvic_IrqType irq, uint32 priority )
 {
     if( ( (uint32)irq >= NVIC_MIN_IRQ ) && ( (uint32)irq <= NVIC_MAX_IRQ ) )
@@ -22,6 +27,11 @@ void CDD_Nvic_SetPriority( Nvic_IrqType irq, uint32 priority )
     }
 }
 
+/**
+ * @brief Return the priority of a given NVIC interrupt.
+ * @param irq is the interrupt to be checked.
+ * @retval The priority of the interrupt or INVALID_PRIORITY if the interrupt is out of range
+ */
 uint32 CDD_Nvic_GetPriority( Nvic_IrqType irq )
 {
     uint32 priority;
@@ -36,6 +46,10 @@ uint32 CDD_Nvic_GetPriority( Nvic_IrqType irq )
     return priority;
 }
 
+/**
+ * @brief Enable a specific NVIC interrupt.
+ * @param irq  i the interrupt to be enabled.
+ */
 void CDD_Nvic_EnableIrq( Nvic_IrqType irq )
 {
     if( ( ( (uint32)( irq ) ) >= NVIC_MIN_IRQ ) && ( (uint32)( irq ) <= NVIC_MAX_IRQ ) )
@@ -44,6 +58,10 @@ void CDD_Nvic_EnableIrq( Nvic_IrqType irq )
     }
 }
 
+/**
+ * @brief Disable a specific NVIC interrupt.
+ * @param irq is the interrupt to be Disabled.
+ */
 void CDD_Nvic_DisableIrq( Nvic_IrqType irq )
 {
     if( ( ( (uint32)( irq ) ) >= NVIC_MIN_IRQ ) && ( (uint32)( irq ) <= NVIC_MAX_IRQ ) )
@@ -52,6 +70,11 @@ void CDD_Nvic_DisableIrq( Nvic_IrqType irq )
     }
 }
 
+/**
+ * @brief Check if a Nvic interrupt is pending.
+ * @param irq is the interrupt to check.
+ * @retval IRQ_PENDING if the interrupt is pending, otherwise IRQ_NOT_PENDING.
+ */
 uint32 CDD_Nvic_GetPendingIrq( Nvic_IrqType irq )
 {
     uint32 pending;
@@ -66,6 +89,10 @@ uint32 CDD_Nvic_GetPendingIrq( Nvic_IrqType irq )
     return pending;
 }
 
+/**
+ * @brief Set a Nvic interrupt as pending.
+ * @param irq is the interrupt to set pending.
+ */
 void CDD_Nvic_SetPendingIrq( Nvic_IrqType irq )
 {
     if( ( (uint32)irq >= NVIC_MIN_IRQ ) && ( (uint32)irq <= NVIC_MAX_IRQ ) )
@@ -74,6 +101,10 @@ void CDD_Nvic_SetPendingIrq( Nvic_IrqType irq )
     }
 }
 
+/**
+ * @brief Clears a specific pending interrupt 
+ * @param irq is the interrupt to clear.
+ */
 void CDD_Nvic_ClearPendingIrq( Nvic_IrqType irq )
 {
     if( ( ( (uint32)( irq ) ) >= NVIC_MIN_IRQ ) && ( (uint32)( irq ) <= NVIC_MAX_IRQ ) )
