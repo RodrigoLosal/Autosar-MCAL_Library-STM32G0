@@ -2,14 +2,147 @@
 #include "Platform_Types.h"
 #include "Register.h"
 
+
+static Dio_ConfigChannel *Dio_PortChannels;
+static Dio_PortType *Dio_Ports;
+static Dio_ChannelGroupType *Dio_ChannelGroups;
+
+
+void Dio_Init(const Dio_ConfigType *ConfigPtr)
+{
+	Dio_PortChannels = ConfigPtr->Channels; 
+	Dio_Ports = ConfigPtr->Ports;
+	Dio_ChannelGroups = ConfigPtr->Groups;
+}
+
+
 Dio_LevelType Dio_ReadChannel(Dio_ChannelType ChannelId)
+{
+	Dio_LevelType ChannelLevel;
+
+	if( DIO_CONFIGURED_CHANNLES => ChannelId )
+	{
+		switch( Dio_PortChannels[ ChannelId ].Port_Num)
+		{
+			case 0:	
+				ChannelLevel = GET_1_BIT( DIOA->ODR , Dio_PortChannels[ ChannelId ].Ch_Num );
+			break;
+			
+			case 1:
+				ChannelLevel = GET_1_BIT( DIOB->ODR , Dio_PortChannels[ ChannelId ].Ch_Num );
+			break;
+			
+			case 2:	
+				ChannelLevel = GET_1_BIT( DIOC->ODR , Dio_PortChannels[ ChannelId ].Ch_Num );
+			break;
+			
+			case 3:
+				ChannelLevel = GET_1_BIT( DIOD->ODR , Dio_PortChannels[ ChannelId ].Ch_Num );
+			break;
+			
+			case 4:
+				ChannelLevel = GET_1_BIT( DIOE->ODR , Dio_PortChannels[ ChannelId ].Ch_Num );
+			break;
+			
+			case 5:	
+				ChannelLevel = GET_1_BIT( DIOF->ODR , Dio_PortChannels[ ChannelId ].Ch_Num );
+			break;
+		}
+		
+	}
+	else
+	{
+		
+	}
+
+	return ChannelLevel ;
+}
+
+
+void Dio_WriteChannel( Dio_ChannelType ChannelId, Dio_LevelType Level )
 {
 	
 }
 
 void Dio_WriteChannel( Dio_ChannelType ChannelId, Dio_LevelType Level )
 {
-	
+	if( DIO_CONFIGURED_CHANNLES => ChannelId )
+	{
+		switch(Dio_PortChannels[ChannelId].Port_Num)
+		{
+			case 0:	
+				if( Level == STD_HIGH )
+				{
+					SET_1_BIT( DIOA->ODR , Dio_PortChannels[ ChannelId ].Ch_Num );
+				}
+				else
+				{
+					CLEAR_1_BIT( DIOA->ODR , Dio_PortChannels[ ChannelId ].Ch_Num );
+				}
+
+			break;
+			
+			case 1:
+				if( Level == STD_HIGH )
+				{
+					SET_1_BIT( DIOB->ODR , Dio_PortChannels[ ChannelId ].Ch_Num );
+				}
+				else
+				{
+					CLEAR_1_BIT( DIOB->ODR , Dio_PortChannels[ ChannelId ].Ch_Num );
+				}
+			break;
+			
+			case 2:	
+				if( Level == STD_HIGH )
+				{
+					SET_1_BIT( DIOC->ODR , Dio_PortChannels[ ChannelId ].Ch_Num );
+				}
+				else
+				{
+					CLEAR_1_BIT( DIOC->ODR , Dio_PortChannels[ ChannelId ].Ch_Num );
+				}
+			break;
+			
+			case 3:
+				if( Level == STD_HIGH )
+				{
+					SET_1_BIT( DIOD->ODR , Dio_PortChannels[ ChannelId ].Ch_Num );
+				}
+				else
+				{
+					CLEAR_1_BIT( DIOD->ODR , Dio_PortChannels[ ChannelId ].Ch_Num );
+				}
+			break;
+			
+			case 4:
+				if( Level == STD_HIGH )
+				{
+					SET_1_BIT( DIOE->ODR , Dio_PortChannels[ ChannelId ].Ch_Num );
+				}
+				else
+				{
+					CLEAR_1_BIT( DIOE->ODR , Dio_PortChannels[ ChannelId ].Ch_Num );
+				}
+			break;
+			
+			case 5:	
+				if( Level == STD_HIGH )
+				{
+					SET_1_BIT( DIOF->ODR , Dio_PortChannels[ ChannelId ].Ch_Num );
+				}
+				else
+				{
+					CLEAR_1_BIT( DIOF->ODR , Dio_PortChannels[ ChannelId ].Ch_Num );
+				}
+			break;
+		}
+	}	
+	else
+	{
+
+	}
+
 }
 
 Dio_LevelType Dio_FlipChannel( Dio_ChannelType ChannelId )
@@ -28,70 +161,5 @@ void Dio_WritePort( Dio_PortType PortId, Dio_PortLevelType Level )
 }
 
 
-Dio_LevelType Dio_ReadChannel(Dio_ChannelType ChannelId)
-{
-	Dio_PortLevelType * PIN_Ptr = NULL_PTR;
-	boolean error = FALSE;
-	Dio_LevelType ChannelLevel ;
-#if (DIO_DEV_ERROR_DETECT == STD_ON)
-	/* Check if the Driver is initialized before using this function */
-	if (DIO_NOT_INITIALIZED == Dio_Status)
-	{
-		Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
-				DIO_READ_CHANNEL_SID, DIO_E_UNINIT);
-		error = TRUE;
-	}
-	else
-	{
-		/* No Action Required */
-	}
-	/* Check if the used channel is within the valid range */
-	if (DIO_CONFIGURED_CHANNLES <= ChannelId)
-	{
-
-		Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
-				DIO_READ_CHANNEL_SID, DIO_E_PARAM_INVALID_CHANNEL_ID);
-		error = TRUE;
-	}
-	else
-	{
-		/* No Action Required */
-	}
-
-
-	/* In-case there are no errors */
-	if(FALSE == error)
-	{
-		/* Point to the correct PIN register according to the Port Id stored in the Port_Num member */
-		switch(Dio_PortChannels[ChannelId].Port_Num)
-		{
-			case 0:	PIN_Ptr = &(DIOA->ODR);
-			break;
-			
-			case 1:	PIN_Ptr = &(DIOB->ODR);
-			break;
-			
-			case 2:	PIN_Ptr = &(DIOC->ODR);
-			break;
-			
-			case 3:	PIN_Ptr = &(DIOD->ODR);
-			break;
-			
-			case 4:	PIN_Ptr = &(DIOE->ODR);
-			break;
-			
-			case 5:	PIN_Ptr = &(DIOF->ODR);
-			break;
-		}
-		/* Read the required channel */
-		ChannelLevel = READ_BIT(*PIN_Ptr,Dio_PortChannels[ChannelId].Ch_Num) ;
-	}
-	else
-	{
-		/* No Action Required */
-	}
-
-	return ChannelLevel ;
-}
 
 

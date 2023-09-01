@@ -6,7 +6,7 @@
 
 #define GET_1_BIT( reg, bit )       ( ( ( reg ) >> ( bit ) ) & 0x01u )
 #define SET_1_BIT( reg, bit )       ( ( reg ) |= ( 1u << ( bit ) ) )
-#define CLEAR_BIT( reg, bit )       ( ( reg ) &= ( ~ ( 1u << bit ) ) )
+#define CLEAR_1_BIT( reg, bit )       ( ( reg ) &= ( ~ ( 1u << bit ) ) )
 
 
 #define DIO_CONFIGURED_CHANNLES     6u
