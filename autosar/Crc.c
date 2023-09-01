@@ -19,6 +19,11 @@
 #define CRC16_8LEFT                       8
 
 #define CRC_16BITARC_POLYNOMIAL_REFLECTED (uint16)0xA001
+#define CRC_16BITARC_LSB 0x00001
+
+#define CRC_32BIT_POLYNOMIAL_REFLECTED (uint32) 0xEDB88320
+#define CRC_32BIT_XORVALUE 0xFFFFFFFF
+#define CRC_32BIT_LSB 0x00000001u
 
 #define REFLECTLSB                        0x01
 
@@ -141,7 +146,7 @@ uint16 Crc_CalculateCRC16ARC(const uint8* Crc_DataPtr, uint32 Crc_Length, uint16
 
             for( bit = 0; bit < 8; bit++ )
             {
-                if( ((crcValue) & 0x00001) != 0 )
+                if( ((crcValue) & CRC_16BITARC_LSB) != 0 )
                 {
                     crcValue = ( crcValue >> 1 ) ^ Crc_Polynomial;
                 }
@@ -152,6 +157,45 @@ uint16 Crc_CalculateCRC16ARC(const uint8* Crc_DataPtr, uint32 Crc_Length, uint16
             }
             Crc_DataPtr++;
         }
+    }
+    return crcValue;
+}
+
+uint32 Crc_CalculateCRC32 (const uint8* Crc_DataPtr, uint32 Crc_Length, uint32 Crc_StartValue32, boolean Crc_IsFirstCall)
+{
+    const uint32 Crc_Polynomial = CRC_32BIT_POLYNOMIAL_REFLECTED; 
+    uint32 crcValue = Crc_StartValue32;
+    uint8 bit;
+
+    if(Crc_Length != 0u)
+    {
+        if(Crc_IsFirstCall)
+        {
+            crcValue = CRC_32BIT_XORVALUE;
+        }
+        else
+        {
+            crcValue ^= CRC_32BIT_XORVALUE;
+        }
+
+        for (uint32 i = Crc_Length; i != 0; i--)
+        {
+            crcValue ^= (uint32) *Crc_DataPtr; 
+
+            for ( bit = 0; bit < 8; bit++)
+            {
+                if ((crcValue & CRC_32BIT_LSB) != 0u) 
+                {
+                    crcValue = (crcValue >> 1) ^ Crc_Polynomial;
+                }
+                else
+                {
+                    crcValue >>= 1;
+                }
+            }
+            Crc_DataPtr++;
+        }
+        crcValue ^= CRC_32BIT_XORVALUE;
     }
     return crcValue;
 }
