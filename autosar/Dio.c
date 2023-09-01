@@ -1,5 +1,6 @@
 #include "Dio.h"
 #include "Platform_Types.h"
+#include "Register.h"
 
 Dio_LevelType Dio_ReadChannel(Dio_ChannelType ChannelId)
 {
@@ -56,7 +57,7 @@ Dio_LevelType Dio_ReadChannel(Dio_ChannelType ChannelId)
 	{
 		/* No Action Required */
 	}
-#endif
+
 
 	/* In-case there are no errors */
 	if(FALSE == error)
@@ -64,27 +65,33 @@ Dio_LevelType Dio_ReadChannel(Dio_ChannelType ChannelId)
 		/* Point to the correct PIN register according to the Port Id stored in the Port_Num member */
 		switch(Dio_PortChannels[ChannelId].Port_Num)
 		{
-		case 0:	PIN_Ptr = &PORTA;
-		break;
-		case 1:	PIN_Ptr = &PORTB;
-		break;
-		case 2:	PIN_Ptr = &PORTC;
-		break;
-		case 3:	PIN_Ptr = &PORTD;
-		break;
-		case 4:	PIN_Ptr = &PORTE;
-		break;
-		case 5:	PIN_Ptr = &PORTF;
-		break;
+			case 0:	PIN_Ptr = &(DIOA->ODR);
+			break;
+			
+			case 1:	PIN_Ptr = &(DIOB->ODR);
+			break;
+			
+			case 2:	PIN_Ptr = &(DIOC->ODR);
+			break;
+			
+			case 3:	PIN_Ptr = &(DIOD->ODR);
+			break;
+			
+			case 4:	PIN_Ptr = &(DIOE->ODR);
+			break;
+			
+			case 5:	PIN_Ptr = &(DIOF->ODR);
+			break;
 		}
 		/* Read the required channel */
 		ChannelLevel = READ_BIT(*PIN_Ptr,Dio_PortChannels[ChannelId].Ch_Num) ;
-		return ChannelLevel ;
 	}
 	else
 	{
 		/* No Action Required */
 	}
+
+	return ChannelLevel ;
 }
 
 

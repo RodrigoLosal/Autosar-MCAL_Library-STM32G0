@@ -4,6 +4,15 @@
 #include "../autosar/mcal/Platform_Types.h"
 
 
+#define GET_1_BIT( reg, bit )       ( ( ( reg ) >> ( bit ) ) & 0x01u )
+#define SET_1_BIT( reg, bit )       ( ( reg ) |= ( 1u << ( bit ) ) )
+#define CLEAR_BIT( reg, bit )       ( ( reg ) &= ( ~ ( 1u << bit ) ) )
+
+
+#define DIO_CONFIGURED_CHANNLES     6u
+#define DIO_CONFIGURED_PORTS        6u
+#define DIO_CONFIGURED_GROUPS       6u
+
 /**
  * @name    Dio Channel Type 
  * @reqs    SWS_Dio_00182
@@ -67,19 +76,20 @@ typedef struct Dio_ChannelGroupType
 /**@}*/
 
 
+typedef struct
+{
+	Dio_PortType Port_Num;
+	Dio_ChannelType Ch_Num;
+}Dio_ConfigChannel;
 
-#define PORTA   0u /*!< Port A pin 0 value*/
-#define PORTB   1u /*!< Port A pin 0 value*/
-#define PORTC   2u /*!< Port A pin 0 value*/
-#define PORTD   3u /*!< Port A pin 0 value*/
-#define PORTE   4u /*!< Port A pin 0 value*/
-#define PORTF   5u /*!< Port A pin 0 value*/
-/*#define GPIO_PORTA_DATA_REG       (((volatile uint32)0x400043FC))
-#define GPIO_PORTB_DATA_REG       (((volatile uint32)0x400053FC))
-#define GPIO_PORTC_DATA_REG       (((volatile uint32)0x400063FC))
-#define GPIO_PORTD_DATA_REG       (((volatile uint32)0x400073FC))
-#define GPIO_PORTE_DATA_REG       (((volatile uint32)0x400243FC))
-#define GPIO_PORTF_DATA_REG       (((volatile uint32)0x400253FC))*/
+
+typedef struct
+{
+	Dio_ConfigChannel Channels[ DIO_CONFIGURED_CHANNLES ];
+	Dio_PortType Ports[ DIO_CONFIGURED_PORTS ];
+	Dio_ChannelGroupType Groups [ DIO_CONFIGURED_GROUPS ];
+} Dio_ConfigType;
+
 
 /**
  * @name   DIO A pin Values 
