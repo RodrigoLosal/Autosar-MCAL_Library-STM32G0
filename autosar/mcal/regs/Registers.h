@@ -1,3 +1,9 @@
+/**
+ * @file        Registers.h
+ * @brief       This file contains definitions and configurations for the NVIC.
+ *
+ * This file defines addresses, interrupts, and NVIC structures for Cortex-M0+.
+ */
 #ifndef REGISTERS_H
 #define REGISTERS_H
 
@@ -7,6 +13,10 @@
 #define NVIC_BASE   ( SCS_BASE + 0x0100UL )    /*!< NVIC Base Address */
 #define NVIC        ( (NVIC_Type *)NVIC_BASE ) /*!< NVIC configuration struct */
 
+/**
+ * @brief Nested Vectored Interrupt Controller (NVIC) interrupt types for Cortex-M0+ and STM32G0xxxx.
+ *  This enumeration lists the Cortex-M0+ exceptions and STM32G0xxxx microcontroller interrupts
+ */
 typedef enum
 {
     /******  Cortex-M0+ Processor Exceptions Numbers ***************************************************************/
@@ -49,18 +59,21 @@ typedef enum
     CEC_IRQn                               = 30, /*!< CEC Interrupt(combined with EXTI 27)                               */
 } Nvic_IrqType;
 
+/**
+ * @brief Nested Vectored Interrupt Controller (NVIC) structure.
+ */
 typedef struct
 {
-    uint32 ISER[ 1U ]; /*!< Offset: 0x000 (R/W)  Interrupt Set Enable Register */
-    uint32 RESERVED0[ 31U ];
-    uint32 ICER[ 1U ]; /*!< Offset: 0x080 (R/W)  Interrupt Clear Enable Register */
-    uint32 RESERVED1[ 31U ];
-    uint32 ISPR[ 1U ]; /*!< Offset: 0x100 (R/W)  Interrupt Set Pending Register */
-    uint32 RESERVED2[ 31U ];
-    uint32 ICPR[ 1U ]; /*!< Offset: 0x180 (R/W)  Interrupt Clear Pending Register */
-    uint32 RESERVED3[ 31U ];
-    uint32 RESERVED4[ 64U ];
-    uint32 IP[ 8U ]; /*!< Offset: 0x300 (R/W)  Interrupt Priority Register */
+    uint32 ISER[ 1U ];       /*!< Offset: 0x000 (R/W)  Interrupt Set Enable Register */
+    uint32 RESERVED0[ 31U ]; /*!< Reserved memory. */
+    uint32 ICER[ 1U ];       /*!< Offset: 0x080 (R/W)  Interrupt Clear Enable Register */
+    uint32 RESERVED1[ 31U ]; /*!< Reserved memory. */
+    uint32 ISPR[ 1U ];       /*!< Offset: 0x100 (R/W)  Interrupt Set Pending Register */
+    uint32 RESERVED2[ 31U ]; /*!< Reserved memory. */
+    uint32 ICPR[ 1U ];       /*!< Offset: 0x180 (R/W)  Interrupt Clear Pending Register */
+    uint32 RESERVED3[ 31U ]; /*!< Reserved memory. */
+    uint32 RESERVED4[ 64U ]; /*!< Reserved memory. */
+    uint32 IP[ 8U ];         /*!< Offset: 0x300 (R/W)  Interrupt Priority Register */
 } NVIC_Type;
 
 #endif
