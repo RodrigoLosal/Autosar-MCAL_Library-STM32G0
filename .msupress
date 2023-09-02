@@ -7,3 +7,4 @@ misra-c2012-11.8:app/app_msps.c
 misra-c2012-11.8:app/app_ints.c
 misra-c2012-11.8:app/interface.c
 misra-c2012-11.5:app/interface.c
+misra-c2012-2.5:autosar/mcal/Port.h
