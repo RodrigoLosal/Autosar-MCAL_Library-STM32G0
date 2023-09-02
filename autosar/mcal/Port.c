@@ -3,43 +3,48 @@
 #include "Registers.h"
 #include "Port.h"
 
+Port_ConfigType *LocalConfigPtr = NULL_PTR;
 
 void Port_Init( const Port_ConfigType *ConfigPtr )
 {
-
+    LocalConfigPtr = ConfigPtr;
     Port_RegisterType *port;
     uint32 mask                   = 1u;
     Port_RegisterType *ports[ 6 ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
-    port                          = ports[ ConfigPtr->Port ];
 
-    for( uint32 i = 0u; i < 16u; i++ )
+    for (uint8 j = 0; j<PORT_PIN_NUMBER_OF_PORTS;j++)
     {
-        if( Bfx_TstBitLnMask_u32u32_u8( ConfigPtr->Pins, mask ) == TRUE )
+        port                          = ports[ (ConfigPtr+j)->Port ];
+        mask                   = 1u;
+        for( uint32 i = 0u; i < 16u; i++ )
         {
-            /*change values on PUPDR*/
-            Bfx_PutBits_u32u8u8u32( (uint32 *)&port->PUPDR, (uint8)( i * 2u ), (uint8)2u, (uint32)ConfigPtr->Pull );
-
-            /*change values on OTYPER*/
-            Bfx_PutBits_u32u8u8u32( (uint32 *)&port->OTYPER, i, 1, (uint32)ConfigPtr->OutputDrive );
-
-            /*change values on OSPEEDR*/
-            Bfx_PutBits_u32u8u8u32( (uint32 *)&port->OSPEEDR, ( i * 2 ), 2, (uint32)ConfigPtr->Speed );
-
-            /*change values on MODER*/
-            Bfx_PutBits_u32u8u8u32( (uint32 *)&port->MODER, ( i * 2 ), 2, (uint32)ConfigPtr->Mode );
-
-            if( i < 8u )
+            if( Bfx_TstBitLnMask_u32u32_u8( (ConfigPtr+j)->Pins, mask ) == TRUE )
             {
-                /*change values on Altern*/
-                Bfx_PutBits_u32u8u8u32( (uint32 *)&port->AFRL, ( i * 4 ), 4, (uint32)ConfigPtr->Altern );
+                /*change values on PUPDR*/
+                Bfx_PutBits_u32u8u8u32( (uint32 *)&port->PUPDR, (uint8)( i * 2u ), (uint8)2u, (uint32)(ConfigPtr+j)->Pull );
+
+                /*change values on OTYPER*/
+                Bfx_PutBits_u32u8u8u32( (uint32 *)&port->OTYPER, i, 1, (uint32)(ConfigPtr+j)->OutputDrive );
+
+                /*change values on OSPEEDR*/
+                Bfx_PutBits_u32u8u8u32( (uint32 *)&port->OSPEEDR, ( i * 2 ), 2, (uint32)(ConfigPtr+j)->Speed );
+
+                /*change values on MODER*/
+                Bfx_PutBits_u32u8u8u32( (uint32 *)&port->MODER, ( i * 2 ), 2, (uint32)(ConfigPtr+j)->Mode );
+
+                if( i < 8u )
+                {
+                    /*change values on Altern*/
+                    Bfx_PutBits_u32u8u8u32( (uint32 *)&port->AFRL, ( i * 4 ), 4, (uint32)(ConfigPtr+j)->Altern );
+                }
+                else
+                {
+                    /*change values on Altern*/
+                    Bfx_PutBits_u32u8u8u32( (uint32 *)&port->AFRH, ( i - 8 ) * 4, 4, (uint32)(ConfigPtr+j)->Altern );
+                }
             }
-            else
-            {
-                /*change values on Altern*/
-                Bfx_PutBits_u32u8u8u32( (uint32 *)&port->AFRH, ( i - 8 ) * 4, 4, (uint32)ConfigPtr->Altern );
-            }
+            mask = mask << 1;
         }
-        mask = mask << 1;
     }
 }
 
@@ -84,4 +89,22 @@ void Port_GetVersionInfo( Std_VersionInfoType *versioninfo ) /* cppcheck-suppres
 
 void Port_RefreshPortDirection( void ) /* cppcheck-suppress misra-c2012-8.4 ; function will not always be defined */
 {
+    Port_RegisterType *port;
+    uint32 mask                   = 1u;
+    Port_RegisterType *ports[ 6 ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
+
+    for (uint8 j = 0; j<PORT_PIN_NUMBER_OF_PORTS;j++)
+    {
+        port                          = ports[ (LocalConfigPtr+j)->Port ];
+        mask                   = 1u;
+        for( uint32 i = 0u; i < 16u; i++ )
+        {
+            if( Bfx_TstBitLnMask_u32u32_u8( (LocalConfigPtr+j)->Pins, mask ) == TRUE )
+            {
+                /*change values on MODER*/
+                Bfx_PutBits_u32u8u8u32( (uint32 *)&port->MODER, ( i * 2 ), 2, (uint32)(LocalConfigPtr+j)->Mode );
+            }
+            mask = mask << 1;
+        }
+    }
 }
