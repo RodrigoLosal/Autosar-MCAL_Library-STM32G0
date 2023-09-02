@@ -86,7 +86,6 @@ void Port_GetVersionInfo( Std_VersionInfoType *versioninfo )
 }
 #endif
 
-#if PORT_REFRESH_PORT_DIRECTION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Port_RefreshPortDirection( void )
 {
     Port_RegisterType *port;
@@ -108,4 +107,3 @@ void Port_RefreshPortDirection( void )
         }
     }
 }
-#endif

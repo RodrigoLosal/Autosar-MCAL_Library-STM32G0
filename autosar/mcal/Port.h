@@ -157,7 +157,6 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
 #define PORT_PIN_PE_14        (Port_PinType)0x4Eu /*!< Port E pin 14 value */
 #define PORT_PIN_PE_15        (Port_PinType)0x4Fu /*!< Port E pin 15 value */
 
-#define PORT_PIN_PF_00        (Port_PinType)0x50u /*!< Port F pin 0 value */
 #define PORT_PIN_PF_01        (Port_PinType)0x51u /*!< Port F pin 1 value */
 #define PORT_PIN_PF_02        (Port_PinType)0x52u /*!< Port F pin 2 value */
 #define PORT_PIN_PF_03        (Port_PinType)0x53u /*!< Port F pin 3 value */
@@ -190,8 +189,6 @@ void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode );
 void Port_GetVersionInfo( Std_VersionInfoType *versioninfo );
 #endif
 
-#if PORT_REFRESH_PORT_DIRECTION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Port_RefreshPortDirection( void );
-#endif
 
 #endif
