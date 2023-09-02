@@ -120,8 +120,8 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
 #define PORT_PIN_PC_11        (Port_PinType)0x2Bu /*!< Port C pin 11 value */
 #define PORT_PIN_PC_12        (Port_PinType)0x2Cu /*!< Port C pin 12 value */
 #define PORT_PIN_PC_13        (Port_PinType)0x2Du /*!< Port C pin 13 value */
-#define PORT_PIN_PC_14        (Port_PinType)0x2Eu /*!< Port C pin 14 value */
-#define PORT_PIN_PC_15        (Port_PinType)0x2Fu /*!< Port C pin 15 value */
+#define PORT_PIN_PC_14        (Port_PinType)0x2Eu /*!< Port C pin 12 value */
+#define PORT_PIN_PC_15        (Port_PinType)0x2Fu /*!< Port C pin 13 value */
 
 #define PORT_PIN_PD_00        (Port_PinType)0x30u /*!< Port D pin 0 value */
 #define PORT_PIN_PD_01        (Port_PinType)0x31u /*!< Port D pin 1 value */
@@ -130,46 +130,12 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
 #define PORT_PIN_PD_04        (Port_PinType)0x34u /*!< Port D pin 4 value */
 #define PORT_PIN_PD_05        (Port_PinType)0x35u /*!< Port D pin 5 value */
 #define PORT_PIN_PD_06        (Port_PinType)0x36u /*!< Port D pin 6 value */
-#define PORT_PIN_PD_07        (Port_PinType)0x37u /*!< Port D pin 7 value */
 #define PORT_PIN_PD_08        (Port_PinType)0x38u /*!< Port D pin 8 value */
 #define PORT_PIN_PD_09        (Port_PinType)0x39u /*!< Port D pin 9 value */
-#define PORT_PIN_PD_10        (Port_PinType)0x3Au /*!< Port D pin 10 value */
-#define PORT_PIN_PD_11        (Port_PinType)0x3Bu /*!< Port D pin 11 value */
-#define PORT_PIN_PD_12        (Port_PinType)0x3Cu /*!< Port D pin 12 value */
-#define PORT_PIN_PD_13        (Port_PinType)0x3Du /*!< Port D pin 13 value */
-#define PORT_PIN_PD_14        (Port_PinType)0x3Eu /*!< Port D pin 14 value */
-#define PORT_PIN_PD_15        (Port_PinType)0x3Fu /*!< Port D pin 15 value */
 
-#define PORT_PIN_PE_00        (Port_PinType)0x40u /*!< Port E pin 0 value */
-#define PORT_PIN_PE_01        (Port_PinType)0x41u /*!< Port E pin 1 value */
-#define PORT_PIN_PE_02        (Port_PinType)0x42u /*!< Port E pin 2 value */
-#define PORT_PIN_PE_03        (Port_PinType)0x43u /*!< Port E pin 3 value */
-#define PORT_PIN_PE_04        (Port_PinType)0x44u /*!< Port E pin 4 value */
-#define PORT_PIN_PE_05        (Port_PinType)0x45u /*!< Port E pin 5 value */
-#define PORT_PIN_PE_06        (Port_PinType)0x46u /*!< Port E pin 6 value */
-#define PORT_PIN_PE_07        (Port_PinType)0x47u /*!< Port E pin 7 value */
-#define PORT_PIN_PE_08        (Port_PinType)0x48u /*!< Port E pin 8 value */
-#define PORT_PIN_PE_09        (Port_PinType)0x49u /*!< Port E pin 9 value */
-#define PORT_PIN_PE_10        (Port_PinType)0x4Au /*!< Port E pin 10 value */
-#define PORT_PIN_PE_11        (Port_PinType)0x4Bu /*!< Port E pin 11 value */
-#define PORT_PIN_PE_12        (Port_PinType)0x4Cu /*!< Port E pin 12 value */
-#define PORT_PIN_PE_13        (Port_PinType)0x4Du /*!< Port E pin 13 value */
-#define PORT_PIN_PE_14        (Port_PinType)0x4Eu /*!< Port E pin 14 value */
-#define PORT_PIN_PE_15        (Port_PinType)0x4Fu /*!< Port E pin 15 value */
-
+#define PORT_PIN_PF_00        (Port_PinType)0x51u /*!< Port F pin 1 value */
 #define PORT_PIN_PF_01        (Port_PinType)0x51u /*!< Port F pin 1 value */
 #define PORT_PIN_PF_02        (Port_PinType)0x52u /*!< Port F pin 2 value */
-#define PORT_PIN_PF_03        (Port_PinType)0x53u /*!< Port F pin 3 value */
-#define PORT_PIN_PF_04        (Port_PinType)0x54u /*!< Port F pin 4 value */
-#define PORT_PIN_PF_05        (Port_PinType)0x55u /*!< Port F pin 5 value */
-#define PORT_PIN_PF_06        (Port_PinType)0x56u /*!< Port F pin 6 value */
-#define PORT_PIN_PF_07        (Port_PinType)0x57u /*!< Port F pin 7 value */
-#define PORT_PIN_PF_08        (Port_PinType)0x58u /*!< Port F pin 8 value */
-#define PORT_PIN_PF_09        (Port_PinType)0x59u /*!< Port F pin 9 value */
-#define PORT_PIN_PF_10        (Port_PinType)0x5Au /*!< Port F pin 10 value */
-#define PORT_PIN_PF_11        (Port_PinType)0x5Bu /*!< Port F pin 11 value */
-#define PORT_PIN_PF_12        (Port_PinType)0x5Cu /*!< Port F pin 12 value */
-#define PORT_PIN_PF_13        (Port_PinType)0x5Du /*!< Port F pin 13 value */
 
 #define PORT_PIN_IN           (Port_PinDirectionType)0x00u /*!< Input mode value */
 #define PORT_PIN_OUT          (Port_PinDirectionType)0x01u /*!< General purpose output mode value */
