@@ -171,8 +171,6 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
 #define PORT_PIN_PF_11        (Port_PinType)0x5Bu /*!< Port F pin 11 value */
 #define PORT_PIN_PF_12        (Port_PinType)0x5Cu /*!< Port F pin 12 value */
 #define PORT_PIN_PF_13        (Port_PinType)0x5Du /*!< Port F pin 13 value */
-#define PORT_PIN_PF_14        (Port_PinType)0x5Eu /*!< Port F pin 14 value */
-#define PORT_PIN_PF_15        (Port_PinType)0x5Fu /*!< Port F pin 15 value */
 
 #define PORT_PIN_IN           (Port_PinDirectionType)0x00u /*!< Input mode value */
 #define PORT_PIN_OUT          (Port_PinDirectionType)0x01u /*!< General purpose output mode value */
