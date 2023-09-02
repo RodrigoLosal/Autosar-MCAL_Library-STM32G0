@@ -105,7 +105,7 @@ debug :
 format :
 	@clang-format -style=file -i --Werror $(FILES)
 
-lint :
+lint : format
 	mkdir -p Build/checks
 	cppcheck --addon=misra.json --suppressions-list=.msupress $(LNFLAGS) autosar
 
@@ -114,7 +114,7 @@ test : format build
 	ceedling gcov:all utils:gcov
 	firefox Build/ceedling/artifacts/gcov/GcovCoverageResults.html
 
-docs :
+docs : format
 	mkdir -p Build/doxygen 
 	mkdir -p Build/sphinx 
 	mkdir -p Build/sphinx/_template 
