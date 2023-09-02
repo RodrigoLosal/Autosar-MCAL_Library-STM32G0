@@ -3,7 +3,7 @@
 #include "Registers.h"
 #include "Port.h"
 
-static const Port_ConfigType *LocalConfigPtr;
+static const Port_ConfigType *LocalConfigPtr = NULL_PTR;
 
 void Port_Init( const Port_ConfigType *ConfigPtr )
 {
@@ -44,8 +44,8 @@ void Port_Init( const Port_ConfigType *ConfigPtr )
     LocalConfigPtr = ConfigPtr;
 }
 
-
-void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction ) /* cppcheck-suppress misra-c2012-8.4 ; function will not always be defined */
+#if PORT_SET_PIN_DIRECTION_API == STD_ON                                       /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction ) 
 {
     Port_RegisterType *port;
     Port_RegisterType *ports[ 6 ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
@@ -53,8 +53,10 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction ) /
 
     Bfx_PutBits_u32u8u8u32( (uint32 *)&port->MODER, (uint8)( Pin & 0xFu ), 2, (uint8)Direction );
 }
+#endif
 
-void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode ) /* cppcheck-suppress misra-c2012-8.4 ; function will not always be defined */
+#if PORT_SET_PIN_MODE_API == STD_ON                             /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode ) 
 {
     Port_RegisterType *port;
     Port_RegisterType *ports[ 6 ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
@@ -71,8 +73,10 @@ void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode ) /* cppcheck-supp
         Bfx_PutBits_u32u8u8u32( (uint32 *)&port->AFRH, ( ( Pin & 0xFu ) - 8 ), 4, (uint32)Mode );
     }
 }
+#endif
 
-void Port_GetVersionInfo( Std_VersionInfoType *versioninfo ) /* cppcheck-suppress misra-c2012-8.4 ; function will not always be defined */
+#if PORT_VERSION_INFO_API == STD_ON                          /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+void Port_GetVersionInfo( Std_VersionInfoType *versioninfo ) 
 {
     versioninfo->moduleID         = 0;
     versioninfo->sw_major_version = 0;
@@ -80,8 +84,10 @@ void Port_GetVersionInfo( Std_VersionInfoType *versioninfo ) /* cppcheck-suppres
     versioninfo->sw_patch_version = 0;
     versioninfo->vendorID         = 0;
 }
+#endif
 
-void Port_RefreshPortDirection( void ) /* cppcheck-suppress misra-c2012-8.4 ; function will not always be defined */
+#if PORT_REFRESH_PORT_DIRECTION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+void Port_RefreshPortDirection( void )
 {
     Port_RegisterType *port;
     uint32 mask;
@@ -102,3 +108,4 @@ void Port_RefreshPortDirection( void ) /* cppcheck-suppress misra-c2012-8.4 ; fu
         }
     }
 }
+#endif
