@@ -44,8 +44,8 @@ void Port_Init( const Port_ConfigType *ConfigPtr )
     LocalConfigPtr = ConfigPtr;
 }
 
-#if PORT_SET_PIN_DIRECTION_API == STD_ON                                       /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
-void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction ) 
+#if PORT_SET_PIN_DIRECTION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
 {
     Port_RegisterType *port;
     Port_RegisterType *ports[ 6 ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
@@ -55,8 +55,8 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
 }
 #endif
 
-#if PORT_SET_PIN_MODE_API == STD_ON                             /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
-void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode ) 
+#if PORT_SET_PIN_MODE_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
 {
     Port_RegisterType *port;
     Port_RegisterType *ports[ 6 ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
@@ -75,8 +75,8 @@ void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
 }
 #endif
 
-#if PORT_VERSION_INFO_API == STD_ON                          /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
-void Port_GetVersionInfo( Std_VersionInfoType *versioninfo ) 
+#if PORT_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+void Port_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
     versioninfo->moduleID         = 0;
     versioninfo->sw_major_version = 0;
@@ -96,14 +96,17 @@ void Port_RefreshPortDirection( void )
     {
         port = ports[ ( &LocalConfigPtr[ j ] )->Port ];
         mask = 1u;
-        for( uint32 i = 0u; i < 16u; i++ )
+        if( ( ( &LocalConfigPtr[ j ] )->Pin_direction == PORTS_NON_CHANGEABLE ) && ( ( ( &LocalConfigPtr[ j ] )->Mode == PORTS_MODE_INPUT ) || ( ( &LocalConfigPtr[ j ] )->Mode == PORTS_MODE_OUTPUT ) ) )
         {
-            if( Bfx_TstBitLnMask_u32u32_u8( ( &LocalConfigPtr[ j ] )->Pins, mask ) == TRUE )
+            for( uint32 i = 0u; i < 16u; i++ )
             {
-                /*change values on MODER*/
-                Bfx_PutBits_u32u8u8u32( (uint32 *)&port->MODER, ( i * 2 ), 2, (uint32)( &LocalConfigPtr[ j ] )->Mode );
+                if( Bfx_TstBitLnMask_u32u32_u8( ( &LocalConfigPtr[ j ] )->Pins, mask ) == TRUE )
+                {
+                    /*change values on MODER*/
+                    Bfx_PutBits_u32u8u8u32( (uint32 *)&port->MODER, ( i * 2 ), 2, (uint32)( &LocalConfigPtr[ j ] )->Mode );
+                }
+                mask = mask << 1;
             }
-            mask = mask << 1;
         }
     }
 }
