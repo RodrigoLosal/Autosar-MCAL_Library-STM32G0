@@ -7,7 +7,6 @@ static const Port_ConfigType *LocalConfigPtr;
 
 void Port_Init( const Port_ConfigType *ConfigPtr )
 {
-    LocalConfigPtr = ConfigPtr;
     Port_RegisterType *port;
     uint32 mask;
     Port_RegisterType *ports[ 6 ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
@@ -22,16 +21,12 @@ void Port_Init( const Port_ConfigType *ConfigPtr )
             {
                 /*change values on PUPDR*/
                 Bfx_PutBits_u32u8u8u32( (uint32 *)&port->PUPDR, (uint8)( i * 2u ), (uint8)2u, (uint32)( &ConfigPtr[ j ] )->Pull );
-
                 /*change values on OTYPER*/
                 Bfx_PutBits_u32u8u8u32( (uint32 *)&port->OTYPER, i, 1, (uint32)( &ConfigPtr[ j ] )->OutputDrive );
-
                 /*change values on OSPEEDR*/
                 Bfx_PutBits_u32u8u8u32( (uint32 *)&port->OSPEEDR, ( i * 2 ), 2, (uint32)( &ConfigPtr[ j ] )->Speed );
-
                 /*change values on MODER*/
                 Bfx_PutBits_u32u8u8u32( (uint32 *)&port->MODER, ( i * 2 ), 2, (uint32)( &ConfigPtr[ j ] )->Mode );
-
                 if( i < 8u )
                 {
                     /*change values on Altern*/
@@ -46,13 +41,13 @@ void Port_Init( const Port_ConfigType *ConfigPtr )
             mask = mask << 1;
         }
     }
+    LocalConfigPtr = ConfigPtr;
 }
 
 
 void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction ) /* cppcheck-suppress misra-c2012-8.4 ; function will not always be defined */
 {
     Port_RegisterType *port;
-
     Port_RegisterType *ports[ 6 ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
     port                          = ports[ Pin >> 4 ];
 
@@ -62,7 +57,6 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction ) /
 void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode ) /* cppcheck-suppress misra-c2012-8.4 ; function will not always be defined */
 {
     Port_RegisterType *port;
-
     Port_RegisterType *ports[ 6 ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
     port                          = ports[ Pin >> 4 ];
 

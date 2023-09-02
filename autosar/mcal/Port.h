@@ -178,19 +178,19 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
 #include "Port_Cfg.h" /* cppcheck-suppress misra-c2012-20.1 ; it is necesary to use a define for this function */
 void Port_Init( const Port_ConfigType *ConfigPtr );
 
-#if PORT_SET_PIN_DIRECTION_API /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if PORT_SET_PIN_DIRECTION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction );
 #endif
 
-#if PORT_SET_PIN_MODE_API /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if PORT_SET_PIN_MODE_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode );
 #endif
 
-#if PORT_VERSION_INFO_API /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if PORT_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Port_GetVersionInfo( Std_VersionInfoType *versioninfo );
 #endif
 
-#if PORT_REFRESH_PORT_DIRECTION_API /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if PORT_REFRESH_PORT_DIRECTION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Port_RefreshPortDirection( void );
 #endif
 
