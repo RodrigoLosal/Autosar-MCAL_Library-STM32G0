@@ -1,6 +1,6 @@
 pipelines:
   branches:
-    master:
+    '**':
       - step:
           name: Deploy to production
           deployment: production
@@ -11,15 +11,6 @@ pipelines:
             - make
             - make test
             - make docs
-          artifacts:
-            - Build/mcal.*
-      - step:
-          script:
-            - pipe: atlassian/bitbucket-upload-file:0.3.3
-              variables:
-                BITBUCKET_USERNAME: $BITBUCKET_USERNAME
-                BITBUCKET_APP_PASSWORD: $BITBUCKET_APP_PASSWORD
-                FILENAME: "Build/mcal.*"
                 
   pull-requests:
     '**':
