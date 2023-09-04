@@ -7,7 +7,6 @@
  * those specific registers and symbols to specify the port, pin and configuration
  * that will be applied to the pin.
  */
-
 #include "Bfx.h"
 #include "Std_Types.h"
 #include "Registers.h"
@@ -19,7 +18,7 @@
 static const Port_ConfigType *LocalConfigPtr = NULL_PTR;
 
 /**
- * @brief Initialize the GPIO pins to the confiduration store on ConfigPTR.
+ * @brief Initialize the GPIO pins to the configuration store on ConfigPTR.
  *
  * The function changes the registers values of the GPIOS depending on the values
  * of the ConfigPtr struct, this function Initialize all pins and port of the
@@ -28,7 +27,7 @@ static const Port_ConfigType *LocalConfigPtr = NULL_PTR;
  *
  * @param ConfigPtr       Pointer to ConfigPtr struct array.
  *
- * * @reqs   SWS_Port_00140
+ * @reqs   SWS_Port_00140
  */
 void Port_Init( const Port_ConfigType *ConfigPtr )
 {
@@ -73,14 +72,14 @@ void Port_Init( const Port_ConfigType *ConfigPtr )
  * @brief Set the direction of a GPIO during runtime.
  *
  * The function changes the registers values of the GPIOS direction during runtime,
- * to eneable this function change the value of PORT_SET_PIN_DIRECTION_API to STD_ON
+ * to enable this function change the value of PORT_SET_PIN_DIRECTION_API to STD_ON
  * on the Port_Cfg file.
  * To change the direction use the symbols of PORT direction
  *
  * @param Pin             Pin to change the direction.
  * @param Direction       Direction to be changed.
  *
- * * @reqs   SWS_Port_00141
+ * @reqs   SWS_Port_00141
  */
 #if PORT_SET_PIN_DIRECTION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
@@ -104,7 +103,7 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
  * @param Pin             Pin to change the direction.
  * @param Mode            Mode to be changed.
  *
- * * @reqs   SWS_Port_00145
+ * @reqs   SWS_Port_00145
  */
 #if PORT_SET_PIN_MODE_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
@@ -132,7 +131,9 @@ void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
  * The function gives the versioninfo struct the values of the current version.
  * to eneable this function change the value of PORT_VERSION_INFO_API to STD_ON
  * on the Port_Cfg file.
+ * 
  * @param versioninfo             Pointer to Std_VersionInfoType struct.
+ * 
  * @reqs   SWS_Port_00143
  */
 #if PORT_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
@@ -152,7 +153,7 @@ void Port_GetVersionInfo( Std_VersionInfoType *versioninfo )
  * The function refreshes the registers values of the GPIOS moder during runtime to
  * the initial values only if they are configured as non changeables.
  *
- * * @reqs   SWS_Port_00142
+ * @reqs   SWS_Port_00142
  */
 void Port_RefreshPortDirection( void )
 {
