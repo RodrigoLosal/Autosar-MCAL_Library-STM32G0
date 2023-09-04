@@ -7,6 +7,11 @@
 #ifndef REGISTERS_H
 #define REGISTERS_H
 
+/**
+ * @name    Base address values
+ * Symbols to specify the Base values of the registers.
+ */
+/**@{*/
 #define PERIPH_BASE        0x40000000UL                   /*!< Peripherals register base address*/
 #define FLASH_BASE_ADDRESS 0x08000000                     /*!< FLASH ADDRESS */
 #define SRAM_BASE_ADDRESS  0x20000000                     /*!< SRAM ADDRESS */
@@ -24,7 +29,11 @@
 #define SCS_BASE           ( 0xE000E000UL )               /*!< System Control Space Base Address */
 #define NVIC_BASE          ( SCS_BASE + 0x0100UL )        /*!< NVIC Base Address */
 #define NVIC               ( (NVIC_Type *)NVIC_BASE )     /*!< NVIC configuration struct */
+/**@}*/
 
+/**
+ * @brief RCC registers struct.
+ */
 typedef struct
 {
     volatile uint32 CR;        /*!< RCC clock control register*/
@@ -54,6 +63,9 @@ typedef struct
     volatile uint32 CSR;       /*!< control/status register*/
 } Rcc_RegisterType;
 
+/**
+ * @brief GPIOS registers struct.
+ */
 typedef struct
 {
     volatile uint32 MODER;   /*!< GPIO port mode register*/
@@ -69,6 +81,9 @@ typedef struct
     volatile uint32 BRR;     /*!< GPIO port bit reset register*/
 } Port_RegisterType;
 
+/**
+  * @defgroup  Struct casting to base address of the PORTS and RCC
+  @{ */
 #define PORTA                ( (Port_RegisterType *)PORTA_BASE )      /*!< Access to PORTA registers*/
 #define PORTB                ( (Port_RegisterType *)PORTB_BASE )      /*!< Access to PORTB registers*/
 #define PORTC                ( (Port_RegisterType *)PORTC_BASE )      /*!< Access to PORTC registers*/
@@ -76,20 +91,29 @@ typedef struct
 #define PORTE                ( (Port_RegisterType *)PORTE_BASE )      /*!< Access to PORTE registers*/
 #define PORTF                ( (Port_RegisterType *)PORTF_BASE )      /*!< Access to PORTF registers*/
 #define RCC                  ( (RCC_RegisterType *)RCC_BASE_ADDRESS ) /*!< Access to RCC registers*/
+/**@}*/
 
+/**
+  * @defgroup Clock-eneable of different ports
+  @{ */
 #define RCC_GPIOA_CLK_EN( )  RCC->IOPENR |= 0x01u; /*!< GPIO PORTA clock enable*/
 #define RCC_GPIOB_CLK_EN( )  RCC->IOPENR |= 0x02u; /*!< GPIO PORTB clock enable*/
 #define RCC_GPIOC_CLK_EN( )  RCC->IOPENR |= 0x04u; /*!< GPIO PORTC clock enable*/
 #define RCC_GPIOD_CLK_EN( )  RCC->IOPENR |= 0x08u; /*!< GPIO PORTD clock enable*/
 #define RCC_GPIOE_CLK_EN( )  RCC->IOPENR |= 0x10u; /*!< GPIO PORTE clock enable*/
 #define RCC_GPIOF_CLK_EN( )  RCC->IOPENR |= 0x20u; /*!< GPIO PORTF clock enable*/
+/**@}*/
 
+/**
+  * @defgroup Clock-disable of different ports
+  @{ */
 #define RCC_GPIOA_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 0u ); /*!< GPIO PORTA clock disable*/
 #define RCC_GPIOB_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 1u ); /*!< GPIO PORTB clock disable*/
 #define RCC_GPIOC_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 2u ); /*!< GPIO PORTC clock disable*/
 #define RCC_GPIOD_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 3u ); /*!< GPIO PORTD clock disable*/
 #define RCC_GPIOE_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 4u ); /*!< GPIO PORTE clock disable*/
 #define RCC_GPIOF_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 5u ); /*!< GPIO PORTF clock disable*/
+/**@}*/
 
 /**
  * @brief Nested Vectored Interrupt Controller (NVIC) interrupt types for Cortex-M0+ and STM32G0xxxx.

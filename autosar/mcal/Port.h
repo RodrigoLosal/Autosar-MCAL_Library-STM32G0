@@ -1,6 +1,18 @@
+/**
+ * @file Port.h
+ * @brief Port driver configuration.
+ *
+ * This file provides the interface for the GPIO configuration, to use some
+ * functions check the Port_Cfg.h file to configured the values.
+ */
 #ifndef PORT_H__
 #define PORT_H__
 
+/**
+ * @brief  Type of the external data structure containing the initialization data for this module.
+ *
+ * @reqs   SWS_Port_00228
+ */
 typedef struct _Port_ConfigType
 {
     uint8 Port;          /*!<Port where the pin to config is grouped*/
@@ -13,19 +25,51 @@ typedef struct _Port_ConfigType
     uint8 Pin_direction; /*!<pin direction changeable during runtime*/
 } Port_ConfigType;
 
-typedef uint32 Port_PinType; /*!< Data type for the symbolic name of a port pin.*/
+/**
+ * @brief  Data type for the symbolic name of a port pin. the 4 most significant
+ *         bits represent the port of the pin and the 4 least significatn bits
+ *         represent the pin.
+ *
+ * @reqs   SWS_Port_00229
+ */
+typedef uint8 Port_PinType; /*!< Data type for the symbolic name of a port pin.*/
 
+/**
+ * @brief  Data type for the symbolic direction of a pin.
+ *         range: PORT_PIN_IN and PORT_PIN_OUT
+ *
+ * @reqs   SWS_Port_00046
+ */
 typedef uint8 Port_PinDirectionType; /*!< Data type for the symbolic direction of a pin.*/
 
+/**
+ * @brief  Data type for the altern functions of a pin.
+ *         range: PORT_PIN_MODE_AF0, PORT_PIN_MODE_AF1, PORT_PIN_MODE_AF2, PORT_PIN_MODE_AF3,
+ *         PORT_PIN_MODE_AF4, PORT_PIN_MODE_AF5, PORT_PIN_MODE_AF6, PORT_PIN_MODE_AF7 and
+ *         PORT_PIN_MODE_AF8.
+ *
+ * @reqs   SWS_Port_00231
+ */
 typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
 
+/**
+ * @name    PORTS values.
+ * Symbols to specify ports values.
+ */
+/**@{*/
 #define PORTS_A               0u /*!< Port A value */
 #define PORTS_B               1u /*!< Port B value */
 #define PORTS_C               2u /*!< Port C value */
 #define PORTS_D               3u /*!< Port D value */
 #define PORTS_E               4u /*!< Port E value */
 #define PORTS_F               5u /*!< Port F value */
+/**@}*/
 
+/**
+ * @name    GPIO Pin values.
+ * Symbols to specify values of GPIO pins.
+ */
+/**@{*/
 #define PORTS_PIN_0           ( 1U )       /*!< Pin 0 value */
 #define PORTS_PIN_1           ( 1 << 1U )  /*!< Pin 1 value */
 #define PORTS_PIN_2           ( 1 << 2U )  /*!< Pin 2 value */
@@ -42,27 +86,63 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
 #define PORTS_PIN_13          ( 1 << 13U ) /*!< Pin 13 value */
 #define PORTS_PIN_14          ( 1 << 14U ) /*!< Pin 14 value */
 #define PORTS_PIN_15          ( 1 << 15U ) /*!< Pin 15 value */
+/**@}*/
 
+/**
+ * @name    PORT direction.
+ * Symbols to specify values of GPIO pins.
+ */
+/**@{*/
 #define PORTS_CHANGEABLE      0x00u /*!< Port can be changed during runtime */
 #define PORTS_NON_CHANGEABLE  0x01u /*!< Port can not be changed during runtime */
+/**@}*/
 
+/**
+ * @name    PORT mode.
+ * Symbols to specify the mode value of GPIO pins on init function.
+ */
+/**@{*/
 #define PORTS_MODE_INPUT      0x00u /*!< Input mode value */
 #define PORTS_MODE_OUTPUT     0x01u /*!< General purpose output mode value */
 #define PORTS_MODE_ALT        0x02u /*!< Alternate function mode value */
 #define PORTS_MODE_ANALOG     0x03u /*!< Analog mode (reset state) value */
+/**@}*/
 
+/**
+ * @name    PORT mode.
+ * Symbols to specify the mode value of GPIO pins on init function.
+ */
+/**@{*/
 #define PORTS_NOPULL          0x00u /*!< No pull-up, pull-down value */
 #define PORTS_PULLUP          0x01u /*!< Pull-up */
 #define PORTS_PULLDOWN        0x02u /*!< Pull-down */
+/**@}*/
 
+/**
+ * @name    GPIO pull values.
+ * Symbols to specify the pull value of GPIO pins on init function.
+ */
+/**@{*/
 #define PORTS_PUSH_PULL       0x00u /*!< Output push-pull (reset state) value */
 #define PORTS_OPEN_COLECTOR   0x01u /*!< Output open-drain */
+/**@}*/
 
+/**
+ * @name    GPIO Speed values
+ * Symbols to specify the Speed value of GPIO pins on init function.
+ */
+/**@{*/
 #define PORTS_VERY_LOW_SPEED  0x00u /*!< Very low speed value */
 #define PORTS_LOW_SPEED       0x01u /*!< Low speed value */
 #define PORTS_HIGH_SPEED      0x02u /*!< High speed value */
 #define PORTS_VERY_HIGH_SPEED 0x03u /*!< Very high speed value */
+/**@}*/
 
+/**
+ * @name    GPIO altern values
+ * Symbols to specify the altern values of GPIO pins.
+ */
+/**@{*/
 #define PORT_PIN_MODE_AF0     (Port_PinModeType)0x00u /*!< Alternarive funcion 0 */
 #define PORT_PIN_MODE_AF1     (Port_PinModeType)0x01u /*!< Alternarive funcion 1 */
 #define PORT_PIN_MODE_AF2     (Port_PinModeType)0x02u /*!< Alternarive funcion 2 */
@@ -71,7 +151,15 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
 #define PORT_PIN_MODE_AF5     (Port_PinModeType)0x05u /*!< Alternarive funcion 5 */
 #define PORT_PIN_MODE_AF6     (Port_PinModeType)0x06u /*!< Alternarive funcion 6 */
 #define PORT_PIN_MODE_AF7     (Port_PinModeType)0x07u /*!< Alternarive funcion 7 */
+/**@}*/
 
+/**
+ * @name    GPIOA pins values
+ * Symbols to specify the values of GPIO pins on port A,the 4 most significant
+ * bits represent the port of the pin and the 4 least significatn bits
+ * represent the pin.
+ */
+/**@{*/
 #define PORT_PIN_PA_00        (Port_PinType)0x00u /*!< Port A pin 0 value */
 #define PORT_PIN_PA_01        (Port_PinType)0x01u /*!< Port A pin 1 value */
 #define PORT_PIN_PA_02        (Port_PinType)0x02u /*!< Port A pin 2 value */
@@ -88,7 +176,15 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
 #define PORT_PIN_PA_13        (Port_PinType)0x0Du /*!< Port A pin 13 value */
 #define PORT_PIN_PA_14        (Port_PinType)0x0Eu /*!< Port A pin 14 value */
 #define PORT_PIN_PA_15        (Port_PinType)0x0Fu /*!< Port A pin 15 value */
+/**@}*/
 
+/**
+ * @name    GPIOB pins values
+ * Symbols to specify the values of GPIO pins on port B,the 4 most significant
+ * bits represent the port of the pin and the 4 least significatn bits
+ * represent the pin.
+ */
+/**@{*/
 #define PORT_PIN_PB_00        (Port_PinType)0x10u /*!< Port B pin 0 value */
 #define PORT_PIN_PB_01        (Port_PinType)0x11u /*!< Port B pin 1 value */
 #define PORT_PIN_PB_02        (Port_PinType)0x12u /*!< Port B pin 2 value */
@@ -105,7 +201,15 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
 #define PORT_PIN_PB_13        (Port_PinType)0x1Du /*!< Port B pin 13 value */
 #define PORT_PIN_PB_14        (Port_PinType)0x1Eu /*!< Port B pin 14 value */
 #define PORT_PIN_PB_15        (Port_PinType)0x1Fu /*!< Port B pin 15 value */
+/**@}*/
 
+/**
+ * @name    GPIOC pins values
+ * Symbols to specify the values of GPIO pins on port C,the 4 most significant
+ * bits represent the port of the pin and the 4 least significatn bits
+ * represent the pin.
+ */
+/**@{*/
 #define PORT_PIN_PC_00        (Port_PinType)0x20u /*!< Port C pin 0 value */
 #define PORT_PIN_PC_01        (Port_PinType)0x21u /*!< Port C pin 1 value */
 #define PORT_PIN_PC_02        (Port_PinType)0x22u /*!< Port C pin 2 value */
@@ -122,7 +226,15 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
 #define PORT_PIN_PC_13        (Port_PinType)0x2Du /*!< Port C pin 13 value */
 #define PORT_PIN_PC_14        (Port_PinType)0x2Eu /*!< Port C pin 12 value */
 #define PORT_PIN_PC_15        (Port_PinType)0x2Fu /*!< Port C pin 13 value */
+/**@}*/
 
+/**
+ * @name    GPIOD pins values
+ * Symbols to specify the values of GPIO pins on port D,the 4 most significant
+ * bits represent the port of the pin and the 4 least significatn bits
+ * represent the pin.
+ */
+/**@{*/
 #define PORT_PIN_PD_00        (Port_PinType)0x30u /*!< Port D pin 0 value */
 #define PORT_PIN_PD_01        (Port_PinType)0x31u /*!< Port D pin 1 value */
 #define PORT_PIN_PD_02        (Port_PinType)0x32u /*!< Port D pin 2 value */
@@ -132,13 +244,28 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
 #define PORT_PIN_PD_06        (Port_PinType)0x36u /*!< Port D pin 6 value */
 #define PORT_PIN_PD_08        (Port_PinType)0x38u /*!< Port D pin 8 value */
 #define PORT_PIN_PD_09        (Port_PinType)0x39u /*!< Port D pin 9 value */
+/**@}*/
 
+/**
+ * @name    GPIOF pins values
+ * Symbols to specify the values of GPIO pins on port F,the 4 most significant
+ * bits represent the port of the pin and the 4 least significatn bits
+ * represent the pin.
+ */
+/**@{*/
 #define PORT_PIN_PF_00        (Port_PinType)0x51u /*!< Port F pin 1 value */
 #define PORT_PIN_PF_01        (Port_PinType)0x51u /*!< Port F pin 1 value */
 #define PORT_PIN_PF_02        (Port_PinType)0x52u /*!< Port F pin 2 value */
+/**@}*/
 
+/**
+ * @name    GPIOD pins direction
+ * Symbols to specify the direction of the GPIO pins
+ */
+/**@{*/
 #define PORT_PIN_IN           (Port_PinDirectionType)0x00u /*!< Input mode value */
 #define PORT_PIN_OUT          (Port_PinDirectionType)0x01u /*!< General purpose output mode value */
+/**@}*/
 
 #include "Port_Cfg.h" /* cppcheck-suppress misra-c2012-20.1 ; it is necesary to use a define for this function */
 void Port_Init( const Port_ConfigType *ConfigPtr );
