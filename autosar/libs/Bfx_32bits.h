@@ -16,7 +16,7 @@
  *
  * @param   Data Unsigned integer to modify
  * @param   BitPn Number of bit to modify
- * 
+ *
  * @reqs   SWS_Bfx_00001, SWS_Bfx_00002, SWS_Bfx_00008
  */
 static inline void Bfx_SetBit_u32u8( uint32 *Data, uint8 BitPn )
