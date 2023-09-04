@@ -16,9 +16,6 @@ Port_RegisterType PORTF_BASE = { 0xFFFFFFFF, 0x00, 0x00000000, 0x00000000, 0x00,
 
 #include "Port.h"
 
-#undef PORT_PIN_NUMBER_OF_PORTS
-#define PORT_PIN_NUMBER_OF_PORTS 3
-
 /*set the ports and pins and its corresponding values to test*/
 const Port_ConfigType PortsConfig[ PORT_PIN_NUMBER_OF_PORTS ] =
 {
@@ -39,12 +36,12 @@ const Port_ConfigType PortsConfig[ PORT_PIN_NUMBER_OF_PORTS ] =
   .Altern        = 0,
   .Pin_direction = PORTS_NON_CHANGEABLE },
 { .Port          = PORTS_B,
-  .Pins          = PORTS_PIN_13 | PORTS_PIN_10,
+  .Pins          = PORTS_PIN_13 | PORTS_PIN_10 | PORTS_PIN_5,
   .Pull          = PORTS_PULLDOWN,
   .OutputDrive   = PORTS_OPEN_COLECTOR,
   .Speed         = PORTS_VERY_HIGH_SPEED,
-  .Mode          = PORTS_MODE_OUTPUT,
-  .Altern        = 0,
+  .Mode          = PORTS_MODE_ALT,
+  .Altern        = PORT_PIN_MODE_AF2,
   .Pin_direction = PORTS_NON_CHANGEABLE } };
 
 /*this function is required by Ceedling to run any code before the test cases*/
@@ -147,6 +144,28 @@ void test__Port_Init__PortA_pins4and5_OTYPER( void )
 }
 
 /**
+ * @brief   Test the Port_Init function
+ *
+ * This test will check if the Port_Init function is setting the correct values in the register
+ * AFRL for pins 13 and 10 from port B.
+ */
+void test__Port_Init__PortB_pins13and10_AFRL( void )
+{
+    TEST_ASSERT_EQUAL_HEX32( 0x00200000, PORTB->AFRL );
+}
+
+/**
+ * @brief   Test the Port_Init function
+ *
+ * This test will check if the Port_Init function is setting the correct values in the register
+ * AFRH for pins 13 and 10 from port B.
+ */
+void test__Port_Init__PortB_pins13and10_AFRH( void )
+{
+    TEST_ASSERT_EQUAL_HEX32( 0x00200200, PORTB->AFRH );
+}
+
+/**
  * @brief   Test the Port_SetPinDirection port C function
  *
  * This test will check if the Port_SetPinDirection function is setting the correct values in the register
@@ -168,4 +187,70 @@ void test__SetPinDirection__PortC_pin0_OUT( void )
 {
     Port_SetPinDirection( PORT_PIN_PC_00, PORT_PIN_OUT );
     TEST_ASSERT_EQUAL_HEX32( 0xFFFFFFF5, PORTC->MODER );
+}
+
+/**
+ * @brief   Test the Port_SetPinMode port B function
+ *
+ * This test will check if the Port_SetPinMode function is setting the correct values in the register
+ * MODER for pin 0 port C.
+ */
+void test__Port_SetPinMode__PortB_pin13_AF7( void )
+{
+    Port_SetPinMode( PORT_PIN_PB_13, PORT_PIN_MODE_AF7 );
+    TEST_ASSERT_EQUAL_HEX32( 0x00700200, PORTB->AFRH );
+}
+
+/**
+ * @brief   Test the Port_SetPinMode port B function
+ *
+ * This test will check if the Port_SetPinMode function is setting the correct values in the register
+ * MODER for pin 0 port C.
+ */
+void test__Port_SetPinMode__PortB_pin05_AF7( void )
+{
+    Port_SetPinMode( PORT_PIN_PB_05, PORT_PIN_MODE_AF7 );
+    TEST_ASSERT_EQUAL_HEX32( 0x00700000, PORTB->AFRL );
+}
+
+/**
+ * @brief   Test the Port_GetVersionInfo
+ *
+ * This test will check if the Port_GetVersionInfo function is giving the correct values
+ */
+void test__Port_GetVersionInfo( void )
+{
+    Std_VersionInfoType test;
+    Port_GetVersionInfo( &test );
+    TEST_ASSERT_EQUAL_HEX32( 0, test.moduleID );
+    TEST_ASSERT_EQUAL_HEX32( 0, test.sw_major_version );
+    TEST_ASSERT_EQUAL_HEX32( 0, test.sw_minor_version );
+    TEST_ASSERT_EQUAL_HEX32( 0, test.sw_patch_version );
+    TEST_ASSERT_EQUAL_HEX32( 0, test.vendorID );
+}
+
+/**
+ * @brief   Test the Port_RefreshPortDirection
+ *
+ * This test will check if the Port_RefreshPortDirection function is refreshing the values on
+ * a non changeable port
+ */
+void test__Port_RefreshPortDirection_non_changeable( void )
+{
+    PORTA->MODER = 0xEBFFFFFF;
+    Port_RefreshPortDirection( );
+    TEST_ASSERT_EQUAL_HEX32( PORTA->MODER, 0xEBFFF5FF );
+}
+
+/**
+ * @brief   Test the Port_RefreshPortDirection
+ *
+ * This test will check if the Port_RefreshPortDirection function is not refreshing the values on
+ * a changeable port
+ */
+void test__Port_RefreshPortDirection_changeable( void )
+{
+    PORTC->MODER = 0xFFFFFFFF;
+    Port_RefreshPortDirection( );
+    TEST_ASSERT_EQUAL_HEX32( PORTC->MODER, 0xFFFFFFFF );
 }
