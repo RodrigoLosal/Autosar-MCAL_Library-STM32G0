@@ -19,19 +19,19 @@
 #define CRC16_8LEFT                       8
 
 #define CRC_16BITARC_POLYNOMIAL_REFLECTED (uint16)0xA001
-#define CRC_16BITARC_LSB 0x00001
+#define CRC_16BITARC_LSB                  0x00001
 
-#define CRC_32BIT_POLYNOMIAL_REFLECTED (uint32) 0xEDB88320
-#define CRC_32BIT_XORVALUE 0xFFFFFFFF
-#define CRC_32BIT_LSB 0x00000001u
+#define CRC_32BIT_POLYNOMIAL_REFLECTED    (uint32)0xEDB88320u
+#define CRC_32BIT_XORVALUE                0xFFFFFFFFu
+#define CRC_32BIT_LSB                     0x00000001u
 
-#define CRC_CRC32P4_POLYNOMIAL_REFLECTED (uint32) 0xC8DF352F
-#define CRC_32BITP4_XORVALUE 0xFFFFFFFF
-#define CRC_32BITP4_LSB 0x00000001u
+#define CRC_CRC32P4_POLYNOMIAL_REFLECTED  (uint32)0xC8DF352Fu
+#define CRC_32BITP4_XORVALUE              0xFFFFFFFFu
+#define CRC_32BITP4_LSB                   0x00000001u
 
-#define CRC_CRC64_POLYNOMIAL_REFLECTED (uint64)  0xC96C5795D7870F42
-#define CRC_64BIT_XORVALUE 0xFFFFFFFFFFFFFFFF
-#define CRC_64BIT_LSB 0x0000000000000001UL
+#define CRC_CRC64_POLYNOMIAL_REFLECTED    (uint64)0xC96C5795D7870F42UL
+#define CRC_64BIT_XORVALUE                0xFFFFFFFFFFFFFFFFUL
+#define CRC_64BIT_LSB                     0x0000000000000001UL
 
 #define REFLECTLSB                        0x01
 
@@ -46,7 +46,7 @@ uint8 Crc_CalculateCRC8( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_
     const uint8 Crc_Polynomial = CRC8_SAEJ1850_POLYNOMIAL;
     uint8 crcValue             = Crc_StartValue8;
 
-    if( Crc_IsFirstCall )
+    if( Crc_IsFirstCall == TRUE )
     {
         crcValue = FIRSTCALLCRC8;
     }
@@ -57,7 +57,7 @@ uint8 Crc_CalculateCRC8( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_
 
         for( uint8 bit = 0; bit < CRC8NBITS; bit++ )
         {
-            if( crcValue & CRC8MSB )
+            if( ( crcValue & CRC8MSB ) != FALSE ) /*Check on test branch*/
             {
                 crcValue = ( crcValue << 1 ) ^ Crc_Polynomial;
             }
@@ -76,7 +76,7 @@ uint8 Crc_CalculateCRC8H2F( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 C
     const uint8 Crc_Polynomial = CRC8H2F_POLYNOMIAL;
     uint8 crcValue             = Crc_StartValue8H2F;
 
-    if( Crc_IsFirstCall )
+    if( Crc_IsFirstCall == TRUE )
     {
         crcValue = FIRSTCALLCRC8H2F;
     }
@@ -87,7 +87,7 @@ uint8 Crc_CalculateCRC8H2F( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 C
 
         for( uint8 bit = 0; bit < CRC8H2FNBITS; bit++ )
         {
-            if( crcValue & CRC8H2NMSB )
+            if( ( crcValue & CRC8H2NMSB ) != FALSE ) /*Check on test branch*/
             {
                 crcValue = ( crcValue << 1 ) ^ Crc_Polynomial;
             }
@@ -106,7 +106,7 @@ uint16 Crc_CalculateCRC16( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 C
     const uint16 Crc_Polynomial = CRC16_POLYNOMIAL;
     uint16 crcValue             = Crc_StartValue16;
 
-    if( Crc_IsFirstCall )
+    if( Crc_IsFirstCall == TRUE )
     {
         crcValue = FIRSTCALLCRC16;
     }
@@ -117,7 +117,7 @@ uint16 Crc_CalculateCRC16( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 C
 
         for( uint8 bit = 0; bit < CRC16NBITS; bit++ )
         {
-            if( crcValue & CRC16MSB )
+            if( ( crcValue & CRC16MSB ) != FALSE ) /*Check on test branch*/
             {
                 crcValue = ( crcValue << 1 ) ^ Crc_Polynomial;
             }
@@ -134,25 +134,25 @@ uint16 Crc_CalculateCRC16( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 C
 /*
 New function of 16 bits with data reflected
 */
-uint16 Crc_CalculateCRC16ARC(const uint8* Crc_DataPtr, uint32 Crc_Length, uint16 Crc_StartValue16, boolean Crc_IsFirstCall)
+uint16 Crc_CalculateCRC16ARC( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 Crc_StartValue16, boolean Crc_IsFirstCall )
 {
     const uint16 Crc_Polynomial = CRC_16BITARC_POLYNOMIAL_REFLECTED;
     uint16 crcValue             = Crc_StartValue16;
     uint8 bit;
 
-    if(Crc_Length != 0)
+    if( Crc_Length != 0 )
     {
-        if( Crc_IsFirstCall )
+        if( Crc_IsFirstCall == TRUE )
         {
-            crcValue = (uint16) 0x0000;
+            crcValue = (uint16)0x0000;
         }
         for( uint32 i = Crc_Length; i != 0; i-- )
         {
-            crcValue ^= (uint16) *Crc_DataPtr;
+            crcValue ^= (uint16)*Crc_DataPtr;
 
             for( bit = 0; bit < 8; bit++ )
             {
-                if( ((crcValue) & CRC_16BITARC_LSB) != 0 )
+                if( ( (crcValue)&CRC_16BITARC_LSB ) != FALSE )
                 {
                     crcValue = ( crcValue >> 1 ) ^ Crc_Polynomial;
                 }
@@ -161,21 +161,22 @@ uint16 Crc_CalculateCRC16ARC(const uint8* Crc_DataPtr, uint32 Crc_Length, uint16
                     crcValue >>= 1;
                 }
             }
+            /* cppcheck-suppress misra-c2012-17.8 ; It's needed to increment the value of the variable*/
             Crc_DataPtr++;
         }
     }
     return crcValue;
 }
 
-uint32 Crc_CalculateCRC32(const uint8* Crc_DataPtr, uint32 Crc_Length, uint32 Crc_StartValue32, boolean Crc_IsFirstCall)
+uint32 Crc_CalculateCRC32( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32 Crc_StartValue32, boolean Crc_IsFirstCall )
 {
-    const uint32 Crc_Polynomial = CRC_32BIT_POLYNOMIAL_REFLECTED; 
-    uint32 crcValue = Crc_StartValue32;
+    const uint32 Crc_Polynomial = CRC_32BIT_POLYNOMIAL_REFLECTED;
+    uint32 crcValue             = Crc_StartValue32;
     uint8 bit;
 
-    if(Crc_Length != 0u)
+    if( Crc_Length != 0u )
     {
-        if(Crc_IsFirstCall)
+        if( Crc_IsFirstCall == TRUE )
         {
             crcValue = CRC_32BIT_XORVALUE;
         }
@@ -184,21 +185,22 @@ uint32 Crc_CalculateCRC32(const uint8* Crc_DataPtr, uint32 Crc_Length, uint32 Cr
             crcValue ^= CRC_32BIT_XORVALUE;
         }
 
-        for (uint32 i = Crc_Length; i != 0; i--)
+        for( uint32 i = Crc_Length; i != 0; i-- )
         {
-            crcValue ^= (uint32) *Crc_DataPtr; 
+            crcValue ^= (uint32)*Crc_DataPtr;
 
-            for ( bit = 0; bit < 8; bit++)
+            for( bit = 0; bit < 8; bit++ )
             {
-                if ((crcValue & CRC_32BIT_LSB) != 0u) 
+                if( ( crcValue & CRC_32BIT_LSB ) != FALSE )
                 {
-                    crcValue = (crcValue >> 1) ^ Crc_Polynomial;
+                    crcValue = ( crcValue >> 1 ) ^ Crc_Polynomial;
                 }
                 else
                 {
                     crcValue >>= 1;
                 }
             }
+            /* cppcheck-suppress misra-c2012-17.8 ; It's needed to increment the value of the variable*/
             Crc_DataPtr++;
         }
         crcValue ^= CRC_32BIT_XORVALUE;
@@ -206,14 +208,14 @@ uint32 Crc_CalculateCRC32(const uint8* Crc_DataPtr, uint32 Crc_Length, uint32 Cr
     return crcValue;
 }
 
-uint32 Crc_CalculateCRC32P4(const uint8* Crc_DataPtr, uint32 Crc_Length, uint32 Crc_StartValue32, boolean Crc_IsFirstCall)
+uint32 Crc_CalculateCRC32P4( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32 Crc_StartValue32, boolean Crc_IsFirstCall )
 {
-    uint8 i;
+    uint8 bit;
     uint32 crcValue;
     crcValue = Crc_StartValue32;
-    if(Crc_Length != 0)
+    if( Crc_Length != 0 )
     {
-        if(Crc_IsFirstCall)
+        if( Crc_IsFirstCall == TRUE )
         {
             crcValue = CRC_32BITP4_XORVALUE;
         }
@@ -221,20 +223,21 @@ uint32 Crc_CalculateCRC32P4(const uint8* Crc_DataPtr, uint32 Crc_Length, uint32 
         {
             crcValue ^= CRC_32BITP4_XORVALUE;
         }
-        for(uint32 i = Crc_Length; i != 0; i--)
+        for( uint32 i = Crc_Length; i != 0; i-- )
         {
-            crcValue ^= (uint32) *Crc_DataPtr;
-            for(i = 0; i < 8; i++)
+            crcValue ^= (uint32)*Crc_DataPtr;
+            for( bit = 0; bit < 8; bit++ )
             {
-                if((crcValue & CRC_32BITP4_LSB) != 0u)
+                if( ( crcValue & CRC_32BITP4_LSB ) != FALSE )
                 {
-                    crcValue = (crcValue >> 1) ^ CRC_CRC32P4_POLYNOMIAL_REFLECTED;
+                    crcValue = ( crcValue >> 1 ) ^ CRC_CRC32P4_POLYNOMIAL_REFLECTED;
                 }
                 else
                 {
                     crcValue >>= 1;
                 }
             }
+            /* cppcheck-suppress misra-c2012-17.8 ; It's needed to increment the value of the variable*/
             Crc_DataPtr++;
         }
         crcValue ^= CRC_32BITP4_XORVALUE;
@@ -242,14 +245,14 @@ uint32 Crc_CalculateCRC32P4(const uint8* Crc_DataPtr, uint32 Crc_Length, uint32 
     return crcValue;
 }
 
-uint64 Crc_CalculateCRC64(const uint8* Crc_DataPtr, uint32 Crc_Length, uint64 Crc_StartValue64, boolean Crc_IsFirstCall)
+uint64 Crc_CalculateCRC64( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint64 Crc_StartValue64, boolean Crc_IsFirstCall )
 {
-    uint8 i;
+    uint8 bit;
     uint64 crcValue;
     crcValue = Crc_StartValue64;
-    if(Crc_Length != 0)
+    if( Crc_Length != 0 )
     {
-        if(Crc_IsFirstCall)
+        if( Crc_IsFirstCall == TRUE )
         {
             crcValue = CRC_64BIT_XORVALUE;
         }
@@ -257,20 +260,21 @@ uint64 Crc_CalculateCRC64(const uint8* Crc_DataPtr, uint32 Crc_Length, uint64 Cr
         {
             crcValue ^= CRC_64BIT_XORVALUE;
         }
-        for(uint32 i = Crc_Length; i != 0; i--)
+        for( uint32 i = Crc_Length; i != 0; i-- )
         {
-            crcValue ^= (uint64) *Crc_DataPtr;
-            for(i = 0; i < 8; i++)
+            crcValue ^= (uint64)*Crc_DataPtr;
+            for( bit = 0; bit < 8; bit++ )
             {
-                if((crcValue & CRC_64BIT_LSB) != 0u)
+                if( ( crcValue & CRC_64BIT_LSB ) != FALSE )
                 {
-                    crcValue = (crcValue >> 1) ^ CRC_CRC64_POLYNOMIAL_REFLECTED;
+                    crcValue = ( crcValue >> 1 ) ^ CRC_CRC64_POLYNOMIAL_REFLECTED;
                 }
                 else
                 {
                     crcValue >>= 1;
                 }
             }
+            /* cppcheck-suppress misra-c2012-17.8 ; It's needed to increment the value of the variable*/
             Crc_DataPtr++;
         }
         crcValue ^= CRC_64BIT_XORVALUE;
