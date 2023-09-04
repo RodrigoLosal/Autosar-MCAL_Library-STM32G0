@@ -1,3 +1,11 @@
+/**
+ * @file Nvic.h
+ * @brief Complex Device Driver (CDD) for the NVIC.
+ *
+ * This file provides the interface for controlling the NVIC functionality. It controls the activation
+ * of interrupts in ARM microcontrollers via the NVIC peripheral
+ */
+
 #ifndef NVIC_H
 #define NVIC_H
 
