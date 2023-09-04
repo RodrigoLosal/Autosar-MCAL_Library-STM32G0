@@ -42,6 +42,14 @@ const Port_ConfigType PortsConfig[ PORT_PIN_NUMBER_OF_PORTS ] =
   .Speed         = PORTS_VERY_HIGH_SPEED,
   .Mode          = PORTS_MODE_ALT,
   .Altern        = PORT_PIN_MODE_AF2,
+  .Pin_direction = PORTS_NON_CHANGEABLE },
+{ .Port          = PORTS_D,
+  .Pins          = PORTS_PIN_1,
+  .Pull          = PORTS_PULLDOWN,
+  .OutputDrive   = PORTS_OPEN_COLECTOR,
+  .Speed         = PORTS_VERY_HIGH_SPEED,
+  .Mode          = PORTS_MODE_INPUT,
+  .Altern        = 0,
   .Pin_direction = PORTS_NON_CHANGEABLE } };
 
 /*this function is required by Ceedling to run any code before the test cases*/
@@ -253,4 +261,17 @@ void test__Port_RefreshPortDirection_changeable( void )
     PORTC->MODER = 0xFFFFFFFF;
     Port_RefreshPortDirection( );
     TEST_ASSERT_EQUAL_HEX32( PORTC->MODER, 0xFFFFFFFF );
+}
+
+/**
+ * @brief   Test the Port_RefreshPortDirection
+ *
+ * This test will check if the Port_RefreshPortDirection function is not refreshing the values on
+ * a changeable port
+ */
+void test__Port_RefreshPortDirection_non_changeable_D( void )
+{
+    PORTD->MODER = 0xFFFFFFFF;
+    Port_RefreshPortDirection( );
+    TEST_ASSERT_EQUAL_HEX32( PORTD->MODER, 0xFFFFFFF3 );
 }
