@@ -13,7 +13,7 @@
 #include "Bfx_32bits.h"
 
 /**
-  * @defgroup Values representing the generation of the register offset and and the index for the iqr priority register
+  * @defgroup Operations representing the generation of the register offset and the index for the irq priority register
   @{ */
 #define BIT_SHIFT( irq ) ( ( ( ( (uint32)( irq ) ) ) & 0x03UL ) * 8UL ) /*!< Calculate the bit shift for IRQ priority */
 #define IP_IDX( irq )    ( ( ( (uint32)( irq ) ) >> 2UL ) )             /*!< Calculate the index for IRQ priority register */
@@ -21,7 +21,7 @@
   @} */
 
 /**
-  * @defgroup Values representing the minimum and maximum irq value
+  * @defgroup MinMaxValues representing the minimum and maximum irq value
   @{ */
 #define NVIC_MIN_IRQ     16U /*!< Minimum IQR value */
 #define NVIC_MAX_IRQ     30U /*!< Maximum IRQ value*/
@@ -29,18 +29,16 @@
   @} */
 
 /**
-  * @defgroup Values representing the byte and irq masks
+  * @defgroup MAskValues representing the byte and irq masks
   @{ */
 #define BYTE_MASK        0xFFU  /*!< Byte mask in 32-bit */
 #define IRQ_MASK         0x1FUL /*!< Mask to obtain bits from an IRQ value */
-
 /**
   @} */
 
 /**
 * @defgroup Values representing return values
 @{ */
-#define IRQ_PENDING      1UL   /*!< Value to specifie IRQ is pending */
 #define IRQ_NOT_PENDING  0UL   /*!< Value to specifie IRQ is not pending */
 #define INVALID_PRIORITY 0xFFU /*!< Invalid priority indicator */
 /**
