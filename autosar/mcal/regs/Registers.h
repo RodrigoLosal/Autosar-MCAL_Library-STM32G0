@@ -82,7 +82,7 @@ typedef struct
 } Port_RegisterType;
 
 /**
-  * @defgroup Operations to cast a structure on the base address of the ports and RCC
+  * @defgroup  Struct casting to base address of the PORTS and RCC
   @{ */
 #define PORTA                ( (Port_RegisterType *)PORTA_BASE )      /*!< Access to PORTA registers*/
 #define PORTB                ( (Port_RegisterType *)PORTB_BASE )      /*!< Access to PORTB registers*/
@@ -94,7 +94,7 @@ typedef struct
 /**@}*/
 
 /**
-  * @defgroup Operations to eneable the clock of different ports
+  * @defgroup Clock-eneable of different ports
   @{ */
 #define RCC_GPIOA_CLK_EN( )  RCC->IOPENR |= 0x01u; /*!< GPIO PORTA clock enable*/
 #define RCC_GPIOB_CLK_EN( )  RCC->IOPENR |= 0x02u; /*!< GPIO PORTB clock enable*/
@@ -105,7 +105,7 @@ typedef struct
 /**@}*/
 
 /**
-  * @defgroup Operations to diseable the clock of different ports
+  * @defgroup Clock-disable of different ports
   @{ */
 #define RCC_GPIOA_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 0u ); /*!< GPIO PORTA clock disable*/
 #define RCC_GPIOB_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 1u ); /*!< GPIO PORTB clock disable*/
