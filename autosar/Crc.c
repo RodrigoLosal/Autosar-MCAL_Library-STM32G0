@@ -1,5 +1,4 @@
 #include "Std_Types.h"
-#include "Platform_Types.h"
 #include "Crc.h"
 
 #define CRC8_SAEJ1850_POLYNOMIAL          0x1D
