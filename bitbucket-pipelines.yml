@@ -2,13 +2,13 @@ pipelines:
   branches:
     '**':
       - step:
-          name: Build binaries
-          deployment: production
-          runs-on:
+        name: Build binaries
+        deployment: production
+        runs-on:
           - self.hosted
           - linux.shell
-          script:
-            - make clean && make
+        script:
+          - make clean && make
       - step:
         name: Testing
         runs-on:
