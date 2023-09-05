@@ -34,7 +34,7 @@
     - startup.c #
     - autosar/mcal/Nvic.c
     - autosar/mcal/Port.c
-    - autosar/Crc.c
+    - autosar/libs/Crc.c
   :utilities:
     - gcovr
   :reports:
