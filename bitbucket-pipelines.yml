@@ -1,0 +1,25 @@
+pipelines:
+  branches:
+    '**':
+       - step:
+           name: Build binaries
+           deployment: production
+           runs-on:
+             - self.hosted
+             - linux.shell
+           script:
+             - make clean && make
+       - step:
+          name: Testing
+          runs-on:
+            - self.hosted
+            - linux.shell
+          script:
+            - make test
+       - step:
+          name: Documentation
+          runs-on:
+            - self.hosted
+            - linux.shell
+          script:
+            - make docs
