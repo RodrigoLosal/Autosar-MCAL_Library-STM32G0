@@ -7,7 +7,6 @@ pipelines:
              - self.hosted
              - linux.shell
            script:
-             - make clean
              - make
        - step:
           name: Testing
