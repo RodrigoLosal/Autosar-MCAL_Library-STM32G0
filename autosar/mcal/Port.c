@@ -131,9 +131,9 @@ void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
  * The function gives the versioninfo struct the values of the current version.
  * to eneable this function change the value of PORT_VERSION_INFO_API to STD_ON
  * on the Port_Cfg file.
- * 
+ *
  * @param versioninfo             Pointer to Std_VersionInfoType struct.
- * 
+ *
  * @reqs   SWS_Port_00143
  */
 #if PORT_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
