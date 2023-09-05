@@ -2,33 +2,21 @@ pipelines:
   branches:
     '**':
       - step:
-          name: Deploy to production
+          name: Build binaries
           deployment: production
           runs-on:
           - self.hosted
           - linux.shell
           script:
-            - make
-            - make test
-            - make docs
-                
-  pull-requests:
-    '**':
-    - step:
-        name: Build
-        runs-on:
-          - self.hosted
-          - linux.shell
-        script:
-          - make clean && make
-    - step:
+            - make clean && make
+      - step:
         name: Testing
         runs-on:
           - self.hosted
           - linux.shell
         script:
           - make test
-    - step:
+      - step:
         name: Documentation
         runs-on:
           - self.hosted
