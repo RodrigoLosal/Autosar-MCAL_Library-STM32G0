@@ -3,12 +3,11 @@ pipelines:
     '**':
        - step:
            name: Build binaries
-           deployment: production
            runs-on:
              - self.hosted
              - linux.shell
            script:
-             - make clean && make
+             - make
        - step:
           name: Testing
           runs-on:
