@@ -15,10 +15,3 @@ pipelines:
             - linux.shell
           script:
             - make test
-       - step:
-          name: Documentation
-          runs-on:
-            - self.hosted
-            - linux.shell
-          script:
-            - make docs
