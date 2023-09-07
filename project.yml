@@ -32,6 +32,8 @@
   :uncovered_ignore_list:
     - main.c #
     - startup.c #
+    - autosar/mcal/Nvic.c
+    - autosar/mcal/Port.c
   :utilities:
     - gcovr
   :reports:

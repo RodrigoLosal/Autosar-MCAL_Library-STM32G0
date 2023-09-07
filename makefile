@@ -2,7 +2,7 @@
 TARGET = mcal
 
 #---Files to compile
-SRCS = main.c startup.c
+SRCS = main.c startup.c Nvic.c Port.c Port_Cfg.c
 
 #---Linker script
 LINKER = linker.ld
@@ -16,8 +16,8 @@ SRC_PATHS += cfg
 INC_PATHS  = .
 INC_PATHS += autosar
 INC_PATHS += autosar/libs
-INC_PATHS += autosar/regs
 INC_PATHS += autosar/mcal
+INC_PATHS += autosar/mcal/regs
 INC_PATHS += cfg
 
 #---Set toolchain
@@ -49,6 +49,8 @@ LFLAGS += -Wl,-Map=Build/$(TARGET).map	# Generate map file
 
 #Linter ccpcheck flags
 LNFLAGS  = --inline-suppr       # comments to suppress lint warnings
+LNFLAGS += --enable=warning,style # enable only warnings
+LNFLAGS += --error-exitcode=1	# return error if any warnings
 LNFLAGS += --quiet              # spit only useful information
 LNFLAGS += --std=c11            # check against C11
 LNFLAGS += --template=gcc       # display warning gcc style
@@ -103,7 +105,7 @@ debug :
 format :
 	@clang-format -style=file -i --Werror $(FILES)
 
-lint :
+lint : format
 	mkdir -p Build/checks
 	cppcheck --addon=misra.json --suppressions-list=.msupress $(LNFLAGS) autosar
 
@@ -112,7 +114,7 @@ test : format build
 	ceedling gcov:all utils:gcov
 	firefox Build/ceedling/artifacts/gcov/GcovCoverageResults.html
 
-docs :
+docs : format
 	mkdir -p Build/doxygen 
 	mkdir -p Build/sphinx 
 	mkdir -p Build/sphinx/_template 
