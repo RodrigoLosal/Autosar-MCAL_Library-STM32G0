@@ -31,7 +31,7 @@ typedef uint16 Dio_LevelType;
 typedef uint16 Dio_PortLevelType;
 
 
-typedef struct Dio_ChannelGroupType
+typedef struct
 {
     uint8 mask;
     uint8 offset;
