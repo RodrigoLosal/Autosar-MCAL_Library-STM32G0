@@ -23,11 +23,11 @@ typedef struct
 } Port_RegisterType;
 
 extern Port_RegisterType PORTA_BASE; /*!< GPIOA ADDRESS */
-extern Port_RegisterType PORTB_BASE; /*!< GPIOA ADDRESS */
-extern Port_RegisterType PORTC_BASE; /*!< GPIOA ADDRESS */
-extern Port_RegisterType PORTD_BASE; /*!< GPIOA ADDRESS */
-extern Port_RegisterType PORTE_BASE; /*!< GPIOA ADDRESS */
-extern Port_RegisterType PORTF_BASE; /*!< GPIOA ADDRESS */
+extern Port_RegisterType PORTB_BASE; /*!< GPIOB ADDRESS */
+extern Port_RegisterType PORTC_BASE; /*!< GPIOC ADDRESS */
+extern Port_RegisterType PORTD_BASE; /*!< GPIOD ADDRESS */
+extern Port_RegisterType PORTE_BASE; /*!< GPIOE ADDRESS */
+extern Port_RegisterType PORTF_BASE; /*!< GPIOF ADDRESS */
 
 /**
  * @name    Register access
