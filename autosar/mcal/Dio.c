@@ -80,8 +80,8 @@ Dio_LevelType Dio_FlipChannel( Dio_ChannelType ChannelId )
     if( ( ChannelId >= MIN_NUM_CHANNELS ) && ( ChannelId <= MAX_NUM_CHANNELS ) )
     {
         Dio_PortLevelType *Port_Ch = NULL;
-        // Dio_PortLevelType *Pin_Ch  = NULL;
-        Dio_PortType Channel_Id = 0;
+        Dio_PortLevelType *Pin_Ch  = NULL;
+        Dio_PortType Channel_Id    = 0;
         uint8 Array_ID;
 
         for( Array_ID = 0; Array_ID < NUM_CHANNELS; Array_ID++ )
@@ -93,9 +93,9 @@ Dio_LevelType Dio_FlipChannel( Dio_ChannelType ChannelId )
         }
 
         Port_Ch = &( Dio_PortChannels[ Channel_Id ].Port );
-        // Pin_Ch  = &( Dio_PortChannels[ Channel_Id ].Pin_Reg );
+        Pin_Ch  = &( Dio_PortChannels[ Channel_Id ].Pin_Reg );
 
-        if( 1 )
+        if( Bfx_GetBit_u32u8_u8( (uint32 *)&Pin_Ch, Dio_PortChannels[ Channel_Id ].Pin ) != 0 )
         {
             Bfx_ClrBit_u32u8( (uint32 *)&Port_Ch, Dio_PortChannels[ Channel_Id ].Pin );
             ChannelLevel = STD_LOW;
