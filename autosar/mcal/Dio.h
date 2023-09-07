@@ -1,7 +1,12 @@
 #ifndef DIO_H_
 #define DIO_H_
 
-#include "../autosar/mcal/Platform_Types.h"
+#include "Dio.h"
+#include "Platform_Types.h"
+#include "Registers.h"
+#include "Bfx.h"
+#include "Std_Types.h"
+#include "Dio_Cfg.h"
 
 
 #define DIO_CONFIGURED_CHANNLES 1u
@@ -12,14 +17,18 @@
 #define DIO_SW_MINOR_VERSION    (uint8)0u
 #define DIO_SW_PATCH_VERSION    (uint8)0u
 
+#define NUM_CHANNELS            1u
 
-typedef uint8 Dio_ChannelType;
+#define NULL                    ( (void *)0 )
 
-typedef uint8 Dio_PortType;
 
-typedef uint8 Dio_LevelType;
+typedef uint16 Dio_ChannelType;
 
-typedef uint8 Dio_PortLevelType;
+typedef uint16 Dio_PortType;
+
+typedef uint16 Dio_LevelType;
+
+typedef uint16 Dio_PortLevelType;
 
 
 typedef struct Dio_ChannelGroupType
@@ -33,7 +42,9 @@ typedef struct Dio_ChannelGroupType
 typedef struct
 {
     Dio_PortType Port;
+    Dio_PortType Port_Num;
     Dio_ChannelType Ch_Num;
+    Dio_PortType Pin_Reg;
     uint8 Pin;
 } Dio_ConfigChannel;
 
@@ -56,6 +67,17 @@ enum Channel_ID
     CHANNEL13_ID,
     CHANNEL14_ID,
     CHANNEL15_ID,
+};
+
+enum Port_ID
+{
+    PORT0_ID = 0,
+    PORT1_ID,
+    PORT2_ID,
+    PORT3_ID,
+    PORT4_ID,
+    PORT5_ID,
+    PORT6_ID,
 };
 
 #define DIO_PIN_PA_00 (Dio_ChannelType)0x00u
@@ -172,7 +194,7 @@ void Dio_WriteChannel( Dio_ChannelType ChannelId, Dio_LevelType Level );
 Dio_LevelType Dio_FlipChannel( Dio_ChannelType ChannelId );
 Dio_PortLevelType Dio_ReadPort( Dio_PortType PortId );
 void Dio_WritePort( Dio_PortType PortId, Dio_PortLevelType Level );
-void Dio_WriteChannelGroup( const Dio_ChannelGroupType *ChannelGroupIdPtr, Dio_PortLevelType Level );
+Dio_PortLevelType Dio_ReadChannelGroup( const Dio_ChannelGroupType *ChannelGroupIdPtr );
 void Dio_WriteChannelGroup( const Dio_ChannelGroupType *ChannelGroupIdPtr, Dio_PortLevelType Level );
 void Dio_GetVersionInfo( Std_VersionInfoType *versioninfo );
 void Dio_MaskedWritePort( Dio_PortType PortId, Dio_PortLevelType Level, Dio_PortLevelType Mask );
