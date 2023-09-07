@@ -1,5 +1,4 @@
 #include "Dio.h"
-#include "Platform_Types.h"
 #include "Registers.h"
 #include "Std_Types.h"
 #include "Dio_Cfg.h"
