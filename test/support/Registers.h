@@ -103,7 +103,7 @@ typedef struct
 
 extern NVIC_Type *NVIC_Mock;
 
-#define NVIC NVIC_Mock 
+#define NVIC NVIC_Mock
 
 
 #endif
