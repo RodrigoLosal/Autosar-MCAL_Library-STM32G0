@@ -96,8 +96,7 @@ uint8 Crc_CalculateCRC8H2F( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 C
             }
         }
     }
-
-    return crcValue;
+    return ~crcValue;
 }
 
 uint16 Crc_CalculateCRC16( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 Crc_StartValue16, boolean Crc_IsFirstCall )
@@ -246,7 +245,7 @@ uint32 Crc_CalculateCRC32P4( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32
 
 uint64 Crc_CalculateCRC64( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint64 Crc_StartValue64, boolean Crc_IsFirstCall )
 {
-    uint8 bit;
+    // uint8 bit;
     uint64 crcValue;
     crcValue = Crc_StartValue64;
     if( Crc_Length != 0 )
@@ -262,7 +261,7 @@ uint64 Crc_CalculateCRC64( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint64 C
         for( uint32 i = Crc_Length; i != 0; i-- )
         {
             crcValue ^= (uint64)*Crc_DataPtr;
-            for( bit = 0; bit < 8; bit++ )
+            for( uint8 bit = 0; bit < 8; bit++ )
             {
                 if( ( crcValue & CRC_64BIT_LSB ) != FALSE )
                 {
