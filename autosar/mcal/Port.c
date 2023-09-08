@@ -115,12 +115,12 @@ void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
     if( ( Pin & 0xFu ) < 8u )
     {
         /*change values on Altern*/
-        Bfx_PutBits_u32u8u8u32( (uint32 *)&port->AFRL, ( Pin & 0xFu ), 4, (uint32)Mode );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&port->AFRL, ( Pin & 0xFu ) * 4, 4, (uint32)Mode );
     }
     else
     {
         /*change values on Altern*/
-        Bfx_PutBits_u32u8u8u32( (uint32 *)&port->AFRH, ( ( Pin & 0xFu ) - 8 ), 4, (uint32)Mode );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&port->AFRH, ( ( Pin & 0xFu ) - 8 ) * 4, 4, (uint32)Mode );
     }
 }
 #endif
