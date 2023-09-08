@@ -1,6 +1,5 @@
-#ifndef REGISTERS_H__
-
-#define REGISTERS_H__
+#ifndef REGISTERS_H
+#define REGISTERS_H
 
 #include "Std_Types.h"
 
@@ -42,8 +41,6 @@ extern Port_RegisterType PORTF_BASE; /*!< GPIOF ADDRESS */
 #define PORTE ( (Port_RegisterType *)&PORTE_BASE ) /*!< Access to PORTE registers*/
 #define PORTF ( (Port_RegisterType *)&PORTF_BASE ) /*!< Access to PORTF registers*/
 /**@}*/
-
-#endif
 
 typedef enum
 {
