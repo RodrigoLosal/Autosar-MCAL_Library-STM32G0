@@ -7,6 +7,14 @@ NVIC_Type NVIC_MemoryMock;
 NVIC_Type *NVIC_Mock = &NVIC_MemoryMock;
 
 /**
+  * @defgroup MinMaxValues representing the minimum and maximum irq value
+  @{ */
+#define NVIC_MIN_IRQ     16U /*!< Minimum IQR value */
+#define NVIC_MAX_IRQ     30U /*!< Maximum IRQ value*/
+/**
+  @} */
+
+/**
 * @defgroup Values representing return values
 @{ */
 #define IRQ_NOT_PENDING  0UL   /*!< Value to specifie IRQ is not pending */
@@ -37,16 +45,64 @@ void tearDown( void )
 }
 
 /**
+ * @brief   **Test priority setting for an upper NVIC_MAX_IRQ irq**
+ *
+ * This test validates if setting the priority 2 of an upper NVIC_MAX_IRQ irq is not reflected in
+ * the IP register.
+ */
+void test__CDD_Nvic_SetPriority_UpperMaxIrq( void )
+{
+    Nvic_IrqType irq    = NVIC_MAX_IRQ + 1;
+    uint32 priority     = 2;
+    uint32 expected_IPR = 0x00000000;
+
+    CDD_Nvic_SetPriority( irq, priority );
+    TEST_ASSERT_EQUAL_HEX32( expected_IPR, NVIC->IP[ IP_IDX( irq ) ] );
+}
+
+/**
+ * @brief   **Test priority setting for NVIC_MAX_IRQ irq**
+ *
+ * This test validates if setting the priority 2 of NVIC_MAX_IRQ irq is correctly reflected in
+ * the IP register.
+ */
+void test__CDD_Nvic_SetPriority_MaxIrq( void )
+{
+    Nvic_IrqType irq    = NVIC_MAX_IRQ;
+    uint32 priority     = 2;
+    uint32 expected_IPR = 0x00800000;
+
+    CDD_Nvic_SetPriority( irq, priority );
+    TEST_ASSERT_EQUAL_HEX32( expected_IPR, NVIC->IP[ IP_IDX( irq ) ] );
+}
+
+/**
+ * @brief   **Test priority setting for NVIC_MIN_IRQ irq**
+ *
+ * This test validates if setting the priority 2 of NVIC_MIN_IRQ irq is correctly reflected in
+ * the IP register.
+ */
+void test__CDD_Nvic_SetPriority_MinIrq( void )
+{
+    Nvic_IrqType irq    = NVIC_MIN_IRQ;
+    uint32 priority     = 2;
+    uint32 expected_IPR = 0x00000080;
+
+    CDD_Nvic_SetPriority( irq, priority );
+    TEST_ASSERT_EQUAL_HEX32( expected_IPR, NVIC->IP[ IP_IDX( irq ) ] );
+}
+
+/**
  * @brief   **Test set priority checks the used register is correct **
  *
  * This test checks if the priority is setting in the right register IP_IDX ( irq ) .
  */
-void test__CDD_Nvic_SetPriority_ValidIrq1( void )
+void test__CDD_Nvic_SetPriority_IP_IDX( void )
 {
     Nvic_IrqType irq    = 23;
     uint32 priority     = 2;
     uint32 expected_IPR = 5;
-    
+
     CDD_Nvic_SetPriority( irq, priority );
     TEST_ASSERT_EQUAL_HEX32( expected_IPR, IP_IDX( irq ) );
 }
@@ -68,14 +124,14 @@ void test__CDD_Nvic_SetPriority_ValidIrq( void )
 }
 
 /**
- * @brief   **Test priority setting for an invalid IRQ**
+ * @brief   **Test priority setting for a minor NVIC_MIN_IRQ irq**
  *
- * This test validates if setting the priority 2 of invalid IRQ number (10) is not reflected
+ * This test validates if setting the priority 2 of a minor NVIC_MIN_IRQ irq is not reflected
  * in the IP register.
  */
-void test__CDD_Nvic_SetPriority_InvalidIrq( void )
+void test__CDD_Nvic_SetPriority_MinorMinIrq( void )
 {
-    Nvic_IrqType irq    = 10;
+    Nvic_IrqType irq    = NVIC_MIN_IRQ - 1;
     uint32 priority     = 2;
     uint32 expected_IPR = 0x0000000; /* 0000 0000 0000 0000 0000 0000 0000 0000 */
 
@@ -86,7 +142,7 @@ void test__CDD_Nvic_SetPriority_InvalidIrq( void )
 /**
  * @brief   **Test get the priority for a valid IRQ**
  *
- * This test validates that the function CDD_Nvic_GetPriority gets correctly the priority for a
+ * This test validates if the function CDD_Nvic_GetPriority gets correctly the priority for a
  * valid IRQ number.
  */
 void test__CDD_Nvic_GetPriority_ValidIrqPriotity( void )
