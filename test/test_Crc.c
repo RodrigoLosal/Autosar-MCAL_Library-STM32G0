@@ -152,11 +152,6 @@ void test_Crc_16bit_FF( void )
 
 void test_Crc_16bitARC_ZEROS( void )
 {
-    // uint8 data[] = {0x92, 0x6B, 0x55};
-    // uint8 data[] = {0x0F, 0xAA, 0x00, 0x55};
-    // uint8 data[] = {0x00, 0x0F, 0x55, 0x11};
-    // uint8 data[] = {0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF};
-    // uint8 data[] = {0x92, 0x6B, 0x55};
     uint8 data[]        = { 0x00, 0x00, 0x00, 0x00 };
     uint32 dataLength   = sizeof( data );
     uint16 startValue   = 0x0000;
@@ -167,11 +162,6 @@ void test_Crc_16bitARC_ZEROS( void )
 
 void test_Crc_16bitARC_FF( void )
 {
-    // uint8 data[] = {0x92, 0x6B, 0x55};
-    // uint8 data[] = {0x0F, 0xAA, 0x00, 0x55};
-    // uint8 data[] = {0x00, 0x0F, 0x55, 0x11};
-    // uint8 data[] = {0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF};
-    // uint8 data[] = {0x92, 0x6B, 0x55};
     uint8 data[]        = { 0xFF, 0xFF, 0xFF, 0xFF };
     uint32 dataLength   = sizeof( data );
     uint16 startValue   = 0x0000;
@@ -180,15 +170,65 @@ void test_Crc_16bitARC_FF( void )
     TEST_ASSERT_EQUAL_HEX16_MESSAGE( 0x9401, crcResult, "Crc result was not the supposed value" );
 }
 
-void test_Crc_32bit( void )
+void test_Crc_16bitARC_HEX_NUM( void )
 {
-    uint8 data[] = { 0xF2, 0x01, 0x83 }; // result 0x24AB9D77
-    // uint32 dataLength = sizeof(data) / sizeof(data[0]);
+    uint8 data[]        = { 0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
     uint32 dataLength   = sizeof( data );
+    uint16 startValue   = 0x0000;
+    boolean isFirstCall = TRUE;
+    uint16 crcResult    = Crc_CalculateCRC16ARC( data, dataLength, startValue, isFirstCall );
+    TEST_ASSERT_EQUAL_HEX16_MESSAGE( 0xAE98, crcResult, "Crc result was not the supposed value" );
+}
+
+void test_Crc_16bitARC_3BYTES_1( void )
+{
+    uint8 data[]        = { 0xF2, 0x01, 0x83 };
+    uint32 dataLength   = sizeof( data );
+    uint16 startValue   = 0x0000;
+    boolean isFirstCall = TRUE;
+    uint16 crcResult    = Crc_CalculateCRC16ARC( data, dataLength, startValue, isFirstCall );
+    TEST_ASSERT_EQUAL_HEX16_MESSAGE( 0xC2E1, crcResult, "Crc result was not the supposed value" );
+}
+
+void test_Crc_32bit_ZEROS( void )
+{
+    uint8 data[]      = { 0x00, 0x00, 0x00, 0x00 }; // result 0x24AB9D77
+    uint32 dataLength = sizeof( data ) / sizeof( data[ 0 ] );
+    // uint32 dataLength   = sizeof( data );
+    uint32 startValue   = 0xFFFFFFFF;
+    boolean isFirstCall = TRUE;
+    uint32 crcResult    = Crc_CalculateCRC32( data, dataLength, startValue, isFirstCall );
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x2144DF1C, crcResult, "Crc result was not the supposed value" );
+}
+
+void test_Crc_32bit_FF( void )
+{
+    uint8 data[]        = { 0xFF, 0xFF, 0xFF, 0xFF };
+    uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
+    uint32 startValue   = 0xFFFFFFFF;
+    boolean isFirstCall = TRUE;
+    uint32 crcResult    = Crc_CalculateCRC32( data, dataLength, startValue, isFirstCall );
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0xFFFFFFFF, crcResult, "Crc result was not the supposed value" );
+}
+
+void test_Crc_32bit_3BYTES_1( void )
+{
+    uint8 data[]        = { 0xF2, 0x01, 0x83 };
+    uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
     uint32 startValue   = 0xFFFFFFFF;
     boolean isFirstCall = TRUE;
     uint32 crcResult    = Crc_CalculateCRC32( data, dataLength, startValue, isFirstCall );
     TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x24AB9D77, crcResult, "Crc result was not the supposed value" );
+}
+
+void test_Crc_32bit_HEX_NUM( void )
+{
+    uint8 data[]        = { 0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
+    uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
+    uint32 startValue   = 0xFFFFFFFF;
+    boolean isFirstCall = TRUE;
+    uint32 crcResult    = Crc_CalculateCRC32( data, dataLength, startValue, isFirstCall );
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0xB0AE863D, crcResult, "Crc result was not the supposed value" );
 }
 
 void test_Crc_32bitP4( void )
