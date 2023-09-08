@@ -11,6 +11,8 @@ NVIC_Type *NVIC_Mock = &NVIC_MemoryMock;
   @{ */
 #define NVIC_MIN_IRQ     16U /*!< Minimum IQR value */
 #define NVIC_MAX_IRQ     30U /*!< Maximum IRQ value*/
+#define NVIC_IRQ         23U /*!< IRQ value within the accepted range*/
+
 /**
   @} */
 
@@ -99,7 +101,7 @@ void test__CDD_Nvic_SetPriority_MinIrq( void )
  */
 void test__CDD_Nvic_SetPriority_IP_IDX( void )
 {
-    Nvic_IrqType irq    = 23;
+    Nvic_IrqType irq    = NVIC_IRQ;
     uint32 priority     = 2;
     uint32 expected_IPR = 5;
 
@@ -115,7 +117,7 @@ void test__CDD_Nvic_SetPriority_IP_IDX( void )
  */
 void test__CDD_Nvic_SetPriority_ValidIrq( void )
 {
-    Nvic_IrqType irq    = 23;
+    Nvic_IrqType irq    = NVIC_IRQ;
     uint32 priority     = 2;
     uint32 expected_IPR = 0x80000000; /* 1000 0000 0000 0000 0000 0000 0000 0000 */
 
@@ -124,12 +126,12 @@ void test__CDD_Nvic_SetPriority_ValidIrq( void )
 }
 
 /**
- * @brief   **Test priority setting for a minor NVIC_MIN_IRQ irq**
+ * @brief   **Test priority setting for a minior NVIC_MIN_IRQ irq**
  *
- * This test validates if setting the priority 2 of a minor NVIC_MIN_IRQ irq is not reflected
+ * This test validates if setting the priority 2 of a minior NVIC_MIN_IRQ irq is not reflected
  * in the IP register.
  */
-void test__CDD_Nvic_SetPriority_MinorMinIrq( void )
+void test__CDD_Nvic_SetPriority_MiniorMinIrq( void )
 {
     Nvic_IrqType irq    = NVIC_MIN_IRQ - 1;
     uint32 priority     = 2;
@@ -140,6 +142,21 @@ void test__CDD_Nvic_SetPriority_MinorMinIrq( void )
 }
 
 /**
+ * @brief   **Test get the priority for an upper NVIC_Max_IRQ irq**
+ *
+ * This test validates if the function CDD_Nvic_GetPriority gets the INVALID_PRIORITY value
+ * for a invalid IRQ number.
+ */
+void test__CDD_Nvic_GetPriority_UpperMaxIrq( void )
+{
+    Nvic_IrqType irq        = NVIC_MAX_IRQ + 1;
+    uint32 expectedPriority = INVALID_PRIORITY;
+
+    uint32 priority = CDD_Nvic_GetPriority( irq );
+    TEST_ASSERT_EQUAL_HEX32( expectedPriority, priority );
+}
+
+/**
  * @brief   **Test get the priority for a valid IRQ**
  *
  * This test validates if the function CDD_Nvic_GetPriority gets correctly the priority for a
@@ -147,7 +164,7 @@ void test__CDD_Nvic_SetPriority_MinorMinIrq( void )
  */
 void test__CDD_Nvic_GetPriority_ValidIrqPriotity( void )
 {
-    Nvic_IrqType irq        = 23;
+    Nvic_IrqType irq        = NVIC_IRQ;
     uint32 expectedPriority = 2;
 
     uint32 priority = CDD_Nvic_GetPriority( irq );
@@ -155,17 +172,47 @@ void test__CDD_Nvic_GetPriority_ValidIrqPriotity( void )
 }
 
 /**
- * @brief   **Test get the priority for an invalid IRQ**
+ * @brief   **Test get the priority for a minior NVIC_Min_IRQ irq**
  *
- * This test validates that the function CDD_Nvic_GetPriority gets correctly the INVALID_PRIORITY
- * value for an invalid IRQ number.
+ * This test validates if the function CDD_Nvic_GetPriority gets the INVALID_PRIORITY value
+ * for a minior NVIC_Min_IRQ irq.
  */
-void test__CDD_Nvic_GetPriority_InvalidPriority( void )
+void test__CDD_Nvic_GetPriority_MiniorMinIrq( void )
 {
-    Nvic_IrqType irq        = 10;
+    Nvic_IrqType irq        = NVIC_MIN_IRQ - 1;
     uint32 expectedPriority = CDD_Nvic_GetPriority( irq );
 
     TEST_ASSERT_EQUAL_HEX32( INVALID_PRIORITY, expectedPriority );
+}
+
+/**
+ * @brief   **Test enable an upper NVIC_Min_IRQ irq**
+ *
+ *This test validates that when enabling a Upper NVIC_Max_IRQ irq using the CDD_Nvic_EnableIrq function,
+ *the corresponding value in the ISER register is not updated.
+ */
+void test__CDD_Nvic_EnableIrq_MaxIrq( void )
+{
+    Nvic_IrqType irq     = NVIC_MAX_IRQ + 1;
+    uint32 expected_ISER = 0x00000000; /* 0000 0000 0000 0000 0000 0000 0000 0000 */
+
+    CDD_Nvic_EnableIrq( irq );
+    TEST_ASSERT_EQUAL_HEX32( expected_ISER, NVIC->ISER[ FIRST_INDEX ] );
+}
+
+/**
+ * @brief   **Test enable a minior NVIC_Min_IRQ irq**
+ *
+ *This test validates that when enabling a minior NVIC_Min_IRQ irq using the CDD_Nvic_EnableIrq function,
+ *the corresponding value in the ISER register is not updated.
+ */
+void test__CDD_Nvic_EnableIrq_MiniorMinIrq( void )
+{
+    Nvic_IrqType irq     = NVIC_MIN_IRQ - 1;
+    uint32 expected_ISER = 0x00000000; /* 0000 0000 0000 0000 0000 0000 0000 0000 */
+
+    CDD_Nvic_EnableIrq( irq );
+    TEST_ASSERT_EQUAL_HEX32( expected_ISER, NVIC->ISER[ FIRST_INDEX ] );
 }
 
 /**
@@ -176,8 +223,8 @@ void test__CDD_Nvic_GetPriority_InvalidPriority( void )
  */
 void test__CDD_Nvic_EnableIrq_ValidIrq( void )
 {
-    Nvic_IrqType irq     = 25;
-    uint32 expected_ISER = 0x02000000; /* 0000 0010 0000 0000 0000 0000 0000 0000 */
+    Nvic_IrqType irq     = NVIC_IRQ;
+    uint32 expected_ISER = 0x00800000; /* 0000 0000 1000 0000 0000 0000 0000 0000 */
 
     CDD_Nvic_EnableIrq( irq );
     TEST_ASSERT_EQUAL_HEX32( expected_ISER, NVIC->ISER[ FIRST_INDEX ] );
@@ -192,7 +239,7 @@ void test__CDD_Nvic_EnableIrq_ValidIrq( void )
 void test__CDD_Nvic_DisableIrq_ValidIrq( void )
 {
     NVIC->ICER[ FIRST_INDEX ] = 0x00000000;
-    Nvic_IrqType irq          = 25;
+    Nvic_IrqType irq          = NVIC_IRQ;
     uint32 expected_ICER      = 0x00000000; /* 0000 0000 0000 0000 0000 0000 0000 0000 */
 
     CDD_Nvic_DisableIrq( irq );
@@ -200,18 +247,79 @@ void test__CDD_Nvic_DisableIrq_ValidIrq( void )
 }
 
 /**
- * @brief   **Test disable an invalid IRQ**
+ * @brief   **Test disable NVIC_MAX_IRQ **
  *
- *This test validates that when disabling an invalid IRQ using the CDD_Nvic_DisableIrq function,
- *the corresponding value in the ICER register is not updated.
+ *This test validates that when disabling NVIC_MAX_IRQ irq using the CDD_Nvic_DisableIrq function,
+ *the corresponding value in the ICER register is updated correctly.
  */
-void test__CDD_Nvic_DisableIrq_InvalidIrq( void )
+void test__CDD_Nvic_DisableIrq_LimitMaxIrq( void )
 {
-    Nvic_IrqType irq     = 10;
+    NVIC->ICER[ FIRST_INDEX ] = 0x00000000;
+    Nvic_IrqType irq          = NVIC_MAX_IRQ;
+    uint32 expected_ICER      = 0x00000000; /* 0000 0000 0000 0000 0000 0000 0000 0000 */
+
+    CDD_Nvic_DisableIrq( irq );
+    TEST_ASSERT_EQUAL_HEX32( expected_ICER, NVIC->ICER[ FIRST_INDEX ] );
+}
+
+/**
+ * @brief   **Test disable a minior NVIC_Min_IRQ irq**
+ *
+ *This test validates that when disabling  a minior NVIC_Min_IRQ irq using the CDD_Nvic_DisableIrq
+ *function, the corresponding value in the ICER register is not updated.
+ */
+void test__CDD_Nvic_DisableIrq_MiniorMinIrq( void )
+{
+    Nvic_IrqType irq     = NVIC_MIN_IRQ - 1;
     uint32 expected_ICER = 0x00000000;
 
     CDD_Nvic_DisableIrq( irq );
     TEST_ASSERT_EQUAL_HEX32( expected_ICER, NVIC->ICER[ FIRST_INDEX ] );
+}
+
+/**
+ * @brief   **Test disable an upper NVIC_Max_IRQ irq**
+ *
+ *This test validates that when disabling  an upper NVIC_Max_IRQ irq using the CDD_Nvic_DisableIrq
+ *function, the corresponding value in the ICER register is not updated.
+ */
+void test__CDD_Nvic_DisableIrq_UpperMaxIrq( void )
+{
+    Nvic_IrqType irq     = NVIC_MAX_IRQ + 1;
+    uint32 expected_ICER = 0x00000000;
+
+    CDD_Nvic_DisableIrq( irq );
+    TEST_ASSERT_EQUAL_HEX32( expected_ICER, NVIC->ICER[ FIRST_INDEX ] );
+}
+
+/**
+ * @brief   **Test set pending for an upper NVIC_Max_IRQ irq**
+ *
+ * This test validates that when an upper NVIC_Max_IRQ irq is set as pending using the
+ * CDD_Nvic_SetPendingIrq function, the corresponding value in the ISPR register is not updated.
+ */
+void test_CDD_Nvic_SetPendingIrq_UpperMaxIrq( void )
+{
+    Nvic_IrqType irq     = NVIC_MAX_IRQ + 1;
+    uint32 expected_ISPR = 0x00000000; /* 0000 0000 0000 0000 0000 0000 0000 0000 */
+
+    CDD_Nvic_SetPendingIrq( irq );
+    TEST_ASSERT_EQUAL_HEX32( expected_ISPR, NVIC->ISPR[ FIRST_INDEX ] );
+}
+
+/**
+ * @brief   **Test set pending for a minior NVIC_MIN_IRQ irq**
+ *
+ * This test validates that when an minior NVIC_MIN_IRQ irq is set as pending using the
+ * CDD_Nvic_SetPendingIrq function, the corresponding value in the ISPR register is not updated.
+ */
+void test_CDD_Nvic_SetPendingIrq_MiniorMinIrq( void )
+{
+    Nvic_IrqType irq     = NVIC_MIN_IRQ - 1;
+    uint32 expected_ISPR = 0x00000000; /* 0000 0000 0000 0000 0000 0000 0000 0000 */
+
+    CDD_Nvic_SetPendingIrq( irq );
+    TEST_ASSERT_EQUAL_HEX32( expected_ISPR, NVIC->ISPR[ FIRST_INDEX ] );
 }
 
 /**
@@ -222,26 +330,41 @@ void test__CDD_Nvic_DisableIrq_InvalidIrq( void )
  */
 void test_CDD_Nvic_SetPendingIrq_ValidIrq( void )
 {
-    Nvic_IrqType irq     = 24;
-    uint32 expected_ISPR = 0x01000000; /* 0000 0001 0000 0000 0000 0000 0000 0000 */
+    Nvic_IrqType irq     = NVIC_IRQ;
+    uint32 expected_ISPR = 0x00800000; /* 0000 0000 1000 0000 0000 0000 0000 0000 */
 
     CDD_Nvic_SetPendingIrq( irq );
     TEST_ASSERT_EQUAL_HEX32( expected_ISPR, NVIC->ISPR[ FIRST_INDEX ] );
 }
 
 /**
- * @brief   **Test get pending for an invalid IRQ**
+ * @brief   **Test get pending a minior NVIC_Min_IRQ irq**
  *
  * This test checks that the function CDD_Nvic_GetPendingIrq returns a FALSE when querying
- * the pending status of an invalid IRQ number
+ * the pending status of a minior NVIC_Min_IRQ irq
  */
-void test_CDD_Nvic_GetPendingIrq_InvalidIrq( void )
+void test_CDD_Nvic_GetPendingIrq_MiniorMinIrq( void )
 {
-    Nvic_IrqType irq = 10;
+    Nvic_IrqType irq = NVIC_MIN_IRQ - 1;
 
     uint32 expectedValue = CDD_Nvic_GetPendingIrq( irq );
     TEST_ASSERT_FALSE( expectedValue );
 }
+
+/**
+ * @brief   **Test get pending an upper NVIC_Max_IRQ irq**
+ *
+ * This test checks that the function CDD_Nvic_GetPendingIrq returns a FALSE when querying
+ * the pending status of an upper NVIC_Max_IRQ irq
+ */
+void test_CDD_Nvic_GetPendingIrq_UpperMaxIrq( void )
+{
+    Nvic_IrqType irq = NVIC_MAX_IRQ + 1;
+
+    uint32 expectedValue = CDD_Nvic_GetPendingIrq( irq );
+    TEST_ASSERT_FALSE( expectedValue );
+}
+
 
 /**
  * @brief   **Test get pending for a valid IRQ**
@@ -251,7 +374,7 @@ void test_CDD_Nvic_GetPendingIrq_InvalidIrq( void )
  */
 void test_CDD_Nvic_GetPendingIrq_validIrq( void )
 {
-    Nvic_IrqType irq = 24;
+    Nvic_IrqType irq = NVIC_IRQ;
 
     uint32 status = CDD_Nvic_GetPendingIrq( irq );
     TEST_ASSERT_TRUE( status );
@@ -279,7 +402,7 @@ void test_CDD_Nvic_GetPendingIrq_NotPendingValidIrq( void )
  */
 void test_CDD_Nvic_GetPendingIrq_NotPendingInvalidIrq( void )
 {
-    Nvic_IrqType irq = 10;
+    Nvic_IrqType irq = NVIC_MIN_IRQ - 1;
 
     uint32 result = CDD_Nvic_GetPendingIrq( irq );
     TEST_ASSERT_EQUAL_UINT32( IRQ_NOT_PENDING, result );
@@ -293,22 +416,38 @@ void test_CDD_Nvic_GetPendingIrq_NotPendingInvalidIrq( void )
  */
 void test__CDD_Nvic_ClearPendingIrq_ValidIrq( void )
 {
-    Nvic_IrqType irq    = 25;
-    uint32 expectedData = 0x02000000; /*0000 0010 0000 0000 0000 0000 0000 0000*/
+    Nvic_IrqType irq    = NVIC_IRQ;
+    uint32 expectedData = 0x00800000; /*0000 0000 1000 0000 0000 0000 0000 0000*/
 
     CDD_Nvic_ClearPendingIrq( irq );
     TEST_ASSERT_EQUAL_HEX32( expectedData, NVIC->ICPR[ FIRST_INDEX ] );
 }
 
 /**
- * @brief   **Test clear pending for an invalid IRQ**
+ * @brief   **Test clear pending for a minior NVIC_MIN_IRQ irq**
  *
- * This test validates that when clear an invalid pending IRQ using the CDD_Nvic_ClearPendingIrq
+ * This test validates that when clear a minior NVIC_Min_IRQ irq using the CDD_Nvic_ClearPendingIrq
  * function, the corresponding value in the ICPR register is not updated.
  */
-void test__CDD_Nvic_ClearPendingIrq_InvalidIrq( void )
+void test__CDD_Nvic_ClearPendingIrq_MiniorMinIrq( void )
 {
-    Nvic_IrqType irq          = 7;
+    Nvic_IrqType irq          = NVIC_MIN_IRQ - 1;
+    NVIC->ICPR[ FIRST_INDEX ] = 0;
+    uint32 expected_ICRP      = 0x00000000; /*0000 0000 0000 0000 0000 0000 0000 0000*/
+
+    CDD_Nvic_ClearPendingIrq( irq );
+    TEST_ASSERT_EQUAL_HEX32( expected_ICRP, NVIC->ICPR[ FIRST_INDEX ] );
+}
+
+/**
+ * @brief   **Test clear pending for an upper NVIC_MAX_IRQ irq**
+ *
+ * This test validates that when clear an upper NVIC_MAX_IRQ irq using the CDD_Nvic_ClearPendingIrq
+ * function, the corresponding value in the ICPR register is not updated.
+ */
+void test__CDD_Nvic_ClearPendingIrq_UpperrManIrq( void )
+{
+    Nvic_IrqType irq          = NVIC_MAX_IRQ + 1;
     NVIC->ICPR[ FIRST_INDEX ] = 0;
     uint32 expected_ICRP      = 0x00000000; /*0000 0000 0000 0000 0000 0000 0000 0000*/
 
