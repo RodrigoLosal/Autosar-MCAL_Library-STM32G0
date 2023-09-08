@@ -129,39 +129,32 @@ uint16 Crc_CalculateCRC16( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 C
     return crcValue;
 }
 
-/*
-New function of 16 bits with data reflected
-*/
 uint16 Crc_CalculateCRC16ARC( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 Crc_StartValue16, boolean Crc_IsFirstCall )
 {
     const uint16 Crc_Polynomial = CRC_16BITARC_POLYNOMIAL_REFLECTED;
     uint16 crcValue             = Crc_StartValue16;
-    uint8 bit;
 
-    if( Crc_Length != 0 )
+    if( Crc_IsFirstCall == TRUE )
     {
-        if( Crc_IsFirstCall == TRUE )
-        {
-            crcValue = (uint16)0x0000;
-        }
-        for( uint32 i = Crc_Length; i != 0; i-- )
-        {
-            crcValue ^= (uint16)*Crc_DataPtr;
+        crcValue = (uint16)0x0000;
+    }
+    for( uint32 i = Crc_Length; i != 0; i-- )
+    {
+        crcValue ^= (uint16)*Crc_DataPtr;
 
-            for( bit = 0; bit < 8; bit++ )
+        for( uint8 bit = 0; bit < 8; bit++ )
+        {
+            if( ( (crcValue)&CRC_16BITARC_LSB ) != FALSE )
             {
-                if( ( (crcValue)&CRC_16BITARC_LSB ) != FALSE )
-                {
-                    crcValue = ( crcValue >> 1 ) ^ Crc_Polynomial;
-                }
-                else
-                {
-                    crcValue >>= 1;
-                }
+                crcValue = ( crcValue >> 1 ) ^ Crc_Polynomial;
             }
-            /* cppcheck-suppress misra-c2012-17.8 ; It's needed to increment the value of the variable*/
-            Crc_DataPtr++;
+            else
+            {
+                crcValue >>= 1;
+            }
         }
+        /* cppcheck-suppress misra-c2012-17.8 ; It's needed to increment the value of the variable*/
+        Crc_DataPtr++;
     }
     return crcValue;
 }
@@ -170,76 +163,73 @@ uint32 Crc_CalculateCRC32( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32 C
 {
     const uint32 Crc_Polynomial = CRC_32BIT_POLYNOMIAL_REFLECTED;
     uint32 crcValue             = Crc_StartValue32;
-    uint8 bit;
 
-    if( Crc_Length != 0u )
+    if( Crc_IsFirstCall == TRUE )
     {
-        if( Crc_IsFirstCall == TRUE )
-        {
-            crcValue = CRC_32BIT_XORVALUE;
-        }
-        else
-        {
-            crcValue ^= CRC_32BIT_XORVALUE;
-        }
-
-        for( uint32 i = Crc_Length; i != 0; i-- )
-        {
-            crcValue ^= (uint32)*Crc_DataPtr;
-
-            for( bit = 0; bit < 8; bit++ )
-            {
-                if( ( crcValue & CRC_32BIT_LSB ) != FALSE )
-                {
-                    crcValue = ( crcValue >> 1 ) ^ Crc_Polynomial;
-                }
-                else
-                {
-                    crcValue >>= 1;
-                }
-            }
-            /* cppcheck-suppress misra-c2012-17.8 ; It's needed to increment the value of the variable*/
-            Crc_DataPtr++;
-        }
+        crcValue = CRC_32BIT_XORVALUE;
+    }
+    else
+    {
         crcValue ^= CRC_32BIT_XORVALUE;
     }
+
+    for( uint32 i = Crc_Length; i != 0; i-- )
+    {
+        crcValue ^= (uint32)*Crc_DataPtr;
+
+        for( uint8 bit = 0; bit < 8; bit++ )
+        {
+            if( ( crcValue & CRC_32BIT_LSB ) != FALSE )
+            {
+                crcValue = ( crcValue >> 1 ) ^ Crc_Polynomial;
+            }
+            else
+            {
+                crcValue >>= 1;
+            }
+        }
+        /* cppcheck-suppress misra-c2012-17.8 ; It's needed to increment the value of the variable*/
+        Crc_DataPtr++;
+    }
+    crcValue ^= CRC_32BIT_XORVALUE;
+
     return crcValue;
 }
 
 uint32 Crc_CalculateCRC32P4( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32 Crc_StartValue32, boolean Crc_IsFirstCall )
 {
-    uint8 bit;
+    // uint8 bit;
     uint32 crcValue;
     crcValue = Crc_StartValue32;
-    if( Crc_Length != 0 )
+    // if( Crc_Length != 0 )
+    //{
+    if( Crc_IsFirstCall == TRUE )
     {
-        if( Crc_IsFirstCall == TRUE )
-        {
-            crcValue = CRC_32BITP4_XORVALUE;
-        }
-        else
-        {
-            crcValue ^= CRC_32BITP4_XORVALUE;
-        }
-        for( uint32 i = Crc_Length; i != 0; i-- )
-        {
-            crcValue ^= (uint32)*Crc_DataPtr;
-            for( bit = 0; bit < 8; bit++ )
-            {
-                if( ( crcValue & CRC_32BITP4_LSB ) != FALSE )
-                {
-                    crcValue = ( crcValue >> 1 ) ^ CRC_CRC32P4_POLYNOMIAL_REFLECTED;
-                }
-                else
-                {
-                    crcValue >>= 1;
-                }
-            }
-            /* cppcheck-suppress misra-c2012-17.8 ; It's needed to increment the value of the variable*/
-            Crc_DataPtr++;
-        }
+        crcValue = CRC_32BITP4_XORVALUE;
+    }
+    else
+    {
         crcValue ^= CRC_32BITP4_XORVALUE;
     }
+    for( uint32 i = Crc_Length; i != 0; i-- )
+    {
+        crcValue ^= (uint32)*Crc_DataPtr;
+        for( uint8 bit = 0; bit < 8; bit++ )
+        {
+            if( ( crcValue & CRC_32BITP4_LSB ) != FALSE )
+            {
+                crcValue = ( crcValue >> 1 ) ^ CRC_CRC32P4_POLYNOMIAL_REFLECTED;
+            }
+            else
+            {
+                crcValue >>= 1;
+            }
+        }
+        /* cppcheck-suppress misra-c2012-17.8 ; It's needed to increment the value of the variable*/
+        Crc_DataPtr++;
+    }
+    crcValue ^= CRC_32BITP4_XORVALUE;
+    //}
     return crcValue;
 }
 
