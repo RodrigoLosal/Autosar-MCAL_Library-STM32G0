@@ -56,7 +56,7 @@ uint8 Crc_CalculateCRC8( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_
 
         for( uint8 bit = 0; bit < CRC8NBITS; bit++ )
         {
-            if( ( crcValue & CRC8MSB ) != FALSE ) /*Check on test branch*/
+            if( ( crcValue & CRC8MSB ) != FALSE )
             {
                 crcValue = ( crcValue << 1 ) ^ Crc_Polynomial;
             }
@@ -86,7 +86,7 @@ uint8 Crc_CalculateCRC8H2F( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 C
 
         for( uint8 bit = 0; bit < CRC8H2FNBITS; bit++ )
         {
-            if( ( crcValue & CRC8H2NMSB ) != FALSE ) /*Check on test branch*/
+            if( ( crcValue & CRC8H2NMSB ) != FALSE )
             {
                 crcValue = ( crcValue << 1 ) ^ Crc_Polynomial;
             }
@@ -115,7 +115,7 @@ uint16 Crc_CalculateCRC16( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 C
 
         for( uint8 bit = 0; bit < CRC16NBITS; bit++ )
         {
-            if( ( crcValue & CRC16MSB ) != FALSE ) /*Check on test branch*/
+            if( ( crcValue & CRC16MSB ) != FALSE )
             {
                 crcValue = ( crcValue << 1 ) ^ Crc_Polynomial;
             }
@@ -198,11 +198,9 @@ uint32 Crc_CalculateCRC32( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32 C
 
 uint32 Crc_CalculateCRC32P4( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32 Crc_StartValue32, boolean Crc_IsFirstCall )
 {
-    // uint8 bit;
     uint32 crcValue;
     crcValue = Crc_StartValue32;
-    // if( Crc_Length != 0 )
-    //{
+
     if( Crc_IsFirstCall == TRUE )
     {
         crcValue = CRC_32BITP4_XORVALUE;
@@ -229,13 +227,12 @@ uint32 Crc_CalculateCRC32P4( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32
         Crc_DataPtr++;
     }
     crcValue ^= CRC_32BITP4_XORVALUE;
-    //}
+
     return crcValue;
 }
 
 uint64 Crc_CalculateCRC64( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint64 Crc_StartValue64, boolean Crc_IsFirstCall )
 {
-    // uint8 bit;
     uint64 crcValue;
     crcValue = Crc_StartValue64;
     if( Crc_Length != 0 )
@@ -270,11 +267,28 @@ uint64 Crc_CalculateCRC64( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint64 C
     return crcValue;
 }
 
+/*
+Real prototype
 void Crc_GetVersionInfo( Std_VersionInfoType *Versioninfo )
+*/
+uint8 Crc_GetVersionInfo( Std_VersionInfoType *Versioninfo )
 {
+    /*For test only*/
+    uint8 status = FALSE;
+
+    /*Real code*/
     Versioninfo->vendorID         = VENDOR_ID;
     Versioninfo->moduleID         = MODULE_ID;
     Versioninfo->sw_major_version = CRC_SW_MAJOR_VERSION;
     Versioninfo->sw_minor_version = CRC_SW_MINOR_VERSION;
     Versioninfo->sw_patch_version = CRC_SW_PATCH_VERSION;
+
+    /*For test only*/
+
+    if( ( ( Versioninfo->vendorID ) && ( Versioninfo->moduleID ) ) == FALSE )
+    {
+        status = TRUE;
+    }
+
+    return status;
 }
