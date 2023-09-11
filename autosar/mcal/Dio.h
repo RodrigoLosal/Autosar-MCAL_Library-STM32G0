@@ -9,26 +9,18 @@
 #include "Dio_Cfg.h"
 
 
-#define DIO_CONFIGURED_CHANNLES 1u
+#define VALUE_F (Dio_LevelType)0xF
 
-#define DIO_VENDOR_ID           (uint16)1000u
-#define DIO_MODULE_ID           (uint16)120u
-#define DIO_SW_MAJOR_VERSION    (uint8)1u
-#define DIO_SW_MINOR_VERSION    (uint8)0u
-#define DIO_SW_PATCH_VERSION    (uint8)0u
-
-#define NUM_CHANNELS            1u
-
-#define NULL                    ( (void *)0 )
+#define NULL    ( (void *)0 )
 
 
-typedef uint16 Dio_ChannelType;
+typedef uint8 Dio_ChannelType;
 
-typedef uint16 Dio_PortType;
+typedef uint8 Dio_PortType;
 
-typedef uint16 Dio_LevelType;
+typedef uint8 Dio_LevelType;
 
-typedef uint16 Dio_PortLevelType;
+typedef uint8 Dio_PortLevelType;
 
 
 typedef struct
@@ -38,47 +30,6 @@ typedef struct
     Dio_PortType port;
 } Dio_ChannelGroupType;
 
-
-typedef struct
-{
-    Dio_PortType Port;
-    Dio_PortType Port_Num;
-    Dio_ChannelType Ch_Num;
-    Dio_PortType Pin_Reg;
-    uint8 Pin;
-} Dio_ConfigChannel;
-
-
-enum Channel_ID
-{
-    CHANNEL0_ID = 0,
-    CHANNEL1_ID,
-    CHANNEL2_ID,
-    CHANNEL3_ID,
-    CHANNEL4_ID,
-    CHANNEL5_ID,
-    CHANNEL6_ID,
-    CHANNEL7_ID,
-    CHANNEL8_ID,
-    CHANNEL9_ID,
-    CHANNEL10_ID,
-    CHANNEL11_ID,
-    CHANNEL12_ID,
-    CHANNEL13_ID,
-    CHANNEL14_ID,
-    CHANNEL15_ID,
-};
-
-enum Port_ID
-{
-    PORT0_ID = 0,
-    PORT1_ID,
-    PORT2_ID,
-    PORT3_ID,
-    PORT4_ID,
-    PORT5_ID,
-    PORT6_ID,
-};
 
 #define DIO_PIN_PA_00 (Dio_ChannelType)0x00u
 #define DIO_PIN_PA_01 (Dio_ChannelType)0x01u

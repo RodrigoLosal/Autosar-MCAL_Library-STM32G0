@@ -4,34 +4,18 @@
 #include "Dio_Cfg.h"
 
 
-extern Dio_ConfigChannel Dio_PortChannels[ DIO_CONFIGURED_CHANNLES ];
-
-
 Dio_LevelType Dio_ReadChannel( Dio_ChannelType ChannelId )
 {
     Dio_LevelType ChannelLevel = 0;
+    Dio_RegisterType *Dio      = NULL;
+    Dio_LevelType Pin;
 
-    if( ( ChannelId >= MIN_NUM_CHANNELS ) && ( ChannelId <= MAX_NUM_CHANNELS ) )
-    {
-        Dio_PortType *Pin_Ch    = NULL;
-        Dio_PortType Channel_Id = 0;
-        uint8 Array_ID;
+    Dio_RegisterType *Dios[ 6 ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
+    Dio                         = Dios[ ChannelId >> 4 ];
 
-        for( Array_ID = 0; Array_ID < NUM_CHANNELS; Array_ID++ )
-        {
-            if( ChannelId == Dio_PortChannels[ Array_ID ].Ch_Num )
-            {
-                Channel_Id = Array_ID;
-            }
-        }
+    Pin = ChannelId & VALUE_F;
 
-        Pin_Ch = &( Dio_PortChannels[ Channel_Id ].Pin_Reg );
-
-        ChannelLevel = Bfx_GetBit_u32u8_u8( (uint32 *)&Pin_Ch, Dio_PortChannels[ Channel_Id ].Pin );
-    }
-    else
-    {
-    }
+    ChannelLevel = Bfx_GetBit_u32u8_u8( (uint32 *)&Dio->IDR, Pin );
 
     return ChannelLevel;
 }
@@ -39,74 +23,46 @@ Dio_LevelType Dio_ReadChannel( Dio_ChannelType ChannelId )
 
 void Dio_WriteChannel( Dio_ChannelType ChannelId, Dio_LevelType Level )
 {
-    if( ( ChannelId >= MIN_NUM_CHANNELS ) && ( ChannelId <= MAX_NUM_CHANNELS ) )
+    Dio_RegisterType *Dio = NULL;
+    Dio_PortType Pin;
+
+    Dio_RegisterType *Dios[ 6 ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
+    Dio                         = Dios[ ChannelId >> 4 ];
+
+    Pin = ChannelId & VALUE_F;
+
+    if( Level == STD_HIGH )
     {
-        Dio_PortLevelType *Port_Ch = NULL;
-        Dio_PortType Channel_Id    = 0;
-        uint8 Array_ID;
-
-        for( Array_ID = 0; Array_ID < NUM_CHANNELS; Array_ID++ )
-        {
-            if( ChannelId == Dio_PortChannels[ Array_ID ].Ch_Num )
-            {
-                Channel_Id = Array_ID;
-            }
-        }
-
-        Port_Ch = &Dio_PortChannels[ Channel_Id ].Port;
-
-        if( Level == STD_HIGH )
-        {
-            Bfx_SetBit_u32u8( (uint32 *)&Port_Ch, Dio_PortChannels[ Channel_Id ].Pin );
-        }
-        else if( Level == STD_LOW )
-        {
-            Bfx_ClrBit_u32u8( (uint32 *)&Port_Ch, Dio_PortChannels[ Channel_Id ].Pin );
-        }
-        else
-        {
-        }
+        Bfx_SetBit_u32u8( (uint32 *)&Dio->ODR, Pin );
+    }
+    else if( Level == STD_LOW )
+    {
+        Bfx_ClrBit_u32u8( (uint32 *)&Dio->ODR, Pin );
     }
     else
     {
     }
 }
 
+
 Dio_LevelType Dio_FlipChannel( Dio_ChannelType ChannelId )
 {
-    Dio_LevelType ChannelLevel = STD_LOW;
+    Dio_LevelType ChannelLevel = 0;
+    Dio_RegisterType *Dio      = NULL;
+    Dio_PortType Pin;
+    Dio_RegisterType *Dios[ 6 ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
 
-    if( ( ChannelId >= MIN_NUM_CHANNELS ) && ( ChannelId <= MAX_NUM_CHANNELS ) )
+    Dio = Dios[ ChannelId >> 4 ];
+
+    Pin = ChannelId & VALUE_F;
+
+    if( Bfx_GetBit_u32u8_u8( (uint32 *)&Dio->IDR, Pin ) == 0 )
     {
-        Dio_PortLevelType *Port_Ch = NULL;
-        Dio_PortLevelType *Pin_Ch  = NULL;
-        Dio_PortType Channel_Id    = 0;
-        uint8 Array_ID;
-
-        for( Array_ID = 0; Array_ID < NUM_CHANNELS; Array_ID++ )
-        {
-            if( ChannelId == Dio_PortChannels[ Array_ID ].Ch_Num )
-            {
-                Channel_Id = Array_ID;
-            }
-        }
-
-        Port_Ch = &( Dio_PortChannels[ Channel_Id ].Port );
-        Pin_Ch  = &( Dio_PortChannels[ Channel_Id ].Pin_Reg );
-
-        if( Bfx_GetBit_u32u8_u8( (uint32 *)&Pin_Ch, Dio_PortChannels[ Channel_Id ].Pin ) != 0 )
-        {
-            Bfx_ClrBit_u32u8( (uint32 *)&Port_Ch, Dio_PortChannels[ Channel_Id ].Pin );
-            ChannelLevel = STD_LOW;
-        }
-        else
-        {
-            Bfx_ClrBit_u32u8( (uint32 *)&Port_Ch, Dio_PortChannels[ ChannelId ].Pin );
-            ChannelLevel = STD_HIGH;
-        }
+        Bfx_SetBit_u32u8( (uint32 *)&Dio->ODR, Pin );
     }
     else
     {
+        Bfx_ClrBit_u32u8( (uint32 *)&Dio->ODR, Pin );
     }
 
     return ChannelLevel;
@@ -114,76 +70,37 @@ Dio_LevelType Dio_FlipChannel( Dio_ChannelType ChannelId )
 
 Dio_PortLevelType Dio_ReadPort( Dio_PortType PortId )
 {
-    Dio_PortLevelType *Pin_Port = NULL;
-    Dio_PortLevelType PortLevel = 0;
+    Dio_PortLevelType *Port_Data;
+    Dio_RegisterType *Port       = NULL;
+    Dio_RegisterType *Ports[ 6 ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
 
-    if( ( PortId >= MIN_NUM_PORTS ) && ( PortId <= MAX_NUM_PORTS ) )
-    {
+    Port = Ports[ PortId ];
 
-        Dio_PortType Port_Id = 0;
-        uint8 Array_ID;
+    Port_Data = (Dio_PortLevelType *)&Port->IDR;
 
-        for( Array_ID = 0; Array_ID < NUM_CHANNELS; Array_ID++ )
-        {
-            if( PortId == Dio_PortChannels[ Array_ID ].Port_Num )
-            {
-                Port_Id = Array_ID;
-            }
-        }
-
-        Pin_Port = &( Dio_PortChannels[ Port_Id ].Pin_Reg );
-
-        PortLevel = *Pin_Port;
-    }
-    else
-    {
-    }
-
-    return PortLevel;
+    return *Port_Data;
 }
 
 void Dio_WritePort( Dio_PortType PortId, Dio_PortLevelType Level )
 {
-    if( ( PortId >= MIN_NUM_PORTS ) && ( PortId <= MAX_NUM_PORTS ) )
-    {
-        Dio_PortLevelType *Port_Pt = NULL;
-        Dio_PortType Port_Id       = 0;
-        uint8 Array_ID;
+    Dio_RegisterType *Port       = NULL;
+    Dio_RegisterType *Ports[ 6 ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
 
-        for( Array_ID = 0; Array_ID < NUM_CHANNELS; Array_ID++ )
-        {
-            if( PortId == Dio_PortChannels[ Array_ID ].Port_Num )
-            {
-                Port_Id = Array_ID;
-            }
-        }
+    Port = Ports[ PortId ];
 
-        Port_Pt = &( Dio_PortChannels[ Port_Id ].Port );
-
-        *Port_Pt = Level;
-    }
-    else
-    {
-    }
+    Port->ODR = Level;
 }
 
 
 Dio_PortLevelType Dio_ReadChannelGroup( const Dio_ChannelGroupType *ChannelGroupIdPtr )
 {
     Dio_PortLevelType GroupLevel = 0;
+    Dio_RegisterType *Port       = NULL;
+    Dio_RegisterType *Ports[ 6 ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
 
-    if( ChannelGroupIdPtr != NULL )
-    {
-        Dio_PortLevelType Port = 0;
+    Port = Ports[ ChannelGroupIdPtr->port ];
 
-        Port = ChannelGroupIdPtr->port;
-
-        GroupLevel = ( ( Port ) & ( ChannelGroupIdPtr->mask ) ) >> ChannelGroupIdPtr->offset;
-    }
-
-    else
-    {
-    }
+    GroupLevel = ( ( Port->IDR ) & ( ChannelGroupIdPtr->mask ) ) >> ChannelGroupIdPtr->offset;
 
     return GroupLevel;
 }
@@ -191,28 +108,12 @@ Dio_PortLevelType Dio_ReadChannelGroup( const Dio_ChannelGroupType *ChannelGroup
 
 void Dio_WriteChannelGroup( const Dio_ChannelGroupType *ChannelGroupIdPtr, Dio_PortLevelType Level )
 {
-    if( ChannelGroupIdPtr != NULL )
-    {
-        Dio_PortLevelType *Port_Pt = NULL;
-        Dio_PortType Port_Id       = 0;
-        uint8 Array_ID;
+    Dio_RegisterType *Port;
+    Dio_RegisterType *Ports[ 6 ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
 
-        for( Array_ID = 0; Array_ID < NUM_CHANNELS; Array_ID++ )
-        {
-            if( ChannelGroupIdPtr->port == Dio_PortChannels[ Array_ID ].Port_Num )
-            {
-                Port_Id = Array_ID;
-            }
-        }
+    Port = Ports[ ChannelGroupIdPtr->port ];
 
-        Port_Pt = &Dio_PortChannels[ Port_Id ].Port;
-
-        *Port_Pt = (Dio_PortLevelType)( ( *Port_Pt ) & ( ~( ( ChannelGroupIdPtr->mask ) ) ) ) | (Dio_PortLevelType)( Level << ( ChannelGroupIdPtr->offset ) );
-    }
-
-    else
-    {
-    }
+    Port->ODR = (Dio_PortLevelType)( ( Port->ODR ) & ( ~( ( ChannelGroupIdPtr->mask ) ) ) ) | (Dio_PortLevelType)( Level << ( ChannelGroupIdPtr->offset ) );
 }
 
 
@@ -228,33 +129,10 @@ void Dio_GetVersionInfo( Std_VersionInfoType *versioninfo )
 
 void Dio_MaskedWritePort( Dio_PortType PortId, Dio_PortLevelType Level, Dio_PortLevelType Mask )
 {
-    if( ( PortId >= MIN_NUM_PORTS ) && ( PortId <= MAX_NUM_PORTS ) )
-    {
-        if( ( PortId >= MIN_NUM_PORTS ) && ( PortId <= MAX_NUM_PORTS ) )
-        {
-            Dio_PortLevelType *Port = NULL;
-            Dio_PortType Port_Id    = 0;
-            uint8 Array_ID;
+    Dio_RegisterType *Port       = NULL;
+    Dio_RegisterType *Ports[ 6 ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
 
-            for( Array_ID = 0; Array_ID < NUM_CHANNELS; Array_ID++ )
-            {
-                if( PortId == Dio_PortChannels[ Array_ID ].Port_Num )
-                {
-                    Port_Id = Array_ID;
-                }
-            }
+    Port = Ports[ PortId ];
 
-            Port = &( Dio_PortChannels[ Port_Id ].Port );
-
-            *Port = Level;
-
-            *Port &= Mask;
-        }
-        else
-        {
-        }
-    }
-    else
-    {
-    }
+    Port->ODR = Mask & ( ( Port->ODR ) | Level );
 }
