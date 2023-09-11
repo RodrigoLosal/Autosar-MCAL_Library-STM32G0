@@ -3,7 +3,7 @@
  * @brief   **This file contains the unit testing of CRC driver.**
  *
  * The file is designed to test the functions of CRC as entablished at the official documentation
- * of AUTOSAR CRCLibrary. 
+ * of AUTOSAR CRCLibrary.
  */
 
 #include "unity.h"
@@ -32,11 +32,11 @@ void tearDown( void )
  * @brief   **test_Crc_8bits_ZEROS**
  *
  * Function to test the Crc_CalculateCRC8 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0x00, 0x00, 0x00, 0x00}
  */
 void test_Crc_8bits_ZEROS( void )
@@ -53,11 +53,11 @@ void test_Crc_8bits_ZEROS( void )
  * @brief   **test_Crc_8bits_FF**
  *
  * Function to test the Crc_CalculateCRC8 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0xFF, 0xFF, 0xFF, 0xFF}
  */
 void test_Crc_8bits_FF( void )
@@ -74,11 +74,11 @@ void test_Crc_8bits_FF( void )
  * @brief   **test_Crc_8bits_3_BYTES_1**
  *
  * Function to test the Crc_CalculateCRC8 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0xF2, 0x01, 0x83}
  */
 void test_Crc_8bits_3_BYTES_1( void )
@@ -95,11 +95,11 @@ void test_Crc_8bits_3_BYTES_1( void )
  * @brief   **test_Crc_8bits_HEX_NUM**
  *
  * Function to test the Crc_CalculateCRC8 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}
  */
 void test_Crc_8bits_HEX_NUM( void )
@@ -116,11 +116,11 @@ void test_Crc_8bits_HEX_NUM( void )
  * @brief   **test_Crc_8bits2HF_ZEROS**
  *
  * Function to test the test_Crc_8bits2HF with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0x00, 0x00, 0x00, 0x00}
  */
 void test_Crc_8bits2HF_ZEROS( void )
@@ -137,11 +137,11 @@ void test_Crc_8bits2HF_ZEROS( void )
  * @brief   **test_Crc_8bits2HF_3_BYTES_1**
  *
  * Function to test the Crc_CalculateCRC8H2F with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0xF2, 0x01, 0x83}
  */
 void test_Crc_8bits2HF_3_BYTES_1( void )
@@ -158,11 +158,11 @@ void test_Crc_8bits2HF_3_BYTES_1( void )
  * @brief   **test_Crc_8bits2HF_HEX_NUM**
  *
  * Function to test the Crc_CalculateCRC8H2F with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}
  */
 void test_Crc_8bits2HF_HEX_NUM( void )
@@ -179,11 +179,11 @@ void test_Crc_8bits2HF_HEX_NUM( void )
  * @brief   **test_Crc_8bits2HF_FF**
  *
  * Function to test the Crc_CalculateCRC8H2F with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0xFF, 0xFF, 0xFF, 0xFF}
  */
 void test_Crc_8bits2HF_FF( void )
@@ -200,11 +200,11 @@ void test_Crc_8bits2HF_FF( void )
  * @brief   **test_Crc_16bit_ZEROS**
  *
  * Function to test the Crc_CalculateCRC16 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0x00, 0x00, 0x00, 0x00}
  */
 void test_Crc_16bit_ZEROS( void )
@@ -221,11 +221,11 @@ void test_Crc_16bit_ZEROS( void )
  * @brief   **test_Crc_16bit_3_BYTES_1**
  *
  * Function to test the Crc_CalculateCRC16 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0xF2, 0x01, 0x83}
  */
 void test_Crc_16bit_3_BYTES_1( void )
@@ -242,11 +242,11 @@ void test_Crc_16bit_3_BYTES_1( void )
  * @brief   **test_Crc_16bit_HEX_NUM**
  *
  * Function to test the Crc_CalculateCRC16 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}
  */
 void test_Crc_16bit_HEX_NUM( void )
@@ -263,11 +263,11 @@ void test_Crc_16bit_HEX_NUM( void )
  * @brief   **test_Crc_16bit**
  *
  * Function to test the Crc_CalculateCRC16 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0x0F, 0xAA, 0x00, 0x55}
  */
 void test_Crc_16bit( void )
@@ -284,11 +284,11 @@ void test_Crc_16bit( void )
  * @brief   **test_Crc_16bit_FF**
  *
  * Function to test the Crc_CalculateCRC16 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0xFF, 0xFF, 0xFF, 0xFF}
  */
 void test_Crc_16bit_FF( void )
@@ -305,11 +305,11 @@ void test_Crc_16bit_FF( void )
  * @brief   **test_Crc_16bitARC_ZEROS**
  *
  * Function to test the Crc_CalculateCRC16ARC with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0x00, 0x00, 0x00, 0x00}
  */
 void test_Crc_16bitARC_ZEROS( void )
@@ -326,11 +326,11 @@ void test_Crc_16bitARC_ZEROS( void )
  * @brief   **test_Crc_16bitARC_FF**
  *
  * Function to test the Crc_CalculateCRC16ARC with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0xFF, 0xFF, 0xFF, 0xFF}
  */
 void test_Crc_16bitARC_FF( void )
@@ -347,11 +347,11 @@ void test_Crc_16bitARC_FF( void )
  * @brief   **test_Crc_16bitARC_HEX_NUM**
  *
  * Function to test the Crc_CalculateCRC16ARC with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}
  */
 void test_Crc_16bitARC_HEX_NUM( void )
@@ -368,11 +368,11 @@ void test_Crc_16bitARC_HEX_NUM( void )
  * @brief   **test_Crc_16bitARC_3BYTES_1**
  *
  * Function to test the Crc_CalculateCRC16ARC with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0xF2, 0x01, 0x83}
  */
 void test_Crc_16bitARC_3BYTES_1( void )
@@ -389,11 +389,11 @@ void test_Crc_16bitARC_3BYTES_1( void )
  * @brief   **test_Crc_32bit_ZEROS**
  *
  * Function to test the Crc_CalculateCRC32 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0x00, 0x00, 0x00, 0x00}
  */
 void test_Crc_32bit_ZEROS( void )
@@ -410,11 +410,11 @@ void test_Crc_32bit_ZEROS( void )
  * @brief   **test_Crc_32bit_FALSE**
  *
  * Function to test the Crc_CalculateCRC32 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0x00, 0x00, 0x00, 0x00} and with FALSE on isFirstCall.
  */
 void test_Crc_32bit_FALSE( void )
@@ -431,11 +431,11 @@ void test_Crc_32bit_FALSE( void )
  * @brief   **test_Crc_32bit_FF**
  *
  * Function to test the Crc_CalculateCRC32 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0xFF, 0xFF, 0xFF, 0xFF}
  */
 void test_Crc_32bit_FF( void )
@@ -452,11 +452,11 @@ void test_Crc_32bit_FF( void )
  * @brief   **test_Crc_32bit_3BYTES_1**
  *
  * Function to test the Crc_CalculateCRC32 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0xF2, 0x01, 0x83}
  */
 void test_Crc_32bit_3BYTES_1( void )
@@ -473,11 +473,11 @@ void test_Crc_32bit_3BYTES_1( void )
  * @brief   **test_Crc_32bit_HEX_NUM**
  *
  * Function to test the Crc_CalculateCRC32 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}
  */
 void test_Crc_32bit_HEX_NUM( void )
@@ -494,11 +494,11 @@ void test_Crc_32bit_HEX_NUM( void )
  * @brief   **test_Crc_32bitP4_ZEROS**
  *
  * Function to test the Crc_CalculateCRC32P4 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0x00, 0x00, 0x00, 0x00}
  */
 void test_Crc_32bitP4_ZEROS( void )
@@ -515,11 +515,11 @@ void test_Crc_32bitP4_ZEROS( void )
  * @brief   **test_Crc_32bitP4_3BYTES_1**
  *
  * Function to test the Crc_CalculateCRC32P4 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0xF2, 0x01, 0x83}
  */
 void test_Crc_32bitP4_3BYTES_1( void )
@@ -536,11 +536,11 @@ void test_Crc_32bitP4_3BYTES_1( void )
  * @brief   **test_Crc_32bitP4_HEX_NUM**
  *
  * Function to test the Crc_CalculateCRC32P4 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}
  */
 void test_Crc_32bitP4_HEX_NUM( void )
@@ -557,11 +557,11 @@ void test_Crc_32bitP4_HEX_NUM( void )
  * @brief   **test_Crc_32bitP4_FF**
  *
  * Function to test the Crc_CalculateCRC32P4 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0xFF, 0xFF, 0xFF, 0xFF}
  */
 void test_Crc_32bitP4_FF( void )
@@ -578,11 +578,11 @@ void test_Crc_32bitP4_FF( void )
  * @brief   **test_Crc_32bitP4_FALSE**
  *
  * Function to test the Crc_CalculateCRC32P4 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0xFF, 0xFF, 0xFF, 0xFF} and with FALSE on isFirstCall.
  */
 void test_Crc_32bitP4_FALSE( void )
@@ -599,11 +599,11 @@ void test_Crc_32bitP4_FALSE( void )
  * @brief   **test_Crc_64bit_ZEROS**
  *
  * Function to test the Crc_CalculateCRC64 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0x00, 0x00, 0x00, 0x00}
  */
 void test_Crc_64bit_ZEROS( void )
@@ -620,11 +620,11 @@ void test_Crc_64bit_ZEROS( void )
  * @brief   **test_Crc_64bit_3BYTES_1**
  *
  * Function to test the Crc_CalculateCRC64 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0xF2, 0x01, 0x83}
  */
 void test_Crc_64bit_3BYTES_1( void )
@@ -641,11 +641,11 @@ void test_Crc_64bit_3BYTES_1( void )
  * @brief   **test_Crc_64bit_FF**
  *
  * Function to test the Crc_CalculateCRC64 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0xFF, 0xFF, 0xFF, 0xFF}
  */
 void test_Crc_64bit_FF( void )
@@ -662,11 +662,11 @@ void test_Crc_64bit_FF( void )
  * @brief   **test_Crc_64bit_HEX_NUM**
  *
  * Function to test the Crc_CalculateCRC64 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}
  */
 void test_Crc_64bit_HEX_NUM( void )
@@ -683,11 +683,11 @@ void test_Crc_64bit_HEX_NUM( void )
  * @brief   **test_Crc_64bit_FALSE**
  *
  * Function to test the Crc_CalculateCRC64 with parameters of the official documentation of Autosar.
- * Parameters for test: data (data to calculate CRC), dataLength to know the size of data, 
+ * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
- * 
- * In this case the data was assigned of one of the results according to official documentation 
+ *
+ * In this case the data was assigned of one of the results according to official documentation
  * data {0x00, 0x00, 0x00, 0x00} and with FALSE on isFirstCall.
  */
 void test_Crc_64bit_FALSE( void )
