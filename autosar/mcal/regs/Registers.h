@@ -28,7 +28,7 @@
 #define PORTF_BASE         ( IOPORT_BASE + 0x00001400UL ) /*!< GPIOF ADDRESS */
 #define SCS_BASE           ( 0xE000E000UL )               /*!< System Control Space Base Address */
 #define NVIC_BASE          ( SCS_BASE + 0x0100UL )        /*!< NVIC Base Address */
-#define NVIC               ( (NVIC_Type *)NVIC_BASE )     /*!< NVIC configuration struct */
+#define NVIC               ( (Nvic_RegisterType *)NVIC_BASE )     /*!< NVIC configuration struct */
 /**@}*/
 
 /**
@@ -176,6 +176,6 @@ typedef struct
     uint32 RESERVED3[ 31U ]; /*!< Reserved memory. */
     uint32 RESERVED4[ 64U ]; /*!< Reserved memory. */
     uint32 IP[ 8U ];         /*!< Offset: 0x300 (R/W)  Interrupt Priority Register */
-} NVIC_Type;
+} Nvic_RegisterType;
 
 #endif
