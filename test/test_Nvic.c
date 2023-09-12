@@ -3,8 +3,9 @@
 #include "Registers.h"
 #include "Nvic.h"
 
-NVIC_Type NVIC_MemoryMock;
-NVIC_Type *NVIC_Mock = &NVIC_MemoryMock;
+/*mock microcontroller registers with its initial values*/
+/*                         ISER  RESERVED  ICER RESERVED ISPR RESERVED ICPR RESERVED RESERVED IP*/
+Nvic_RegisterType NVIC_BASE = { { 0 }, { 0 }, { 0 }, { 0 }, { 0 }, { 0 }, { 0 }, { 0 }, { 0 }, { 0 } };
 
 /**
   * @defgroup MinMaxValues representing the minimum and maximum irq value
@@ -12,7 +13,6 @@ NVIC_Type *NVIC_Mock = &NVIC_MemoryMock;
 #define NVIC_MIN_IRQ     16U /*!< Minimum IQR value */
 #define NVIC_MAX_IRQ     30U /*!< Maximum IRQ value*/
 #define NVIC_IRQ         23U /*!< IRQ value within the accepted range*/
-
 /**
   @} */
 
