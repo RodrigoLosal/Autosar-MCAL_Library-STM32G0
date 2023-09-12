@@ -84,7 +84,7 @@ uint32 CDD_Nvic_GetPriority( Nvic_IrqType irq )
     if( ( ( (uint32)( irq ) ) >= NVIC_MIN_IRQ ) && ( (uint32)( irq ) <= NVIC_MAX_IRQ ) )
     {
         priority = Bfx_GetBits_u32u8u8_u32( NVIC->IP[ IP_IDX( irq ) ], BIT_SHIFT( irq ), 8U );
-        priority >>= ( 8U - 2U );
+        priority >>= 6;
     }
     else
     {
