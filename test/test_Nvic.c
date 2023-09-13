@@ -23,8 +23,11 @@ Nvic_RegisterType NVIC_BASE = { { 0 }, { 0 }, { 0 }, { 0 }, { 0 }, { 0 }, { 0 },
 /**
 @} */
 
-#define IP_IDX( irq )    ( ( ( (uint32)( irq ) ) >> 2UL ) ) /*!< Calculate the index for IRQ priority register */
-#define FIRST_INDEX      0U                                 /*!< Starting index for NVIC register */
+/** @brief Calculate the index for IRQ priority register */
+#define IP_IDX( irq )    ( ( ( (uint32)( irq ) ) >> 2UL ) )
+
+/** @brief Starting index for NVIC register */
+#define FIRST_INDEX      0U                                 
 
 
 /**
