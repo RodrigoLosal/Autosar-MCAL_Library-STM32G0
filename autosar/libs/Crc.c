@@ -40,6 +40,31 @@
 #define CRC_SW_MINOR_VERSION              0
 #define CRC_SW_PATCH_VERSION              0
 
+/**
+ * @brief   **Calculate a CRC of 8 bits**
+ *
+ * The function calculates the a 8 bit CRC according to the standard of AUTOSAR with their respective
+ * paramters.
+ * 
+ * First is necessary to know if is the first time to use the function and it is assigned a value 
+ * for our CRC calculation.
+ * The function calculates the CRC through a for cycle, one of them is to know what of all bytes 
+ * is in the calculation and the other is to move the bit of the respective byte.
+ * 
+ * The function uses bit shift to calculate the CRC according with the process.
+ *
+ * @param   Crc_DataPtr Unsigned integer pointer to locate the bytes to calculate the CRC. 
+ * 
+ * @param   Crc_Length Unsigned long to locate the size of data to calculate.
+ * 
+ * @param   Crc_StartValue8 Unsigned integer to locate the start value of the CRC.
+ * 
+ * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.   
+ *
+ * @retval  crcValue
+ *
+ * @reqs   SWS_Crc_00031
+ */
 uint8 Crc_CalculateCRC8( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_StartValue8, boolean Crc_IsFirstCall )
 {
     const uint8 Crc_Polynomial = CRC8_SAEJ1850_POLYNOMIAL;
@@ -70,6 +95,31 @@ uint8 Crc_CalculateCRC8( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_
     return crcValue ^ 0xFF;
 }
 
+/**
+ * @brief   **Calculate a CRC of 8 bits with other polynomial 0x2F**
+ *
+ * The function calculates the a 8 bit CRC according to the standard of AUTOSAR with their respective
+ * paramters.
+ * 
+ * First is necessary to know if is the first time to use the function and it is assigned a value 
+ * for our CRC calculation.
+ * The function calculates the CRC through a for cycle, one of them is to know what of all bytes 
+ * is in the calculation and the other is to move the bit of the respective byte.
+ * 
+ * The function uses bit shift to calculate the CRC according with the process.
+ *
+ * @param   Crc_DataPtr Unsigned integer pointer to locate the bytes to calculate the CRC. 
+ * 
+ * @param   Crc_Length Unsigned long to locate the size of data to calculate.
+ * 
+ * @param   Crc_StartValue8 Unsigned integer to locate the start value of the CRC.
+ * 
+ * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.   
+ *
+ * @retval  crcValue
+ *
+ * @reqs   SWS_Crc_00043
+ */
 uint8 Crc_CalculateCRC8H2F( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_StartValue8H2F, boolean Crc_IsFirstCall )
 {
     const uint8 Crc_Polynomial = CRC8H2F_POLYNOMIAL;
@@ -100,6 +150,31 @@ uint8 Crc_CalculateCRC8H2F( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 C
     return crcValue;
 }
 
+/**
+ * @brief   **Calculate a CRC of 16 bits and polynomial of 0x1021**
+ *
+ * The function calculates the a 16 bit CRC according to the standard of AUTOSAR with their respective
+ * paramters.
+ * 
+ * First is necessary to know if is the first time to use the function and it is assigned a value 
+ * for our CRC calculation.
+ * The function calculates the CRC through a for cycle, one of them is to know what of all bytes 
+ * is in the calculation and the other is to move the bit of the respective byte.
+ * 
+ * The function uses bit shift to calculate the CRC according with the process.
+ *
+ * @param   Crc_DataPtr Unsigned integer pointer to locate the bytes to calculate the CRC. 
+ * 
+ * @param   Crc_Length Unsigned long to locate the size of data to calculate.
+ * 
+ * @param   Crc_StartValue8 Unsigned integer to locate the start value of the CRC.
+ * 
+ * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.   
+ *
+ * @retval  crcValue
+ *
+ * @reqs   SWS_Crc_00019
+ */
 uint16 Crc_CalculateCRC16( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 Crc_StartValue16, boolean Crc_IsFirstCall )
 {
     const uint16 Crc_Polynomial = CRC16_POLYNOMIAL;
@@ -130,9 +205,34 @@ uint16 Crc_CalculateCRC16( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 C
     return crcValue;
 }
 
-/*
-New function of 16 bits with data reflected
-*/
+/**
+ * @brief   **Calculate a CRC of 16 bits and polynomial of 0xA001**
+ *
+ * The function calculates the a 16 bit CRC with data reflected according to the standard of 
+ * AUTOSAR with their respective paramters.
+ * 
+ * In this case AUTOSAR specify a 0x8005 polynomial but the function need that the input data 
+ * are relfected so the reflected data of 0x8005 is 0xA001.
+ * 
+ * First is necessary to know if is the first time to use the function and it is assigned a value 
+ * for our CRC calculation.
+ * The function calculates the CRC through a for cycle, one of them is to know what of all bytes 
+ * is in the calculation and the other is to move the bit of the respective byte.
+ * 
+ * The function uses bit shift to calculate the CRC according with the process.
+ *
+ * @param   Crc_DataPtr Unsigned integer pointer to locate the bytes to calculate the CRC. 
+ * 
+ * @param   Crc_Length Unsigned long to locate the size of data to calculate.
+ * 
+ * @param   Crc_StartValue8 Unsigned integer to locate the start value of the CRC.
+ * 
+ * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.   
+ *
+ * @retval  crcValue
+ *
+ * @reqs   SWS_Crc_00071
+ */
 uint16 Crc_CalculateCRC16ARC( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 Crc_StartValue16, boolean Crc_IsFirstCall )
 {
     const uint16 Crc_Polynomial = CRC_16BITARC_POLYNOMIAL_REFLECTED;
@@ -167,6 +267,34 @@ uint16 Crc_CalculateCRC16ARC( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint1
     return crcValue;
 }
 
+/**
+ * @brief   **Calculate a CRC of 32 bits and polynomial of 0x04C11DB7**
+ *
+ * The function calculates the a 32 bit CRC with data reflected according to the standard of 
+ * AUTOSAR with their respective paramters.
+ * 
+ * In this case AUTOSAR specify a 0x04C11DB7 polynomial but the function need that the input data 
+ * are relfected so the reflected data of 0x04C11DB7 is 0xEDB88320.
+ * 
+ * First is necessary to know if is the first time to use the function and it is assigned a value 
+ * for our CRC calculation.
+ * The function calculates the CRC through a for cycle, one of them is to know what of all bytes 
+ * is in the calculation and the other is to move the bit of the respective byte.
+ * 
+ * The function uses bit shift to calculate the CRC according with the process.
+ *
+ * @param   Crc_DataPtr Unsigned integer pointer to locate the bytes to calculate the CRC. 
+ * 
+ * @param   Crc_Length Unsigned long to locate the size of data to calculate.
+ * 
+ * @param   Crc_StartValue8 Unsigned integer to locate the start value of the CRC.
+ * 
+ * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.   
+ *
+ * @retval  crcValue
+ *
+ * @reqs   SWS_Crc_00020
+ */
 uint32 Crc_CalculateCRC32( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32 Crc_StartValue32, boolean Crc_IsFirstCall )
 {
     const uint32 Crc_Polynomial = CRC_32BIT_POLYNOMIAL_REFLECTED;
@@ -207,6 +335,35 @@ uint32 Crc_CalculateCRC32( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32 C
     return crcValue;
 }
 
+/**
+ * @brief   **Calculate a CRC of 32 bits and polynomial of F4’AC’FB’13h**
+ *
+ * The function calculates the a 32 bit CRC with data reflected according to the standard of 
+ * AUTOSAR with their respective paramters.
+ * 
+ * In this case AUTOSAR specify a F4’AC’FB’13h polynomial but the function need that the input data 
+ * are relfected so the reflected and is needed to assign the first CRC value the value of their
+ * XOR in this case 0xFFFFFFFF.
+ * 
+ * First is necessary to know if is the first time to use the function and it is assigned a value 
+ * for our CRC calculation.
+ * The function calculates the CRC through a for cycle, one of them is to know what of all bytes 
+ * is in the calculation and the other is to move the bit of the respective byte.
+ * 
+ * The function uses bit shift to calculate the CRC according with the process.
+ *
+ * @param   Crc_DataPtr Unsigned integer pointer to locate the bytes to calculate the CRC. 
+ * 
+ * @param   Crc_Length Unsigned long to locate the size of data to calculate.
+ * 
+ * @param   Crc_StartValue8 Unsigned integer to locate the start value of the CRC.
+ * 
+ * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.   
+ *
+ * @retval  crcValue
+ *
+ * @reqs   SWS_Crc_00058
+ */
 uint32 Crc_CalculateCRC32P4( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32 Crc_StartValue32, boolean Crc_IsFirstCall )
 {
     uint8 bit;
@@ -244,6 +401,35 @@ uint32 Crc_CalculateCRC32P4( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32
     return crcValue;
 }
 
+/**
+ * @brief   **Calculate a CRC of 64 bits and polynomial of 42’F0’E1’EB’A9’EA’36’93h**
+ *
+ * The function calculates the a 32 bit CRC with data reflected according to the standard of 
+ * AUTOSAR with their respective paramters.
+ * 
+ * In this case AUTOSAR specify a 42’F0’E1’EB’A9’EA’36’93h polynomial but the function need that the input data 
+ * are relfected so the reflected and is needed to assign the first CRC value the value of their
+ * XOR in this case 0xFFFFFFFFFFFFFFFF.
+ * 
+ * First is necessary to know if is the first time to use the function and it is assigned a value 
+ * for our CRC calculation.
+ * The function calculates the CRC through a for cycle, one of them is to know what of all bytes 
+ * is in the calculation and the other is to move the bit of the respective byte.
+ * 
+ * The function uses bit shift to calculate the CRC according with the process.
+ *
+ * @param   Crc_DataPtr Unsigned integer pointer to locate the bytes to calculate the CRC. 
+ * 
+ * @param   Crc_Length Unsigned long to locate the size of data to calculate.
+ * 
+ * @param   Crc_StartValue8 Unsigned integer to locate the start value of the CRC.
+ * 
+ * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.   
+ *
+ * @retval  crcValue
+ *
+ * @reqs   SWS_Crc_00061
+ */
 uint64 Crc_CalculateCRC64( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint64 Crc_StartValue64, boolean Crc_IsFirstCall )
 {
     uint8 bit;
@@ -281,6 +467,28 @@ uint64 Crc_CalculateCRC64( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint64 C
     return crcValue;
 }
 
+/**
+ * @brief   **Fuunction to assign values to VersionInfo structure**
+ *
+ * This service returns the version information of this module.
+ * 
+ * The function assign values to VersionInfo structure to know the vendorID, moduleID,
+ * sw_major_version, sw_minor_version and sw_patch_version.
+ * 
+ * the function returns a TRUE if the members of structure have a value.
+ *
+ * @param   Crc_DataPtr Unsigned integer pointer to locate the bytes to calculate the CRC. 
+ * 
+ * @param   Crc_Length Unsigned long to locate the size of data to calculate.
+ * 
+ * @param   Crc_StartValue8 Unsigned integer to locate the start value of the CRC.
+ * 
+ * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.   
+ *
+ * @retval  crcValue
+ *
+ * @reqs   SWS_Crc_00061
+ */
 void Crc_GetVersionInfo( Std_VersionInfoType *Versioninfo )
 {
     Versioninfo->vendorID         = VENDOR_ID;
