@@ -29,7 +29,7 @@ void tearDown( void )
 }
 
 /**
- * @brief   **test_Crc_8bits_ZEROS**
+ * @brief   **Function to test the Crc_CalculateCRC8 with full zeros on data**
  *
  * Function to test the Crc_CalculateCRC8 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -50,7 +50,7 @@ void test_Crc_8bits_ZEROS( void )
 }
 
 /**
- * @brief   **test_Crc_8bits_FF**
+ * @brief   **Function to test the Crc_CalculateCRC8 with full 0xFF on data**
  *
  * Function to test the Crc_CalculateCRC8 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -71,7 +71,7 @@ void test_Crc_8bits_FF( void )
 }
 
 /**
- * @brief   **test_Crc_8bits_3_BYTES_1**
+ * @brief   **Function to test the Crc_CalculateCRC8 with 3 different bytes according to AUTOSAR**
  *
  * Function to test the Crc_CalculateCRC8 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -92,7 +92,7 @@ void test_Crc_8bits_3_BYTES_1( void )
 }
 
 /**
- * @brief   **test_Crc_8bits_HEX_NUM**
+ * @brief   **Function to test the Crc_CalculateCRC8 with nine bytes according to AUTOSAR**
  *
  * Function to test the Crc_CalculateCRC8 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -113,7 +113,7 @@ void test_Crc_8bits_HEX_NUM( void )
 }
 
 /**
- * @brief   **test_Crc_8bits2HF_ZEROS**
+ * @brief   **Function to test the Crc_CalculateCRC8H2F with full zeros on data**
  *
  * Function to test the test_Crc_8bits2HF with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -134,7 +134,7 @@ void test_Crc_8bits2HF_ZEROS( void )
 }
 
 /**
- * @brief   **test_Crc_8bits2HF_3_BYTES_1**
+ * @brief   **Function to test the Crc_CalculateCRC8H2F with 3 bytes on data according to AUTOSAR**
  *
  * Function to test the Crc_CalculateCRC8H2F with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -155,7 +155,7 @@ void test_Crc_8bits2HF_3_BYTES_1( void )
 }
 
 /**
- * @brief   **test_Crc_8bits2HF_HEX_NUM**
+ * @brief   **Function to test the Crc_CalculateCRC8H2F with nine bytes on data according to AUTOSAR**
  *
  * Function to test the Crc_CalculateCRC8H2F with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -176,7 +176,7 @@ void test_Crc_8bits2HF_HEX_NUM( void )
 }
 
 /**
- * @brief   **test_Crc_8bits2HF_FF**
+ * @brief   **Function to test the Crc_CalculateCRC8H2F with full 0xFF on data**
  *
  * Function to test the Crc_CalculateCRC8H2F with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -197,7 +197,7 @@ void test_Crc_8bits2HF_FF( void )
 }
 
 /**
- * @brief   **test_Crc_16bit_ZEROS**
+ * @brief   **Function to test the Crc_CalculateCRC16 with full zeros on data**
  *
  * Function to test the Crc_CalculateCRC16 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -218,7 +218,7 @@ void test_Crc_16bit_ZEROS( void )
 }
 
 /**
- * @brief   **test_Crc_16bit_3_BYTES_1**
+ * @brief   **Function to test the Crc_CalculateCRC16 with 3 different bytes on data according to AUTOSAR**
  *
  * Function to test the Crc_CalculateCRC16 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -239,7 +239,7 @@ void test_Crc_16bit_3_BYTES_1( void )
 }
 
 /**
- * @brief   **test_Crc_16bit_HEX_NUM**
+ * @brief   **Function to test the Crc_CalculateCRC16 with 9 different bytes on data according to AUTOSAR**
  *
  * Function to test the Crc_CalculateCRC16 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -260,7 +260,7 @@ void test_Crc_16bit_HEX_NUM( void )
 }
 
 /**
- * @brief   **test_Crc_16bit**
+ * @brief   **Function to test the Crc_CalculateCRC16 with 4 different bytes on data according to AUTOSAR**
  *
  * Function to test the Crc_CalculateCRC16 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -281,7 +281,7 @@ void test_Crc_16bit( void )
 }
 
 /**
- * @brief   **test_Crc_16bit_FF**
+ * @brief   **Function to test the Crc_CalculateCRC16 with full 0xFF on data**
  *
  * Function to test the Crc_CalculateCRC16 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -302,7 +302,7 @@ void test_Crc_16bit_FF( void )
 }
 
 /**
- * @brief   **test_Crc_16bitARC_ZEROS**
+ * @brief   **Function to test the Crc_CalculateCRC16ARC with full zeros on data**
  *
  * Function to test the Crc_CalculateCRC16ARC with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -323,7 +323,7 @@ void test_Crc_16bitARC_ZEROS( void )
 }
 
 /**
- * @brief   **test_Crc_16bitARC_FF**
+ * @brief   **Function to test the Crc_CalculateCRC16ARC with full 0xFF on data**
  *
  * Function to test the Crc_CalculateCRC16ARC with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -344,7 +344,7 @@ void test_Crc_16bitARC_FF( void )
 }
 
 /**
- * @brief   **test_Crc_16bitARC_HEX_NUM**
+ * @brief   **Function to test the Crc_CalculateCRC16ARC with 9 different bytes on data according to AUTOSAR**
  *
  * Function to test the Crc_CalculateCRC16ARC with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -365,7 +365,7 @@ void test_Crc_16bitARC_HEX_NUM( void )
 }
 
 /**
- * @brief   **test_Crc_16bitARC_3BYTES_1**
+ * @brief   **Function to test the Crc_CalculateCRC16 with 3 bytes on data according to AUTOSAR**
  *
  * Function to test the Crc_CalculateCRC16ARC with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -386,7 +386,7 @@ void test_Crc_16bitARC_3BYTES_1( void )
 }
 
 /**
- * @brief   **test_Crc_32bit_ZEROS**
+ * @brief   **Function to test the Crc_CalculateCRC32 with full zeros on data**
  *
  * Function to test the Crc_CalculateCRC32 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -407,7 +407,7 @@ void test_Crc_32bit_ZEROS( void )
 }
 
 /**
- * @brief   **test_Crc_32bit_FALSE**
+ * @brief   **Function to test the Crc_CalculateCRC32 with FALSE on isFirstCall parameter**
  *
  * Function to test the Crc_CalculateCRC32 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -428,7 +428,7 @@ void test_Crc_32bit_FALSE( void )
 }
 
 /**
- * @brief   **test_Crc_32bit_FF**
+ * @brief   **Function to test the Crc_CalculateCRC32 with full OXFF on data**
  *
  * Function to test the Crc_CalculateCRC32 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -449,7 +449,7 @@ void test_Crc_32bit_FF( void )
 }
 
 /**
- * @brief   **test_Crc_32bit_3BYTES_1**
+ * @brief   **Function to test the Crc_CalculateCRC32 with 3 different bytes on data according to AUTOSAR**
  *
  * Function to test the Crc_CalculateCRC32 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -470,7 +470,7 @@ void test_Crc_32bit_3BYTES_1( void )
 }
 
 /**
- * @brief   **test_Crc_32bit_HEX_NUM**
+ * @brief   **Function to test the Crc_CalculateCRC32 with 9 different bytes on data according to AUTOSAR**
  *
  * Function to test the Crc_CalculateCRC32 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -491,9 +491,9 @@ void test_Crc_32bit_HEX_NUM( void )
 }
 
 /**
- * @brief   **test_Crc_32bitP4_ZEROS**
+ * @brief   **Function to test the Crc_CalculateCRC32P4 with full zeros on data**
  *
- * Function to test the Crc_CalculateCRC32P4 with parameters of the official documentation of Autosar.
+ * Function to test the Crc_CalculateCRC32P4 with parameters of the official documentation to Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
@@ -512,7 +512,7 @@ void test_Crc_32bitP4_ZEROS( void )
 }
 
 /**
- * @brief   **test_Crc_32bitP4_3BYTES_1**
+ * @brief   **Function to test the Crc_CalculateCRC32P4 with 3 different bytes on data according to AUTOSAR**
  *
  * Function to test the Crc_CalculateCRC32P4 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -533,7 +533,7 @@ void test_Crc_32bitP4_3BYTES_1( void )
 }
 
 /**
- * @brief   **test_Crc_32bitP4_HEX_NUM**
+ * @brief   **Function to test the Crc_CalculateCRC32P4 with 9 different bytes on data according to AUTOSAR**
  *
  * Function to test the Crc_CalculateCRC32P4 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -554,9 +554,9 @@ void test_Crc_32bitP4_HEX_NUM( void )
 }
 
 /**
- * @brief   **test_Crc_32bitP4_FF**
+ * @brief   **Function to test the Crc_CalculateCRC32P4 with full 0xFF on data**
  *
- * Function to test the Crc_CalculateCRC32P4 with parameters of the official documentation of Autosar.
+ * Function to test the Crc_CalculateCRC32P4 with parameters of the official documentation to Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
@@ -575,9 +575,9 @@ void test_Crc_32bitP4_FF( void )
 }
 
 /**
- * @brief   **test_Crc_32bitP4_FALSE**
+ * @brief   **Function to test the Crc_CalculateCRC32P4 with FALSE on isFirstCall paramter**
  *
- * Function to test the Crc_CalculateCRC32P4 with parameters of the official documentation of Autosar.
+ * Function to test the Crc_CalculateCRC32P4 with parameters of the official documentation to Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
@@ -596,9 +596,9 @@ void test_Crc_32bitP4_FALSE( void )
 }
 
 /**
- * @brief   **test_Crc_64bit_ZEROS**
+ * @brief   **Function to test the Crc_CalculateCRC64 with full zeros on data**
  *
- * Function to test the Crc_CalculateCRC64 with parameters of the official documentation of Autosar.
+ * Function to test the Crc_CalculateCRC64 with parameters of the official documentation to Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
  * startValue this is the initial value of CRC acording to documentation, isFirstCall indicator to
  * assign a value to CRC frame.
@@ -617,7 +617,7 @@ void test_Crc_64bit_ZEROS( void )
 }
 
 /**
- * @brief   **test_Crc_64bit_3BYTES_1**
+ * @brief   **Function to test the Crc_CalculateCRC64 with 3 different bytes on data according to AUTOSAR**
  *
  * Function to test the Crc_CalculateCRC64 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -638,7 +638,7 @@ void test_Crc_64bit_3BYTES_1( void )
 }
 
 /**
- * @brief   **test_Crc_64bit_FF**
+ * @brief   **Function to test the Crc_CalculateCRC64 with full 0xFF on data**
  *
  * Function to test the Crc_CalculateCRC64 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -659,7 +659,7 @@ void test_Crc_64bit_FF( void )
 }
 
 /**
- * @brief   **test_Crc_64bit_HEX_NUM**
+ * @brief   **Function to test the Crc_CalculateCRC64 with 9 different bytes on data according to AUTOSAR**
  *
  * Function to test the Crc_CalculateCRC64 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -680,7 +680,7 @@ void test_Crc_64bit_HEX_NUM( void )
 }
 
 /**
- * @brief   **test_Crc_64bit_FALSE**
+ * @brief   **Function to test the Crc_CalculateCRC64 with FALSE on isFirstCall parameter**
  *
  * Function to test the Crc_CalculateCRC64 with parameters of the official documentation of Autosar.
  * Parameters for test: data (data to calculate CRC), dataLength to know the size of data,
@@ -701,7 +701,7 @@ void test_Crc_64bit_FALSE( void )
 }
 
 /**
- * @brief   **test_Crc_GetVersionInfo**
+ * @brief   **Function to test if members of test_Crc_GetVersionInfo have a value**
  *
  * Function to check that all members on VersionInfo structure have a value.
  * In this case the function it was modified to return one in case that the members have a value.
