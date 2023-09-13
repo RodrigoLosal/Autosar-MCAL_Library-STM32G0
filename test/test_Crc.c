@@ -60,7 +60,7 @@ void test_Crc_8bits_ZEROS( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0xFF, 0xFF, 0xFF, 0xFF}
  */
-void test_Crc_8bits_FF( void )
+void test_Crc_8bits_FULL_BYTES_0xFF( void )
 {
     uint8 data[]        = { 0xFF, 0xFF, 0xFF, 0xFF };
     uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
@@ -81,7 +81,7 @@ void test_Crc_8bits_FF( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0xF2, 0x01, 0x83}
  */
-void test_Crc_8bits_3_BYTES_1( void )
+void test_Crc_8bits_FIRST_3BYTES( void )
 {
     uint8 data[]        = { 0xF2, 0x01, 0x83 };
     uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
@@ -102,7 +102,7 @@ void test_Crc_8bits_3_BYTES_1( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}
  */
-void test_Crc_8bits_HEX_NUM( void )
+void test_Crc_8bits_9BYTES_AA_TO_FF( void )
 {
     uint8 data[]        = { 0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
     uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
@@ -144,7 +144,7 @@ void test_Crc_8bits2HF_ZEROS( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0xF2, 0x01, 0x83}
  */
-void test_Crc_8bits2HF_3_BYTES_1( void )
+void test_Crc_8bits2HF_FIRST_3BYTES( void )
 {
     uint8 data[]        = { 0xF2, 0x01, 0x83 };
     uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
@@ -165,7 +165,7 @@ void test_Crc_8bits2HF_3_BYTES_1( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}
  */
-void test_Crc_8bits2HF_HEX_NUM( void )
+void test_Crc_8bits2HF_9BYTES_AA_TO_FF( void )
 {
     uint8 data[]        = { 0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
     uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
@@ -186,7 +186,7 @@ void test_Crc_8bits2HF_HEX_NUM( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0xFF, 0xFF, 0xFF, 0xFF}
  */
-void test_Crc_8bits2HF_FF( void )
+void test_Crc_8bits2HF_FULL_BYTES_0xFF( void )
 {
     uint8 data[]        = { 0xFF, 0xFF, 0xFF, 0xFF };
     uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
@@ -228,7 +228,7 @@ void test_Crc_16bit_ZEROS( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0xF2, 0x01, 0x83}
  */
-void test_Crc_16bit_3_BYTES_1( void )
+void test_Crc_16bit_FIRST_3BYTES( void )
 {
     uint8 data[]        = { 0xF2, 0x01, 0x83 };
     uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
@@ -249,7 +249,7 @@ void test_Crc_16bit_3_BYTES_1( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}
  */
-void test_Crc_16bit_HEX_NUM( void )
+void test_Crc_16bit_9BYTES_AA_TO_FF( void )
 {
     uint8 data[]        = { 0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
     uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
@@ -270,7 +270,7 @@ void test_Crc_16bit_HEX_NUM( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0x0F, 0xAA, 0x00, 0x55}
  */
-void test_Crc_16bit( void )
+void test_Crc_16bit_FIRST_4BYTES( void )
 {
     uint8 data[]        = { 0x0F, 0xAA, 0x00, 0x55 };
     uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
@@ -291,7 +291,7 @@ void test_Crc_16bit( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0xFF, 0xFF, 0xFF, 0xFF}
  */
-void test_Crc_16bit_FF( void )
+void test_Crc_16bit_FULL_BYTES_0xFF( void )
 {
     uint8 data[]        = { 0xFF, 0xFF, 0xFF, 0xFF };
     uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
@@ -333,7 +333,7 @@ void test_Crc_16bitARC_ZEROS( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0xFF, 0xFF, 0xFF, 0xFF}
  */
-void test_Crc_16bitARC_FF( void )
+void test_Crc_16bitARC_FULL_BYTES_0xFF( void )
 {
     uint8 data[]        = { 0xFF, 0xFF, 0xFF, 0xFF };
     uint32 dataLength   = sizeof( data );
@@ -354,7 +354,7 @@ void test_Crc_16bitARC_FF( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}
  */
-void test_Crc_16bitARC_HEX_NUM( void )
+void test_Crc_16bitARC_9BYTES_AA_TO_FF( void )
 {
     uint8 data[]        = { 0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
     uint32 dataLength   = sizeof( data );
@@ -375,7 +375,7 @@ void test_Crc_16bitARC_HEX_NUM( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0xF2, 0x01, 0x83}
  */
-void test_Crc_16bitARC_3BYTES_1( void )
+void test_Crc_16bitARC_FIRST_3BYTES( void )
 {
     uint8 data[]        = { 0xF2, 0x01, 0x83 };
     uint32 dataLength   = sizeof( data );
@@ -417,7 +417,7 @@ void test_Crc_32bit_ZEROS( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0x00, 0x00, 0x00, 0x00} and with FALSE on isFirstCall.
  */
-void test_Crc_32bit_FALSE( void )
+void test_Crc_32bit_isFirstCall_FALSE( void )
 {
     uint8 data[]        = { 0x00, 0x00, 0x00, 0x00 };
     uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
@@ -438,7 +438,7 @@ void test_Crc_32bit_FALSE( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0xFF, 0xFF, 0xFF, 0xFF}
  */
-void test_Crc_32bit_FF( void )
+void test_Crc_32bit_FULL_BYTES_0xFF( void )
 {
     uint8 data[]        = { 0xFF, 0xFF, 0xFF, 0xFF };
     uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
@@ -459,7 +459,7 @@ void test_Crc_32bit_FF( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0xF2, 0x01, 0x83}
  */
-void test_Crc_32bit_3BYTES_1( void )
+void test_Crc_32bit_FIRST_3BYTES( void )
 {
     uint8 data[]        = { 0xF2, 0x01, 0x83 };
     uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
@@ -480,7 +480,7 @@ void test_Crc_32bit_3BYTES_1( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}
  */
-void test_Crc_32bit_HEX_NUM( void )
+void test_Crc_32bit_9BYTES_AA_TO_FF( void )
 {
     uint8 data[]        = { 0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
     uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
@@ -522,7 +522,7 @@ void test_Crc_32bitP4_ZEROS( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0xF2, 0x01, 0x83}
  */
-void test_Crc_32bitP4_3BYTES_1( void )
+void test_Crc_32bitP4_FIRST_3BYTES( void )
 {
     uint8 data[]        = { 0xF2, 0x01, 0x83 };
     uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
@@ -543,7 +543,7 @@ void test_Crc_32bitP4_3BYTES_1( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}
  */
-void test_Crc_32bitP4_HEX_NUM( void )
+void test_Crc_32bitP4_9BYTES_AA_TO_FF( void )
 {
     uint8 data[]        = { 0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
     uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
@@ -564,7 +564,7 @@ void test_Crc_32bitP4_HEX_NUM( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0xFF, 0xFF, 0xFF, 0xFF}
  */
-void test_Crc_32bitP4_FF( void )
+void test_Crc_32bitP4_FULL_BYTES_0xFF( void )
 {
     uint8 data[]        = { 0xFF, 0xFF, 0xFF, 0xFF };
     uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
@@ -585,7 +585,7 @@ void test_Crc_32bitP4_FF( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0xFF, 0xFF, 0xFF, 0xFF} and with FALSE on isFirstCall.
  */
-void test_Crc_32bitP4_FALSE( void )
+void test_Crc_32bitP4_isFirstCall_FALSE( void )
 {
     uint8 data[]        = { 0x00, 0x00, 0x00, 0x00 };
     uint32 dataLength   = sizeof( data ) / sizeof( data[ 0 ] );
@@ -627,7 +627,7 @@ void test_Crc_64bit_ZEROS( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0xF2, 0x01, 0x83}
  */
-void test_Crc_64bit_3BYTES_1( void )
+void test_Crc_64bit_FIRST_3BYTES( void )
 {
     uint8 data[]        = { 0xF2, 0x01, 0x83 };
     uint64 dataLength   = sizeof( data );
@@ -648,7 +648,7 @@ void test_Crc_64bit_3BYTES_1( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0xFF, 0xFF, 0xFF, 0xFF}
  */
-void test_Crc_64bit_FF( void )
+void test_Crc_64bit_FULL_BYTES_0xFF( void )
 {
     uint8 data[]        = { 0xFF, 0xFF, 0xFF, 0xFF };
     uint64 dataLength   = sizeof( data );
@@ -669,7 +669,7 @@ void test_Crc_64bit_FF( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}
  */
-void test_Crc_64bit_HEX_NUM( void )
+void test_Crc_64bit_9BYTES_AA_TO_FF( void )
 {
     uint8 data[]        = { 0x33, 0x22, 0x55, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
     uint64 dataLength   = sizeof( data );
@@ -690,7 +690,7 @@ void test_Crc_64bit_HEX_NUM( void )
  * In this case the data was assigned of one of the results according to official documentation
  * data {0x00, 0x00, 0x00, 0x00} and with FALSE on isFirstCall.
  */
-void test_Crc_64bit_FALSE( void )
+void test_Crc_64bit_isFirstCall_FALSE( void )
 {
     uint8 data[]        = { 0x00, 0x00, 0x00, 0x00 };
     uint64 dataLength   = sizeof( data );
