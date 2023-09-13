@@ -54,4 +54,4 @@
       - -g3
       - -c ${1}
       - -o ${2}
-      - -O0, -pedantic, -Werror, -Wstrict-prototypes, -fsigned-char, -fomit-frame-pointer, -fverbose-asm
+      #- -O0, -pedantic, -Werror, -Wstrict-prototypes, -fsigned-char, -fomit-frame-pointer, -fverbose-asm
