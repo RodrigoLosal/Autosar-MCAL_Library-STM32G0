@@ -464,22 +464,14 @@ uint64 Crc_CalculateCRC64( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint64 C
  * The function assign values to VersionInfo structure to know the vendorID, moduleID,
  * sw_major_version, sw_minor_version and sw_patch_version.
  * 
- * the function returns a TRUE if the members of structure have a value.
+ * The function returns a TRUE if the members of structure have a value.
  *
- * @param   Crc_DataPtr Unsigned integer pointer to locate the bytes to calculate the CRC. 
- * 
- * @param   Crc_Length Unsigned long to locate the size of data to calculate.
- * 
- * @param   Crc_StartValue8 Unsigned integer to locate the start value of the CRC.
- * 
- * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.   
+ * @param   Versioninfo Variable that locates the version information of CRC.
  *
- * @retval  crcValue
+ * @retval  status
  *
  * @reqs   SWS_Crc_00021
  */
-void Crc_GetVersionInfo( Std_VersionInfoType *Versioninfo )
-*/
 uint8 Crc_GetVersionInfo( Std_VersionInfoType *Versioninfo )
 {
     /*For test only*/
