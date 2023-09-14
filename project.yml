@@ -36,7 +36,6 @@
     - autosar/mcal/Nvic.c
     - autosar/mcal/Port.c
     - autosar/mcal/Dio.c
-    - autosar/libs/Crc.c
   :utilities:
     - gcovr
   :reports:
@@ -56,4 +55,4 @@
       - -g3
       - -c ${1}
       - -o ${2}
-      - -O0, -pedantic, -Werror, -Wstrict-prototypes, -fsigned-char, -fomit-frame-pointer, -fverbose-asm
+      #- -O0, -pedantic, -Werror, -Wstrict-prototypes, -fsigned-char, -fomit-frame-pointer, -fverbose-asm

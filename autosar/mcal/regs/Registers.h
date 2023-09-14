@@ -12,23 +12,23 @@
  * Symbols to specify the Base values of the registers.
  */
 /**@{*/
-#define PERIPH_BASE        0x40000000UL                   /*!< Peripherals register base address*/
-#define FLASH_BASE_ADDRESS 0x08000000                     /*!< FLASH ADDRESS */
-#define SRAM_BASE_ADDRESS  0x20000000                     /*!< SRAM ADDRESS */
-#define APB1_BASE_ADDRESS  ( PERIPH_BASE + 0x00000000 )   /*!< APB1 ADDRESS */
-#define APB2_BASE_ADDRESS  ( PERIPH_BASE + 0x00010000 )   /*!< APB2 ADDRESS */
-#define AHB_BASE_ADDRESS   ( PERIPH_BASE + 0x00020000 )   /*!< AHB ADDRESS */
-#define RCC_BASE_ADDRESS   0x40021000                     /*!< RCC ADDRESS */
-#define IOPORT_BASE        0x50000000                     /*!< IOPORT ADDRESS */
-#define PORTA_BASE         ( IOPORT_BASE + 0x00000000UL ) /*!< GPIOA ADDRESS */
-#define PORTB_BASE         ( IOPORT_BASE + 0x00000400UL ) /*!< GPIOB ADDRESS */
-#define PORTC_BASE         ( IOPORT_BASE + 0x00000800UL ) /*!< GPIOC ADDRESS */
-#define PORTD_BASE         ( IOPORT_BASE + 0x00000C00UL ) /*!< GPIOD ADDRESS */
-#define PORTE_BASE         ( IOPORT_BASE + 0x00001000UL ) /*!< GPIOE ADDRESS */
-#define PORTF_BASE         ( IOPORT_BASE + 0x00001400UL ) /*!< GPIOF ADDRESS */
-#define SCS_BASE           ( 0xE000E000UL )               /*!< System Control Space Base Address */
-#define NVIC_BASE          ( SCS_BASE + 0x0100UL )        /*!< NVIC Base Address */
-#define NVIC               ( (NVIC_Type *)NVIC_BASE )     /*!< NVIC configuration struct */
+#define PERIPH_BASE        0x40000000UL                       /*!< Peripherals register base address*/
+#define FLASH_BASE_ADDRESS 0x08000000                         /*!< FLASH ADDRESS */
+#define SRAM_BASE_ADDRESS  0x20000000                         /*!< SRAM ADDRESS */
+#define APB1_BASE_ADDRESS  ( PERIPH_BASE + 0x00000000 )       /*!< APB1 ADDRESS */
+#define APB2_BASE_ADDRESS  ( PERIPH_BASE + 0x00010000 )       /*!< APB2 ADDRESS */
+#define AHB_BASE_ADDRESS   ( PERIPH_BASE + 0x00020000 )       /*!< AHB ADDRESS */
+#define RCC_BASE_ADDRESS   0x40021000                         /*!< RCC ADDRESS */
+#define IOPORT_BASE        0x50000000                         /*!< IOPORT ADDRESS */
+#define PORTA_BASE         ( IOPORT_BASE + 0x00000000UL )     /*!< GPIOA ADDRESS */
+#define PORTB_BASE         ( IOPORT_BASE + 0x00000400UL )     /*!< GPIOB ADDRESS */
+#define PORTC_BASE         ( IOPORT_BASE + 0x00000800UL )     /*!< GPIOC ADDRESS */
+#define PORTD_BASE         ( IOPORT_BASE + 0x00000C00UL )     /*!< GPIOD ADDRESS */
+#define PORTE_BASE         ( IOPORT_BASE + 0x00001000UL )     /*!< GPIOE ADDRESS */
+#define PORTF_BASE         ( IOPORT_BASE + 0x00001400UL )     /*!< GPIOF ADDRESS */
+#define SCS_BASE           ( 0xE000E000UL )                   /*!< System Control Space Base Address */
+#define NVIC_BASE          ( SCS_BASE + 0x0100UL )            /*!< NVIC Base Address */
+#define NVIC               ( (Nvic_RegisterType *)NVIC_BASE ) /*!< NVIC configuration struct */
 /**@}*/
 
 /**
@@ -195,6 +195,6 @@ typedef struct
     uint32 RESERVED3[ 31U ]; /*!< Reserved memory. */
     uint32 RESERVED4[ 64U ]; /*!< Reserved memory. */
     uint32 IP[ 8U ];         /*!< Offset: 0x300 (R/W)  Interrupt Priority Register */
-} NVIC_Type;
+} Nvic_RegisterType;
 
 #endif
