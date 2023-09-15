@@ -9,8 +9,8 @@
  * • CRC32
  * • CRC32P4: CRC32 0xF4ACFB13 polynomial
  * • CRC64: CRC-64-ECMA
- * 
- * This library was designed like a Runtime calculation: 
+ *
+ * This library was designed like a Runtime calculation:
  * Slower execution, but small code size (no ROM table)
  */
 
