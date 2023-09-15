@@ -3,33 +3,22 @@
 #include "Dio_Cfg.h"
 #include "Bfx.h"
 
+static Dio_RegisterType *Dios_Port[ SIX ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
+
 
 Dio_LevelType Dio_ReadChannel( Dio_ChannelType ChannelId )
 {
-    Dio_LevelType ChannelLevel = 0;
-    Dio_RegisterType *Dio      = NULL;
-    Dio_LevelType Pin;
+    Dio_RegisterType *Dio = Dios_Port[ ChannelId >> FOUR ];
+    Dio_LevelType Pin     = ChannelId & VALUE_F;
 
-    Dio_RegisterType *Dios[ SIX ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
-    Dio                           = Dios[ ChannelId >> FOUR ];
-
-    Pin = ChannelId & VALUE_F;
-
-    ChannelLevel = Bfx_GetBit_u32u8_u8( (uint32 *)&Dio->IDR, Pin );
-
-    return ChannelLevel;
+    return Bfx_GetBit_u32u8_u8( (uint32 *)&Dio->IDR, Pin );
 }
 
 
 void Dio_WriteChannel( Dio_ChannelType ChannelId, Dio_LevelType Level )
 {
-    Dio_RegisterType *Dio = NULL;
-    Dio_PortType Pin;
-
-    Dio_RegisterType *Dios[ SIX ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
-    Dio                           = Dios[ ChannelId >> FOUR ];
-
-    Pin = ChannelId & VALUE_F;
+    Dio_RegisterType *Dio = Dios_Port[ ChannelId >> FOUR ];
+    Dio_PortType Pin      = ChannelId & VALUE_F;
 
     Bfx_PutBit_u32u8u8( (uint32 *)&Dio->ODR, Pin, Level );
 }
@@ -37,41 +26,24 @@ void Dio_WriteChannel( Dio_ChannelType ChannelId, Dio_LevelType Level )
 
 Dio_LevelType Dio_FlipChannel( Dio_ChannelType ChannelId )
 {
-    Dio_LevelType FlipChannel = 0;
-    Dio_RegisterType *Dio     = NULL;
-    Dio_PortType Pin;
-    Dio_RegisterType *Dios[ SIX ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
+    Dio_RegisterType *Dio = Dios_Port[ ChannelId >> FOUR ];
+    Dio_PortType Pin      = ChannelId & VALUE_F;
 
-    Dio = Dios[ ChannelId >> FOUR ];
+    Bfx_ToggleBitMask_u32u32( (uint32 *)&Dio->ODR, ( 1u << Pin ) );
 
-    Pin = ChannelId & VALUE_F;
-
-    Bfx_ToggleBits_u32( (uint32 *)&Dio->ODR );
-
-    FlipChannel = Bfx_GetBit_u32u8_u8( (uint32 *)&Dio->IDR, Pin );
-
-    return FlipChannel;
+    return Bfx_GetBit_u32u8_u8( (uint32 *)&Dio->IDR, Pin );
 }
 
 Dio_PortLevelType Dio_ReadPort( Dio_PortType PortId )
 {
-    Dio_PortLevelType *Port_Data;
-    Dio_RegisterType *Port         = NULL;
-    Dio_RegisterType *Ports[ SIX ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
+    Dio_RegisterType *Port = Dios_Port[ PortId ];
 
-    Port = Ports[ PortId ];
-
-    Port_Data = (Dio_PortLevelType *)&Port->IDR;
-
-    return *Port_Data;
+    return (Dio_PortLevelType)Port->IDR;
 }
 
 void Dio_WritePort( Dio_PortType PortId, Dio_PortLevelType Level )
 {
-    Dio_RegisterType *Port         = NULL;
-    Dio_RegisterType *Ports[ SIX ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
-
-    Port = Ports[ PortId ];
+    Dio_RegisterType *Port = Dios_Port[ PortId ];
 
     Port->ODR = Level;
 }
@@ -79,11 +51,8 @@ void Dio_WritePort( Dio_PortType PortId, Dio_PortLevelType Level )
 
 Dio_PortLevelType Dio_ReadChannelGroup( const Dio_ChannelGroupType *ChannelGroupIdPtr )
 {
-    Dio_PortLevelType GroupLevel   = 0;
-    Dio_RegisterType *Port         = NULL;
-    Dio_RegisterType *Ports[ SIX ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
-
-    Port = Ports[ ChannelGroupIdPtr->port ];
+    Dio_PortLevelType GroupLevel = 0;
+    const Dio_RegisterType *Port = Dios_Port[ ChannelGroupIdPtr->port ];
 
     GroupLevel = ( ( Port->IDR ) & ( ChannelGroupIdPtr->mask ) ) >> ChannelGroupIdPtr->offset;
 
@@ -93,10 +62,7 @@ Dio_PortLevelType Dio_ReadChannelGroup( const Dio_ChannelGroupType *ChannelGroup
 
 void Dio_WriteChannelGroup( const Dio_ChannelGroupType *ChannelGroupIdPtr, Dio_PortLevelType Level )
 {
-    Dio_RegisterType *Port;
-    Dio_RegisterType *Ports[ SIX ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
-
-    Port = Ports[ ChannelGroupIdPtr->port ];
+    Dio_RegisterType *Port = Dios_Port[ ChannelGroupIdPtr->port ];
 
     Port->ODR = (Dio_PortLevelType)( ( Port->ODR ) & ( ~( ( ChannelGroupIdPtr->mask ) ) ) ) | (Dio_PortLevelType)( Level << ( ChannelGroupIdPtr->offset ) );
 }
@@ -118,10 +84,7 @@ Dio_PortLevelType Dio_GetVersionInfo( Std_VersionInfoType *versioninfo )
 
 void Dio_MaskedWritePort( Dio_PortType PortId, Dio_PortLevelType Level, Dio_PortLevelType Mask )
 {
-    Dio_RegisterType *Port         = NULL;
-    Dio_RegisterType *Ports[ SIX ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
-
-    Port = Ports[ PortId ];
+    Dio_RegisterType *Port = Dios_Port[ PortId ];
 
     Port->ODR = Mask & ( ( Port->ODR ) | Level );
 }

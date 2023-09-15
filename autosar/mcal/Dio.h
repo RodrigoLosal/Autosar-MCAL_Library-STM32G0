@@ -3,7 +3,6 @@
 
 #include "Std_Types.h"
 
-
 typedef uint8 Dio_ChannelType;
 
 typedef uint8 Dio_PortType;
@@ -22,9 +21,6 @@ typedef struct
 
 
 #define VALUE_F       (Dio_LevelType)0xF
-
-#define NULL          ( (void *)0 )
-
 #define SIX           6u
 #define FOUR          4u
 
