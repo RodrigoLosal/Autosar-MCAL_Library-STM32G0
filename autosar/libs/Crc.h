@@ -14,7 +14,6 @@
  * Slower execution, but small code size (no ROM table)
  */
 
-
 #ifndef CRC_H_
 #define CRC_H_
 
