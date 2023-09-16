@@ -114,7 +114,7 @@
  *
  * @retval  crcValue the value of crc (8 bits) according with parameters and specifications of this function 
  *
- * @reqs   SWS_Crc_00031
+ * @reqs   SWS_Crc_00031, SWS_Crc_00032
  */
 uint8 Crc_CalculateCRC8( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_StartValue8, boolean Crc_IsFirstCall )
 {
@@ -390,7 +390,7 @@ uint32 Crc_CalculateCRC32( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32 C
  *
  * @retval  crcValue the value of crc (32 bits) according with parameters and specifications of this function 
  *
- * @reqs   SWS_Crc_00058
+ * @reqs   SWS_Crc_00058, SWS_Crc_00059
  */
 uint32 Crc_CalculateCRC32P4( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32 Crc_StartValue32, boolean Crc_IsFirstCall )
 {
@@ -451,7 +451,7 @@ uint32 Crc_CalculateCRC32P4( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32
  *
  * @retval  crcValue the value of crc (64 bits) according with parameters and specifications of this function 
  *
- * @reqs   SWS_Crc_00061
+ * @reqs   SWS_Crc_00061, SWS_Crc_00064
  */
 uint64 Crc_CalculateCRC64( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint64 Crc_StartValue64, boolean Crc_IsFirstCall )
 {
