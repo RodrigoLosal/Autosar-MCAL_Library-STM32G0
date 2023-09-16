@@ -112,7 +112,7 @@
  * @param   Crc_StartValue8 Start value when the algorithm starts.
  * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.
  *
- * @retval  crcValue
+ * @retval  crcValue the value of crc (8 bits) according with parameters and specifications of this function 
  *
  * @reqs   SWS_Crc_00031
  */
@@ -164,7 +164,7 @@ uint8 Crc_CalculateCRC8( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_
  * @param   Crc_StartValue8H2F Start value when the algorithm starts.
  * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.
  *
- * @retval  crcValue
+ * @retval  crcValue the value of crc (8 bits) according with parameters and specifications of this function 
  *
  * @reqs   SWS_Crc_00043, SWS_Crc_00044
  */
@@ -215,7 +215,7 @@ uint8 Crc_CalculateCRC8H2F( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 C
  * @param   Crc_StartValue16 Start value when the algorithm starts.
  * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.
  *
- * @retval  crcValue
+ * @retval  crcValue the value of crc (16 bits) according with parameters and specifications of this function 
  *
  * @reqs   SWS_Crc_00019, SWS_Crc_00015
  */
@@ -270,7 +270,7 @@ uint16 Crc_CalculateCRC16( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 C
  * @param   Crc_StartValue16 Start value when the algorithm starts.
  * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.
  *
- * @retval  crcValue
+ * @retval  crcValue the value of crc (16 bits) according with parameters and specifications of this function 
  *
  * @reqs   SWS_Crc_00071, SWS_Crc_00069
  */
@@ -325,7 +325,7 @@ uint16 Crc_CalculateCRC16ARC( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint1
  * @param   Crc_StartValue32 Start value when the algorithm starts.
  * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.
  *
- * @retval  crcValue
+ * @retval  crcValue the value of crc (32 bits) according with parameters and specifications of this function 
  *
  * @reqs   SWS_Crc_00020, SWS_Crc_00016
  */
@@ -388,7 +388,7 @@ uint32 Crc_CalculateCRC32( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32 C
  * @param   Crc_StartValue32 Start value when the algorithm starts.
  * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.
  *
- * @retval  crcValue
+ * @retval  crcValue the value of crc (32 bits) according with parameters and specifications of this function 
  *
  * @reqs   SWS_Crc_00058
  */
@@ -449,7 +449,7 @@ uint32 Crc_CalculateCRC32P4( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32
  * @param   Crc_StartValue64 Start value when the algorithm starts.
  * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.
  *
- * @retval  crcValue
+ * @retval  crcValue the value of crc (64 bits) according with parameters and specifications of this function 
  *
  * @reqs   SWS_Crc_00061
  */
@@ -497,7 +497,8 @@ uint64 Crc_CalculateCRC64( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint64 C
  * The function assign values to VersionInfo structure to know the vendorID, moduleID,
  * sw_major_version, sw_minor_version and sw_patch_version.
  *
- * The function returns a TRUE if the members of structure have a value.
+ * The function returns a TRUE if the members of structure have a value this part of
+ * code is inly for test porpuses.
  *
  * @param   Versioninfo Variable that locates the version information of CRC.
  *
