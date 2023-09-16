@@ -1,7 +1,6 @@
-#ifndef DIO_H_
-#define DIO_H_
+#ifndef DIO_H__
+#define DIO_H__
 
-#include "Std_Types.h"
 
 typedef uint8 Dio_ChannelType;
 
@@ -9,7 +8,7 @@ typedef uint8 Dio_PortType;
 
 typedef uint8 Dio_LevelType;
 
-typedef uint8 Dio_PortLevelType;
+typedef uint32 Dio_PortLevelType;
 
 
 typedef struct
@@ -20,7 +19,6 @@ typedef struct
 } Dio_ChannelGroupType;
 
 
-#define VALUE_F       (Dio_LevelType)0xF
 #define SIX           6u
 #define FOUR          4u
 

@@ -1,7 +1,11 @@
-#include "Dio.h"
+#include "Std_Types.h"
 #include "Registers.h"
-#include "Dio_Cfg.h"
 #include "Bfx.h"
+#include "Dio_Cfg.h"
+#include "Dio.h"
+
+#define VALUE_F (Dio_LevelType)0xF
+
 
 static Dio_RegisterType *Dios_Port[ SIX ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
 
@@ -36,16 +40,12 @@ Dio_LevelType Dio_FlipChannel( Dio_ChannelType ChannelId )
 
 Dio_PortLevelType Dio_ReadPort( Dio_PortType PortId )
 {
-    Dio_RegisterType *Port = Dios_Port[ PortId ];
-
-    return (Dio_PortLevelType)Port->IDR;
+    return (Dio_PortLevelType)Dios_Port[ PortId ];
 }
 
 void Dio_WritePort( Dio_PortType PortId, Dio_PortLevelType Level )
 {
-    Dio_RegisterType *Port = Dios_Port[ PortId ];
-
-    Port->ODR = Level;
+    Dios_Port[ PortId ] = (Dio_RegisterType *)Level;
 }
 
 
@@ -54,7 +54,9 @@ Dio_PortLevelType Dio_ReadChannelGroup( const Dio_ChannelGroupType *ChannelGroup
     Dio_PortLevelType GroupLevel = 0;
     const Dio_RegisterType *Port = Dios_Port[ ChannelGroupIdPtr->port ];
 
-    GroupLevel = ( ( Port->IDR ) & ( ChannelGroupIdPtr->mask ) ) >> ChannelGroupIdPtr->offset;
+    GroupLevel = ( Port->IDR ) & ( ChannelGroupIdPtr->mask );
+
+    Bfx_ShiftBitRt_u32u8( (uint32 *)GroupLevel, ChannelGroupIdPtr->offset );
 
     return GroupLevel;
 }
@@ -64,7 +66,7 @@ void Dio_WriteChannelGroup( const Dio_ChannelGroupType *ChannelGroupIdPtr, Dio_P
 {
     Dio_RegisterType *Port = Dios_Port[ ChannelGroupIdPtr->port ];
 
-    Port->ODR = (Dio_PortLevelType)( ( Port->ODR ) & ( ~( ( ChannelGroupIdPtr->mask ) ) ) ) | (Dio_PortLevelType)( Level << ( ChannelGroupIdPtr->offset ) );
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Port->ODR, ChannelGroupIdPtr->offset, ChannelGroupIdPtr->mask, Level );
 }
 
 
