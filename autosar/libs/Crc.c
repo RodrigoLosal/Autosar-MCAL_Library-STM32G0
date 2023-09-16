@@ -108,11 +108,8 @@
  * The function uses bit shift to calculate the CRC according with the process.
  *
  * @param   Crc_DataPtr Pointer to start address of data block to be calculated.
- *
  * @param   Crc_Length Length of data block to be calculated in bytes.
- *
  * @param   Crc_StartValue8 Start value when the algorithm starts.
- *
  * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.
  *
  * @retval  crcValue
@@ -163,16 +160,13 @@ uint8 Crc_CalculateCRC8( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_
  * The function uses bit shift to calculate the CRC according with the process.
  *
  * @param   Crc_DataPtr Pointer to start address of data block to be calculated.
- *
  * @param   Crc_Length Length of data block to be calculated in bytes.
- *
  * @param   Crc_StartValue8H2F Start value when the algorithm starts.
- *
  * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.
  *
  * @retval  crcValue
  *
- * @reqs   SWS_Crc_00043
+ * @reqs   SWS_Crc_00043, SWS_Crc_00044
  */
 uint8 Crc_CalculateCRC8H2F( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 Crc_StartValue8H2F, boolean Crc_IsFirstCall )
 {
@@ -217,16 +211,13 @@ uint8 Crc_CalculateCRC8H2F( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint8 C
  * The function uses bit shift to calculate the CRC according with the process.
  *
  * @param   Crc_DataPtr Pointer to start address of data block to be calculated.
- *
  * @param   Crc_Length Length of data block to be calculated in bytes.
- *
  * @param   Crc_StartValue16 Start value when the algorithm starts.
- *
  * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.
  *
  * @retval  crcValue
  *
- * @reqs   SWS_Crc_00019
+ * @reqs   SWS_Crc_00019, SWS_Crc_00015
  */
 uint16 Crc_CalculateCRC16( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 Crc_StartValue16, boolean Crc_IsFirstCall )
 {
@@ -275,16 +266,13 @@ uint16 Crc_CalculateCRC16( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 C
  * The function uses bit shift to calculate the CRC according with the process.
  *
  * @param   Crc_DataPtr Pointer to start address of data block to be calculated.
- *
  * @param   Crc_Length Length of data block to be calculated in bytes.
- *
  * @param   Crc_StartValue16 Start value when the algorithm starts.
- *
  * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.
  *
  * @retval  crcValue
  *
- * @reqs   SWS_Crc_00071
+ * @reqs   SWS_Crc_00071, SWS_Crc_00069
  */
 uint16 Crc_CalculateCRC16ARC( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint16 Crc_StartValue16, boolean Crc_IsFirstCall )
 {
@@ -333,16 +321,13 @@ uint16 Crc_CalculateCRC16ARC( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint1
  * The function uses bit shift to calculate the CRC according with the process.
  *
  * @param   Crc_DataPtr Pointer to start address of data block to be calculated.
- *
  * @param   Crc_Length Length of data block to be calculated in bytes.
- *
  * @param   Crc_StartValue32 Start value when the algorithm starts.
- *
  * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.
  *
  * @retval  crcValue
  *
- * @reqs   SWS_Crc_00020
+ * @reqs   SWS_Crc_00020, SWS_Crc_00016
  */
 uint32 Crc_CalculateCRC32( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32 Crc_StartValue32, boolean Crc_IsFirstCall )
 {
@@ -399,11 +384,8 @@ uint32 Crc_CalculateCRC32( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32 C
  * The function uses bit shift to calculate the CRC according with the process.
  *
  * @param   Crc_DataPtr Pointer to start address of data block to be calculated.
- *
  * @param   Crc_Length Length of data block to be calculated in bytes.
- *
  * @param   Crc_StartValue32 Start value when the algorithm starts.
- *
  * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.
  *
  * @retval  crcValue
@@ -463,11 +445,8 @@ uint32 Crc_CalculateCRC32P4( const uint8 *Crc_DataPtr, uint32 Crc_Length, uint32
  * The function uses bit shift to calculate the CRC according with the process.
  *
  * @param   Crc_DataPtr Pointer to start address of data block to be calculated.
- *
  * @param   Crc_Length Length of data block to be calculated in bytes.
- *
  * @param   Crc_StartValue64 Start value when the algorithm starts.
- *
  * @param   Crc_IsFirstCall boolean variable to know if is the first time that we used the function.
  *
  * @retval  crcValue
