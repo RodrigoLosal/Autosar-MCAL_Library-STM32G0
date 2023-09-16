@@ -13,7 +13,6 @@
  * This library was designed like a Runtime calculation:
  * Slower execution, but small code size (no ROM table)
  */
-
 #ifndef CRC_H_
 #define CRC_H_
 
