@@ -88,7 +88,7 @@ typedef struct
 #define DIO_PIN_PF_01 (Dio_ChannelType)0x51u /* cppcheck-suppress misra-c2012-2.5 ; This define is used to indicate the pin value */
 #define DIO_PIN_PF_02 (Dio_ChannelType)0x52u /* cppcheck-suppress misra-c2012-2.5 ; This define is used to indicate the pin value */
 #define DIO_PIN_PF_03 (Dio_ChannelType)0x53u /* cppcheck-suppress misra-c2012-2.5 ; This define is used to indicate the pin value */
-#define DIO_PIN_PF_04 (Dio_ChannelType)0x54u /* cppcheck-suppress misra-c2012-2.5 ; This define is used to indicate the pin value */s
+#define DIO_PIN_PF_04 (Dio_ChannelType)0x54u /* cppcheck-suppress misra-c2012-2.5 ; This define is used to indicate the pin value */ s
 
 
 Dio_LevelType Dio_ReadChannel( Dio_ChannelType ChannelId );
