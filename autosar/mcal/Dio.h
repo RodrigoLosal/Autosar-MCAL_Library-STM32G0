@@ -19,10 +19,6 @@ typedef struct
 } Dio_ChannelGroupType;
 
 
-#define SIX           6u
-#define FOUR          4u
-
-
 #define DIO_PIN_PA_00 (Dio_ChannelType)0x00u
 #define DIO_PIN_PA_01 (Dio_ChannelType)0x01u
 #define DIO_PIN_PA_02 (Dio_ChannelType)0x02u

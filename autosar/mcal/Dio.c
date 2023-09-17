@@ -5,6 +5,8 @@
 #include "Dio.h"
 
 #define VALUE_F (Dio_LevelType)0xF
+#define SIX     6u
+#define FOUR    4u
 
 
 static Dio_RegisterType *Dios_Port[ SIX ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
