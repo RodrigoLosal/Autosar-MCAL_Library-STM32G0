@@ -27,7 +27,7 @@ Nvic_RegisterType NVIC_BASE = { { 0 }, { 0 }, { 0 }, { 0 }, { 0 }, { 0 }, { 0 },
 #define IP_IDX( irq )    ( ( ( (uint32)( irq ) ) >> 2UL ) )
 
 /** @brief Starting index for NVIC register */
-#define FIRST_INDEX      0U                                 
+#define FIRST_INDEX      0U
 
 
 /**

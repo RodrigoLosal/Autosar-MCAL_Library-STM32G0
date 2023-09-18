@@ -1,3 +1,28 @@
+/**
+ * @file Dio.c
+ * @brief Port driver configuration.
+ *
+ * This is the file for the Dio driver, it provides functions for accessing the hardware
+ * pins of the microcontroller. It also allows the grouping of those pins.
+ *
+ * The DIO driver provides services for reading and writing to/from:
+ * DIO Channels (Pins)
+ * DIO Ports
+ * DIO Channel Groups
+ *
+ * This module operates on pins and ports configured by the PORT driver for this purpose.
+ * For this reason, there is no configuration and initialization of this port structure in
+ * the DIO driver.
+ *
+ * The DIO driver provides the following functions:
+ * The Dio controller will define functions to modify the output channel levels individually,
+ * for a port or for a channel group.
+ * The Dio driver will define functions to read the level of the input and output channels
+ * individually, for a port or for a group of channels.
+ *
+ * @note Dio module will use the definitions that have been created during the configuration
+ * process in the Dio_Cfg.h file.
+ */
 #ifndef DIO_H__
 #define DIO_H__
 
