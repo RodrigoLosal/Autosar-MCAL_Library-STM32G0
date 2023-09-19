@@ -1,3 +1,18 @@
+/**
+ * @file    Crc.h
+ * @brief   **This file contains the API and the configuration of the AUTOSAR Basic Software module CRC.**
+ *
+ * The Crc library contains the following routines for CRC calculation
+ * • CRC8: SAEJ1850
+ * • CRC8H2F: CRC8 0x2F polynomial
+ * • CRC16
+ * • CRC32
+ * • CRC32P4: CRC32 0xF4ACFB13 polynomial
+ * • CRC64: CRC-64-ECMA
+ *
+ * This library was designed like a Runtime calculation:
+ * Slower execution, but small code size (no ROM table)
+ */
 #ifndef CRC_H_
 #define CRC_H_
 
