@@ -27,15 +27,41 @@
 #include "Dio.h"
 
 
+/**
+ * @brief Read Channel 
+ *
+ * The function will return the value of the specified DIO channel, taking the MSB bit as 
+ * the port and the LSB bit as the pin. 
+ * 
+ * @param ChannelId ID of DIO channel
+ */
 Dio_LevelType Dio_ReadChannel( Dio_ChannelType ChannelId )
 {
 }
 
 
+/**
+ * @brief 
+ *
+ * The function will return the value of the specified DIO channel, taking the MSB bit as 
+ * the port and the LSB bit as the pin. 
+ * 
+ * @param ChannelId ID of DIO channel
+ * @param Level ID of DIO channel
+ */
 void Dio_WriteChannel( Dio_ChannelType ChannelId, Dio_LevelType Level )
 {
 }
 
+
+/**
+ * @brief 
+ *
+ * The function will return the value of the specified DIO channel, taking the MSB bit as 
+ * the port and the LSB bit as the pin. 
+ * 
+ * @param ChannelId ID of DIO channel
+ */
 Dio_LevelType Dio_FlipChannel( Dio_ChannelType ChannelId )
 {
 }
