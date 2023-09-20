@@ -82,14 +82,17 @@ typedef struct
 } Port_RegisterType;
 
 
+/**
+ * @brief GPIOS registers struct for Dio.
+ */
 typedef struct
 {
-    volatile uint32 Reserved1[ 4 ];
-    volatile uint32 IDR;
-    volatile uint32 ODR;
-    volatile uint32 BSRR;
-    volatile uint32 Reserved2[ 3 ];
-    volatile uint32 BRR;
+    volatile uint32 Reserved1[ 4 ]; /*!< Reserved register*/
+    volatile uint32 IDR;            /*!< GPIO port input data register*/
+    volatile uint32 ODR;            /*!< GPIO port output data register*/
+    volatile uint32 BSRR;           /*!< GPIO port bit set/reset register*/
+    volatile uint32 Reserved2[ 3 ]; /*!< Reserved register*/
+    volatile uint32 BRR;            /*!< GPIO port bit reset register*/
 } Dio_RegisterType;
 
 /**
@@ -104,13 +107,16 @@ typedef struct
 #define RCC                  ( (RCC_RegisterType *)RCC_BASE_ADDRESS ) /*!< Access to RCC registers*/
 /**@}*/
 
-#define DIOA                 ( (Dio_RegisterType *)PORTA_BASE )
-#define DIOB                 ( (Dio_RegisterType *)PORTB_BASE )
-#define DIOC                 ( (Dio_RegisterType *)PORTC_BASE )
-#define DIOD                 ( (Dio_RegisterType *)PORTD_BASE )
-#define DIOE                 ( (Dio_RegisterType *)PORTE_BASE )
-#define DIOF                 ( (Dio_RegisterType *)PORTF_BASE )
-
+/**
+  * @defgroup  Struct-Dio casting to base address of the PORTS and RCC for Dio
+  @{ */
+#define DIOA                 ( (Dio_RegisterType *)PORTA_BASE ) /*!< Access to DIOA registers*/
+#define DIOB                 ( (Dio_RegisterType *)PORTB_BASE ) /*!< Access to DIOB registers*/
+#define DIOC                 ( (Dio_RegisterType *)PORTC_BASE ) /*!< Access to DIOC registers*/
+#define DIOD                 ( (Dio_RegisterType *)PORTD_BASE ) /*!< Access to DIOD registers*/
+#define DIOE                 ( (Dio_RegisterType *)PORTE_BASE ) /*!< Access to DIOE registers*/
+#define DIOF                 ( (Dio_RegisterType *)PORTF_BASE ) /*!< Access to DIOF registers*/
+/**@}*/
 
 /**
   * @defgroup Clock-eneable of different ports
