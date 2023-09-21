@@ -1,6 +1,6 @@
 /**
  * @file Dio.h
- * @brief Port driver configuration.
+ * @brief Dio driver configuration.
  *
  * This is the file for the Dio driver, it provides functions for accessing the hardware
  * pins of the microcontroller. It also allows the grouping of those pins.
