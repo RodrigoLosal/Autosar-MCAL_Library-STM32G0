@@ -106,6 +106,7 @@ typedef struct
  */
 typedef struct
 {
+<<<<<<< HEAD
   volatile uint32 CR1;          /*!< TIM control register 1 */
   volatile uint32 CR2;          /*!< TIM control register 2 */
   volatile uint32 Reserved0;    /*!< Reserved memory space */
@@ -116,6 +117,19 @@ typedef struct
   volatile uint32 CNT;          /*!< TIM counter */
   volatile uint32 PSC;          /*!< TIM prescaler */
   volatile uint32 ARR;          /*!< TIM auto-reload register */
+=======
+  volatile uint32 CR1;        /*!< TIM control register 1 */
+  volatile uint32 CR2;        /*!< TIM control register 2 */
+  volatile uint32 Reserved0;  /*!< Reserved memory space */
+  volatile uint32 DIER;       /*!< TIM DMA/Interrupt enable register */
+  volatile uint32 SR;         /*!< TIM status register */
+  volatile uint32 EGR;        /*!< TIM event generation register */
+  volatile uint32 Reserved1;  /*!< Reserved memory space */
+  volatile uint16 Reserved2;  /*!< Reserved memory space */
+  volatile uint32 CNT;        /*!< TIM counter */
+  volatile uint32 PSC;        /*!< TIM prescaler */
+  volatile uint32 ARR;        /*!< TIM auto-reload register */
+>>>>>>> cf843bd (GPT-Code-Implementation. Creation of the files, control variables & functions. TIM6 & TIM7 registers added to Registers.h)
 } Gpt_RegisterType;
 
 /**
@@ -130,6 +144,7 @@ typedef struct
 #define RCC                  ( (RCC_RegisterType *)RCC_BASE_ADDRESS ) /*!< Access to RCC registers*/
 /**@}*/
 
+<<<<<<< HEAD
 /**
   * @defgroup  Struct-Dio casting to base address of the PORTS and RCC for Dio
   @{ */
@@ -139,6 +154,20 @@ typedef struct
 #define DIOD                 ( (Dio_RegisterType *)PORTD_BASE ) /*!< Access to DIOD registers*/
 #define DIOE                 ( (Dio_RegisterType *)PORTE_BASE ) /*!< Access to DIOE registers*/
 #define DIOF                 ( (Dio_RegisterType *)PORTF_BASE ) /*!< Access to DIOF registers*/
+=======
+#define DIOA                 ( (Dio_RegisterType *)PORTA_BASE )
+#define DIOB                 ( (Dio_RegisterType *)PORTB_BASE )
+#define DIOC                 ( (Dio_RegisterType *)PORTC_BASE )
+#define DIOD                 ( (Dio_RegisterType *)PORTD_BASE )
+#define DIOE                 ( (Dio_RegisterType *)PORTE_BASE )
+#define DIOF                 ( (Dio_RegisterType *)PORTF_BASE )
+
+/**
+  * @defgroup  Struct casting to base address of the Basic Timers
+  @{ */
+#define TIM6                ( (Gpt_RegisterType *)TIM6_BASE_ADDRESS )      /*!< Access to TIM6 registers*/
+#define TIM7                ( (Gpt_RegisterType *)TIM7_BASE_ADDRESS )      /*!< Access to TIM7 registers*/
+>>>>>>> cf843bd (GPT-Code-Implementation. Creation of the files, control variables & functions. TIM6 & TIM7 registers added to Registers.h)
 /**@}*/
 
 /**

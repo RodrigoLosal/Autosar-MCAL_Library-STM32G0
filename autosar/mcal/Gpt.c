@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include "Bfx.h"
 #include "Std_Types.h"
 #include "Registers.h"
@@ -30,6 +31,18 @@ void Gpt_Init( const Gpt_ConfigType *ConfigPtr )
     }
     
     LocalGptPtr = ConfigPtr;
+=======
+#include "Gpt.h"
+
+void Gpt_GetVersionInfo( Std_VersionInfoType *VersionInfoPtr )
+{
+
+}
+
+void Gpt_Init( const Gpt_ConfigType *ConfigPtr )
+{
+
+>>>>>>> cf843bd (GPT-Code-Implementation. Creation of the files, control variables & functions. TIM6 & TIM7 registers added to Registers.h)
 }
 
 void Gpt_DeInit( void )
@@ -39,6 +52,7 @@ void Gpt_DeInit( void )
 
 Gpt_ValueType Gpt_GetTimeElapsed(Gpt_ChannelType Channel )
 {
+<<<<<<< HEAD
     switch ( Channel )
     {
         case Channel1:
@@ -52,10 +66,14 @@ Gpt_ValueType Gpt_GetTimeElapsed(Gpt_ChannelType Channel )
         default:
             break;
     }
+=======
+
+>>>>>>> cf843bd (GPT-Code-Implementation. Creation of the files, control variables & functions. TIM6 & TIM7 registers added to Registers.h)
 }
 
 Gpt_ValueType Gpt_GetTimeRemaining( Gpt_ChannelType Channel )
 {
+<<<<<<< HEAD
     switch ( Channel )
     {
         case Channel1:
@@ -69,6 +87,9 @@ Gpt_ValueType Gpt_GetTimeRemaining( Gpt_ChannelType Channel )
         default:
             break;
     }
+=======
+
+>>>>>>> cf843bd (GPT-Code-Implementation. Creation of the files, control variables & functions. TIM6 & TIM7 registers added to Registers.h)
 }
 
 void Gpt_StartTimer( Gpt_ChannelType Channel, Gpt_ValueType Value )
@@ -91,6 +112,24 @@ void Gpt_DisableNotification( Gpt_ChannelType Channel )
 
 }
 
+<<<<<<< HEAD
+=======
+void Gpt_SetMode( Gpt_ModeType Mode )
+{
+
+}
+
+void Gpt_DisableWakeUp( Gpt_ChannelType Channel )
+{
+
+}
+
+void Gpt_EnableWakeUp( Gpt_ChannelType Channel )
+{
+
+}
+
+>>>>>>> cf843bd (GPT-Code-Implementation. Creation of the files, control variables & functions. TIM6 & TIM7 registers added to Registers.h)
 void Gpt_Notification_TIM6( void )
 {
 
@@ -98,5 +137,9 @@ void Gpt_Notification_TIM6( void )
 
 void Gpt_Notification_TIM7( void )
 {
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> cf843bd (GPT-Code-Implementation. Creation of the files, control variables & functions. TIM6 & TIM7 registers added to Registers.h)
 }
