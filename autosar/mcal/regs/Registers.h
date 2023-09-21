@@ -29,6 +29,8 @@
 #define SCS_BASE           ( 0xE000E000UL )                   /*!< System Control Space Base Address */
 #define NVIC_BASE          ( SCS_BASE + 0x0100UL )            /*!< NVIC Base Address */
 #define NVIC               ( (Nvic_RegisterType *)NVIC_BASE ) /*!< NVIC configuration struct */
+#define TIM6_BASE_ADDRESS  0x40001000                         /*!< TIM6 register base address */
+#define TIM7_BASE_ADDRESS  0x40001400                         /*!< TIM7 register base address */
 /**@}*/
 
 /**
@@ -94,6 +96,24 @@ typedef struct
     volatile uint32 Reserved2[ 3 ]; /*!< Reserved register*/
     volatile uint32 BRR;            /*!< GPIO port bit reset register*/
 } Dio_RegisterType;
+
+/**
+ * @brief GPT registers struct.
+ */
+typedef struct
+{
+  volatile uint32 CR1;        /*!< TIM control register 1 */
+  volatile uint32 CR2;        /*!< TIM control register 2 */
+  volatile uint32 Reserved0;  /*!< Reserved memory space */
+  volatile uint32 DIER;       /*!< TIM DMA/Interrupt enable register */
+  volatile uint32 SR;         /*!< TIM status register */
+  volatile uint32 EGR;        /*!< TIM event generation register */
+  volatile uint32 Reserved1;  /*!< Reserved memory space */
+  volatile uint16 Reserved2;  /*!< Reserved memory space */
+  volatile uint32 CNT;        /*!< TIM counter */
+  volatile uint32 PSC;        /*!< TIM prescaler */
+  volatile uint32 ARR;        /*!< TIM auto-reload register */
+} Gpt_RegisterType;
 
 /**
   * @defgroup  Struct casting to base address of the PORTS and RCC
