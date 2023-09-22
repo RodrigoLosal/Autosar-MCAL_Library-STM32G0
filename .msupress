@@ -4,3 +4,4 @@
 
 // suppress all MISRA warnings in source/cmsis-st32mg0xx folder
 misra-c2012-2.5:autosar/mcal/Port.h
+misra-c2012-2.5:autosar/mcal/Dio.h 
