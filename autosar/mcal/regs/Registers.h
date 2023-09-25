@@ -31,8 +31,6 @@
 #define NVIC               ( (Nvic_RegisterType *)NVIC_BASE ) /*!< NVIC configuration struct */
 #define TIM6_BASE_ADDRESS  0x40001000                         /*!< TIM6 register base address */
 #define TIM7_BASE_ADDRESS  0x40001400                         /*!< TIM7 register base address */
-#define TIM6_BASE_ADDRESS  0x40001000                         /*!< TIM6 register base address */
-#define TIM7_BASE_ADDRESS  0x40001400                         /*!< TIM7 register base address */
 /**@}*/
 
 /**
@@ -137,6 +135,13 @@ typedef struct
 #define DIOD                 ( (Dio_RegisterType *)PORTD_BASE ) /*!< Access to DIOD registers*/
 #define DIOE                 ( (Dio_RegisterType *)PORTE_BASE ) /*!< Access to DIOE registers*/
 #define DIOF                 ( (Dio_RegisterType *)PORTF_BASE ) /*!< Access to DIOF registers*/
+/**@}*/
+
+/**
+  * @defgroup  Struct casting to base address of the Basic Timers
+  @{ */
+#define TIM6                ( (Gpt_RegisterType *)TIM6_BASE_ADDRESS ) /*!< Access to TIM6 registers*/
+#define TIM7                ( (Gpt_RegisterType *)TIM7_BASE_ADDRESS ) /*!< Access to TIM7 registers*/
 /**@}*/
 
 /**
