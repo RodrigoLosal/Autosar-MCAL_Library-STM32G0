@@ -5,7 +5,10 @@
 typedef struct _Gpt_ConfigType
 {
     uint8 Channel;
+    uint8 ChannelMode;
+    uint8 ChannelState;
     uint16 Prescaler;
+<<<<<<< HEAD
     uint16 Period;
 =======
 #include "Registers.h"
@@ -16,10 +19,13 @@ typedef struct _Gpt_ConfigType
 {
     
 >>>>>>> cf843bd (GPT-Code-Implementation. Creation of the files, control variables & functions. TIM6 & TIM7 registers added to Registers.h)
+=======
+>>>>>>> bbfe89e (GPT-Code-Implementation. Rest of the functions filled.)
 } Gpt_ConfigType;
 
 typedef enum
 {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 	Channel1,
@@ -30,9 +36,27 @@ typedef enum
 >>>>>>> cf843bd (GPT-Code-Implementation. Creation of the files, control variables & functions. TIM6 & TIM7 registers added to Registers.h)
 =======
     Channel1,
+=======
+    Channel1 = 0,
+>>>>>>> bbfe89e (GPT-Code-Implementation. Rest of the functions filled.)
     Channel2,
 >>>>>>> 8a205fd (GPT-Code-Implementation. Autoformat runned, fixed some warnings.)
 } Gpt_ChannelType;
+
+typedef enum
+{
+    GPT_CH_MODE_CONTINUOUS = 0,
+    GPT_CH_MODE_ONESHOT,
+} Gpt_ChannelMode;
+
+typedef enum
+{
+    Uninitialized = 0,
+    Initialized,
+    Running,
+    Stopped,
+    Expired
+} Gpt_ChannelState;
 
 typedef uint32 Gpt_ValueType;
 
