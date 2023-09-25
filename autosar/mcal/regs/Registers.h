@@ -171,6 +171,13 @@ typedef struct
 /**@}*/
 
 /**
+  * @defgroup  Struct casting to base address of the Basic Timers
+  @{ */
+#define TIM6                ( (Gpt_RegisterType *)TIM6_BASE_ADDRESS ) /*!< Access to TIM6 registers*/
+#define TIM7                ( (Gpt_RegisterType *)TIM7_BASE_ADDRESS ) /*!< Access to TIM7 registers*/
+/**@}*/
+
+/**
   * @defgroup Clock-eneable of different ports
   @{ */
 #define RCC_GPIOA_CLK_EN( )  RCC->IOPENR |= 0x01u; /*!< GPIO PORTA clock enable*/
