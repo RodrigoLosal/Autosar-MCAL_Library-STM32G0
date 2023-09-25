@@ -102,17 +102,16 @@ typedef struct
  */
 typedef struct
 {
-  volatile uint32 CR1;        /*!< TIM control register 1 */
-  volatile uint32 CR2;        /*!< TIM control register 2 */
-  volatile uint32 Reserved0;  /*!< Reserved memory space */
-  volatile uint32 DIER;       /*!< TIM DMA/Interrupt enable register */
-  volatile uint32 SR;         /*!< TIM status register */
-  volatile uint32 EGR;        /*!< TIM event generation register */
-  volatile uint32 Reserved1;  /*!< Reserved memory space */
-  volatile uint16 Reserved2;  /*!< Reserved memory space */
-  volatile uint32 CNT;        /*!< TIM counter */
-  volatile uint32 PSC;        /*!< TIM prescaler */
-  volatile uint32 ARR;        /*!< TIM auto-reload register */
+  volatile uint32 CR1;          /*!< TIM control register 1 */
+  volatile uint32 CR2;          /*!< TIM control register 2 */
+  volatile uint32 Reserved0;    /*!< Reserved memory space */
+  volatile uint32 DIER;         /*!< TIM DMA/Interrupt enable register */
+  volatile uint32 SR;           /*!< TIM status register */
+  volatile uint32 EGR;          /*!< TIM event generation register */
+  volatile uint32 Reserved1[3]; /*!< Reserved memory space */
+  volatile uint32 CNT;          /*!< TIM counter */
+  volatile uint32 PSC;          /*!< TIM prescaler */
+  volatile uint32 ARR;          /*!< TIM auto-reload register */
 } Gpt_RegisterType;
 
 /**
