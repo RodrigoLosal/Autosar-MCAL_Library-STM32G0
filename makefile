@@ -2,7 +2,7 @@
 TARGET = mcal
 
 #---Files to compile
-SRCS = main.c startup.c Nvic.c Port.c Port_Cfg.c Crc.c Dio.c 
+SRCS = main.c startup.c Nvic.c Port.c Port_Cfg.c Crc.c Dio.c Gpt.c
 
 #---Linker script
 LINKER = linker.ld
