@@ -36,6 +36,7 @@
     - autosar/mcal/Nvic.c
     - autosar/mcal/Port.c
     - autosar/mcal/Dio.c
+    - autosar/mcal/Gpt.c
   :utilities:
     - gcovr
   :reports:
