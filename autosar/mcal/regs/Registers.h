@@ -31,6 +31,8 @@
 #define NVIC               ( (Nvic_RegisterType *)NVIC_BASE ) /*!< NVIC configuration struct */
 #define TIM6_BASE_ADDRESS  0x40001000                         /*!< TIM6 register base address */
 #define TIM7_BASE_ADDRESS  0x40001400                         /*!< TIM7 register base address */
+#define TIM6_BASE_ADDRESS  0x40001000                         /*!< TIM6 register base address */
+#define TIM7_BASE_ADDRESS  0x40001400                         /*!< TIM7 register base address */
 /**@}*/
 
 /**
