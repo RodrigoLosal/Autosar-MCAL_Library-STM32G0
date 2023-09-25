@@ -10,8 +10,8 @@ typedef struct _Gpt_ConfigType
 
 typedef enum
 {
-	Channel1,
-	Channel2,
+    Channel1,
+    Channel2,
 } Gpt_ChannelType;
 
 typedef uint32 Gpt_ValueType;
