@@ -4,15 +4,31 @@
 typedef struct _Gpt_ConfigType
 {
     uint8 Channel;
+    uint8 ChannelMode;
+    uint8 ChannelState;
     uint16 Prescaler;
-    uint16 Period;
 } Gpt_ConfigType;
 
 typedef enum
 {
-    Channel1,
+    Channel1 = 0,
     Channel2,
 } Gpt_ChannelType;
+
+typedef enum
+{
+    GPT_CH_MODE_CONTINUOUS = 0,
+    GPT_CH_MODE_ONESHOT,
+} Gpt_ChannelMode;
+
+typedef enum
+{
+    Uninitialized = 0,
+    Initialized,
+    Running,
+    Stopped,
+    Expired
+} Gpt_ChannelState;
 
 typedef uint32 Gpt_ValueType;
 
