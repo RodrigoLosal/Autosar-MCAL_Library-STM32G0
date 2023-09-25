@@ -37,7 +37,7 @@ void Gpt_DeInit( void )
 
 }
 
-Gpt_ValueType Gpt_GetTimeElapsed(Gpt_ChannelType Channel )
+Gpt_ValueType Gpt_GetTimeElapsed( Gpt_ChannelType Channel )
 {
     switch ( Channel )
     {
