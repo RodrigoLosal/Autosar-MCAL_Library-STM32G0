@@ -21,12 +21,17 @@ typedef struct _Gpt_ConfigType
 typedef enum
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	Channel1,
 	Channel2,
 =======
 	TIM6 = 0,
 	TIM7,
 >>>>>>> cf843bd (GPT-Code-Implementation. Creation of the files, control variables & functions. TIM6 & TIM7 registers added to Registers.h)
+=======
+    Channel1,
+    Channel2,
+>>>>>>> 8a205fd (GPT-Code-Implementation. Autoformat runned, fixed some warnings.)
 } Gpt_ChannelType;
 
 typedef uint32 Gpt_ValueType;
