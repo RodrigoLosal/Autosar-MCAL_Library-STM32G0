@@ -135,5 +135,34 @@ extern Nvic_RegisterType NVIC_BASE; /* NVIC ADDRESS */
 
 #define NVIC ( (Nvic_RegisterType *)&NVIC_BASE ) /*!< Access to NVIC registers*/
 
+/**
+ * @brief GPT registers structure.
+ */
+typedef struct
+{
+    volatile uint32 CR1;            /*!< TIM control register 1 */
+    volatile uint32 CR2;            /*!< TIM control register 2 */
+    volatile uint32 Reserved0;      /*!< Reserved memory space */
+    volatile uint32 DIER;           /*!< TIM DMA/Interrupt enable register */
+    volatile uint32 SR;             /*!< TIM status register */
+    volatile uint32 EGR;            /*!< TIM event generation register */
+    volatile uint32 Reserved1[ 3 ]; /*!< Reserved memory space */
+    volatile uint32 CNT;            /*!< TIM counter */
+    volatile uint32 PSC;            /*!< TIM prescaler */
+    volatile uint32 ARR;            /*!< TIM auto-reload register */
+} Gpt_RegisterType;
+
+extern Gpt_RegisterType TIM6_BASE; /*!< TIM6 ADDRESS */
+extern Gpt_RegisterType TIM7_BASE; /*!< TIM7 ADDRESS */
+
+/**
+ * @name    GPT Register access
+ *
+ * Symbols to access the registers
+/**@{*/
+#define TIM6 ( (Gpt_RegisterType *)&TIM6_BASE ) /*!< Access to TIM6 registers*/
+#define TIM7 ( (Gpt_RegisterType *)&TIM7_BASE ) /*!< Access to TIM7 registers*/
+/**@}*/
+
 
 #endif
