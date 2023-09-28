@@ -38,7 +38,7 @@ void Gpt_Init( const Gpt_ConfigType *ConfigPtr )
 void Gpt_DeInit( void )
 {
     Gpt_RegisterType *channel;
-    Gpt_RegisterType *channels[ 2 ] = { TIM6, TIM7 };
+    Gpt_RegisterType *channels[ GPT_NUMBER_OF_CHANNELS ] = { TIM6, TIM7 };
 
     for( uint8 j = 0; j < GPT_NUMBER_OF_CHANNELS; j++ )
     {
