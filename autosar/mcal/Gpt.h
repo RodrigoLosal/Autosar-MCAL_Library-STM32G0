@@ -2,12 +2,15 @@
 #ifndef GPT_H__
 #define GPT_H__
 
+#define GPT_NUMBER_OF_CHANNELS 2
+
 typedef struct _Gpt_ConfigType
 {
     uint8 Channel;
+    uint8 NotificationMode;
     uint8 ChannelMode;
-    uint8 ChannelState;
     uint16 Prescaler;
+<<<<<<< HEAD
 <<<<<<< HEAD
     uint16 Period;
 =======
@@ -21,10 +24,14 @@ typedef struct _Gpt_ConfigType
 >>>>>>> cf843bd (GPT-Code-Implementation. Creation of the files, control variables & functions. TIM6 & TIM7 registers added to Registers.h)
 =======
 >>>>>>> bbfe89e (GPT-Code-Implementation. Rest of the functions filled.)
+=======
+    void ( *Notifications[ 2u ] )( void );
+>>>>>>> d5b5122 (GPT-Code-Implementation. Corrections made on the functions.)
 } Gpt_ConfigType;
 
 typedef enum
 {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -41,6 +48,10 @@ typedef enum
 >>>>>>> bbfe89e (GPT-Code-Implementation. Rest of the functions filled.)
     Channel2,
 >>>>>>> 8a205fd (GPT-Code-Implementation. Autoformat runned, fixed some warnings.)
+=======
+    Channel0 = 0,
+    Channel1,
+>>>>>>> d5b5122 (GPT-Code-Implementation. Corrections made on the functions.)
 } Gpt_ChannelType;
 
 typedef enum
@@ -48,6 +59,12 @@ typedef enum
     GPT_CH_MODE_CONTINUOUS = 0,
     GPT_CH_MODE_ONESHOT,
 } Gpt_ChannelMode;
+
+typedef enum
+{
+    Enabled = 0,
+    Disabled,
+} Gpt_NotificationMode;
 
 typedef enum
 {
@@ -79,8 +96,13 @@ void Gpt_StopTimer( Gpt_ChannelType Channel );
 void Gpt_EnableNotification( Gpt_ChannelType Channel );
 void Gpt_DisableNotification( Gpt_ChannelType Channel );
 <<<<<<< HEAD
+<<<<<<< HEAD
 void Gpt_Notification_TIM6( void );
 void Gpt_Notification_TIM7( void );
+=======
+void Gpt_Notification_Channel1( void );
+void Gpt_Notification_Channel2( void );
+>>>>>>> d5b5122 (GPT-Code-Implementation. Corrections made on the functions.)
 
 #endif
 =======
