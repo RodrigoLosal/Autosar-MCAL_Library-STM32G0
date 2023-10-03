@@ -17,6 +17,7 @@ Port_RegisterType PORTF_BASE = { 0xFFFFFFFF, 0x00, 0x00000000, 0x00000000, 0x00,
 /*this function is required by Ceedling to run any code before the test cases*/
 void setUp( void )
 {
+    Port_Init( PortsConfig );
 }
 
 /*this function is required by Ceedling to run any code after the test cases*/
@@ -32,7 +33,6 @@ void tearDown( void )
  */
 void test__Port_Init__PortC_pins0and1_MODER( void )
 {
-    Port_Init( &PortsConfig[ 0 ] );
     TEST_ASSERT_EQUAL_HEX32( 0xFFFFFFF5, PORTC->MODER );
 }
 
@@ -143,7 +143,7 @@ void test__Port_Init__PortB_pins13and10_AFRH( void )
  */
 void test__SetPinDirection__PortC_pin0_IN( void )
 {
-    Port_SetPinDirection( PORT_PIN_PC_00, PORT_PIN_IN );
+    Port_SetPinDirection( PORT_TEST_ON_PORT_C_PIN_0, PORTS_PIN_IN );
     TEST_ASSERT_EQUAL_HEX32( 0xFFFFFFF4, PORTC->MODER );
 }
 
@@ -155,7 +155,7 @@ void test__SetPinDirection__PortC_pin0_IN( void )
  */
 void test__SetPinDirection__PortC_pin0_OUT( void )
 {
-    Port_SetPinDirection( PORT_PIN_PC_00, PORT_PIN_OUT );
+    Port_SetPinDirection( PORT_TEST_ON_PORT_C_PIN_0, PORTS_PIN_OUT );
     TEST_ASSERT_EQUAL_HEX32( 0xFFFFFFF5, PORTC->MODER );
 }
 
@@ -167,7 +167,7 @@ void test__SetPinDirection__PortC_pin0_OUT( void )
  */
 void test__Port_SetPinMode__PortB_pin13_AF7( void )
 {
-    Port_SetPinMode( PORT_PIN_PB_13, PORT_PIN_MODE_AF7 );
+    Port_SetPinMode( PORT_TEST_ON_PORT_B_PIN_13, PORTS_MODE_ALT_AF7 );
     TEST_ASSERT_EQUAL_HEX32( 0x00700200, PORTB->AFRH );
 }
 
@@ -179,7 +179,7 @@ void test__Port_SetPinMode__PortB_pin13_AF7( void )
  */
 void test__Port_SetPinMode__PortB_pin05_AF7( void )
 {
-    Port_SetPinMode( PORT_PIN_PB_05, PORT_PIN_MODE_AF7 );
+    Port_SetPinMode( PORT_TEST_ON_PORT_B_PIN_5, PORTS_MODE_ALT_AF7 );
     TEST_ASSERT_EQUAL_HEX32( 0x00700000, PORTB->AFRL );
 }
 

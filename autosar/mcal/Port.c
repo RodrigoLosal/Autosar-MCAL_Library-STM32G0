@@ -13,9 +13,41 @@
 #include "Port.h"
 
 /**
+ * @defgroup max_port_values  max number of Mcu ports and pins
+ * @{*/
+#define MAX_PORT_NUMBER      6u  /*!< Port A value */
+#define MAX_PIN_NUMBER       16u /*!< Port A value */
+/**
+ * @}*/
+
+/**
+ * @defgroup max_port_values  max number of Mcu ports and pins
+ * @{*/
+#define GET_LOW_NIBBLE( x )  ( (x)&0x0fu )   /*!< Port A value */
+#define GET_HIGH_NIBBLE( x ) ( ( x ) >> 4u ) /*!< Port A value */
+#define GET_HIGH_BYTE( x )   ( ( x ) >> 8u ) /*!< Port A value */
+/**
+ * @}*/
+
+/**
+ * @defgroup max_port_values  max number of Mcu ports and pins
+ * @{*/
+#define MUL_BY_TWO           1u /*!< Port A value */
+#define MUL_BY_FOUR          2u /*!< Port A value */
+/**
+ * @}*/
+
+/**
  * @brief  Variable for the initial value of the port configuration array.
  */
 static const Port_ConfigType *LocalConfigPtr = NULL_PTR;
+
+/**
+ * @brief Global port register array
+ */
+/* clang-format off */
+static Port_RegisterType *Port_Ports[ MAX_PORT_NUMBER ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
+/* clang-format on */
 
 /**
  * @brief Initialize the GPIO pins to the configuration store on ConfigPTR.
@@ -31,40 +63,39 @@ static const Port_ConfigType *LocalConfigPtr = NULL_PTR;
  */
 void Port_Init( const Port_ConfigType *ConfigPtr )
 {
-    Port_RegisterType *port;
-    uint32 mask;
-    Port_RegisterType *ports[ 6 ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
+    Port_RegisterType *PortReg;
 
-    for( uint8 j = 0; j < PORT_PIN_NUMBER_OF_PORTS; j++ )
+    for( uint8 Port = 0u; Port < PORT_PIN_NUMBER_OF_PORTS; Port++ )
     {
-        port = ports[ ( &ConfigPtr[ j ] )->Port ];
-        mask = 1u;
-        for( uint32 i = 0u; i < 16u; i++ )
+        PortReg = Port_Ports[ ConfigPtr[ Port ].Port ];
+
+        for( uint8 Pin = 0u; Pin < MAX_PIN_NUMBER; Pin++ )
         {
-            if( Bfx_TstBitLnMask_u32u32_u8( ( &ConfigPtr[ j ] )->Pins, mask ) == TRUE )
+            if( Bfx_GetBit_u32u8_u8( (uint32 *)&ConfigPtr[ Port ].Pins, Pin ) == TRUE )
             {
                 /*change values on PUPDR*/
-                Bfx_PutBits_u32u8u8u32( (uint32 *)&port->PUPDR, (uint8)( i * 2u ), (uint8)2u, (uint32)( &ConfigPtr[ j ] )->Pull );
+                Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->PUPDR, ( Pin << MUL_BY_TWO ), 2u, ConfigPtr[ Port ].Pull );
                 /*change values on OTYPER*/
-                Bfx_PutBits_u32u8u8u32( (uint32 *)&port->OTYPER, i, 1, (uint32)( &ConfigPtr[ j ] )->OutputDrive );
+                Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->OTYPER, Pin, 1u, ConfigPtr[ Port ].OutputDrive );
                 /*change values on OSPEEDR*/
-                Bfx_PutBits_u32u8u8u32( (uint32 *)&port->OSPEEDR, ( i * 2 ), 2, (uint32)( &ConfigPtr[ j ] )->Speed );
+                Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->OSPEEDR, ( Pin << MUL_BY_TWO ), 2u, ConfigPtr[ Port ].Speed );
                 /*change values on MODER*/
-                Bfx_PutBits_u32u8u8u32( (uint32 *)&port->MODER, ( i * 2 ), 2, (uint32)( &ConfigPtr[ j ] )->Mode );
-                if( i < 8u )
+                Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->MODER, ( Pin << MUL_BY_TWO ), 2u, GET_HIGH_NIBBLE( ConfigPtr[ Port ].Mode ) );
+
+                if( Pin < 8u )
                 {
                     /*change values on Altern*/
-                    Bfx_PutBits_u32u8u8u32( (uint32 *)&port->AFRL, ( i * 4 ), 4, (uint32)( &ConfigPtr[ j ] )->Altern );
+                    Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->AFRL, ( Pin << MUL_BY_FOUR ), 4u, GET_LOW_NIBBLE( ConfigPtr[ Port ].Mode ) );
                 }
                 else
                 {
                     /*change values on Altern*/
-                    Bfx_PutBits_u32u8u8u32( (uint32 *)&port->AFRH, ( i - 8 ) * 4, 4, (uint32)( &ConfigPtr[ j ] )->Altern );
+                    Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->AFRH, ( ( Pin - 8u ) << MUL_BY_FOUR ), 4u, GET_LOW_NIBBLE( ConfigPtr[ Port ].Mode ) );
                 }
             }
-            mask = mask << 1;
         }
     }
+    /*make the port configuration accesible for other functions*/
     LocalConfigPtr = ConfigPtr;
 }
 
@@ -84,11 +115,9 @@ void Port_Init( const Port_ConfigType *ConfigPtr )
 #if PORT_SET_PIN_DIRECTION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
 {
-    Port_RegisterType *port;
-    Port_RegisterType *ports[ 6 ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
-    port                          = ports[ Pin >> 4 ];
+    Port_RegisterType *PortReg = Port_Ports[ LocalConfigPtr[ GET_HIGH_BYTE( Pin ) ].Port ];
 
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&port->MODER, (uint8)( Pin & 0xFu ), 2, (uint8)Direction );
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->MODER, GET_LOW_NIBBLE( Pin ), 2u, Direction );
 }
 #endif
 
@@ -108,19 +137,20 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
 #if PORT_SET_PIN_MODE_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
 {
-    Port_RegisterType *port;
-    Port_RegisterType *ports[ 6 ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
-    port                          = ports[ Pin >> 4 ];
+    Port_RegisterType *PortReg = Port_Ports[ LocalConfigPtr[ GET_HIGH_BYTE( Pin ) ].Port ];
 
-    if( ( Pin & 0xFu ) < 8u )
+    /*Set mode*/
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->MODER, ( Pin << MUL_BY_TWO ), 2u, GET_HIGH_NIBBLE( Mode ) );
+
+    if( GET_LOW_NIBBLE( Pin ) < 8u )
     {
         /*change values on Altern*/
-        Bfx_PutBits_u32u8u8u32( (uint32 *)&port->AFRL, ( Pin & 0xFu ) * 4, 4, (uint32)Mode );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->AFRL, ( GET_LOW_NIBBLE( Pin ) << MUL_BY_FOUR ), 4u, Mode );
     }
     else
     {
         /*change values on Altern*/
-        Bfx_PutBits_u32u8u8u32( (uint32 *)&port->AFRH, ( ( Pin & 0xFu ) - 8 ) * 4, 4, (uint32)Mode );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->AFRH, ( ( GET_LOW_NIBBLE( Pin ) - 8u ) << MUL_BY_FOUR ), 4u, Mode );
     }
 }
 #endif
@@ -157,24 +187,21 @@ void Port_GetVersionInfo( Std_VersionInfoType *versioninfo )
  */
 void Port_RefreshPortDirection( void )
 {
-    Port_RegisterType *port;
-    uint32 mask;
-    Port_RegisterType *ports[ 6 ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
+    Port_RegisterType *PortReg;
 
-    for( uint8 j = 0; j < PORT_PIN_NUMBER_OF_PORTS; j++ )
+    for( uint8 Port = 0; Port < PORT_PIN_NUMBER_OF_PORTS; Port++ )
     {
-        port = ports[ ( &LocalConfigPtr[ j ] )->Port ];
-        mask = 1u;
-        if( ( ( &LocalConfigPtr[ j ] )->Pin_direction == PORTS_NON_CHANGEABLE ) && ( ( ( &LocalConfigPtr[ j ] )->Mode == PORTS_MODE_INPUT ) || ( ( &LocalConfigPtr[ j ] )->Mode == PORTS_MODE_OUTPUT ) ) )
+        PortReg = Port_Ports[ LocalConfigPtr[ Port ].Port ];
+
+        if( ( LocalConfigPtr[ Port ].DirChange == FALSE ) && ( ( LocalConfigPtr[ Port ].Mode == PORTS_MODE_INPUT ) || ( LocalConfigPtr[ Port ].Mode == PORTS_MODE_OUTPUT ) ) )
         {
-            for( uint32 i = 0u; i < 16u; i++ )
+            for( uint8 Pin = 0u; Pin < MAX_PIN_NUMBER; Pin++ )
             {
-                if( Bfx_TstBitLnMask_u32u32_u8( ( &LocalConfigPtr[ j ] )->Pins, mask ) == TRUE )
+                if( Bfx_GetBit_u32u8_u8( (uint32 *)&LocalConfigPtr[ Port ].Pins, Pin ) == TRUE )
                 {
                     /*change values on MODER*/
-                    Bfx_PutBits_u32u8u8u32( (uint32 *)&port->MODER, ( i * 2 ), 2, (uint32)( &LocalConfigPtr[ j ] )->Mode );
+                    Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->MODER, ( Pin << MUL_BY_TWO ), 2, GET_HIGH_NIBBLE( LocalConfigPtr[ Port ].Mode ) );
                 }
-                mask = mask << 1;
             }
         }
     }
