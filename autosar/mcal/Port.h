@@ -57,12 +57,12 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
  * Symbols to specify ports values.
  */
 /**@{*/
-#define PORTS_A               0u /*!< Port A value */
-#define PORTS_B               1u /*!< Port B value */
-#define PORTS_C               2u /*!< Port C value */
-#define PORTS_D               3u /*!< Port D value */
-#define PORTS_E               4u /*!< Port E value */
-#define PORTS_F               5u /*!< Port F value */
+#define PORTS_A                       0u /*!< Port A value */
+#define PORTS_B                       1u /*!< Port B value */
+#define PORTS_C                       2u /*!< Port C value */
+#define PORTS_D                       3u /*!< Port D value */
+#define PORTS_E                       4u /*!< Port E value */
+#define PORTS_F                       5u /*!< Port F value */
 /**@}*/
 
 /**
@@ -94,22 +94,22 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
  * Symbols to specify values of GPIO pins.
  */
 /**@{*/
-#define PORTS_PIN_00          ( 1u << PORTS_PIN_00_VAL ) /*!< Pin 0 value */
-#define PORTS_PIN_01          ( 1u << PORTS_PIN_01_VAL ) /*!< Pin 1 value */
-#define PORTS_PIN_02          ( 1u << PORTS_PIN_02_VAL ) /*!< Pin 2 value */
-#define PORTS_PIN_03          ( 1u << PORTS_PIN_03_VAL ) /*!< Pin 3 value */
-#define PORTS_PIN_04          ( 1u << PORTS_PIN_04_VAL ) /*!< Pin 4 value */
-#define PORTS_PIN_05          ( 1u << PORTS_PIN_05_VAL ) /*!< Pin 5 value */
-#define PORTS_PIN_06          ( 1u << PORTS_PIN_06_VAL ) /*!< Pin 6 value */
-#define PORTS_PIN_07          ( 1u << PORTS_PIN_07_VAL ) /*!< Pin 7 value */
-#define PORTS_PIN_08          ( 1u << PORTS_PIN_08_VAL ) /*!< Pin 8 value */
-#define PORTS_PIN_09          ( 1u << PORTS_PIN_09_VAL ) /*!< Pin 9 value */
-#define PORTS_PIN_10          ( 1u << PORTS_PIN_10_VAL ) /*!< Pin 10 value */
-#define PORTS_PIN_11          ( 1u << PORTS_PIN_11_VAL ) /*!< Pin 11 value */
-#define PORTS_PIN_12          ( 1u << PORTS_PIN_12_VAL ) /*!< Pin 12 value */
-#define PORTS_PIN_13          ( 1u << PORTS_PIN_13_VAL ) /*!< Pin 13 value */
-#define PORTS_PIN_14          ( 1u << PORTS_PIN_14_VAL ) /*!< Pin 14 value */
-#define PORTS_PIN_15          ( 1u << PORTS_PIN_15_VAL ) /*!< Pin 15 value */
+#define PORTS_PIN_00                  ( 1u << PORTS_PIN_00_VAL ) /*!< Pin 0 value */
+#define PORTS_PIN_01                  ( 1u << PORTS_PIN_01_VAL ) /*!< Pin 1 value */
+#define PORTS_PIN_02                  ( 1u << PORTS_PIN_02_VAL ) /*!< Pin 2 value */
+#define PORTS_PIN_03                  ( 1u << PORTS_PIN_03_VAL ) /*!< Pin 3 value */
+#define PORTS_PIN_04                  ( 1u << PORTS_PIN_04_VAL ) /*!< Pin 4 value */
+#define PORTS_PIN_05                  ( 1u << PORTS_PIN_05_VAL ) /*!< Pin 5 value */
+#define PORTS_PIN_06                  ( 1u << PORTS_PIN_06_VAL ) /*!< Pin 6 value */
+#define PORTS_PIN_07                  ( 1u << PORTS_PIN_07_VAL ) /*!< Pin 7 value */
+#define PORTS_PIN_08                  ( 1u << PORTS_PIN_08_VAL ) /*!< Pin 8 value */
+#define PORTS_PIN_09                  ( 1u << PORTS_PIN_09_VAL ) /*!< Pin 9 value */
+#define PORTS_PIN_10                  ( 1u << PORTS_PIN_10_VAL ) /*!< Pin 10 value */
+#define PORTS_PIN_11                  ( 1u << PORTS_PIN_11_VAL ) /*!< Pin 11 value */
+#define PORTS_PIN_12                  ( 1u << PORTS_PIN_12_VAL ) /*!< Pin 12 value */
+#define PORTS_PIN_13                  ( 1u << PORTS_PIN_13_VAL ) /*!< Pin 13 value */
+#define PORTS_PIN_14                  ( 1u << PORTS_PIN_14_VAL ) /*!< Pin 14 value */
+#define PORTS_PIN_15                  ( 1u << PORTS_PIN_15_VAL ) /*!< Pin 15 value */
 /**@}*/
 
 /**
@@ -117,17 +117,20 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
  * Symbols to specify the mode value of GPIO pins on init function.
  */
 /**@{*/
-#define PORTS_MODE_INPUT      0x00u /*!< Input mode value */
-#define PORTS_MODE_OUTPUT     0x10u /*!< General purpose output mode value */
-#define PORTS_MODE_ANALOG     0x30u /*!< Analog mode (reset state) value */
-#define PORTS_MODE_ALT_AF0    0x20u /*!< Alternarive funcion 0 */
-#define PORTS_MODE_ALT_AF1    0x21u /*!< Alternarive funcion 1 */
-#define PORTS_MODE_ALT_AF2    0x22u /*!< Alternarive funcion 2 */
-#define PORTS_MODE_ALT_AF3    0x23u /*!< Alternarive funcion 3 */
-#define PORTS_MODE_ALT_AF4    0x24u /*!< Alternarive funcion 4 */
-#define PORTS_MODE_ALT_AF5    0x25u /*!< Alternarive funcion 5 */
-#define PORTS_MODE_ALT_AF6    0x26u /*!< Alternarive funcion 6 */
-#define PORTS_MODE_ALT_AF7    0x27u /*!< Alternarive funcion 7 */
+#define PORTS_MODE_INPUT              0x00u /*!< Input mode value */
+#define PORTS_MODE_OUTPUT             0x10u /*!< General purpose output mode value */
+#define PORTS_MODE_ANALOG             0x30u /*!< Analog mode (reset state) value */
+#define PORTS_MODE_ALT_AF0            0x20u /*!< Alternarive funcion 0 */
+#define PORTS_MODE_ALT_AF1            0x21u /*!< Alternarive funcion 1 */
+#define PORTS_MODE_ALT_AF2            0x22u /*!< Alternarive funcion 2 */
+#define PORTS_MODE_ALT_AF3            0x23u /*!< Alternarive funcion 3 */
+#define PORTS_MODE_ALT_AF4            0x24u /*!< Alternarive funcion 4 */
+#define PORTS_MODE_ALT_AF5            0x25u /*!< Alternarive funcion 5 */
+#define PORTS_MODE_ALT_AF6            0x26u /*!< Alternarive funcion 6 */
+#define PORTS_MODE_ALT_AF7            0x27u /*!< Alternarive funcion 7 */
+#define PORTS_MODE_ALT_AF8            0x25u /*!< Alternarive funcion 5 */
+#define PORTS_MODE_ALT_AF9            0x26u /*!< Alternarive funcion 6 */
+#define PORTS_MODE_ALT_AF10           0x27u /*!< Alternarive funcion 7 */
 /**@}*/
 
 /**
@@ -135,9 +138,9 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
  * Symbols to specify the mode value of GPIO pins on init function.
  */
 /**@{*/
-#define PORTS_NOPULL          0x00u /*!< No pull-up, pull-down value */
-#define PORTS_PULLUP          0x01u /*!< Pull-up */
-#define PORTS_PULLDOWN        0x02u /*!< Pull-down */
+#define PORTS_NOPULL                  0x00u /*!< No pull-up, pull-down value */
+#define PORTS_PULLUP                  0x01u /*!< Pull-up */
+#define PORTS_PULLDOWN                0x02u /*!< Pull-down */
 /**@}*/
 
 /**
@@ -145,8 +148,8 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
  * Symbols to specify the pull value of GPIO pins on init function.
  */
 /**@{*/
-#define PORTS_PUSH_PULL       0x00u /*!< Output push-pull (reset state) value */
-#define PORTS_OPEN_COLECTOR   0x01u /*!< Output open-drain */
+#define PORTS_PUSH_PULL               0x00u /*!< Output push-pull (reset state) value */
+#define PORTS_OPEN_COLECTOR           0x01u /*!< Output open-drain */
 /**@}*/
 
 /**
@@ -154,10 +157,10 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
  * Symbols to specify the Speed value of GPIO pins on init function.
  */
 /**@{*/
-#define PORTS_VERY_LOW_SPEED  0x00u /*!< Very low speed value */
-#define PORTS_LOW_SPEED       0x01u /*!< Low speed value */
-#define PORTS_HIGH_SPEED      0x02u /*!< High speed value */
-#define PORTS_VERY_HIGH_SPEED 0x03u /*!< Very high speed value */
+#define PORTS_VERY_LOW_SPEED          0x00u /*!< Very low speed value */
+#define PORTS_LOW_SPEED               0x01u /*!< Low speed value */
+#define PORTS_HIGH_SPEED              0x02u /*!< High speed value */
+#define PORTS_VERY_HIGH_SPEED         0x03u /*!< Very high speed value */
 /**@}*/
 
 /**
@@ -165,8 +168,8 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
  * Symbols to specify the direction of the GPIO pins
  */
 /**@{*/
-#define PORTS_PIN_IN          (Port_PinDirectionType)0x00u /*!< Input mode value */
-#define PORTS_PIN_OUT         (Port_PinDirectionType)0x01u /*!< General purpose output mode value */
+#define PORTS_PIN_IN                  (Port_PinDirectionType)0x00u /*!< Input mode value */
+#define PORTS_PIN_OUT                 (Port_PinDirectionType)0x01u /*!< General purpose output mode value */
 /**@}*/
 
 /**
