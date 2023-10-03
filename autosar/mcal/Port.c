@@ -12,6 +12,11 @@
 #include "Registers.h"
 #include "Port.h"
 
+#define MAX_PORT_NUMBER   6u
+#define MAX_PIN_NUMBER    16u
+#define MAX_PIN_MODES     4u
+#define MAX_ALT_MODES     11u
+
 /**
  * @defgroup max_port_values  max number of Mcu ports and pins
  * @{*/
@@ -52,10 +57,13 @@ static const Port_ConfigType *LocalConfigPtr = NULL_PTR;
 
 /**
  * @brief Global port register array
- */
+*/
 /* clang-format off */
 static Port_RegisterType *Port_Ports[ MAX_PORT_NUMBER ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
 /* clang-format on */
+
+/*temporary macro to be remove when Det is implemented*/
+#define assert_det( param, error ) (void)0
 
 /**
  * @brief Initialize the GPIO pins to the configuration store on ConfigPTR.
@@ -72,6 +80,9 @@ static Port_RegisterType *Port_Ports[ MAX_PORT_NUMBER ] = { PORTA, PORTB, PORTC,
 void Port_Init( const Port_ConfigType *ConfigPtr )
 {
     Port_RegisterType *PortReg;
+    
+    /*validate if the intialization pointer is not NULL, in case null trigger an error*/
+    assert_det( ConfigPtr != NULL_PTR, PORT_E_INIT_FAILED );
 
     for( uint8 Port = 0u; Port < PORT_PIN_NUMBER_OF_PORTS; Port++ )
     {
@@ -125,7 +136,14 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
 {
     Port_RegisterType *PortReg = Port_Ports[ LocalConfigPtr[ GET_HIGH_BYTE( Pin ) ].Port ];
 
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->MODER, GET_LOW_NIBBLE( Pin ), TWO_BITS, Direction );
+    /*validate if Port_Init function has been called previously*/
+    assert_det( LocalConfigPtr != NULL_PTR, PORT_E_UNINIT );
+    /*validate is Pin is a valid value*/
+    assert_det( ( ( Pin >> 4 ) < MAX_PORT_NUMBER ) && ( ( Pin & 0x0Fu ) < MAX_PIN_NUMBER ), PORT_E_PARAM_PIN );
+    /*validate if the pin has active its corresponding changeable flag*/
+    assert_det( LocalConfigPtr[ Pin>>8u ].Pin_direction == PORTS_CHANGEABLE, PORT_E_DIRECTION_UNCHANGEABLE );
+    
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->MODER, GET_LOW_NIBBLE( Pin ), 2u, Direction );
 }
 #endif
 
@@ -146,6 +164,15 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
 void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
 {
     Port_RegisterType *PortReg = Port_Ports[ LocalConfigPtr[ GET_HIGH_BYTE( Pin ) ].Port ];
+    
+    /*validate if Port_Init function has been called previously*/
+    assert_det( LocalConfigPtr != NULL_PTR, PORT_E_UNINIT );
+    /*validate is Pin is a valid value*/
+    assert_det( ( ( Pin >> 4 ) < MAX_PORT_NUMBER ) && ( ( Pin & 0x0Fu ) < MAX_PIN_NUMBER ), PORT_E_PARAM_PIN );
+    /*validate is Mode is a valid value*/
+    assert_det( ( PinMode < MAX_PIN_MODES ) && ( AlternFunction < MAX_ALT_MODES ), PORT_E_PARAM_INVALID_MODE );
+    /*validate if the pin has active its corresponding changeable flag*/
+    assert_det( Bfx_GetBit_u32u8_u8( Port_ConfigDataPtr->PortsConfig[ Port ].ModeChangeable, PortPin ) == TRUE, PORT_E_MODE_UNCHANGEABLE );
 
     /*Set mode*/
     Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->MODER, ( Pin << MUL_BY_TWO ), TWO_BITS, GET_HIGH_NIBBLE( Mode ) );

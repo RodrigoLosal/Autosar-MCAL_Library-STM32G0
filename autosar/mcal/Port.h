@@ -169,6 +169,19 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
 #define PORTS_PIN_OUT         (Port_PinDirectionType)0x01u /*!< General purpose output mode value */
 /**@}*/
 
+/**
+ * @defgroup PORT_errors PORT Driver Errors
+ * @{ */
+#define PORT_E_PARAM_PIN              0x0Au /*!< Invalid Port Pin ID requested        */
+#define PORT_E_DIRECTION_UNCHANGEABLE 0x0Bu /*!< Port Pin not configured as changeable */
+#define PORT_E_INIT_FAILED            0x0Cu /*!< Invalid configuration set            */
+#define PORT_E_PARAM_INVALID_MODE     0x0Du /*!< Invalid Port Pin mode specified      */
+#define PORT_E_MODE_UNCHANGEABLE      0x0Eu /*!< Port Pin mode is not configurable    */
+#define PORT_E_UNINIT                 0x0Fu /*!< Port driver not initialized          */
+#define PORT_E_PARAM_POINTER          0x10u /*!< Invalid Port Pin ID requested        */
+/**
+ * @} */
+
 #include "Port_Cfg.h" /* cppcheck-suppress misra-c2012-20.1 ; it is necesary to use a define for this function */
 
 void Port_Init( const Port_ConfigType *ConfigPtr );
