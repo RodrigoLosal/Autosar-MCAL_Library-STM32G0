@@ -61,7 +61,12 @@ static const Port_ConfigType *LocalConfigPtr = NULL_PTR;
 static Port_RegisterType *Port_Ports[ MAX_PORT_NUMBER ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
 /* clang-format on */
 
-/*temporary macro to be remove when Det is implemented*/
+/**
+ * @brief  temporary macro to be remove when Det is implemented
+ *
+ * @param   param sentence to validate if true
+ * @param   error if not true send this error
+ */
 #define assert_det( param, error ) (void)0
 
 /**
