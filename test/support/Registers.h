@@ -1,3 +1,9 @@
+/**
+ * @file        Registers.h
+ * @brief       This file contains definitions and configurations for the NVIC.
+ *
+ * This file defines simulated addresses, interrupts, and NVIC structures for Cortex-M0+.
+ */
 #ifndef REGISTERS_H__
 #define REGISTERS_H__
 
@@ -11,7 +17,7 @@ typedef enum
     SVCall_IRQn         = -5,                    /*!< 11 Cortex-M SV Call Interrupt                                     */
     PendSV_IRQn         = -2,                    /*!< 14 Cortex-M Pend SV Interrupt                                     */
     SysTick_IRQn        = -1,                    /*!< 15 Cortex-M System Tick Interrupt                                 */
-                                                 /******  STM32G0xxxx specific Interrupt Numbers ****************************************************************/
+                                                 /******  STM32G0xxxx specific Interrupt Numbers ************************/
     WWDG_IRQn                              = 0,  /*!< Window WatchDog Interrupt                                         */
     PVD_VDDIO2_IRQn                        = 1,  /*!< PVD through EXTI line 16, PVM (monit. VDDIO2) through EXTI line 34*/
     RTC_TAMP_IRQn                          = 2,  /*!< RTC interrupt through the EXTI line 19 & 21                       */
@@ -46,8 +52,7 @@ typedef enum
 } Nvic_IrqType;
 
 /**
- * @brief  Struct for GPIO registers
- *
+ * @brief  Struct for PORT registers
  */
 typedef struct
 {
@@ -72,33 +77,32 @@ extern Port_RegisterType PORTE_BASE; /*!< GPIOE ADDRESS */
 extern Port_RegisterType PORTF_BASE; /*!< GPIOF ADDRESS */
 
 /**
- * @name    Register access
- *
- * Symbols to access the registers
-/**@{*/
+  * @defgroup  Port_pointers_address PORT Base Address
+  @{ */
 #define PORTA ( (Port_RegisterType *)&PORTA_BASE ) /*!< Access to PORTA registers*/
 #define PORTB ( (Port_RegisterType *)&PORTB_BASE ) /*!< Access to PORTB registers*/
 #define PORTC ( (Port_RegisterType *)&PORTC_BASE ) /*!< Access to PORTC registers*/
 #define PORTD ( (Port_RegisterType *)&PORTD_BASE ) /*!< Access to PORTD registers*/
 #define PORTE ( (Port_RegisterType *)&PORTE_BASE ) /*!< Access to PORTE registers*/
 #define PORTF ( (Port_RegisterType *)&PORTF_BASE ) /*!< Access to PORTF registers*/
-/**@}*/
+/**
+ * @} */
 
 /**
  * @brief Nested Vectored Interrupt Controller (NVIC) structure.
  */
 typedef struct
 {
-    uint32 ISER[ 1U ];       /*!< Offset: 0x000 (R/W)  Interrupt Set Enable Register */
-    uint32 RESERVED0[ 31U ]; /*!< Reserved memory. */
-    uint32 ICER[ 1U ];       /*!< Offset: 0x080 (R/W)  Interrupt Clear Enable Register */
-    uint32 RESERVED1[ 31U ]; /*!< Reserved memory. */
-    uint32 ISPR[ 1U ];       /*!< Offset: 0x100 (R/W)  Interrupt Set Pending Register */
-    uint32 RESERVED2[ 31U ]; /*!< Reserved memory. */
-    uint32 ICPR[ 1U ];       /*!< Offset: 0x180 (R/W)  Interrupt Clear Pending Register */
-    uint32 RESERVED3[ 31U ]; /*!< Reserved memory. */
-    uint32 RESERVED4[ 64U ]; /*!< Reserved memory. */
-    uint32 IP[ 8U ];         /*!< Offset: 0x300 (R/W)  Interrupt Priority Register */
+    volatile uint32 ISER[ 1U ];       /*!< Offset: 0x000 (R/W)  Interrupt Set Enable Register */
+    volatile uint32 RESERVED0[ 31U ]; /*!< Reserved memory. */
+    volatile uint32 ICER[ 1U ];       /*!< Offset: 0x080 (R/W)  Interrupt Clear Enable Register */
+    volatile uint32 RESERVED1[ 31U ]; /*!< Reserved memory. */
+    volatile uint32 ISPR[ 1U ];       /*!< Offset: 0x100 (R/W)  Interrupt Set Pending Register */
+    volatile uint32 RESERVED2[ 31U ]; /*!< Reserved memory. */
+    volatile uint32 ICPR[ 1U ];       /*!< Offset: 0x180 (R/W)  Interrupt Clear Pending Register */
+    volatile uint32 RESERVED3[ 31U ]; /*!< Reserved memory. */
+    volatile uint32 RESERVED4[ 64U ]; /*!< Reserved memory. */
+    volatile uint32 IP[ 8U ];         /*!< Offset: 0x300 (R/W)  Interrupt Priority Register */
 } Nvic_RegisterType;
 
 extern Nvic_RegisterType NVIC_BASE; /* NVIC ADDRESS */

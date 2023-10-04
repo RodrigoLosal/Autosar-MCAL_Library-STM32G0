@@ -8,141 +8,8 @@
 #define REGISTERS_H
 
 /**
- * @name    Base address values
- * Symbols to specify the Base values of the registers.
- */
-/**@{*/
-#define PERIPH_BASE        0x40000000UL                       /*!< Peripherals register base address*/
-#define FLASH_BASE_ADDRESS 0x08000000                         /*!< FLASH ADDRESS */
-#define SRAM_BASE_ADDRESS  0x20000000                         /*!< SRAM ADDRESS */
-#define APB1_BASE_ADDRESS  ( PERIPH_BASE + 0x00000000 )       /*!< APB1 ADDRESS */
-#define APB2_BASE_ADDRESS  ( PERIPH_BASE + 0x00010000 )       /*!< APB2 ADDRESS */
-#define AHB_BASE_ADDRESS   ( PERIPH_BASE + 0x00020000 )       /*!< AHB ADDRESS */
-#define RCC_BASE_ADDRESS   0x40021000                         /*!< RCC ADDRESS */
-#define IOPORT_BASE        0x50000000                         /*!< IOPORT ADDRESS */
-#define PORTA_BASE         ( IOPORT_BASE + 0x00000000UL )     /*!< GPIOA ADDRESS */
-#define PORTB_BASE         ( IOPORT_BASE + 0x00000400UL )     /*!< GPIOB ADDRESS */
-#define PORTC_BASE         ( IOPORT_BASE + 0x00000800UL )     /*!< GPIOC ADDRESS */
-#define PORTD_BASE         ( IOPORT_BASE + 0x00000C00UL )     /*!< GPIOD ADDRESS */
-#define PORTE_BASE         ( IOPORT_BASE + 0x00001000UL )     /*!< GPIOE ADDRESS */
-#define PORTF_BASE         ( IOPORT_BASE + 0x00001400UL )     /*!< GPIOF ADDRESS */
-#define SCS_BASE           ( 0xE000E000UL )                   /*!< System Control Space Base Address */
-#define NVIC_BASE          ( SCS_BASE + 0x0100UL )            /*!< NVIC Base Address */
-#define NVIC               ( (Nvic_RegisterType *)NVIC_BASE ) /*!< NVIC configuration struct */
-/**@}*/
-
-/**
- * @brief RCC registers struct.
- */
-typedef struct
-{
-    volatile uint32 CR;        /*!< RCC clock control register*/
-    volatile uint32 ICSCR;     /*!< RCC internal clock sources calibration register*/
-    volatile uint32 CFGR;      /*!< Clock configuration register*/
-    volatile uint32 PLLCFGR;   /*!< PLL configuration register*/
-    volatile uint32 Reserv;    /*!< Reserv memory space*/
-    volatile uint32 CRRCR;     /*!< clock recovery RC register*/
-    volatile uint32 CIER;      /*!< Clock interrupt enable register*/
-    volatile uint32 CIFR;      /*!< Clock interrupt flag register*/
-    volatile uint32 CICR;      /*!< Clock interrupt clear register*/
-    volatile uint32 IOPRSTR;   /*!< I/O port reset register*/
-    volatile uint32 AHBRSTR;   /*!< AHB peripheral reset register*/
-    volatile uint32 APBRSTR1;  /*!< APB1 peripheral reset register*/
-    volatile uint32 APBRSTR2;  /*!< APB2 peripheral reset register*/
-    volatile uint32 IOPENR;    /*!< I/O port clock enable register*/
-    volatile uint32 AHBENR;    /*!< AHB peripheral clock enable register*/
-    volatile uint32 APBENR1;   /*!< APB1 peripheral clock enable register */
-    volatile uint32 APBENR2;   /*!< APB2 peripheral clock enable register */
-    volatile uint32 IOPSMENR;  /*!< I/O port in Sleep mode clock enable register*/
-    volatile uint32 AHBSMENR;  /*!< AHB peripheral clock enable in sleep/stop mode register*/
-    volatile uint32 APBSMENR1; /*!< APB1 peripheral clock enable in Sleep/stop mode register */
-    volatile uint32 APBSMENR2; /*!< APB2 peripheral clock enable in Sleep/stop mode register*/
-    volatile uint32 CCIPR;     /*!< Peripherals independent clock configuration register*/
-    volatile uint32 CCIPR2;    /*!< Peripherals independent clock configuration register 2*/
-    volatile uint32 BDCR;      /*!< RTC domain control register*/
-    volatile uint32 CSR;       /*!< control/status register*/
-} Rcc_RegisterType;
-
-/**
- * @brief GPIOS registers struct.
- */
-typedef struct
-{
-    volatile uint32 MODER;   /*!< GPIO port mode register*/
-    volatile uint32 OTYPER;  /*!< GPIO port output type register*/
-    volatile uint32 OSPEEDR; /*!< GPIO port output speed register*/
-    volatile uint32 PUPDR;   /*!< GPIO port pull-up/pull-down register*/
-    volatile uint32 IDR;     /*!< GPIO port input data register*/
-    volatile uint32 ODR;     /*!< GPIO port output data register*/
-    volatile uint32 BSRR;    /*!< GPIO port bit set/reset register*/
-    volatile uint32 LCKR;    /*!< GPIO port configuration lock register*/
-    volatile uint32 AFRL;    /*!< GPIO alternate function low register*/
-    volatile uint32 AFRH;    /*!< GPIO alternate function high register*/
-    volatile uint32 BRR;     /*!< GPIO port bit reset register*/
-} Port_RegisterType;
-
-
-/**
- * @brief GPIOS registers struct for Dio.
- */
-typedef struct
-{
-    volatile uint32 Reserved1[ 4 ]; /*!< Reserved register*/
-    volatile uint32 IDR;            /*!< GPIO port input data register*/
-    volatile uint32 ODR;            /*!< GPIO port output data register*/
-    volatile uint32 BSRR;           /*!< GPIO port bit set/reset register*/
-    volatile uint32 Reserved2[ 3 ]; /*!< Reserved register*/
-    volatile uint32 BRR;            /*!< GPIO port bit reset register*/
-} Dio_RegisterType;
-
-/**
-  * @defgroup  Struct casting to base address of the PORTS and RCC
-  @{ */
-#define PORTA                ( (Port_RegisterType *)PORTA_BASE )      /*!< Access to PORTA registers*/
-#define PORTB                ( (Port_RegisterType *)PORTB_BASE )      /*!< Access to PORTB registers*/
-#define PORTC                ( (Port_RegisterType *)PORTC_BASE )      /*!< Access to PORTC registers*/
-#define PORTD                ( (Port_RegisterType *)PORTD_BASE )      /*!< Access to PORTD registers*/
-#define PORTE                ( (Port_RegisterType *)PORTE_BASE )      /*!< Access to PORTE registers*/
-#define PORTF                ( (Port_RegisterType *)PORTF_BASE )      /*!< Access to PORTF registers*/
-#define RCC                  ( (RCC_RegisterType *)RCC_BASE_ADDRESS ) /*!< Access to RCC registers*/
-/**@}*/
-
-/**
-  * @defgroup  Struct-Dio casting to base address of the PORTS and RCC for Dio
-  @{ */
-#define DIOA                 ( (Dio_RegisterType *)PORTA_BASE ) /*!< Access to DIOA registers*/
-#define DIOB                 ( (Dio_RegisterType *)PORTB_BASE ) /*!< Access to DIOB registers*/
-#define DIOC                 ( (Dio_RegisterType *)PORTC_BASE ) /*!< Access to DIOC registers*/
-#define DIOD                 ( (Dio_RegisterType *)PORTD_BASE ) /*!< Access to DIOD registers*/
-#define DIOE                 ( (Dio_RegisterType *)PORTE_BASE ) /*!< Access to DIOE registers*/
-#define DIOF                 ( (Dio_RegisterType *)PORTF_BASE ) /*!< Access to DIOF registers*/
-/**@}*/
-
-/**
-  * @defgroup Clock-eneable of different ports
-  @{ */
-#define RCC_GPIOA_CLK_EN( )  RCC->IOPENR |= 0x01u; /*!< GPIO PORTA clock enable*/
-#define RCC_GPIOB_CLK_EN( )  RCC->IOPENR |= 0x02u; /*!< GPIO PORTB clock enable*/
-#define RCC_GPIOC_CLK_EN( )  RCC->IOPENR |= 0x04u; /*!< GPIO PORTC clock enable*/
-#define RCC_GPIOD_CLK_EN( )  RCC->IOPENR |= 0x08u; /*!< GPIO PORTD clock enable*/
-#define RCC_GPIOE_CLK_EN( )  RCC->IOPENR |= 0x10u; /*!< GPIO PORTE clock enable*/
-#define RCC_GPIOF_CLK_EN( )  RCC->IOPENR |= 0x20u; /*!< GPIO PORTF clock enable*/
-/**@}*/
-
-/**
-  * @defgroup Clock-disable of different ports
-  @{ */
-#define RCC_GPIOA_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 0u ); /*!< GPIO PORTA clock disable*/
-#define RCC_GPIOB_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 1u ); /*!< GPIO PORTB clock disable*/
-#define RCC_GPIOC_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 2u ); /*!< GPIO PORTC clock disable*/
-#define RCC_GPIOD_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 3u ); /*!< GPIO PORTD clock disable*/
-#define RCC_GPIOE_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 4u ); /*!< GPIO PORTE clock disable*/
-#define RCC_GPIOF_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 5u ); /*!< GPIO PORTF clock disable*/
-/**@}*/
-
-/**
- * @brief Nested Vectored Interrupt Controller (NVIC) interrupt types for Cortex-M0+ and STM32G0xxxx.
- *  This enumeration lists the Cortex-M0+ exceptions and STM32G0xxxx microcontroller interrupts
+ * @brief   Nested Vectored Interrupt Controller (NVIC) interrupt types for Cortex-M0+ and STM32G0xxxx.
+ *          This enumeration lists the Cortex-M0+ exceptions and STM32G0xxxx microcontroller interrupts
  */
 typedef enum
 {
@@ -152,7 +19,7 @@ typedef enum
     SVCall_IRQn         = -5,                    /*!< 11 Cortex-M SV Call Interrupt                                     */
     PendSV_IRQn         = -2,                    /*!< 14 Cortex-M Pend SV Interrupt                                     */
     SysTick_IRQn        = -1,                    /*!< 15 Cortex-M System Tick Interrupt                                 */
-                                                 /******  STM32G0xxxx specific Interrupt Numbers ****************************************************************/
+                                                 /******  STM32G0xxxx specific Interrupt Numbers ************************/
     WWDG_IRQn                              = 0,  /*!< Window WatchDog Interrupt                                         */
     PVD_VDDIO2_IRQn                        = 1,  /*!< PVD through EXTI line 16, PVM (monit. VDDIO2) through EXTI line 34*/
     RTC_TAMP_IRQn                          = 2,  /*!< RTC interrupt through the EXTI line 19 & 21                       */
@@ -187,20 +54,166 @@ typedef enum
 } Nvic_IrqType;
 
 /**
+ * @defgroup base_address Base address values
+ * @{ */
+#define FLASH_BASE     ( 0x08000000UL ) /*!< FLASH base address */
+#define SRAM_BASE      ( 0x20000000UL ) /*!< SRAM base address */
+#define PERIPH_BASE    ( 0x40000000UL ) /*!< Peripheral base address */
+#define IOPORT_BASE    ( 0x50000000UL ) /*!< IOPORT base address */
+#define SCS_BASE       ( 0xE000E000UL )
+#define APBPERIPH_BASE ( PERIPH_BASE )                /*!< APB peripherals base address */
+#define AHBPERIPH_BASE ( PERIPH_BASE + 0x00020000UL ) /*!< AHB peripherals base address */
+/**
+ * @} */
+
+/**
  * @brief Nested Vectored Interrupt Controller (NVIC) structure.
  */
 typedef struct
 {
-    uint32 ISER[ 1U ];       /*!< Offset: 0x000 (R/W)  Interrupt Set Enable Register */
-    uint32 RESERVED0[ 31U ]; /*!< Reserved memory. */
-    uint32 ICER[ 1U ];       /*!< Offset: 0x080 (R/W)  Interrupt Clear Enable Register */
-    uint32 RESERVED1[ 31U ]; /*!< Reserved memory. */
-    uint32 ISPR[ 1U ];       /*!< Offset: 0x100 (R/W)  Interrupt Set Pending Register */
-    uint32 RESERVED2[ 31U ]; /*!< Reserved memory. */
-    uint32 ICPR[ 1U ];       /*!< Offset: 0x180 (R/W)  Interrupt Clear Pending Register */
-    uint32 RESERVED3[ 31U ]; /*!< Reserved memory. */
-    uint32 RESERVED4[ 64U ]; /*!< Reserved memory. */
-    uint32 IP[ 8U ];         /*!< Offset: 0x300 (R/W)  Interrupt Priority Register */
+    volatile uint32 ISER[ 1U ];       /*!< Offset: 0x000 (R/W)  Interrupt Set Enable Register */
+    volatile uint32 RESERVED0[ 31U ]; /*!< Reserved memory. */
+    volatile uint32 ICER[ 1U ];       /*!< Offset: 0x080 (R/W)  Interrupt Clear Enable Register */
+    volatile uint32 RESERVED1[ 31U ]; /*!< Reserved memory. */
+    volatile uint32 ISPR[ 1U ];       /*!< Offset: 0x100 (R/W)  Interrupt Set Pending Register */
+    volatile uint32 RESERVED2[ 31U ]; /*!< Reserved memory. */
+    volatile uint32 ICPR[ 1U ];       /*!< Offset: 0x180 (R/W)  Interrupt Clear Pending Register */
+    volatile uint32 RESERVED3[ 31U ]; /*!< Reserved memory. */
+    volatile uint32 RESERVED4[ 64U ]; /*!< Reserved memory. */
+    volatile uint32 IP[ 8U ];         /*!< Offset: 0x300 (R/W)  Interrupt Priority Register */
 } Nvic_RegisterType;
+
+/**
+ * @defgroup Nvic_Base_address NVIC Base Address
+ * @{ */
+#define NVIC_BASE ( SCS_BASE + 0x0100UL )            /*!< NVIC Base Address */
+#define NVIC      ( (Nvic_RegisterType *)NVIC_BASE ) /*!< NVIC configuration pointer */
+/**
+ * @} */
+
+/**
+ * @brief RCC registers struct.
+ */
+typedef struct
+{
+    volatile uint32 CR;        /*!< RCC clock control register*/
+    volatile uint32 ICSCR;     /*!< RCC internal clock sources calibration register*/
+    volatile uint32 CFGR;      /*!< Clock configuration register*/
+    volatile uint32 PLLCFGR;   /*!< PLL configuration register*/
+    volatile uint32 Reserv;    /*!< Reserv memory space*/
+    volatile uint32 CRRCR;     /*!< clock recovery RC register*/
+    volatile uint32 CIER;      /*!< Clock interrupt enable register*/
+    volatile uint32 CIFR;      /*!< Clock interrupt flag register*/
+    volatile uint32 CICR;      /*!< Clock interrupt clear register*/
+    volatile uint32 IOPRSTR;   /*!< I/O port reset register*/
+    volatile uint32 AHBRSTR;   /*!< AHB peripheral reset register*/
+    volatile uint32 APBRSTR1;  /*!< APB1 peripheral reset register*/
+    volatile uint32 APBRSTR2;  /*!< APB2 peripheral reset register*/
+    volatile uint32 IOPENR;    /*!< I/O port clock enable register*/
+    volatile uint32 AHBENR;    /*!< AHB peripheral clock enable register*/
+    volatile uint32 APBENR1;   /*!< APB1 peripheral clock enable register */
+    volatile uint32 APBENR2;   /*!< APB2 peripheral clock enable register */
+    volatile uint32 IOPSMENR;  /*!< I/O port in Sleep mode clock enable register*/
+    volatile uint32 AHBSMENR;  /*!< AHB peripheral clock enable in sleep/stop mode register*/
+    volatile uint32 APBSMENR1; /*!< APB1 peripheral clock enable in Sleep/stop mode register */
+    volatile uint32 APBSMENR2; /*!< APB2 peripheral clock enable in Sleep/stop mode register*/
+    volatile uint32 CCIPR;     /*!< Peripherals independent clock configuration register*/
+    volatile uint32 CCIPR2;    /*!< Peripherals independent clock configuration register 2*/
+    volatile uint32 BDCR;      /*!< RTC domain control register*/
+    volatile uint32 CSR;       /*!< control/status register*/
+} Rcc_RegisterType;
+
+/**
+ * @defgroup  Rcc_Base_address RCC Base Address
+  @{ */
+#define RCC_BASE ( AHBPERIPH_BASE + 0x00001000UL )
+#define RCC      ( (RCC_RegisterType *)RCC_BASE_ADDRESS ) /*!< Access to RCC registers*/
+/**
+ * @} */
+
+/**
+ * @brief GPIOS registers struct.
+ */
+typedef struct
+{
+    volatile uint32 MODER;   /*!< GPIO port mode register*/
+    volatile uint32 OTYPER;  /*!< GPIO port output type register*/
+    volatile uint32 OSPEEDR; /*!< GPIO port output speed register*/
+    volatile uint32 PUPDR;   /*!< GPIO port pull-up/pull-down register*/
+    volatile uint32 IDR;     /*!< GPIO port input data register*/
+    volatile uint32 ODR;     /*!< GPIO port output data register*/
+    volatile uint32 BSRR;    /*!< GPIO port bit set/reset register*/
+    volatile uint32 LCKR;    /*!< GPIO port configuration lock register*/
+    volatile uint32 AFRL;    /*!< GPIO alternate function low register*/
+    volatile uint32 AFRH;    /*!< GPIO alternate function high register*/
+    volatile uint32 BRR;     /*!< GPIO port bit reset register*/
+} Port_RegisterType;
+
+/**
+  * @defgroup  Port_Base_address PORT Base Address
+  @{ */
+#define PORTA_BASE ( IOPORT_BASE + 0x00000000UL )
+#define PORTB_BASE ( IOPORT_BASE + 0x00000400UL )
+#define PORTC_BASE ( IOPORT_BASE + 0x00000800UL )
+#define PORTD_BASE ( IOPORT_BASE + 0x00000C00UL )
+#define PORTE_BASE ( IOPORT_BASE + 0x00001000UL )
+#define PORTF_BASE ( IOPORT_BASE + 0x00001400UL )
+#define PORTA      ( (Port_RegisterType *)PORTA_BASE ) /*!< Access to PORTA registers*/
+#define PORTB      ( (Port_RegisterType *)PORTB_BASE ) /*!< Access to PORTB registers*/
+#define PORTC      ( (Port_RegisterType *)PORTC_BASE ) /*!< Access to PORTC registers*/
+#define PORTD      ( (Port_RegisterType *)PORTD_BASE ) /*!< Access to PORTD registers*/
+#define PORTE      ( (Port_RegisterType *)PORTE_BASE ) /*!< Access to PORTE registers*/
+#define PORTF      ( (Port_RegisterType *)PORTF_BASE ) /*!< Access to PORTF registers*/
+/**
+ * @} */
+
+/**
+ * @brief GPIOS registers struct for Dio.
+ */
+typedef struct
+{
+    volatile uint32 Reserved1[ 4 ]; /*!< Reserved register*/
+    volatile uint32 IDR;            /*!< GPIO port input data register*/
+    volatile uint32 ODR;            /*!< GPIO port output data register*/
+    volatile uint32 BSRR;           /*!< GPIO port bit set/reset register*/
+    volatile uint32 Reserved2[ 3 ]; /*!< Reserved register*/
+    volatile uint32 BRR;            /*!< GPIO port bit reset register*/
+} Dio_RegisterType;
+
+/**
+  * @defgroup  DIO_Base_address DIO Base Address
+  @{ */
+#define DIOA                 ( (Dio_RegisterType *)PORTA_BASE ) /*!< Access to DIOA registers*/
+#define DIOB                 ( (Dio_RegisterType *)PORTB_BASE ) /*!< Access to DIOB registers*/
+#define DIOC                 ( (Dio_RegisterType *)PORTC_BASE ) /*!< Access to DIOC registers*/
+#define DIOD                 ( (Dio_RegisterType *)PORTD_BASE ) /*!< Access to DIOD registers*/
+#define DIOE                 ( (Dio_RegisterType *)PORTE_BASE ) /*!< Access to DIOE registers*/
+#define DIOF                 ( (Dio_RegisterType *)PORTF_BASE ) /*!< Access to DIOF registers*/
+/**
+ * @} */
+
+/**
+  * @defgroup Clock-eneable of different ports
+  @{ */
+#define RCC_GPIOA_CLK_EN( )  RCC->IOPENR |= 0x01u; /*!< GPIO PORTA clock enable*/
+#define RCC_GPIOB_CLK_EN( )  RCC->IOPENR |= 0x02u; /*!< GPIO PORTB clock enable*/
+#define RCC_GPIOC_CLK_EN( )  RCC->IOPENR |= 0x04u; /*!< GPIO PORTC clock enable*/
+#define RCC_GPIOD_CLK_EN( )  RCC->IOPENR |= 0x08u; /*!< GPIO PORTD clock enable*/
+#define RCC_GPIOE_CLK_EN( )  RCC->IOPENR |= 0x10u; /*!< GPIO PORTE clock enable*/
+#define RCC_GPIOF_CLK_EN( )  RCC->IOPENR |= 0x20u; /*!< GPIO PORTF clock enable*/
+/**
+ * @} */
+
+/**
+  * @defgroup Clock-disable of different ports
+  @{ */
+#define RCC_GPIOA_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 0u ); /*!< GPIO PORTA clock disable*/
+#define RCC_GPIOB_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 1u ); /*!< GPIO PORTB clock disable*/
+#define RCC_GPIOC_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 2u ); /*!< GPIO PORTC clock disable*/
+#define RCC_GPIOD_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 3u ); /*!< GPIO PORTD clock disable*/
+#define RCC_GPIOE_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 4u ); /*!< GPIO PORTE clock disable*/
+#define RCC_GPIOF_CLK_DIS( ) RCC->IOPENR &= ~( 1u << 5u ); /*!< GPIO PORTF clock disable*/
+/**
+ * @} */
 
 #endif
