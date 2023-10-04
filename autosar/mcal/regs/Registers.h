@@ -56,11 +56,11 @@ typedef enum
 /**
  * @defgroup base_address Base address values
  * @{ */
-#define FLASH_BASE     ( 0x08000000UL ) /*!< FLASH base address */
-#define SRAM_BASE      ( 0x20000000UL ) /*!< SRAM base address */
-#define PERIPH_BASE    ( 0x40000000UL ) /*!< Peripheral base address */
-#define IOPORT_BASE    ( 0x50000000UL ) /*!< IOPORT base address */
-#define SCS_BASE       ( 0xE000E000UL )
+#define FLASH_BASE     ( 0x08000000UL )               /*!< FLASH base address */
+#define SRAM_BASE      ( 0x20000000UL )               /*!< SRAM base address */
+#define PERIPH_BASE    ( 0x40000000UL )               /*!< Peripheral base address */
+#define IOPORT_BASE    ( 0x50000000UL )               /*!< IOPORT base address */
+#define SCS_BASE       ( 0xE000E000UL )               /*!< System Control Space base address */
 #define APBPERIPH_BASE ( PERIPH_BASE )                /*!< APB peripherals base address */
 #define AHBPERIPH_BASE ( PERIPH_BASE + 0x00020000UL ) /*!< AHB peripherals base address */
 /**
@@ -126,7 +126,7 @@ typedef struct
 /**
  * @defgroup  Rcc_Base_address RCC Base Address
   @{ */
-#define RCC_BASE ( AHBPERIPH_BASE + 0x00001000UL )
+#define RCC_BASE ( AHBPERIPH_BASE + 0x00001000UL )        /*!< RCC Base Address */
 #define RCC      ( (RCC_RegisterType *)RCC_BASE_ADDRESS ) /*!< Access to RCC registers*/
 /**
  * @} */
@@ -152,12 +152,12 @@ typedef struct
 /**
   * @defgroup  Port_Base_address PORT Base Address
   @{ */
-#define PORTA_BASE ( IOPORT_BASE + 0x00000000UL )
-#define PORTB_BASE ( IOPORT_BASE + 0x00000400UL )
-#define PORTC_BASE ( IOPORT_BASE + 0x00000800UL )
-#define PORTD_BASE ( IOPORT_BASE + 0x00000C00UL )
-#define PORTE_BASE ( IOPORT_BASE + 0x00001000UL )
-#define PORTF_BASE ( IOPORT_BASE + 0x00001400UL )
+#define PORTA_BASE ( IOPORT_BASE + 0x00000000UL )      /*!< PORTA Base Address */
+#define PORTB_BASE ( IOPORT_BASE + 0x00000400UL )      /*!< PORTB Base Address */
+#define PORTC_BASE ( IOPORT_BASE + 0x00000800UL )      /*!< PORTC Base Address */
+#define PORTD_BASE ( IOPORT_BASE + 0x00000C00UL )      /*!< PORTD Base Address */
+#define PORTE_BASE ( IOPORT_BASE + 0x00001000UL )      /*!< PORTE Base Address */
+#define PORTF_BASE ( IOPORT_BASE + 0x00001400UL )      /*!< PORTF Base Address */
 #define PORTA      ( (Port_RegisterType *)PORTA_BASE ) /*!< Access to PORTA registers*/
 #define PORTB      ( (Port_RegisterType *)PORTB_BASE ) /*!< Access to PORTB registers*/
 #define PORTC      ( (Port_RegisterType *)PORTC_BASE ) /*!< Access to PORTC registers*/
