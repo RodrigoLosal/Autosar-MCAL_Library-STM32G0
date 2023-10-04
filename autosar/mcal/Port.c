@@ -1,11 +1,16 @@
 /**
- * @file Port.c
- * @brief Port driver configuration.
+ * @file    Port.c
+ * @brief   **Port driver configuration**
+ * @author  Daniel Byuerly, Diego Perez
  *
- * The port driver provides functions to Initialize and change values on the
- * GPIO registers, this makes use of previously defined symbols that point to
- * those specific registers and symbols to specify the port, pin and configuration
- * that will be applied to the pin.
+ * This PORT driver module control the overall configuration and initialization of the port structure
+ * which is used in the DIO driver module. Therefore, the DIO driver works on pins and ports which are
+ * configured by the PORT driver.
+ *
+ * The PORT driver shall be initialized prior to the use of the DIO functions. Otherwise, DIO
+ * functions will exhibit undefined behavior. The diagram below identifies the PORT driver functions
+ * and the structure of the PORT driver and DIO driver within the MCAL software layer. To use some
+ * functions check the Port_Cfg.h file to configured the values.
  */
 #include "Bfx.h"
 #include "Std_Types.h"
@@ -13,14 +18,15 @@
 #include "Port.h"
 
 /**
- * @defgroup max_port_values  max number of Mcu ports and pins
- * @{*/
-#define MAX_PORT_NUMBER      6u  /*!< Port A value */
-#define MAX_PIN_NUMBER       16u /*!< Port A value */
+ * @defgroup max_port_values  max number of Mcu ports, pins and altern modes
+ *
+ * @{ */
+#define MAX_PORT_NUMBER      6u  /*!< Max number of port in Mcu */
+#define MAX_PIN_NUMBER       16u /*!< Max number of pins on each port*/
 /* cppcheck-suppress misra-c2012-2.5 ; use when DET is active */
-#define MAX_PIN_MODES        4u /*!< Port A value */
+#define MAX_PIN_MODES        4u /*!< Max values on pin modes */
 /* cppcheck-suppress misra-c2012-2.5 ; use when DET is active */
-#define MAX_ALT_MODES        11u /*!< Port A value */
+#define MAX_ALT_MODES        11u /*!< Max values on altern modes */
 /**
  * @}*/
 
@@ -33,19 +39,21 @@
  * @}*/
 
 /**
- * @defgroup max_port_values  max number of Mcu ports and pins
+ * @defgroup get_bits  macros to extract certaing number of bits from a variable
+ *
  * @{*/
-#define GET_LOW_NIBBLE( x )  ( (x)&0x0fu )   /*!< Port A value */
-#define GET_HIGH_NIBBLE( x ) ( ( x ) >> 4u ) /*!< Port A value */
-#define GET_HIGH_BYTE( x )   ( ( x ) >> 8u ) /*!< Port A value */
+#define GET_LOW_NIBBLE( x )  ( (x)&0x0fu )   /*!< get the less significant bits */
+#define GET_HIGH_NIBBLE( x ) ( ( x ) >> 4u ) /*!< get the four most significant nibble */
+#define GET_HIGH_BYTE( x )   ( ( x ) >> 8u ) /*!< get hte MSB from and 16 bit variable */
 /**
  * @}*/
 
 /**
- * @defgroup max_port_values  max number of Mcu ports and pins
+ * @defgroup mlu_factors  multiplication factors
+ *
  * @{*/
-#define MUL_BY_TWO           1u /*!< Port A value */
-#define MUL_BY_FOUR          2u /*!< Port A value */
+#define MUL_BY_TWO           1u /*!< Multiply by two on a shift operation */
+#define MUL_BY_FOUR          2u /*!< Multiply by four on a shift operation */
 /**
  * @}*/
 
@@ -75,10 +83,10 @@ static Port_RegisterType *Port_Ports[ MAX_PORT_NUMBER ] = { PORTA, PORTB, PORTC,
 /**
  * @brief Initialize the GPIO pins to the configuration store on ConfigPTR.
  *
- * The function changes the registers values of the GPIOS depending on the values
- * of the ConfigPtr struct, this function Initialize all pins and port of the
- * ConfigPtr array, the length of the array is given by PORT_PIN_NUMBER_OF_PORTS,
- * To configure the values of the struct use the symbols defined on the Port.h file.
+ * The function changes the registers values of the GPIOS depending on the values of the ConfigPtr
+ * struct, this function Initialize all pins and port of the ConfigPtr array, the length of the
+ * array is given by PORT_PIN_NUMBER_OF_PORTS, To configure the values of the struct use the symbols
+ * defined on the Port.h file.
  *
  * @param ConfigPtr       Pointer to ConfigPtr struct array.
  *
@@ -131,17 +139,17 @@ void Port_Init( const Port_ConfigType *ConfigPtr )
 /**
  * @brief Set the direction of a GPIO during runtime.
  *
- * The function changes the registers values of the GPIOS direction during runtime,
- * to enable this function change the value of PORT_SET_PIN_DIRECTION_API to STD_ON
- * on the Port_Cfg file.
- * To change the direction use the symbols of PORT direction
+ * The function changes the registers values of the GPIOS direction during runtime, to enable this
+ * function change the value of PORT_SET_PIN_DIRECTION_API to STD_ON on the Port_Cfg file. To change
+ * the direction use the symbols of PORT direction
  *
  * @param Pin             Pin to change the direction.
  * @param Direction       Direction to be changed.
  *
  * @reqs   SWS_Port_00141
  */
-#if PORT_SET_PIN_DIRECTION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+/* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if PORT_SET_PIN_DIRECTION_API == STD_ON
 void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
 {
     Port_RegisterType *PortReg = Port_Ports[ LocalConfigPtr[ GET_HIGH_BYTE( Pin ) ].Port ];
@@ -160,9 +168,8 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
 /**
  * @brief Set the mode of a GPIO during runtime.
  *
- * The function changes the registers values of the GPIOS mode during runtime,
- * to eneable this function change the value of PORT_SET_PIN_MODE_API to STD_ON
- * on the Port_Cfg file.
+ * The function changes the registers values of the GPIOS mode during runtime, to eneable this
+ * function change the value of PORT_SET_PIN_MODE_API to STD_ON on the Port_Cfg file.
  * To change the mode use the symbols of GPIO altern values.
  *
  * @param Pin             Pin to change the direction.
@@ -170,7 +177,8 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
  *
  * @reqs   SWS_Port_00145
  */
-#if PORT_SET_PIN_MODE_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+/* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if PORT_SET_PIN_MODE_API == STD_ON
 void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
 {
     Port_RegisterType *PortReg = Port_Ports[ LocalConfigPtr[ GET_HIGH_BYTE( Pin ) ].Port ];
@@ -212,15 +220,15 @@ void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
 /**
  * @brief Gets the current version.
  *
- * The function gives the versioninfo struct the values of the current version.
- * to eneable this function change the value of PORT_VERSION_INFO_API to STD_ON
- * on the Port_Cfg file.
+ * The function gives the versioninfo struct the values of the current version. to eneable this
+ * function change the value of PORT_VERSION_INFO_API to STD_ON on the Port_Cfg file.
  *
  * @param versioninfo             Pointer to Std_VersionInfoType struct.
  *
  * @reqs   SWS_Port_00143
  */
-#if PORT_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+/* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if PORT_VERSION_INFO_API == STD_ON
 void Port_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
     assert_det( versioninfo != NULL, PORT_E_PARAM_POINTER );
@@ -236,8 +244,8 @@ void Port_GetVersionInfo( Std_VersionInfoType *versioninfo )
 /**
  * @brief Refresh port direction.
  *
- * The function refreshes the registers values of the GPIOS moder during runtime to
- * the initial values only if they are configured as non changeables.
+ * The function refreshes the registers values of the GPIOS moder during runtime to the initial values
+ * only if they are configured as non changeables.
  *
  * @reqs   SWS_Port_00142
  */
