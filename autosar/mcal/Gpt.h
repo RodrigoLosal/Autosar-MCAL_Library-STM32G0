@@ -2,7 +2,7 @@
 #ifndef GPT_H__
 #define GPT_H__
 
-#define GPT_NUMBER_OF_CHANNELS 2
+#define GPT_NUMBER_OF_CHANNELS 2u
 
 typedef struct _Gpt_ConfigType
 {
@@ -35,6 +35,7 @@ typedef enum
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	Channel1,
 	Channel2,
 =======
@@ -52,6 +53,10 @@ typedef enum
     Channel0 = 0,
     Channel1,
 >>>>>>> d5b5122 (GPT-Code-Implementation. Corrections made on the functions.)
+=======
+    GPT_CHANNEL_0 = 0,
+    GPT_CHANNEL_1,
+>>>>>>> 6a80043 (Solved feedback comments.)
 } Gpt_ChannelType;
 
 typedef enum
@@ -62,18 +67,9 @@ typedef enum
 
 typedef enum
 {
-    Enabled = 0,
-    Disabled,
+    GPT_NOTIFICATION_ENABLED = 0,
+    GPT_NOTIFICATION_DISABLED,
 } Gpt_NotificationMode;
-
-typedef enum
-{
-    Uninitialized = 0,
-    Initialized,
-    Running,
-    Stopped,
-    Expired
-} Gpt_ChannelState;
 
 typedef uint32 Gpt_ValueType;
 
@@ -97,12 +93,17 @@ void Gpt_EnableNotification( Gpt_ChannelType Channel );
 void Gpt_DisableNotification( Gpt_ChannelType Channel );
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 void Gpt_Notification_TIM6( void );
 void Gpt_Notification_TIM7( void );
 =======
 void Gpt_Notification_Channel1( void );
 void Gpt_Notification_Channel2( void );
 >>>>>>> d5b5122 (GPT-Code-Implementation. Corrections made on the functions.)
+=======
+void Gpt_Notification_Channel0( void );
+void Gpt_Notification_Channel1( void );
+>>>>>>> 6a80043 (Solved feedback comments.)
 
 #endif
 =======
