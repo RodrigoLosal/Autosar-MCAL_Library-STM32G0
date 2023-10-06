@@ -71,22 +71,22 @@ typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
  * with ports when specify in Port_Cfg.h.
  */
 /**@{*/
-#define PORTS_PIN_00_VAL      0x0000u /*!< Pin 0 value */
-#define PORTS_PIN_01_VAL      0x0001u /*!< Pin 1 value */
-#define PORTS_PIN_02_VAL      0x0002u /*!< Pin 2 value */
-#define PORTS_PIN_03_VAL      0x0003u /*!< Pin 3 value */
-#define PORTS_PIN_04_VAL      0x0004u /*!< Pin 4 value */
-#define PORTS_PIN_05_VAL      0x0005u /*!< Pin 5 value */
-#define PORTS_PIN_06_VAL      0x0006u /*!< Pin 6 value */
-#define PORTS_PIN_07_VAL      0x0007u /*!< Pin 7 value */
-#define PORTS_PIN_08_VAL      0x0008u /*!< Pin 8 value */
-#define PORTS_PIN_09_VAL      0x0009u /*!< Pin 9 value */
-#define PORTS_PIN_10_VAL      0x000Au /*!< Pin 10 value */
-#define PORTS_PIN_11_VAL      0x000Bu /*!< Pin 11 value */
-#define PORTS_PIN_12_VAL      0x000Cu /*!< Pin 12 value */
-#define PORTS_PIN_13_VAL      0x000Du /*!< Pin 13 value */
-#define PORTS_PIN_14_VAL      0x000Eu /*!< Pin 14 value */
-#define PORTS_PIN_15_VAL      0x000Fu /*!< Pin 15 value */
+#define PORTS_PIN_00_VAL              0x0000u /*!< Pin 0 value */
+#define PORTS_PIN_01_VAL              0x0001u /*!< Pin 1 value */
+#define PORTS_PIN_02_VAL              0x0002u /*!< Pin 2 value */
+#define PORTS_PIN_03_VAL              0x0003u /*!< Pin 3 value */
+#define PORTS_PIN_04_VAL              0x0004u /*!< Pin 4 value */
+#define PORTS_PIN_05_VAL              0x0005u /*!< Pin 5 value */
+#define PORTS_PIN_06_VAL              0x0006u /*!< Pin 6 value */
+#define PORTS_PIN_07_VAL              0x0007u /*!< Pin 7 value */
+#define PORTS_PIN_08_VAL              0x0008u /*!< Pin 8 value */
+#define PORTS_PIN_09_VAL              0x0009u /*!< Pin 9 value */
+#define PORTS_PIN_10_VAL              0x000Au /*!< Pin 10 value */
+#define PORTS_PIN_11_VAL              0x000Bu /*!< Pin 11 value */
+#define PORTS_PIN_12_VAL              0x000Cu /*!< Pin 12 value */
+#define PORTS_PIN_13_VAL              0x000Du /*!< Pin 13 value */
+#define PORTS_PIN_14_VAL              0x000Eu /*!< Pin 14 value */
+#define PORTS_PIN_15_VAL              0x000Fu /*!< Pin 15 value */
 /**@}*/
 
 /**
