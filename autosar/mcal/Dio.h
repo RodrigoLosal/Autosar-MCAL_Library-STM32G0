@@ -2,11 +2,11 @@
 #define DIO_H__
 
 
-typedef uint8 Dio_ChannelType;
+typedef uint32 Dio_ChannelType;
 
-typedef uint8 Dio_PortType;
+typedef uint32 Dio_PortType;
 
-typedef uint8 Dio_LevelType;
+typedef uint32 Dio_LevelType;
 
 typedef uint32 Dio_PortLevelType;
 
@@ -90,6 +90,19 @@ typedef struct
 #define DIO_PIN_PF_03 (Dio_ChannelType)0x53u /* cppcheck-suppress misra-c2012-2.5 ; This define is used to indicate the pin value */
 #define DIO_PIN_PF_04 (Dio_ChannelType)0x54u /* cppcheck-suppress misra-c2012-2.5 ; This define is used to indicate the pin value */ s
 
+
+/**
+ * @name    PORTS values.
+ * Symbols to specify ports values.
+ */
+/**@{*/
+#define PORTS_A       0u /*!< Port A value */
+#define PORTS_B       1u /*!< Port B value */
+#define PORTS_C       2u /*!< Port C value */
+#define PORTS_D       3u /*!< Port D value */
+#define PORTS_E       4u /*!< Port E value */
+#define PORTS_F       5u /*!< Port F value */
+/**@}*/
 
 Dio_LevelType Dio_ReadChannel( Dio_ChannelType ChannelId );
 void Dio_WriteChannel( Dio_ChannelType ChannelId, Dio_LevelType Level );
