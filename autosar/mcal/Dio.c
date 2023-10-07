@@ -26,7 +26,6 @@
 #include "Std_Types.h"
 #include "Registers.h"
 #include "Bfx.h"
-#include "Dio_Cfg.h"
 #include "Dio.h"
 
 /**
@@ -113,7 +112,9 @@ Dio_LevelType Dio_FlipChannel( Dio_ChannelType ChannelId )
  */
 Dio_PortLevelType Dio_ReadPort( Dio_PortType PortId )
 {
-    return (Dio_PortLevelType)Dios_Port[ PortId ];
+    Dio_RegisterType *Port = Dios_Port[ PortId ];
+
+    return (Dio_PortLevelType)Port->IDR;
 }
 
 /**
@@ -127,7 +128,7 @@ Dio_PortLevelType Dio_ReadPort( Dio_PortType PortId )
  */
 void Dio_WritePort( Dio_PortType PortId, Dio_PortLevelType Level )
 {
-    Dios_Port[ PortId ] = (Dio_RegisterType *)Level;
+    Dios_Port[ PortId ] = (Dio_RegisterType *)&Level;
 }
 
 /**
@@ -148,7 +149,7 @@ Dio_PortLevelType Dio_ReadChannelGroup( const Dio_ChannelGroupType *ChannelGroup
 
     GroupLevel = ( Port->IDR ) & ( ChannelGroupIdPtr->mask );
 
-    Bfx_ShiftBitRt_u32u8( (uint32 *)GroupLevel, ChannelGroupIdPtr->offset );
+    Bfx_ShiftBitRt_u32u8( (uint32 *)&GroupLevel, ChannelGroupIdPtr->offset );
 
     return GroupLevel;
 }
@@ -185,11 +186,11 @@ Dio_PortLevelType Dio_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
     Dio_PortLevelType Level = 0;
 
-    versioninfo->vendorID         = DIO_VENDOR_ID;
-    versioninfo->moduleID         = DIO_MODULE_ID;
-    versioninfo->sw_major_version = DIO_SW_MAJOR_VERSION;
-    versioninfo->sw_minor_version = DIO_SW_MINOR_VERSION;
-    versioninfo->sw_patch_version = DIO_SW_PATCH_VERSION;
+    versioninfo->vendorID         = 0;
+    versioninfo->moduleID         = 0;
+    versioninfo->sw_major_version = 0;
+    versioninfo->sw_minor_version = 0;
+    versioninfo->sw_patch_version = 0;
 
     return Level;
 }
