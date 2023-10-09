@@ -29,12 +29,6 @@ typedef enum
     GPT_CH_MODE_ONESHOT,
 } Gpt_ChannelMode;
 
-typedef enum
-{
-    GPT_NOTIFICATION_ENABLED = 0,
-    GPT_NOTIFICATION_DISABLED,
-} Gpt_NotificationMode;
-
 typedef uint32 Gpt_ValueType;
 
 void Gpt_Init( const Gpt_ConfigType *ConfigPtr );
