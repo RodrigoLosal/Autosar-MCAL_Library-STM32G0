@@ -643,6 +643,32 @@ void test__Bfx_ShiftBitSat_s8s8_s8__saturation( void )
 }
 
 /**
+ * @brief   **Test Shift Bit Sat (signed) - Saturation**
+ *
+ * The test validates if the value in Data = 0xAA = 1010 1010 had a correct saturation when
+ * ShiftCnt = 1 resulting in 1111 1111 = 0xFF
+ */
+void test__Bfx_ShiftBitSat_s8s8_s8__negsat( void )
+{
+    sint8 Data   = 0xAA; // 1010 1010
+    sint8 Result = Bfx_ShiftBitSat_s8s8_s8( 1, Data );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, -128, "The negative saturation wasn't performed correctly" );
+}
+
+/**
+ * @brief   **Test Shift Bit Sat (signed) - Saturation**
+ *
+ * The test validates if the value in Data = 0x55 = 0101 0101 had a correct saturation when
+ * ShiftCnt = -2 resulting in 0001 0101 = 0x15
+ */
+void test__Bfx_ShiftBitSat_s8s8_s8__shiftright( void )
+{
+    sint8 Data   = 0x55; // 0101 0101
+    sint8 Result = Bfx_ShiftBitSat_s8s8_s8( -2, Data );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0x15, "The shift right wasn't performed correctly" );
+}
+
+/**
  * @brief   **Test Shift Bit Sat (unsigned) - Saturation**
  *
  * The test validates if the value in Data = 0x2A = 0010 1010 had a correct saturation when
@@ -666,4 +692,17 @@ void test__Bfx_ShiftBitSat_u8s8_u8__nosaturation( void )
     sint8 Data   = 0x2A; // 0010 1010
     sint8 Result = Bfx_ShiftBitSat_u8s8_u8( 2, Data );
     TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0xA8, "The left shift wasn't performed correctly" );
+}
+
+/**
+ * @brief   **Test Shift Bit Sat (signed) - Saturation**
+ *
+ * The test validates if the value in Data = 0x55 = 0101 0101 had a correct saturation when
+ * ShiftCnt = -2 resulting in 0000 1010 = 0x0A
+ */
+void test__Bfx_ShiftBitSat_u8s8_u8__shiftright( void )
+{
+    sint8 Data   = 0x55; // 0101 0101
+    sint8 Result = Bfx_ShiftBitSat_u8s8_u8( -3, Data );
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0x0A, "The shift right wasn't performed correctly" );
 }
