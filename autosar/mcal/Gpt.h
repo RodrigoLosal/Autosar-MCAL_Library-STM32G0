@@ -12,10 +12,9 @@
 typedef struct _Gpt_ConfigType
 {
     uint8 GptChannelId;
-    uint8 GptNotification;
     uint8 GptChannelMode;
     uint16 GptChannelPrescaler;
-    void ( *Notifications[ 2u ] )( void );
+    void ( *GptNotification[ 2u ] )( void );
 } Gpt_ConfigType;
 
 typedef enum
