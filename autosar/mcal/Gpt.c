@@ -105,7 +105,7 @@ void Gpt_Notification_Channel0( void )
 {
     if( TIM6->SR == 1 ) /*Checking if the update interrupt flag of TIMx_SR is set*/
     {
-        LocalConfigPtr->Notifications[ GPT_CHANNEL_0 ]( );
+        LocalConfigPtr->GptNotification[ GPT_CHANNEL_0 ]( );
         Bfx_ClrBit_u32u8( (uint32 *)&TIM6->SR, 0 ); /*Clearing the update interrupt flag of TIMx_SR*/
     }
 }
@@ -116,7 +116,7 @@ void Gpt_Notification_Channel1( void )
 {
     if( TIM7->SR == 1 ) /*Checking if the update interrupt flag of TIMx_SR is set*/
     {
-        LocalConfigPtr->Notifications[ GPT_CHANNEL_1 ]( );
+        LocalConfigPtr->GptNotification[ GPT_CHANNEL_1 ]( );
         Bfx_ClrBit_u32u8( (uint32 *)&TIM7->SR, 0 ); /*Clearing the update interrupt flag of TIMx_SR*/
     }
 }
