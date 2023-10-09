@@ -519,7 +519,7 @@ static inline sint32 Bfx_ShiftBitSat_s16s8_s16( sint8 ShiftCnt, sint16 Data )
         Data <<= ShiftCnt;
         if( ( DataIsNegative == FALSE ) && ( Data < 0 ) )
         {
-            Data = 0x7FFF;
+            Data = 32767;
         }
         else if( ( DataIsNegative == TRUE ) && ( Data >= 0 ) )
         {
