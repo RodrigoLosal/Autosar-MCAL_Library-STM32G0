@@ -2,7 +2,9 @@
 #ifndef GPT_H__
 #define GPT_H__
 
-#define GPT_NUMBER_OF_CHANNELS 2u
+#define GPT_NUMBER_OF_CHANNELS   2u
+#define GPT_VERSION_INFO_API     STD_ON
+#define GPT_SET_NOTIFICATION_API STD_ON
 
 typedef struct _Gpt_ConfigType
 {
@@ -89,8 +91,18 @@ Gpt_ValueType Gpt_GetTimeElapsed( Gpt_ChannelType Channel );
 Gpt_ValueType Gpt_GetTimeRemaining( Gpt_ChannelType Channel );
 void Gpt_StartTimer( Gpt_ChannelType Channel, Gpt_ValueType Value );
 void Gpt_StopTimer( Gpt_ChannelType Channel );
+
+#if GPT_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+void Gpt_GetVersionInfo( Std_VersionInfoType *versioninfo );
+#endif
+
+#if GPT_SET_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_EnableNotification( Gpt_ChannelType Channel );
+#endif
+
+#if GPT_SET_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_DisableNotification( Gpt_ChannelType Channel );
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -101,9 +113,21 @@ void Gpt_Notification_Channel1( void );
 void Gpt_Notification_Channel2( void );
 >>>>>>> d5b5122 (GPT-Code-Implementation. Corrections made on the functions.)
 =======
+=======
+#endif
+
+#if GPT_SET_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+>>>>>>> 7698406 (Precompile conditions added to some functions.)
 void Gpt_Notification_Channel0( void );
+#endif
+
+#if GPT_SET_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_Notification_Channel1( void );
+<<<<<<< HEAD
 >>>>>>> 6a80043 (Solved feedback comments.)
+=======
+#endif
+>>>>>>> 7698406 (Precompile conditions added to some functions.)
 
 #endif
 =======
