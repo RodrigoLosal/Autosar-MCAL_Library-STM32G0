@@ -151,18 +151,34 @@ void Gpt_StopTimer( Gpt_ChannelType Channel )
     Bfx_ClrBit_u32u8( (uint32 *)&channel->CR1, 0 ); /*Clearing the CEN: bit of TIMx_CR1*/
 }
 
+#if GPT_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+void Gpt_GetVersionInfo( Std_VersionInfoType *versioninfo )
+{
+    versioninfo->moduleID         = 0;
+    versioninfo->sw_major_version = 0;
+    versioninfo->sw_minor_version = 0;
+    versioninfo->sw_patch_version = 0;
+    versioninfo->vendorID         = 0;
+}
+#endif
+
+#if GPT_SET_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_EnableNotification( Gpt_ChannelType Channel )
 {
     channel = channels[ Channel ];
     Bfx_ClrBit_u32u8( (uint32 *)&channel->CR1, 1 ); /*Clearing the UDIS: bit of TIMx_CR1*/
 }
+#endif
 
+#if GPT_SET_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_DisableNotification( Gpt_ChannelType Channel )
 {
     channel = channels[ Channel ];
     Bfx_SetBit_u32u8( (uint32 *)&channel->CR1, 1 ); /*Setting the UDIS: bit of TIMx_CR1*/
 }
+#endif
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -188,6 +204,9 @@ void Gpt_Notification_TIM6( void )
 void Gpt_Notification_Channel1( void )
 >>>>>>> d5b5122 (GPT-Code-Implementation. Corrections made on the functions.)
 =======
+=======
+#if GPT_SET_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+>>>>>>> 7698406 (Precompile conditions added to some functions.)
 void Gpt_Notification_Channel0( void )
 >>>>>>> 6a80043 (Solved feedback comments.)
 {
@@ -197,7 +216,9 @@ void Gpt_Notification_Channel0( void )
         Bfx_ClrBit_u32u8( (uint32 *)&TIM6->SR, 0 ); /*Clearing the update interrupt flag of TIMx_SR*/
     }
 }
+#endif
 
+#if GPT_SET_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_Notification_Channel1( void )
 {
 <<<<<<< HEAD
@@ -224,5 +245,10 @@ void Gpt_Notification_Channel1( void )
         LocalConfigPtr->Notifications[ GPT_CHANNEL_1 ]( );
         Bfx_ClrBit_u32u8( (uint32 *)&TIM7->SR, 0 ); /*Clearing the update interrupt flag of TIMx_SR*/
     }
+<<<<<<< HEAD
 >>>>>>> 6a80043 (Solved feedback comments.)
 }
+=======
+}
+#endif
+>>>>>>> 7698406 (Precompile conditions added to some functions.)
