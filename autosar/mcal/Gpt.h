@@ -1,16 +1,20 @@
 #ifndef GPT_H__
 #define GPT_H__
 
-#define GPT_NUMBER_OF_CHANNELS   2u
-#define GPT_VERSION_INFO_API     STD_ON
-#define GPT_SET_NOTIFICATION_API STD_ON
+#define GPT_NUMBER_OF_CHANNELS              2u
+#define APB_DEFAULT_FREQ                    16000000U
+#define GPT_DEINIT_API                      STD_ON
+#define GPT_TIME_ELAPSED_API                STD_ON
+#define GPT_TIME_REMAINING_API              STD_ON
+#define GPT_VERSION_INFO_API                STD_ON
+#define GPT_ENABLE_DISABLE_NOTIFICATION_API STD_ON
 
 typedef struct _Gpt_ConfigType
 {
-    uint8 Channel;
-    uint8 NotificationMode;
-    uint8 ChannelMode;
-    uint16 Prescaler;
+    uint8 GptChannelId;
+    uint8 GptNotification;
+    uint8 GptChannelMode;
+    uint16 GptChannelPrescaler;
     void ( *Notifications[ 2u ] )( void );
 } Gpt_ConfigType;
 
@@ -35,9 +39,19 @@ typedef enum
 typedef uint32 Gpt_ValueType;
 
 void Gpt_Init( const Gpt_ConfigType *ConfigPtr );
+
+#if GPT_DEINIT_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_DeInit( void );
+#endif
+
+#if GPT_TIME_ELAPSED_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Gpt_ValueType Gpt_GetTimeElapsed( Gpt_ChannelType Channel );
+#endif
+
+#if GPT_TIME_REMAINING_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Gpt_ValueType Gpt_GetTimeRemaining( Gpt_ChannelType Channel );
+#endif
+
 void Gpt_StartTimer( Gpt_ChannelType Channel, Gpt_ValueType Value );
 void Gpt_StopTimer( Gpt_ChannelType Channel );
 
@@ -45,19 +59,19 @@ void Gpt_StopTimer( Gpt_ChannelType Channel );
 void Gpt_GetVersionInfo( Std_VersionInfoType *versioninfo );
 #endif
 
-#if GPT_SET_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_EnableNotification( Gpt_ChannelType Channel );
 #endif
 
-#if GPT_SET_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_DisableNotification( Gpt_ChannelType Channel );
 #endif
 
-#if GPT_SET_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_Notification_Channel0( void );
 #endif
 
-#if GPT_SET_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_Notification_Channel1( void );
 #endif
 
