@@ -216,4 +216,30 @@ typedef struct
 /**
  * @} */
 
+/**
+ * @brief GPT registers struct.
+ */
+typedef struct
+{
+    volatile uint32 CR1;            /*!< TIM control register 1 */
+    volatile uint32 CR2;            /*!< TIM control register 2 */
+    volatile uint32 Reserved0;      /*!< Reserved memory space */
+    volatile uint32 DIER;           /*!< TIM DMA/Interrupt enable register */
+    volatile uint32 SR;             /*!< TIM status register */
+    volatile uint32 EGR;            /*!< TIM event generation register */
+    volatile uint32 Reserved1[ 3 ]; /*!< Reserved memory space */
+    volatile uint32 CNT;            /*!< TIM counter */
+    volatile uint32 PSC;            /*!< TIM prescaler */
+    volatile uint32 ARR;            /*!< TIM auto-reload register */
+} Gpt_RegisterType;
+
+/**
+  * @defgroup  Struct casting to base address of the Basic Timers
+  @{ */
+#define TIM6_BASE ( PERIPH_BASE + 0x00001000UL )    /*!< TIM6 Base Address */
+#define TIM7_BASE ( PERIPH_BASE + 0x00001400UL )    /*!< TIM7 Base Address */
+#define TIM6      ( (Gpt_RegisterType *)TIM6_BASE ) /*!< Access to TIM6 registers*/
+#define TIM7      ( (Gpt_RegisterType *)TIM7_BASE ) /*!< Access to TIM7 registers*/
+/**@}*/
+
 #endif
