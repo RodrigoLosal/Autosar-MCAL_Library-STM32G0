@@ -511,7 +511,7 @@ static inline uint8 Bfx_CountLeadingSigns_s16( sint16 Data )
  */
 static inline sint32 Bfx_ShiftBitSat_s16s8_s16( sint8 ShiftCnt, sint16 Data )
 {
-    uint32 Mask            = 0x8000;
+    uint32 Mask            = 0x80000;
     boolean DataIsNegative = ( Data < 0 );
 
     if( ShiftCnt >= 0 )
