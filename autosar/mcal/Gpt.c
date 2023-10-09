@@ -14,14 +14,15 @@ void Gpt_Init( const Gpt_ConfigType *ConfigPtr )
 {
     for( uint8 ChannelsToInit = 0; ChannelsToInit < GPT_NUMBER_OF_CHANNELS; ChannelsToInit++ )
     {
-        channel = channels[ ( &ConfigPtr[ ChannelsToInit ] )->Channel ];
-        Bfx_SetBitMask_u32u32( (uint32 *)&channel->PSC, (uint32)( &ConfigPtr[ ChannelsToInit ] )->Prescaler );    /*Writing the value of the prescaler on TIMx_PSC*/
-        Bfx_PutBit_u32u8u8( (uint32 *)&channel->CR1, 3u, (uint32)( &ConfigPtr[ ChannelsToInit ] )->ChannelMode ); /*Writing the OPM: bit of TIMx_CR1 for continuous or one-pulse mode*/
-        Bfx_ClrBit_u32u8( (uint32 *)&channel->SR, 0 );                                                            /*Clearing the update interrupt flag of TIMx_SR*/
+        channel = channels[ ( &ConfigPtr[ ChannelsToInit ] )->GptChannelId ];
+        Bfx_SetBitMask_u32u32( (uint32 *)&channel->PSC, (uint32)( &ConfigPtr[ ChannelsToInit ] )->GptChannelPrescaler ); /*Writing the value of the prescaler on TIMx_PSC*/
+        Bfx_PutBit_u32u8u8( (uint32 *)&channel->CR1, 3u, (uint32)( &ConfigPtr[ ChannelsToInit ] )->GptChannelMode );     /*Writing the OPM: bit of TIMx_CR1 for continuous or one-pulse mode*/
+        Bfx_ClrBit_u32u8( (uint32 *)&channel->SR, 0 ); /*Clearing the Status Register Flag*/                             /*Clearing the update interrupt flag of TIMx_SR*/
     }
     LocalConfigPtr = ConfigPtr;
 }
 
+#if GPT_DEINIT_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_DeInit( void )
 {
     for( uint8 ChannelsToDeinit = 0; ChannelsToDeinit < GPT_NUMBER_OF_CHANNELS; ChannelsToDeinit++ )
@@ -32,7 +33,9 @@ void Gpt_DeInit( void )
         Bfx_SetBits_u32u8u8u8( (uint32 *)&channel->ARR, 0, 16u, 1 ); /*Setting back the reset value of TIMx_ARR*/
     }
 }
+#endif
 
+#if GPT_TIME_ELAPSED_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Gpt_ValueType Gpt_GetTimeElapsed( Gpt_ChannelType Channel )
 {
     Gpt_ValueType TimeElapsed;
@@ -42,7 +45,9 @@ Gpt_ValueType Gpt_GetTimeElapsed( Gpt_ChannelType Channel )
 
     return TimeElapsed;
 }
+#endif
 
+#if GPT_TIME_REMAINING_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Gpt_ValueType Gpt_GetTimeRemaining( Gpt_ChannelType Channel )
 {
     Gpt_ValueType TimeRemaining;
@@ -52,6 +57,7 @@ Gpt_ValueType Gpt_GetTimeRemaining( Gpt_ChannelType Channel )
 
     return TimeRemaining;
 }
+#endif
 
 void Gpt_StartTimer( Gpt_ChannelType Channel, Gpt_ValueType Value )
 {
@@ -78,7 +84,7 @@ void Gpt_GetVersionInfo( Std_VersionInfoType *versioninfo )
 }
 #endif
 
-#if GPT_SET_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_EnableNotification( Gpt_ChannelType Channel )
 {
     channel = channels[ Channel ];
@@ -86,7 +92,7 @@ void Gpt_EnableNotification( Gpt_ChannelType Channel )
 }
 #endif
 
-#if GPT_SET_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_DisableNotification( Gpt_ChannelType Channel )
 {
     channel = channels[ Channel ];
@@ -94,7 +100,7 @@ void Gpt_DisableNotification( Gpt_ChannelType Channel )
 }
 #endif
 
-#if GPT_SET_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_Notification_Channel0( void )
 {
     if( TIM6->SR == 1 ) /*Checking if the update interrupt flag of TIMx_SR is set*/
@@ -105,7 +111,7 @@ void Gpt_Notification_Channel0( void )
 }
 #endif
 
-#if GPT_SET_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_Notification_Channel1( void )
 {
     if( TIM7->SR == 1 ) /*Checking if the update interrupt flag of TIMx_SR is set*/
@@ -114,4 +120,5 @@ void Gpt_Notification_Channel1( void )
         Bfx_ClrBit_u32u8( (uint32 *)&TIM7->SR, 0 ); /*Clearing the update interrupt flag of TIMx_SR*/
     }
 }
+
 #endif
