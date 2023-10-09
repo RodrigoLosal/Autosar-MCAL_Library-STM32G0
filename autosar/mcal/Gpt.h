@@ -2,7 +2,6 @@
 #define GPT_H__
 
 #define GPT_NUMBER_OF_CHANNELS              2u
-#define APB_DEFAULT_FREQ                    16000000U
 #define GPT_DEINIT_API                      STD_ON
 #define GPT_TIME_ELAPSED_API                STD_ON
 #define GPT_TIME_REMAINING_API              STD_ON
