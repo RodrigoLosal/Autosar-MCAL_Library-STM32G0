@@ -1,8 +1,8 @@
 #include "Std_Types.h"
 
-typedef uint8 PduIdType;            /*Might be uint16*/
+typedef uint8 PduIdType;
 
-typedef uint8 PduLengthType;        /*Might be uint16 or uint32*/
+typedef uint32 PduLengthType;
 
 typedef struct
 {
