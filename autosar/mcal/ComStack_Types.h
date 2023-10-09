@@ -43,12 +43,12 @@ typedef struct
 {
     uint8 *SduDataPtr;       /*!< Pointer to the SDU (i.e. payload data) of the PDU. The type of
                              this pointer depends on the memory model being used at compile time*/
-    uint8 *MetaDataPtr;      /*Pointer to the meta data (e.g. CAN ID, socket ID, diagnostic
+    uint8 *MetaDataPtr;      /*!<Pointer to the meta data (e.g. CAN ID, socket ID, diagnostic
                              addresses) of the PDU, consisting of a sequence of meta data items.
                              The length and type of the meta data items is statically configured
                              for each PDU. Meta data items with more than 8 bits use platform
                              byte order.*/
-    PduLengthType SduLength; /*Length of the SDU in bytes.*/
+    PduLengthType SduLength; /*!<Length of the SDU in bytes.*/
 } PduInfoType;
 
 /**
@@ -112,8 +112,8 @@ typedef enum
  */
 typedef struct
 {
-    TpDataStateType TpDataState; /*The enum type to be used to store the state of Tp buffer.*/
-    PduLengthType TxTpDataCnt;   /*Offset from the current position which identifies the number
+    TpDataStateType TpDataState; /*!<The enum type to be used to store the state of Tp buffer.*/
+    PduLengthType TxTpDataCnt;   /*!<Offset from the current position which identifies the number
                                  of bytes to be retransmitted.*/
 } RetryInfoType;
 
