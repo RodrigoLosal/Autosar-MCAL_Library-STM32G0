@@ -643,21 +643,7 @@ void test__Bfx_ShiftBitSat_s8s8_s8__saturation( void )
 }
 
 /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> b8baef1 (100% code coverage tested.)
  * @brief   **Test Shift Bit Sat (signed) - Negative Saturation**
-=======
- * @brief   **Test Shift Bit Sat (signed) - Saturation**
->>>>>>> b367910 (100% code coverage tested.)
-<<<<<<< HEAD
-=======
- * @brief   **Test Shift Bit Sat (signed) - Negative Saturation**
->>>>>>> ab9ad35 (100% code coverage tested.)
-=======
->>>>>>> b8baef1 (100% code coverage tested.)
  *
  * The test validates if the value in Data = 0xAA = 1010 1010 had a correct saturation when
  * ShiftCnt = 1 resulting in 1111 1111 = 0xFF
@@ -670,21 +656,7 @@ void test__Bfx_ShiftBitSat_s8s8_s8__negsat( void )
 }
 
 /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> b8baef1 (100% code coverage tested.)
  * @brief   **Test Shift Bit Sat (signed) - Shift right**
-=======
- * @brief   **Test Shift Bit Sat (signed) - Saturation**
->>>>>>> b367910 (100% code coverage tested.)
-<<<<<<< HEAD
-=======
- * @brief   **Test Shift Bit Sat (signed) - Shift right**
->>>>>>> ab9ad35 (100% code coverage tested.)
-=======
->>>>>>> b8baef1 (100% code coverage tested.)
  *
  * The test validates if the value in Data = 0x55 = 0101 0101 had a correct saturation when
  * ShiftCnt = -2 resulting in 0001 0101 = 0x15
@@ -723,10 +695,10 @@ void test__Bfx_ShiftBitSat_u8s8_u8__nosaturation( void )
 }
 
 /**
- * @brief   **Test Shift Bit Sat (signed) - Saturation**
+ * @brief   **Test Shift Bit Sat (unsigned) - Shift right**
  *
  * The test validates if the value in Data = 0x55 = 0101 0101 had a correct saturation when
- * ShiftCnt = -2 resulting in 0000 1010 = 0x0A
+ * ShiftCnt = -3 resulting in 0000 1010 = 0x0A
  */
 void test__Bfx_ShiftBitSat_u8s8_u8__shiftright( void )
 {
