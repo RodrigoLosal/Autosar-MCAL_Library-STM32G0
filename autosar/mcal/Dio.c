@@ -128,7 +128,9 @@ Dio_PortLevelType Dio_ReadPort( Dio_PortType PortId )
  */
 void Dio_WritePort( Dio_PortType PortId, Dio_PortLevelType Level )
 {
-    Dios_Port[ PortId ] = (Dio_RegisterType *)&Level;
+    Dio_RegisterType *Port = Dios_Port[ PortId ];
+
+    Port->ODR = Level;
 }
 
 /**
