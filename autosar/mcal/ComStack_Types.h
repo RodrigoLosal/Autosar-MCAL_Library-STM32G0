@@ -44,18 +44,17 @@ typedef uint32 PduLengthType;
  * Variables of this type shall be used to store the basic information about a PDU of any
  * type, namely a pointer variable pointing to its SDU (payload), a pointer to Meta Data of the
  * PDU, and the corresponding length of the SDU in bytes.
+ * The type of he pointer SduDataPtr depends on the memory model being used at compile time.
+ * The pointer to the meta data of the PDU *(MetaDataPtr), consists of a sequence of meta data 
+ * items. The length and type of the meta data items is statically configured for each PDU. Meta 
+ * data items with more than 8 bits use platform byte order.
  *
  * @reqs  SWS_COMTYPE_00011
  */
 typedef struct
 {
-    uint8 *SduDataPtr;       /*!< Pointer to the SDU (i.e. payload data) of the PDU. The type of
-                             this pointer depends on the memory model being used at compile time*/
-    uint8 *MetaDataPtr;      /*!<Pointer to the meta data (e.g. CAN ID, socket ID, diagnostic
-                             addresses) of the PDU, consisting of a sequence of meta data items.
-                             The length and type of the meta data items is statically configured
-                             for each PDU. Meta data items with more than 8 bits use platform
-                             byte order.*/
+    uint8 *SduDataPtr;       /*!< Pointer to the SDU (i.e. payload data) of the PDU.*/
+    uint8 *MetaDataPtr;      /*!<Pointer to the meta data of the PDU.*/
     PduLengthType SduLength; /*!<Length of the SDU in bytes.*/
 } PduInfoType;
 
@@ -73,10 +72,9 @@ typedef uint8 PNCHandleType;
  */
 typedef enum
 {
-    TP_STMIN = 0x00, /*Separation Time*/
-    TP_BS    = 0x01, /*Block Size*/
-    TP_BC    = 0x02  /*The Band width control parameter used in FlexRay transport protocol
-                     module.*/
+    TP_STMIN = 0x00, /*!<Separation Time*/
+    TP_BS    = 0x01, /*!<Block Size*/
+    TP_BC    = 0x02  /*!<The Bandwidth cntrl parameter used in FlexRay transport protocol module.*/
 } TPParameterType;
 
 /**
@@ -86,14 +84,10 @@ typedef enum
  */
 typedef enum
 {
-    BUFREQ_OK = 0x00,       /*Buffer request accomplished successful. This status shall have the
-                            value 0.*/
-    BUFREQ_E_NOT_OK = 0x01, /*Buffer request not successful. Buffer cannot be accessed. This status
-                            shall have the value 1.*/
-    BUFREQ_E_BUSY = 0x02,   /*Temporarily no buffer available. It's up the requester to retry
-                            request for a certain time. This status shall have the value 2.*/
-    BUFREQ_E_OVFL = 0x03    /*No Buffer of the required length can be provided. This status shall
-                            have the value 3.*/
+    BUFREQ_OK = 0x00,       /*!<Buffer request accomplished successful.*/
+    BUFREQ_E_NOT_OK = 0x01, /*!<Buffer request not successful. Buffer cannot be accessed.*/
+    BUFREQ_E_BUSY = 0x02,   /*!<Temporarily no buffer available.*/
+    BUFREQ_E_OVFL = 0x03    /*!<No Buffer of the required length can be provided.*/
 } BufReq_ReturnType;
 
 /**
@@ -103,14 +97,9 @@ typedef enum
  */
 typedef enum
 {
-    TP_DATACONF = 0x00,   /*TP_DATACONF indicates that all data, that have been copied so far,
-                          are confirmed and can be removed from the TP buffer. Data copied by
-                          this API call are excluded and will be confirmed later.*/
-    TP_DATARETRY = 0x01,  /*TP_DATARETRY indicates that this API call shall copy already copied
-                          data in order to recover from an error. In this case TxTpDataCnt
-                          specifies the offset of the first byte to be copied by the API call.*/
-    TP_CONFPENDING = 0x02 /*TP_CONFPENDING indicates that the previously copied data must remain
-                          in the TP.*/
+    TP_DATACONF = 0x00,   /*!<Indicates that all data that have been copied so far, are confirmed*/
+    TP_DATARETRY = 0x01,  /*!<Indicates that this API call shall copy already copied data.*/
+    TP_CONFPENDING = 0x02 /*!<Indicates that the previously copied data must remain in the TP.*/
 } TpDataStateType;
 
 /**
@@ -121,8 +110,7 @@ typedef enum
 typedef struct
 {
     TpDataStateType TpDataState; /*!<The enum type to be used to store the state of Tp buffer.*/
-    PduLengthType TxTpDataCnt;   /*!<Offset from the current position which identifies the number
-                                 of bytes to be retransmitted.*/
+    PduLengthType TxTpDataCnt;   /*!<Offset from the current position.*/
 } RetryInfoType;
 
 /**
