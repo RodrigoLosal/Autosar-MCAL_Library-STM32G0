@@ -192,15 +192,6 @@ void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
     /*validate if the pin has active its corresponding changeable flag*/
     assert_det( LocalConfigPtr[ GET_HIGH_BYTE( Pin ) ].ModeChange == TRUE, PORT_E_MODE_UNCHANGEABLE );
 
-    /*validate if Port_Init function has been called previously*/
-    assert_det( LocalConfigPtr != NULL_PTR, PORT_E_UNINIT );
-    /*validate is Pin is a valid value*/
-    assert_det( ( GET_HIGH_BYTE( Pin ) < MAX_PORT_NUMBER ) && ( GET_LOW_NIBBLE( Pin ) < MAX_PIN_NUMBER ), PORT_E_PARAM_PIN );
-    /*validate is Mode is a valid value*/
-    assert_det( ( GET_HIGH_NIBBLE < MAX_PIN_MODES ) && ( GET_LOW_NIBBLE( Mode ) < MAX_ALT_MODES ), PORT_E_PARAM_INVALID_MODE );
-    /*validate if the pin has active its corresponding changeable flag*/
-    assert_det( LocalConfigPtr[ GET_HIGH_BYTE( Pin ) ].ModeChange == TRUE, PORT_E_MODE_UNCHANGEABLE );
-
     /*Set mode*/
     Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->MODER, ( Pin << MUL_BY_TWO ), TWO_BITS, GET_HIGH_NIBBLE( Mode ) );
 
