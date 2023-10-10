@@ -1,9 +1,10 @@
 /**
  * @file        ComStack_Types.h
- * @brief       This file contains definitions of variables, structs an enums for the use of
- *              ComStack.
- *
- * This file defines addresses, interrupts, and NVIC structures for Cortex-M0+.
+ * @brief       This document specifies the AUTOSAR communication stack type header file. It 
+ * contains all types that are used across several modules of the communication stack of the basic
+ * software and all types of all basic software modules that are platform and compiler independent.
+ * 
+ * This file contains definitions of variables, structs an enums for the use of ComStack.
  */
 #include "Std_Types.h"
 
