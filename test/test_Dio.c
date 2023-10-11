@@ -160,6 +160,18 @@ void test__Dio_WritePort_B( void )
 }
 
 /**
+ * @brief   **Test of Dio_WritePort function for PORT_C**
+ *
+ * This test will check that the function is setting the value specified by the Level parameter
+ * for the specified port.
+ */
+void test__Dio_WritePort_C( void )
+{
+    Dio_WritePort( PORTS_C, 0x04 );
+    TEST_ASSERT_EQUAL_MESSAGE( 4u, DIOC->ODR, "Dio result was not the supposed value" );
+}
+
+/**
  * @brief   **Test of Dio_WriteChannelGroup function**
  *
  * This test will check that the function has set a subset of the adjacent bits of
