@@ -156,7 +156,7 @@ void test__Dio_ReadPort_D( void )
 void test__Dio_WritePort_B( void )
 {
     Dio_WritePort( PORTS_B, 0x05 );
-    TEST_ASSERT_EQUAL_MESSAGE( 1u, PORTS_B, "Dio result was not the supposed value" );
+    TEST_ASSERT_EQUAL_MESSAGE( 5u, DIOB->ODR, "Dio result was not the supposed value" );
 }
 
 /**
