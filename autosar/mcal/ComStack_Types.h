@@ -1,9 +1,9 @@
 /**
  * @file        ComStack_Types.h
- * @brief       This file is the AUTOSAR communication stack type header file. 
- * 
- * It contains all types that are used across several modules of the communication stack of the 
- * basic software and all types of all basic software modules that are platform and compiler 
+ * @brief       This file is the AUTOSAR communication stack type header file.
+ *
+ * It contains all types that are used across several modules of the communication stack of the
+ * basic software and all types of all basic software modules that are platform and compiler
  * independent.
  * This file contains definitions of variables, structs an enums for the use of ComStack.
  */
@@ -11,7 +11,7 @@
 
 /**
  * @brief This type is used within the entire AUTOSAR Com Stack except for bus drivers.
- * 
+ *
  * Variables of this type serve as a unique identifier of a PDU within a software module or
  * a set thereof, and also for interaction of two software modules where the PduId of the
  * corresponding target module is being used for referencing.
@@ -27,7 +27,7 @@ typedef uint8 PduIdType;
 /**
  * @brief This type shall be used within the entire AUTOSAR Com Stack except for bus drivers.
  *
- * Variables of this type serve as length information of a PDU. The length information is provided 
+ * Variables of this type serve as length information of a PDU. The length information is provided
  * in number of bytes.
  * The maximum length of a Pdu, is the length of the largest (possibly segmented) PDU to be sent by
  * the ECU.
@@ -40,13 +40,13 @@ typedef uint32 PduLengthType;
 
 /**
  * @brief This variables shall be used to store the basic information about a PDU.
- * 
+ *
  * Variables of this type shall be used to store the basic information about a PDU of any
  * type, namely a pointer variable pointing to its SDU (payload), a pointer to Meta Data of the
  * PDU, and the corresponding length of the SDU in bytes.
  * The type of he pointer SduDataPtr depends on the memory model being used at compile time.
- * The pointer to the meta data of the PDU *(MetaDataPtr), consists of a sequence of meta data 
- * items. The length and type of the meta data items is statically configured for each PDU. Meta 
+ * The pointer to the meta data of the PDU *(MetaDataPtr), consists of a sequence of meta data
+ * items. The length and type of the meta data items is statically configured for each PDU. Meta
  * data items with more than 8 bits use platform byte order.
  *
  * @reqs  SWS_COMTYPE_00011
@@ -84,10 +84,10 @@ typedef enum
  */
 typedef enum
 {
-    BUFREQ_OK = 0x00,       /*!<Buffer request accomplished successful.*/
+    BUFREQ_OK       = 0x00, /*!<Buffer request accomplished successful.*/
     BUFREQ_E_NOT_OK = 0x01, /*!<Buffer request not successful. Buffer cannot be accessed.*/
-    BUFREQ_E_BUSY = 0x02,   /*!<Temporarily no buffer available.*/
-    BUFREQ_E_OVFL = 0x03    /*!<No Buffer of the required length can be provided.*/
+    BUFREQ_E_BUSY   = 0x02, /*!<Temporarily no buffer available.*/
+    BUFREQ_E_OVFL   = 0x03  /*!<No Buffer of the required length can be provided.*/
 } BufReq_ReturnType;
 
 /**
@@ -97,9 +97,9 @@ typedef enum
  */
 typedef enum
 {
-    TP_DATACONF = 0x00,   /*!<Indicates that all data that have been copied so far, are confirmed*/
-    TP_DATARETRY = 0x01,  /*!<Indicates that this API call shall copy already copied data.*/
-    TP_CONFPENDING = 0x02 /*!<Indicates that the previously copied data must remain in the TP.*/
+    TP_DATACONF    = 0x00, /*!<Indicates that all data that have been copied so far, are confirmed*/
+    TP_DATARETRY   = 0x01, /*!<Indicates that this API call shall copy already copied data.*/
+    TP_CONFPENDING = 0x02  /*!<Indicates that the previously copied data must remain in the TP.*/
 } TpDataStateType;
 
 /**
