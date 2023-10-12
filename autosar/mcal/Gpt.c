@@ -8,7 +8,7 @@ extern Gpt_RegisterType *channels[ GPT_NUMBER_OF_CHANNELS ];
 Gpt_RegisterType *channel;
 Gpt_RegisterType *channels[ GPT_NUMBER_OF_CHANNELS ] = { TIM6, TIM7 };
 
-static const Gpt_ConfigType *LocalConfigPtr = NULL_PTR;
+static const Gpt_ConfigType *LocalGptConfigPtr = NULL_PTR;
 
 void Gpt_Init( const Gpt_ConfigType *ConfigPtr )
 {
@@ -19,7 +19,7 @@ void Gpt_Init( const Gpt_ConfigType *ConfigPtr )
         Bfx_PutBit_u32u8u8( (uint32 *)&channel->CR1, 3u, (uint32)( &ConfigPtr[ ChannelsToInit ] )->GptChannelMode );     /*Writing the OPM: bit of TIMx_CR1 for continuous or one-pulse mode*/
         Bfx_ClrBit_u32u8( (uint32 *)&channel->SR, 0 ); /*Clearing the Status Register Flag*/                             /*Clearing the update interrupt flag of TIMx_SR*/
     }
-    LocalConfigPtr = ConfigPtr;
+    LocalGptConfigPtr = ConfigPtr;
 }
 
 #if GPT_DEINIT_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
@@ -105,7 +105,7 @@ void Gpt_Notification_Channel0( void )
 {
     if( TIM6->SR == 1 ) /*Checking if the update interrupt flag of TIMx_SR is set*/
     {
-        LocalConfigPtr->GptNotification[ GPT_CHANNEL_0 ]( );
+        LocalGptConfigPtr->GptNotification[ GPT_CHANNEL_0 ]( );
         Bfx_ClrBit_u32u8( (uint32 *)&TIM6->SR, 0 ); /*Clearing the update interrupt flag of TIMx_SR*/
     }
 }
@@ -116,9 +116,8 @@ void Gpt_Notification_Channel1( void )
 {
     if( TIM7->SR == 1 ) /*Checking if the update interrupt flag of TIMx_SR is set*/
     {
-        LocalConfigPtr->GptNotification[ GPT_CHANNEL_1 ]( );
+        LocalGptConfigPtr->GptNotification[ GPT_CHANNEL_1 ]( );
         Bfx_ClrBit_u32u8( (uint32 *)&TIM7->SR, 0 ); /*Clearing the update interrupt flag of TIMx_SR*/
     }
 }
-
 #endif
