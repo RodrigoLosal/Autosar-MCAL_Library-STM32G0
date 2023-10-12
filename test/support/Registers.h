@@ -69,12 +69,31 @@ typedef struct
     volatile uint32 BRR;     /*!< GPIO port bit reset register*/
 } Port_RegisterType;
 
+
+typedef struct
+{
+    volatile uint32 Reserved1[ 4 ];
+    volatile uint32 IDR;
+    volatile uint32 ODR;
+    volatile uint32 BSRR;
+    volatile uint32 Reserved2[ 3 ];
+    volatile uint32 BRR;
+} Dio_RegisterType;
+
+
 extern Port_RegisterType PORTA_BASE; /*!< GPIOA ADDRESS */
 extern Port_RegisterType PORTB_BASE; /*!< GPIOB ADDRESS */
 extern Port_RegisterType PORTC_BASE; /*!< GPIOC ADDRESS */
 extern Port_RegisterType PORTD_BASE; /*!< GPIOD ADDRESS */
 extern Port_RegisterType PORTE_BASE; /*!< GPIOE ADDRESS */
 extern Port_RegisterType PORTF_BASE; /*!< GPIOF ADDRESS */
+
+extern Dio_RegisterType DIOA_BASE; /*!< GPIOA ADDRESS */
+extern Dio_RegisterType DIOB_BASE; /*!< GPIOB ADDRESS */
+extern Dio_RegisterType DIOC_BASE; /*!< GPIOC ADDRESS */
+extern Dio_RegisterType DIOD_BASE; /*!< GPIOD ADDRESS */
+extern Dio_RegisterType DIOE_BASE; /*!< GPIOE ADDRESS */
+extern Dio_RegisterType DIOF_BASE; /*!< GPIOF ADDRESS */
 
 /**
   * @defgroup  Port_pointers_address PORT Base Address
@@ -87,6 +106,13 @@ extern Port_RegisterType PORTF_BASE; /*!< GPIOF ADDRESS */
 #define PORTF ( (Port_RegisterType *)&PORTF_BASE ) /*!< Access to PORTF registers*/
 /**
  * @} */
+
+#define DIOA  ( (Dio_RegisterType *)&DIOA_BASE )
+#define DIOB  ( (Dio_RegisterType *)&DIOB_BASE )
+#define DIOC  ( (Dio_RegisterType *)&DIOC_BASE )
+#define DIOD  ( (Dio_RegisterType *)&DIOD_BASE )
+#define DIOE  ( (Dio_RegisterType *)&DIOE_BASE )
+#define DIOF  ( (Dio_RegisterType *)&DIOF_BASE )
 
 /**
  * @brief Nested Vectored Interrupt Controller (NVIC) structure.
