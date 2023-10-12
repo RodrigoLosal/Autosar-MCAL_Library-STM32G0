@@ -186,6 +186,19 @@ typedef struct
 /**
   @} */
 
+/**
+ * @name    PORTS values.
+ * Symbols to specify ports values.
+ */
+/**@{*/
+#define PORTS_A       0u /*!< Port A value */
+#define PORTS_B       1u /*!< Port B value */
+#define PORTS_C       2u /*!< Port C value */
+#define PORTS_D       3u /*!< Port D value */
+#define PORTS_E       4u /*!< Port E value */
+#define PORTS_F       5u /*!< Port F value */
+/**@}*/
+
 Dio_LevelType Dio_ReadChannel( Dio_ChannelType ChannelId );
 void Dio_WriteChannel( Dio_ChannelType ChannelId, Dio_LevelType Level );
 Dio_LevelType Dio_FlipChannel( Dio_ChannelType ChannelId );

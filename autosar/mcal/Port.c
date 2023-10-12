@@ -17,6 +17,10 @@
  * @{*/
 #define MAX_PORT_NUMBER      6u  /*!< Port A value */
 #define MAX_PIN_NUMBER       16u /*!< Port A value */
+/* cppcheck-suppress misra-c2012-2.5 ; use when DET is active */
+#define MAX_PIN_MODES        4u /*!< Port A value */
+/* cppcheck-suppress misra-c2012-2.5 ; use when DET is active */
+#define MAX_ALT_MODES        11u /*!< Port A value */
 /**
  * @}*/
 
@@ -58,6 +62,14 @@ static Port_RegisterType *Port_Ports[ MAX_PORT_NUMBER ] = { PORTA, PORTB, PORTC,
 /* clang-format on */
 
 /**
+ * @brief  temporary macro to be remove when Det is implemented
+ *
+ * @param   param sentence to validate if true
+ * @param   error if not true send this error
+ */
+#define assert_det( param, error ) (void)0
+
+/**
  * @brief Initialize the GPIO pins to the configuration store on ConfigPTR.
  *
  * The function changes the registers values of the GPIOS depending on the values
@@ -72,6 +84,9 @@ static Port_RegisterType *Port_Ports[ MAX_PORT_NUMBER ] = { PORTA, PORTB, PORTC,
 void Port_Init( const Port_ConfigType *ConfigPtr )
 {
     Port_RegisterType *PortReg;
+
+    /*validate if the intialization pointer is not NULL, in case null trigger an error*/
+    assert_det( ConfigPtr != NULL_PTR, PORT_E_INIT_FAILED );
 
     for( uint8 Port = 0u; Port < PORT_PIN_NUMBER_OF_PORTS; Port++ )
     {
@@ -125,7 +140,14 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
 {
     Port_RegisterType *PortReg = Port_Ports[ LocalConfigPtr[ GET_HIGH_BYTE( Pin ) ].Port ];
 
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->MODER, GET_LOW_NIBBLE( Pin ), TWO_BITS, Direction );
+    /*validate if Port_Init function has been called previously*/
+    assert_det( LocalConfigPtr != NULL_PTR, PORT_E_UNINIT );
+    /*validate is Pin is a valid value*/
+    assert_det( ( GET_HIGH_BYTE( Pin ) < MAX_PORT_NUMBER ) && ( GET_LOW_NIBBLE( Pin ) < MAX_PIN_NUMBER ), PORT_E_PARAM_PIN );
+    /*validate if the pin has active its corresponding changeable flag*/
+    assert_det( LocalConfigPtr[ Pin >> 8u ].Pin_direction == PORTS_CHANGEABLE, PORT_E_DIRECTION_UNCHANGEABLE );
+
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->MODER, GET_LOW_NIBBLE( Pin ), 2u, Direction );
 }
 #endif
 
@@ -146,6 +168,15 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
 void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
 {
     Port_RegisterType *PortReg = Port_Ports[ LocalConfigPtr[ GET_HIGH_BYTE( Pin ) ].Port ];
+
+    /*validate if Port_Init function has been called previously*/
+    assert_det( LocalConfigPtr != NULL_PTR, PORT_E_UNINIT );
+    /*validate is Pin is a valid value*/
+    assert_det( ( GET_HIGH_BYTE( Pin ) < MAX_PORT_NUMBER ) && ( GET_LOW_NIBBLE( Pin ) < MAX_PIN_NUMBER ), PORT_E_PARAM_PIN );
+    /*validate is Mode is a valid value*/
+    assert_det( ( GET_HIGH_NIBBLE < MAX_PIN_MODES ) && ( GET_LOW_NIBBLE( Mode ) < MAX_ALT_MODES ), PORT_E_PARAM_INVALID_MODE );
+    /*validate if the pin has active its corresponding changeable flag*/
+    assert_det( LocalConfigPtr[ GET_HIGH_BYTE( Pin ) ].ModeChange == TRUE, PORT_E_MODE_UNCHANGEABLE );
 
     /*Set mode*/
     Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->MODER, ( Pin << MUL_BY_TWO ), TWO_BITS, GET_HIGH_NIBBLE( Mode ) );
@@ -177,6 +208,8 @@ void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
 #if PORT_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Port_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
+    assert_det( versioninfo != NULL, PORT_E_PARAM_POINTER );
+
     versioninfo->moduleID         = 0;
     versioninfo->sw_major_version = 0;
     versioninfo->sw_minor_version = 0;
