@@ -10,6 +10,15 @@
 #include "Std_Types.h"
 
 /**
+  * @defgroup Values-data to represent the maximum and minimum data values.
+  @{ */
+#define MAX_VALUE         32767  /*!< Maximun data value */
+#define MIN_VALUE         -32768 /*!< Minimun data value */
+#define MAX_VALUE_USIGNED 0xFFFF /*!< Maximum unsigned data value  */
+/**
+  @} */
+
+/**
  * @brief   **Set a single bit in Data pointer**
  *
  * This function shall set the logical status of input data as ’1’ at the requested bit position.
@@ -75,7 +84,7 @@ static inline boolean Bfx_GetBit_u16u8_u8( uint16 *Data, uint8 BitPn )
  */
 static inline void Bfx_SetBits_u16u8u8u8( uint16 *Data, uint8 BitStartPn, uint8 BitLn, uint8 Status )
 {
-    uint32 Mask = ( ( 1u << BitLn ) - 1 ) << BitStartPn;
+    uint16 Mask = ( ( 1u << BitLn ) - 1 ) << BitStartPn;
 
     if( Status == 0 )
     {
@@ -103,7 +112,7 @@ static inline void Bfx_SetBits_u16u8u8u8( uint16 *Data, uint8 BitStartPn, uint8 
  */
 static inline uint8 Bfx_GetBits_u16u8u8_u16( uint16 Data, uint8 BitStartPn, uint8 BitLn )
 {
-    uint32 Result;
+    uint16 Result;
 
     Result = ( Data >> BitStartPn ) & ( ( 1u << BitLn ) - 1u );
     return Result;
@@ -348,7 +357,7 @@ static inline void Bfx_CopyBit_u16u8u16u8( uint16 *DestinationData, uint8 Destin
  */
 static inline void Bfx_PutBits_u16u8u8u16( uint16 *Data, uint8 BitStartPn, uint8 BitLn, uint16 Pattern )
 {
-    uint32 Mask = ( ( 1u << BitLn ) - 1u ) << BitStartPn;
+    uint16 Mask = ( ( 1u << BitLn ) - 1u ) << BitStartPn;
     *Data       = ( *Data & ~Mask ) | ( ( Pattern << BitStartPn ) & Mask );
 }
 
@@ -469,7 +478,7 @@ static inline uint8 Bfx_CountLeadingZeros_u16( uint16 Data )
 static inline uint8 Bfx_CountLeadingSigns_s16( sint16 Data )
 {
     uint8 Count = 0;
-    sint32 Mask = 0x8000;
+    sint16 Mask = 32767;
 
     if( Data >= 0 )
     {
@@ -509,9 +518,9 @@ static inline uint8 Bfx_CountLeadingSigns_s16( sint16 Data )
  *
  * @reqs   SWS_Bfx_91002, SWS_Bfx_00134, SWS_Bfx_00135
  */
-static inline sint32 Bfx_ShiftBitSat_s16s8_s16( sint8 ShiftCnt, sint16 Data )
+static inline sint16 Bfx_ShiftBitSat_s16s8_s16( sint8 ShiftCnt, sint16 Data )
 {
-    uint32 Mask            = 0x80000;
+    uint16 Mask            = 0x8000;
     boolean DataIsNegative = ( Data < 0 );
 
     if( ShiftCnt >= 0 )
@@ -519,11 +528,11 @@ static inline sint32 Bfx_ShiftBitSat_s16s8_s16( sint8 ShiftCnt, sint16 Data )
         Data <<= ShiftCnt;
         if( ( DataIsNegative == FALSE ) && ( Data < 0 ) )
         {
-            Data = 32767;
+            Data = MAX_VALUE;
         }
         else if( ( DataIsNegative == TRUE ) && ( Data >= 0 ) )
         {
-            Data = -32768;
+            Data = MIN_VALUE;
         }
     }
     else
@@ -564,9 +573,9 @@ static inline sint32 Bfx_ShiftBitSat_s16s8_s16( sint8 ShiftCnt, sint16 Data )
  *
  * @reqs   SWS_Bfx_91002, SWS_Bfx_00134, SWS_Bfx_00135
  */
-static inline uint32 Bfx_ShiftBitSat_u16s8_u16( sint8 ShiftCnt, uint16 Data )
+static inline uint16 Bfx_ShiftBitSat_u16s8_u16( sint8 ShiftCnt, uint16 Data )
 {
-    uint32 Mask        = 0x8000;
+    uint16 Mask        = 0x8000;
     uint8 MaxShiftLeft = 0;
 
     while( ( Data & Mask ) == 0 )
@@ -578,7 +587,7 @@ static inline uint32 Bfx_ShiftBitSat_u16s8_u16( sint8 ShiftCnt, uint16 Data )
     {
         if( ShiftCnt > MaxShiftLeft )
         {
-            Data = 0xFFFF;
+            Data = MAX_VALUE_USIGNED;
         }
         else
         {
