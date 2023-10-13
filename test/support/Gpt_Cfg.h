@@ -1,8 +1,6 @@
 #ifndef GPT_CFG_H_
 #define GPT_CFG_H_
 
-#define GPT_NUMBER_OF_CHANNELS              2u
-
 #define GPT_DEINIT_API                      STD_ON
 #define GPT_TIME_ELAPSED_API                STD_ON
 #define GPT_TIME_REMAINING_API              STD_ON
