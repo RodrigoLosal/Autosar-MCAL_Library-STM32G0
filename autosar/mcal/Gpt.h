@@ -1,12 +1,7 @@
 #ifndef GPT_H__
 #define GPT_H__
 
-#define GPT_NUMBER_OF_CHANNELS              2u
-#define GPT_DEINIT_API                      STD_ON
-#define GPT_TIME_ELAPSED_API                STD_ON
-#define GPT_TIME_REMAINING_API              STD_ON
-#define GPT_VERSION_INFO_API                STD_ON
-#define GPT_ENABLE_DISABLE_NOTIFICATION_API STD_ON
+#define GPT_NUMBER_OF_CHANNELS 2u
 
 typedef struct _Gpt_ConfigType
 {
