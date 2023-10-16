@@ -1,7 +1,19 @@
 #ifndef GPT_H__
 #define GPT_H__
 
-#define GPT_NUMBER_OF_CHANNELS 2u
+#define SET                    1u
+#define RESET                  0
+
+#define GPT_INTERRUPT_FLAG_BIT 0
+#define GPT_ONE_PULSE_MODE_BIT 3u
+#define GPT_PRESCALER_LSB      0
+#define GPT_PRESCALER_MSB      16u
+#define GPT_AUTO_RELOAD_LSB    0
+#define GPT_AUTO_RELOAD_MSB    16u
+#define GPT_COUNTER_ENABLE_BIT 0
+#define GPT_UPDATE_DISABLE_BIT 1u
+
+#include "Gpt_Cfg.h" /* cppcheck-suppress misra-c2012-20.1 ; it is necesary to use a define for this function */
 
 typedef struct _Gpt_ConfigType
 {
