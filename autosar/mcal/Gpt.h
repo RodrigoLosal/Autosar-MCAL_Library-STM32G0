@@ -29,12 +29,6 @@ typedef enum
     GPT_CHANNEL_1,
 } Gpt_ChannelType;
 
-typedef enum
-{
-    GPT_CH_MODE_CONTINUOUS = 0,
-    GPT_CH_MODE_ONESHOT,
-} Gpt_ChannelMode;
-
 typedef uint32 Gpt_ValueType;
 
 void Gpt_Init( const Gpt_ConfigType *ConfigPtr );
