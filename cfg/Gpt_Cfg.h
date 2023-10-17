@@ -3,6 +3,9 @@
 
 #define GPT_NUMBER_OF_CHANNELS              2u
 
+#define TEST_GPT_CH_MODE_CONTINUOUS         0
+#define TEST_GPT_CH_MODE_ONESHOT            1u
+
 #define GPT_DEINIT_API                      STD_ON
 #define GPT_TIME_ELAPSED_API                STD_ON
 #define GPT_TIME_REMAINING_API              STD_ON

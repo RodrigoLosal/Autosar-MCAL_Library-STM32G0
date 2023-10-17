@@ -13,9 +13,6 @@
 #define GPT_COUNTER_ENABLE_BIT 0
 #define GPT_UPDATE_DISABLE_BIT 1u
 
-#define GPT_CH_MODE_CONTINUOUS 0
-#define GPT_CH_MODE_ONESHOT    1u
-
 typedef struct _Gpt_ConfigType
 {
     uint8 GptChannelId;
