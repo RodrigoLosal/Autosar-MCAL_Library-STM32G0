@@ -40,12 +40,10 @@ void Gpt_DeInit( void )
 Gpt_ValueType Gpt_GetTimeElapsed( Gpt_ChannelType Channel )
 {
     Gpt_RegisterType *channel;
-    Gpt_ValueType TimeElapsed;
 
-    channel     = channels[ Channel ];
-    TimeElapsed = channel->CNT;
+    channel = channels[ Channel ];
 
-    return TimeElapsed;
+    return channel->CNT;
 }
 #endif
 
@@ -53,12 +51,10 @@ Gpt_ValueType Gpt_GetTimeElapsed( Gpt_ChannelType Channel )
 Gpt_ValueType Gpt_GetTimeRemaining( Gpt_ChannelType Channel )
 {
     Gpt_RegisterType *channel;
-    Gpt_ValueType TimeRemaining;
 
-    channel       = channels[ Channel ];
-    TimeRemaining = channel->ARR - channel->CNT;
+    channel = channels[ Channel ];
 
-    return TimeRemaining;
+    return channel->ARR - channel->CNT;
 }
 #endif
 
