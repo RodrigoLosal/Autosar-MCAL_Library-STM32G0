@@ -1,7 +1,7 @@
 /**
  * @file    Gpt.c
- * @brief   **Gpt driver configuration**
- * @author  Rodrigo Lopez, Diego Perez
+ * @brief   **GPT driver configuration**
+ * @author  Rodrigo Lopez
  *
  * The GPT driver provides services for starting and stopping timer channels (logical timer
  * instances assigned to a timer hardware), individual for each channel.
@@ -81,7 +81,7 @@ void Gpt_DeInit( void )
  *
  * @param Channel       Numeric identifier of the GPT channel.
  *
- * @retval  channel->CNT
+ * @retval  Returns the current number of ticks already elapsed.
  *
  * @reqs   SWS_Gpt_00282
  */
@@ -104,7 +104,7 @@ Gpt_ValueType Gpt_GetTimeElapsed( Gpt_ChannelType Channel )
  *
  * @param Channel       Numeric identifier of the GPT channel.
  *
- * @retval  channel->ARR - channel->CNT
+ * @retval  Returns the remaining number of ticks before the timer overflows.
  *
  * @reqs   SWS_Gpt_00282
  */

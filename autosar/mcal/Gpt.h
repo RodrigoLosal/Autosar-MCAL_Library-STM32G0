@@ -1,7 +1,7 @@
 /**
  * @file    Port.h
- * @brief   **Gpt driver configuration**
- * @author  Rodrigo Lopez, Diego Perez
+ * @brief   **GPT driver configuration**
+ * @author  Rodrigo Lopez
  *
  * The GPT driver provides services for starting and stopping timer channels (logical timer
  * instances assigned to a timer hardware), individual for each channel.
