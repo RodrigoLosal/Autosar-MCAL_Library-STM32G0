@@ -126,8 +126,8 @@ typedef struct
 /**
  * @defgroup  Rcc_Base_address RCC Base Address
   @{ */
-#define RCC_BASE ( AHBPERIPH_BASE + 0x00001000UL )        /*!< RCC Base Address */
-#define RCC      ( (RCC_RegisterType *)RCC_BASE_ADDRESS ) /*!< Access to RCC registers*/
+#define RCC_BASE ( AHBPERIPH_BASE + 0x00001000UL ) /*!< RCC Base Address */
+#define RCC      ( (Rcc_RegisterType *)RCC_BASE )  /*!< Access to RCC registers*/
 /**
  * @} */
 
