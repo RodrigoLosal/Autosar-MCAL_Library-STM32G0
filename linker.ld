@@ -44,10 +44,10 @@ MEMORY
 SECTIONS
 {
   /* The startup code into "FLASH" Rom type memory */
-  .isr_vector :
+  .isr_vectors :
   {
     . = ALIGN(4);
-    KEEP(*(.isr_vector)) /* Startup code */
+    KEEP(*(.isr_vectors)) /* Startup code */
     . = ALIGN(4);
   } >FLASH
 
