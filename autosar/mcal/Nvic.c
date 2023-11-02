@@ -31,7 +31,6 @@
 /**
   * @defgroup MAskValues representing the byte and irq masks
   @{ */
-#define BYTE_MASK        0xFFU  /*!< Byte mask in 32-bit */
 #define IRQ_MASK         0x1FUL /*!< Mask to obtain bits from an IRQ value */
 /**
   @} */
