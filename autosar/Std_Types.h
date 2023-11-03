@@ -108,7 +108,7 @@ typedef struct Std_TransformerError_Tag
  * @name    status_msgs
  * Return status, the values are used to be stored in the variable type #Std_ReturnType
  *
- * @reqs    SWS_Std_00006
+ * @reqs    SWS_Std_00006, SWS_Can_00039
  */
 /**@{*/
 #ifndef STATUSTYPEDEFINED
@@ -117,6 +117,7 @@ typedef struct Std_TransformerError_Tag
 typedef unsigned char StatusType; /*!< OSEK compliance */
 #endif
 #define E_NOT_OK   1u /*!< Error return value */
+#define CAN_BUSY   2u /*!< CAN controller is busy */
 /**@}*/
 
 

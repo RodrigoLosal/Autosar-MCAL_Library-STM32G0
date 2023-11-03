@@ -12,12 +12,16 @@
  * @brief   Represents the Identifier of an L-PDU. The two most significant bits specify the frame
  *          type: 00 CAN message with Standard CAN ID 01 CAN FD frame with Standard CAN ID 10 CAN
  *          message with  Extended CAN ID 11 CAN FD frame with Extended CAN ID
+ *
+ * @reqs    SWS_Can_00416
  */
 typedef uint32 Can_IdType;
 
 /**
  * @brief   Represents the hardware object handles of a CAN hardware unit. For CAN hardware units
  *          with more than 255 HW objects use extended range.
+ *
+ * @reqs    SWS_Can_00429
  */
 typedef uint16 Can_HwHandleType;
 
@@ -25,6 +29,8 @@ typedef uint16 Can_HwHandleType;
  * @brief   This type defines a data structure which clearly provides an Hardware Object Handle
  *          including its corresponding CAN Controller and therefore CanDrv as well as the
  *          specific CanId.
+ *
+ * @reqs    SWS_CAN_00496
  */
 /* cppcheck-suppress misra-c2012-2.3 ; the enum name it is neccesary */
 typedef struct _Can_HwType
@@ -38,6 +44,8 @@ typedef struct _Can_HwType
 /**
  * @brief   This type unites PduId (swPduHandle), SduLength (length), SduData (sdu), and Can Id (id)
  *          for any CAN L-SDU
+ *
+ * @reqs    SWS_Can_00415
  */
 typedef struct _Can_PduType
 {
@@ -49,6 +57,8 @@ typedef struct _Can_PduType
 
 /**
  * @brief   Error states of a CAN controller.
+ *
+ * @reqs    SWS_Can_91003
  */
 /* cppcheck-suppress misra-c2012-2.3 ; the enum name it is neccesary */
 typedef enum _Can_ErrorStateType
@@ -61,6 +71,8 @@ typedef enum _Can_ErrorStateType
 
 /**
  * @brief   States that are used by the several ControllerMode functions.
+ *
+ * @reqs    SWS_Can_91013
  */
 /* cppcheck-suppress misra-c2012-2.3 ; the enum name it is neccesary */
 typedef enum _Can_ControllerStateType
@@ -76,6 +88,8 @@ typedef enum _Can_ControllerStateType
 /**
  * @brief   The enumeration represents a superset of CAN Error Types which typical CAN HW is able
  *          to report. That means not all CAN HW will be able to support the complete set
+ *
+ * @reqs    SWS_Can_91021
  */
 /* cppcheck-suppress misra-c2012-2.3 ; the enum name it is neccesary */
 typedef enum _Can_ErrorType
@@ -94,5 +108,20 @@ typedef enum _Can_ErrorType
     CAN_ERROR_CHECK_CRC_FAILED,       /*!< CRC check failed*/
     CAN_ERROR_BUS_LOCK                /*!< Bus lock (Bus is stuck to dominant level)*/
 } Can_ErrorType;
+
+/**
+ * @brief **CAN Controller Tiemstamp**
+ *
+ * Variables of this type are used to express time stamps based on relative time.
+ * Value range: * Seconds: 0 .. 4.294.967.295 s (circa 136 years) * Nanoseconds: 0 ..
+ * 999.999.999 ns
+ *
+ * @reqs    SWS_CAN_91029
+ */
+typedef struct _Can_TimeStampType
+{
+    uint32 nanoseconds; /*!< nanoseconds part of the timestamp */
+    uint32 seconds;     /*!< seconds part of the timestamp */
+} Can_TimeStampType;
 
 #endif /* CAN_GENERAL_TYPES_H__ */
