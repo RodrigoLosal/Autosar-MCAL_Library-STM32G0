@@ -6,3 +6,4 @@
 misra-c2012-2.5:autosar/mcal/Dio/Dio.h
 misra-c2012-2.5:autosar/mcal/Port/Port.h
 misra-c2012-2.5:autosar/mcal/Can/Can.h
+misra-c2012-2.5:autosar/mcal/Can/Can_Arch.h

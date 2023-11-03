@@ -10,7 +10,28 @@
  */
 #include "Std_Types.h"
 #include "Can_Cfg.h"
+#include "Can_Arch.h"
 
+
+/**
+ * @brief Array with the configuration for each controller.
+*/
+const Can_Controller Controllers[ CAN_NUMBER_OF_CONTROLLERS ] =
+{
+    { 
+        .FrameFormat        = CAN_FRAME_CLASSIC
+    } 
+};
+
+/**
+ * @brief Array with the configuration for each hardware object.
+*/
+const Can_HardwareObject Hohs[ CAN_NUMBER_OF_HOHS ] =
+{
+    { 
+        .ObjectType          = CAN_HOH_TYPE_TRANSMIT 
+    }
+};
 
 /**
  * @brief Can driver configuration.
@@ -18,6 +39,6 @@
 /* clang-format off */
 const Can_ConfigType CanConfig =
 {
-    .dummy = 0x12345678u
+    .Hohs         = NULL_PTR 
 };
 /* clang-format on */

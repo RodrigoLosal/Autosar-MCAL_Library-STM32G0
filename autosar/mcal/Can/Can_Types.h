@@ -14,6 +14,51 @@
 #include "ComStack_Types.h"
 #include "Can_GeneralTypes.h"
 
+/**
+ * @brief **CAN Controller**
+ *
+ * This container contains the configuration parameters of the CAN controller(s).
+ *
+ * @note the element ID defined by autosar is suppressed due to the fact that the index array it
+ *       is used as an ID. the default baud rate element is not a pointer but rather an index to the
+ *      baud rate array
+ *
+ * @todo more elements are still pending to define
+ */
+typedef struct _Can_Controller
+{
+    uint32 FrameFormat; /*!< Specifies the CAN frame format FD or Classic.
+                            This parameter can be a value of @ref CAN_frame_format     */
+} Can_Controller;
+
+
+/**
+ * @brief **CAN Hardware Object**
+ *
+ * This container contains the configuration parameters of the CAN hardware objects.
+ *
+ * @todo controller and HOH base address are still pending to define
+ */
+typedef struct _Can_HardwareObject
+{
+    uint8 ObjectType; /*!< Select the type of HOH object, for Tx or Rx
+                          This paramter can be a set of  @ref CAN_Hardware_Object_Type */
+} Can_HardwareObject;
+
+
+/**
+ * @brief **CAN Controller Tiemstamp**
+ *
+ * Variables of this type are used to express time stamps based on relative time.
+ * Value range: * Seconds: 0 .. 4.294.967.295 s (circa 136 years) * Nanoseconds: 0 ..
+ * 999.999.999 ns
+ */
+typedef struct _Can_TimeStampType
+{
+    uint32 nanoseconds; /*!< nanoseconds part of the timestamp */
+    uint32 seconds;     /*!< seconds part of the timestamp */
+} Can_TimeStampType;
+
 
 /**
  * @brief **Hardware unit configuration structure**
@@ -25,7 +70,8 @@
  */
 typedef struct _Can_ConfigType
 {
-    uint32 dummy; /*!< dummy element */
+    const Can_Controller *Controllers; /*!< Pointer to the controller structure */
+    const Can_HardwareObject *Hohs;    /*!< Pointer to the hardware object structure */
 } Can_ConfigType;
 
 /**
@@ -36,7 +82,9 @@ typedef struct _Can_ConfigType
  */
 typedef struct _Can_HwUnit
 {
-    const Can_ConfigType *Config; /*!< Pointer to the configuration structure */
+    const Can_ConfigType *Config;                  /*!< Pointer to the configuration structure */
+    uint8 HwUnitState;                             /*!< CAN hardware unit state */
+    Can_ControllerStateType ControllerState[ 2u ]; /*!< CAN controller states */
 } Can_HwUnit;
 
 #endif /* CAN_TYPES_H__ */

@@ -18,7 +18,6 @@
  * @defgroup CAN_Ids Can Id number for module and each API
  *
  * @{ */
-#define CAN_ID                     0x42u /*!< Can module id */
 #define CAN_ID_INIT                0x00u /*!< Can_Init() api service id */
 #define CAN_ID_DE_INIT             0x10u /*!< Can_DeInit() api service id */
 #define CAN_ID_SET_BAUDRATE        0x0fu /*!< Can_ChangeBaudrate() api service id */
