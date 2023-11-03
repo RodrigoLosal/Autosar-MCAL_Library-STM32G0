@@ -18,6 +18,6 @@
 /* clang-format off */
 const Can_ConfigType CanConfig =
 {
-    .dummy = 0x12345678u;
+    .dummy = 0x12345678u
 };
 /* clang-format on */
