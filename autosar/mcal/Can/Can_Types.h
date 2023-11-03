@@ -28,5 +28,15 @@ typedef struct _Can_ConfigType
     uint32 dummy; /*!< dummy element */
 } Can_ConfigType;
 
+/**
+ * @brief **Hardware control unit structure**
+ *
+ * This structure contains the hardware unit configuration and the state of the hardware unit
+ * pointers to controller extructure s
+ */
+typedef struct _Can_HwUnit
+{
+    const Can_ConfigType *Config; /*!< Pointer to the configuration structure */
+} Can_HwUnit;
 
 #endif /* CAN_TYPES_H__ */

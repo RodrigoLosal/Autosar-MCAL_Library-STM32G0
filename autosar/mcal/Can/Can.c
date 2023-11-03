@@ -11,6 +11,17 @@
  */
 #include "Std_Types.h"
 #include "Can.h"
+#include "Can_Arch.h"
+
+/**
+ * @brief  Variable for the initial value of the port configuration array.
+ */
+/* clang-format off */
+static Can_HwUnit HwUnit =
+{
+    .Config          = NULL_PTR 
+};
+/* clang-format on */
 
 /**
  * @brief    **Can Initialization**
@@ -24,7 +35,7 @@
  */
 void Can_Init( const Can_ConfigType *Config )
 {
-    (void)Config;
+    Can_Arch_Init( &HwUnit, Config, 0 );
 }
 
 /**
@@ -36,6 +47,7 @@ void Can_Init( const Can_ConfigType *Config )
  */
 void Can_DeInit( void )
 {
+    Can_Arch_DeInit( &HwUnit, 0 );
 }
 
 #if CAN_SET_BAUDRATE_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
@@ -55,10 +67,7 @@ void Can_DeInit( void )
  */
 Std_ReturnType Can_SetBaudrate( uint8 Controller, uint16 BaudRateConfigID )
 {
-    (void)Controller;
-    (void)BaudRateConfigID;
-
-    return E_NOT_OK;
+    return Can_Arch_SetBaudrate( &HwUnit, Controller, BaudRateConfigID );
 }
 #endif
 
@@ -77,10 +86,7 @@ Std_ReturnType Can_SetBaudrate( uint8 Controller, uint16 BaudRateConfigID )
  */
 Std_ReturnType Can_SetControllerMode( uint8 Controller, Can_ControllerStateType Transition )
 {
-    (void)Controller;
-    (void)Transition;
-
-    return E_NOT_OK;
+    return Can_Arch_SetControllerMode( &HwUnit, Controller, Transition );
 }
 
 /**
@@ -94,7 +100,7 @@ Std_ReturnType Can_SetControllerMode( uint8 Controller, Can_ControllerStateType 
  */
 void Can_EnableControllerInterrupts( uint8 Controller )
 {
-    (void)Controller;
+    Can_Arch_EnableControllerInterrupts( &HwUnit, Controller );
 }
 
 /**
@@ -108,7 +114,7 @@ void Can_EnableControllerInterrupts( uint8 Controller )
  */
 void Can_DisableControllerInterrupts( uint8 Controller )
 {
-    (void)Controller;
+    Can_Arch_DisableControllerInterrupts( &HwUnit, Controller );
 }
 
 /**
@@ -125,9 +131,7 @@ void Can_DisableControllerInterrupts( uint8 Controller )
  */
 Std_ReturnType Can_CheckWakeup( uint8 Controller )
 {
-    (void)Controller;
-
-    return E_NOT_OK;
+    return Can_Arch_CheckWakeup( &HwUnit, Controller );
 }
 
 /**
@@ -147,10 +151,7 @@ Std_ReturnType Can_CheckWakeup( uint8 Controller )
  */
 Std_ReturnType Can_GetControllerErrorState( uint8 ControllerId, Can_ErrorStateType *ErrorStatePtr )
 {
-    (void)ControllerId;
-    (void)ErrorStatePtr;
-
-    return E_NOT_OK;
+    return Can_Arch_GetControllerErrorState( &HwUnit, ControllerId, ErrorStatePtr );
 }
 
 /**
@@ -168,10 +169,7 @@ Std_ReturnType Can_GetControllerErrorState( uint8 ControllerId, Can_ErrorStateTy
  */
 Std_ReturnType Can_GetControllerMode( uint8 Controller, Can_ControllerStateType *ControllerModePtr )
 {
-    (void)Controller;
-    (void)ControllerModePtr;
-
-    return E_NOT_OK;
+    return Can_Arch_GetControllerMode( &HwUnit, Controller, ControllerModePtr );
 }
 
 /**
@@ -194,10 +192,7 @@ Std_ReturnType Can_GetControllerMode( uint8 Controller, Can_ControllerStateType 
  */
 Std_ReturnType Can_GetControllerRxErrorCounter( uint8 ControllerId, uint8 *RxErrorCounterPtr )
 {
-    (void)ControllerId;
-    (void)RxErrorCounterPtr;
-
-    return E_NOT_OK;
+    return Can_Arch_GetControllerRxErrorCounter( &HwUnit, ControllerId, RxErrorCounterPtr );
 }
 
 /**
@@ -219,10 +214,7 @@ Std_ReturnType Can_GetControllerRxErrorCounter( uint8 ControllerId, uint8 *RxErr
  */
 Std_ReturnType Can_GetControllerTxErrorCounter( uint8 ControllerId, uint8 *TxErrorCounterPtr )
 {
-    (void)ControllerId;
-    (void)TxErrorCounterPtr;
-
-    return E_NOT_OK;
+    return Can_Arch_GetControllerTxErrorCounter( &HwUnit, ControllerId, TxErrorCounterPtr );
 }
 
 #if CAN_GLOBAL_TIME_SUPPORT == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
@@ -241,10 +233,7 @@ Std_ReturnType Can_GetControllerTxErrorCounter( uint8 ControllerId, uint8 *TxErr
  */
 Std_ReturnType Can_GetCurrentTime( uint8 ControllerId, Can_TimeStampType *timeStampPtr )
 {
-    (void)ControllerId;
-    (void)timeStampPtr;
-
-    return E_NOT_OK;
+    return Can_Arch_GetCurrentTime( &HwUnit, ControllerId, timeStampPtr );
 }
 
 /**
@@ -263,7 +252,7 @@ Std_ReturnType Can_GetCurrentTime( uint8 ControllerId, Can_TimeStampType *timeSt
  */
 void Can_EnableEgressTimeStamp( Can_HwHandleType Hth )
 {
-    (void)Hth;
+    Can_Arch_EnableEgressTimeStamp( &HwUnit, Hth );
 }
 
 /**
@@ -283,11 +272,7 @@ void Can_EnableEgressTimeStamp( Can_HwHandleType Hth )
  */
 Std_ReturnType Can_GetEgressTimeStamp( PduIdType TxPduId, Can_HwHandleType Hth, Can_TimeStampType *timeStampPtr )
 {
-    (void)TxPduId;
-    (void)Hth;
-    (void)timeStampPtr;
-
-    return E_NOT_OK;
+    return Can_Arch_GetEgressTimeStamp( &HwUnit, TxPduId, Hth, timeStampPtr );
 }
 
 /**
@@ -306,10 +291,7 @@ Std_ReturnType Can_GetEgressTimeStamp( PduIdType TxPduId, Can_HwHandleType Hth, 
  */
 Std_ReturnType Can_GetIngressTimeStamp( Can_HwHandleType Hrh, Can_TimeStampType *timeStampPtr )
 {
-    (void)Hrh;
-    (void)timeStampPtr;
-
-    return E_NOT_OK;
+    return Can_Arch_GetIngressTimeStamp( &HwUnit, Hrh, timeStampPtr );
 }
 #endif
 
@@ -332,10 +314,7 @@ Std_ReturnType Can_GetIngressTimeStamp( Can_HwHandleType Hrh, Can_TimeStampType 
  */
 Std_ReturnType Can_Write( Can_HwHandleType Hth, const Can_PduType *PduInfo )
 {
-    (void)Hth;
-    (void)PduInfo;
-
-    return E_NOT_OK;
+    return Can_Arch_Write( &HwUnit, Hth, PduInfo );
 }
 
 #if CAN_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
