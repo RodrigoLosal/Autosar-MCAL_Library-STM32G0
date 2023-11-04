@@ -14,6 +14,12 @@
 
 #include "Can_Cfg.h"
 
+#ifndef TEST
+#define CAN_STATIC static
+#else
+#define CAN_STATIC
+#endif
+
 /**
  * @defgroup CAN_Ids Can Id number for module and each API
  *

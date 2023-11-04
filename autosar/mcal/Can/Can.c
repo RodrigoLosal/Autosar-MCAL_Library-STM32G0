@@ -32,7 +32,7 @@
  * @brief  Variable for the initial value of the port configuration array.
  */
 /* clang-format off */
-static Can_HwUnit HwUnit =
+CAN_STATIC Can_HwUnit HwUnit =
 {
     .HwUnitState     = CAN_CS_UNINIT,
     .Config          = NULL_PTR,
