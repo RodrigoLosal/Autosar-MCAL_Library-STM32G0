@@ -575,7 +575,7 @@ void test__Bfx_CountLeadingOnes_u8__10ones( void )
  */
 void test__CountLeadingSigns_s8__3ones( void )
 {
-    sint8 Data   = 0xF0;
+    sint8 Data   = (sint8)0xF0;
     uint8 Result = Bfx_CountLeadingSigns_s8( Data );
     TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0x03, "There are no 4 ones after de MSB" );
 }
@@ -624,7 +624,7 @@ void test__Bfx_CountLeadingZeros_u8__1zero( void )
  */
 void test__Bfx_ShiftBitSat_s8s8_s8__arithshift( void )
 {
-    sint8 Data   = 0xF0; // 1111 0000
+    sint8 Data   = (sint8)0xF0; // 1111 0000
     sint8 Result = Bfx_ShiftBitSat_s8s8_s8( -4, Data );
     TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0xFF, "The arithmetic shift wasn't performed correctly" );
 }
@@ -637,7 +637,7 @@ void test__Bfx_ShiftBitSat_s8s8_s8__arithshift( void )
  */
 void test__Bfx_ShiftBitSat_s8s8_s8__saturation( void )
 {
-    sint8 Data   = 0x55; // 0101 0101
+    sint8 Data   = (sint8)0x55; // 0101 0101
     sint8 Result = Bfx_ShiftBitSat_s8s8_s8( 3, Data );
     TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0x7F, "The saturation wasn't performed correctly" );
 }
@@ -650,7 +650,7 @@ void test__Bfx_ShiftBitSat_s8s8_s8__saturation( void )
  */
 void test__Bfx_ShiftBitSat_s8s8_s8__negsat( void )
 {
-    sint8 Data   = 0xAA; // 1010 1010
+    sint8 Data   = (sint8)0xAA; // 1010 1010
     sint8 Result = Bfx_ShiftBitSat_s8s8_s8( 1, Data );
     TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, -128, "The negative saturation wasn't performed correctly" );
 }
@@ -663,7 +663,7 @@ void test__Bfx_ShiftBitSat_s8s8_s8__negsat( void )
  */
 void test__Bfx_ShiftBitSat_s8s8_s8__shiftright( void )
 {
-    sint8 Data   = 0x55; // 0101 0101
+    sint8 Data   = (sint8)0x55; // 0101 0101
     sint8 Result = Bfx_ShiftBitSat_s8s8_s8( -2, Data );
     TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0x15, "The shift right wasn't performed correctly" );
 }
@@ -676,7 +676,7 @@ void test__Bfx_ShiftBitSat_s8s8_s8__shiftright( void )
  */
 void test__Bfx_ShiftBitSat_u8s8_u8__saturation( void )
 {
-    sint8 Data   = 0x2A; // 0010 1010
+    sint8 Data   = (sint8)0x2A; // 0010 1010
     sint8 Result = Bfx_ShiftBitSat_u8s8_u8( 3, Data );
     TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0xFF, "The saturation wasn't performed correctly" );
 }
@@ -689,7 +689,7 @@ void test__Bfx_ShiftBitSat_u8s8_u8__saturation( void )
  */
 void test__Bfx_ShiftBitSat_u8s8_u8__nosaturation( void )
 {
-    sint8 Data   = 0x2A; // 0010 1010
+    sint8 Data   = (sint8)0x2A; // 0010 1010
     sint8 Result = Bfx_ShiftBitSat_u8s8_u8( 2, Data );
     TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0xA8, "The left shift wasn't performed correctly" );
 }
@@ -702,7 +702,7 @@ void test__Bfx_ShiftBitSat_u8s8_u8__nosaturation( void )
  */
 void test__Bfx_ShiftBitSat_u8s8_u8__shiftright( void )
 {
-    sint8 Data   = 0x55; // 0101 0101
+    sint8 Data   = (sint8)0x55; // 0101 0101
     sint8 Result = Bfx_ShiftBitSat_u8s8_u8( -3, Data );
     TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, 0x0A, "The shift right wasn't performed correctly" );
 }
