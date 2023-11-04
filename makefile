@@ -8,9 +8,12 @@ SRCS += Can.c Can_Lcfg.c
 #---Linker script
 LINKER = linker.ld
 
+#List of subdirectories for MCAL modules
+MCAL_MODULES = Can Dio Fls Gpt Mcu Nvic Port Spi
+
 #directorios con archivos a compilar (.c y .s)
 SRC_PATHS  = .
-SRC_PATHS += autosar/mcal
+SRC_PATHS += $(addprefix autosar/mcal/,$(MCAL_MODULES))
 SRC_PATHS += autosar/libs
 SRC_PATHS += cfg
 #direcotrios con archivos .h
@@ -18,6 +21,7 @@ INC_PATHS  = .
 INC_PATHS += autosar
 INC_PATHS += autosar/libs
 INC_PATHS += autosar/mcal
+INC_PATHS += $(addprefix autosar/mcal/,$(MCAL_MODULES))
 INC_PATHS += autosar/mcal/regs
 INC_PATHS += cfg
 
