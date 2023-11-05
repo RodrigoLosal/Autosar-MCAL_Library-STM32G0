@@ -19,6 +19,11 @@
     - -:autosar/mcal/regs/** # exclude the registers from the source
     - -:cfg/** 
 
+# Since there isn't a equivalent source for Cfh.h files, it is necesary to add manually the 
+# corresponding source Lcfc.c files in this way
+:files:
+  :support:
+    - test/support/Can_Lcfg.c
 
 # Global defines applicable only when you run the code using ceedling
 :defines:
