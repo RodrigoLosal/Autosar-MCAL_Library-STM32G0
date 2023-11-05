@@ -85,7 +85,7 @@ void test__Bfx_ClrBit_u32u8__bit28( void )
 void test__Bfx_GetBit_u32u8_u8__bit28( void )
 {
     uint32 Data    = 0x200000FA;
-    boolean Result = Bfx_GetBit_u32u8_u8( &Data, 28u );
+    boolean Result = Bfx_GetBit_u32u8_u8( Data, 28u );
     TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, FALSE, "Bit 28 was not read as supposed to be" );
 }
 
@@ -97,7 +97,7 @@ void test__Bfx_GetBit_u32u8_u8__bit28( void )
 void test__Bfx_GetBit_u32u8_u8__bit29( void )
 {
     uint32 Data    = 0x200000FA;
-    boolean Result = Bfx_GetBit_u32u8_u8( &Data, 29u );
+    boolean Result = Bfx_GetBit_u32u8_u8( Data, 29u );
     TEST_ASSERT_EQUAL_HEX8_MESSAGE( Result, TRUE, "Bit 29 was not read as supposed to be" );
 }
 
