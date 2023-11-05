@@ -11,7 +11,17 @@
 #include "mock_Can_Arch.h"
 #include "mock_Det.h"
 
-#define CAN_CS_INVALID 0xFFu
+/**
+ * @defgroup    support_defines defines for internal use
+ *
+ * @{ */
+#define CAN_CS_INVALID        0xFFu /*!< Invalid driver/controller state */
+#define CAN_CONTROLLER_2      2u    /*!< Invalid controller */
+#define CAN_INVALID_BAUDRATE  0xFFu /*!< Invalid baudrate */
+#define CAN_VALID_TX_PDU_ID   0xAAu /*!< Valid Tx Pdu ID */
+#define CAN_INVALID_TX_PDU_ID 0x00u /*!< Invalid Tx Pdu ID */
+/**
+ * @} */
 
 extern Can_HwUnit HwUnit;
 
@@ -164,7 +174,7 @@ void test__Can_DeInit__when_not_uninit_value_in_ControllerState( void )
  */
 void test__Can_DeInit__when_not_uninit_value_in_ControllerState_1( void )
 {
-    HwUnit.ControllerState[ 1 ] = CAN_CS_INVALID;
+    HwUnit.ControllerState[ CAN_CONTROLLER_1 ] = CAN_CS_INVALID;
 
     Det_ReportError_IgnoreAndReturn( E_OK );
 
@@ -203,7 +213,7 @@ void test__Can_SetBaudrate__when_not_ready_value_in_HwUnitState( void )
 
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_SetBaudrate( CAN_CONTROLLER_0, 0 );
+    Std_ReturnType Return = Can_SetBaudrate( CAN_CONTROLLER_0, CAN_BAUDRATE_100k );
 
     TEST_ASSERT_EQUAL_MESSAGE( E_NOT_OK, Return, "Return value should be E_NOT_OK" );
 }
@@ -218,7 +228,7 @@ void test__Can_SetBaudrate__when_BaudrateConfigID_is_unkown( void )
 {
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_SetBaudrate( CAN_CONTROLLER_0, 1 );
+    Std_ReturnType Return = Can_SetBaudrate( CAN_CONTROLLER_0, CAN_INVALID_BAUDRATE );
 
     TEST_ASSERT_EQUAL_MESSAGE( E_NOT_OK, Return, "Return value should be E_NOT_OK" );
 }
@@ -233,7 +243,7 @@ void test__Can_SetBaudrate__when_Controller_is_unkown( void )
 {
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_SetBaudrate( 2, 0 );
+    Std_ReturnType Return = Can_SetBaudrate( CAN_CONTROLLER_2, 0 );
 
     TEST_ASSERT_EQUAL_MESSAGE( E_NOT_OK, Return, "Return value should be E_NOT_OK" );
 }
@@ -279,7 +289,7 @@ void test__Can_SetControllerMode__when_Controller_is_unkown( void )
 {
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_SetControllerMode( 2, CAN_CS_STARTED );
+    Std_ReturnType Return = Can_SetControllerMode( CAN_CONTROLLER_2, CAN_CS_STARTED );
 
     TEST_ASSERT_EQUAL_MESSAGE( E_NOT_OK, Return, "Return value should be E_NOT_OK" );
 }
@@ -340,7 +350,7 @@ void test__Can_DisableControllerInterrupts__when_Controller_is_unkown( void )
 {
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Can_DisableControllerInterrupts( 2 );
+    Can_DisableControllerInterrupts( CAN_CONTROLLER_2 );
 
     /* test is testing if Det_ReportError was called */
 }
@@ -386,7 +396,7 @@ void test__Can_EnableControllerInterrupts__when_Controller_is_unkown( void )
 {
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Can_EnableControllerInterrupts( 2 );
+    Can_EnableControllerInterrupts( CAN_CONTROLLER_2 );
 
     /* test is testing if Det_ReportError was called */
 }
@@ -432,7 +442,7 @@ void test__Can_CheckWakeup__when_Controller_is_unkown( void )
 {
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_CheckWakeup( 2 );
+    Std_ReturnType Return = Can_CheckWakeup( CAN_CONTROLLER_2 );
 
     TEST_ASSERT_EQUAL_MESSAGE( E_NOT_OK, Return, "Return value should be E_NOT_OK" );
 }
@@ -481,7 +491,7 @@ void test__Can_GetControllerMode__when_Controller_is_unkown( void )
 
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetControllerMode( 2, &ControllerMode );
+    Std_ReturnType Return = Can_GetControllerMode( CAN_CONTROLLER_2, &ControllerMode );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
 }
@@ -547,7 +557,7 @@ void test__Can_GetControllerErrorState__when_Controller_is_unkown( void )
 
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetControllerErrorState( 2, &ErrorState );
+    Std_ReturnType Return = Can_GetControllerErrorState( CAN_CONTROLLER_2, &ErrorState );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
 }
@@ -613,7 +623,7 @@ void test__Can_GetControllerRxErrorCounter__when_Controller_is_unkown( void )
 
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetControllerRxErrorCounter( 2, &RxErrorCounter );
+    Std_ReturnType Return = Can_GetControllerRxErrorCounter( CAN_CONTROLLER_2, &RxErrorCounter );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
 }
@@ -679,7 +689,7 @@ void test__Can_GetControllerTxErrorCounter__when_Controller_is_unkown( void )
 
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetControllerTxErrorCounter( 2, &TxErrorCounter );
+    Std_ReturnType Return = Can_GetControllerTxErrorCounter( CAN_CONTROLLER_2, &TxErrorCounter );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
 }
@@ -745,7 +755,7 @@ void test__Can_GetCurrentTime__when_Controller_is_unkown( void )
 
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetCurrentTime( 2, &CurrentTime );
+    Std_ReturnType Return = Can_GetCurrentTime( CAN_CONTROLLER_2, &CurrentTime );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
 }
@@ -776,7 +786,7 @@ void test__Can_GetCurrentTime__when_all_values_are_correct( void )
 
     Can_Arch_GetCurrentTime_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetCurrentTime( 0, &CurrentTime );
+    Std_ReturnType Return = Can_GetCurrentTime( CAN_CONTROLLER_0, &CurrentTime );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_OK, "Return value should be E_OK" );
 }
@@ -840,7 +850,7 @@ void test__Can_GetEgressTimeStamp__when_not_ready_value_in_HwUnitState( void )
 
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetEgressTimeStamp( 0x0ff, CAN_HTH_0, &EgressTimeStamp );
+    Std_ReturnType Return = Can_GetEgressTimeStamp( CAN_VALID_TX_PDU_ID, CAN_HTH_0, &EgressTimeStamp );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
 }
@@ -857,7 +867,7 @@ void test__Can_GetEgressTimeStamp__when_Hth_is_unkown( void )
 
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetEgressTimeStamp( 0xff, CAN_HRH_0, &EgressTimeStamp );
+    Std_ReturnType Return = Can_GetEgressTimeStamp( CAN_VALID_TX_PDU_ID, CAN_HRH_0, &EgressTimeStamp );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
 }
@@ -872,7 +882,7 @@ void test__Can_GetEgressTimeStamp__when_EgressTimeStamp_is_NULL( void )
 {
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetEgressTimeStamp( 0xff, CAN_HTH_0, NULL_PTR );
+    Std_ReturnType Return = Can_GetEgressTimeStamp( CAN_VALID_TX_PDU_ID, CAN_HTH_0, NULL_PTR );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
 }
@@ -891,7 +901,7 @@ void test__Can_GetEgressTimeStamp__when_TxPduId_is_invalid( void )
 
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetEgressTimeStamp( 0, CAN_HTH_0, &EgressTimeStamp );
+    Std_ReturnType Return = Can_GetEgressTimeStamp( CAN_INVALID_TX_PDU_ID, CAN_HTH_0, &EgressTimeStamp );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
 }
@@ -907,7 +917,7 @@ void test__Can_GetEgressTimeStamp__when_all_values_are_correct( void )
 
     Can_Arch_GetEgressTimeStamp_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetEgressTimeStamp( 0xff, CAN_HTH_0, &EgressTimeStamp );
+    Std_ReturnType Return = Can_GetEgressTimeStamp( CAN_VALID_TX_PDU_ID, CAN_HTH_0, &EgressTimeStamp );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_OK, "Return value should be E_OK" );
 }

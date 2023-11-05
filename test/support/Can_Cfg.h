@@ -46,6 +46,7 @@
  * @typedef EcucIntegerParamDef
  */
 #define CAN_NUMBER_OF_BAUDRATES   1
+#define CAN_BAUDRATE_100k         0
 
 /**
  * @brief Specifies the number of hardware objects to mange by each controller.
