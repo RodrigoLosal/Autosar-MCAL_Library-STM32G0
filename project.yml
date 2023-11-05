@@ -66,6 +66,8 @@
   :treat_externs: :include
   :when_no_prototypes: :warn
   :enforce_strict_ordering: TRUE
+  :includes:
+    - Std_Types.h             # Include by default this header on each mock file
   :plugins:
     - :ignore                 # Generate <function>_Ignore and <function>_IgnoreAndReturn
     - :ignore_arg             # Generate <function>_IgnoreArg_<param_name>

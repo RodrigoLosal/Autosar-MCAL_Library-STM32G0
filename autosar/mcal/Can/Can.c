@@ -85,7 +85,7 @@ void Can_Init( const Can_ConfigType *Config )
  */
 void Can_DeInit( void )
 {
-    if( ( HwUnit.HwUnitState != CAN_CS_READY ) || ( HwUnit.ControllerState[ 0u ] != CAN_CS_STARTED ) || ( HwUnit.ControllerState[ 1u ] != CAN_CS_UNINIT ) )
+    if( ( HwUnit.HwUnitState != CAN_CS_READY ) || ( HwUnit.ControllerState[ 0u ] != CAN_CS_STOPPED ) || ( HwUnit.ControllerState[ 1u ] != CAN_CS_STOPPED ) )
     {
         /* If development error detection for the Can module is enabled:
         The function Can_DeInit shall raise the error CAN_E_TRANSITION if the driver is not in state
@@ -133,14 +133,14 @@ Std_ReturnType Can_SetBaudrate( uint8 Controller, uint16 BaudRateConfigID )
         initialized.⌋*/
         Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_SET_BAUDRATE, CAN_E_UNINIT );
     }
-    else if( BaudRateConfigID > CAN_NUMBER_OF_BAUDRATES )
+    else if( BaudRateConfigID >= CAN_NUMBER_OF_BAUDRATES )
     {
         /* If development error detection for the Can module is enabled:
         The function Can_SetBaudrate shall raise the error CAN_E_PARAM_BAUDRATE if the parameter
         BaudRateConfigID has an invalid value.⌋ */
         Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_SET_BAUDRATE, CAN_E_PARAM_BAUDRATE );
     }
-    else if( Controller > CAN_NUMBER_OF_CONTROLLERS )
+    else if( Controller >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If development error detection for the Can module is enabled:
         the function Can_SetBaudrate shall raise the error CAN_E_PARAM_CONTROLLER if the parameter
@@ -181,7 +181,7 @@ Std_ReturnType Can_SetControllerMode( uint8 Controller, Can_ControllerStateType 
         error CAN_E_UNINIT */
         Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_SET_CTRL_MODE, CAN_E_UNINIT );
     }
-    else if( Controller > CAN_NUMBER_OF_CONTROLLERS )
+    else if( Controller >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If development error detection for the Can module is enabled:
         if the parameter Controller is out of range, the function Can_SetControllerMode shall raise
@@ -222,7 +222,7 @@ void Can_EnableControllerInterrupts( uint8 Controller )
         driver not yet initialized */
         Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_ENABLE_CTRL_INT, CAN_E_UNINIT );
     }
-    else if( Controller > CAN_NUMBER_OF_CONTROLLERS )
+    else if( Controller >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If development error detection for the Can module is enabled:
         The function Can_EnableControllerInterrupts shall raise the error CAN_E_PARAM_CONTROLLER if
@@ -254,7 +254,7 @@ void Can_DisableControllerInterrupts( uint8 Controller )
         driver not yet initialized */
         Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_DISABLE_CTRL_INT, CAN_E_UNINIT );
     }
-    else if( Controller > CAN_NUMBER_OF_CONTROLLERS )
+    else if( Controller >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If development error detection for the Can module is enabled:
         The function Can_DisableControllerInterrupts shall raise the error CAN_E_PARAM_CONTROLLER if
@@ -291,7 +291,7 @@ Std_ReturnType Can_CheckWakeup( uint8 Controller )
         initialized */
         Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_CHECK_WAKEUP, CAN_E_UNINIT );
     }
-    else if( Controller > CAN_NUMBER_OF_CONTROLLERS )
+    else if( Controller >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If development error detection for the Can module is enabled:
         The function Can_CheckWakeup shall raise the error CAN_E_PARAM_CONTROLLER if the parameter
@@ -333,7 +333,7 @@ Std_ReturnType Can_GetControllerErrorState( uint8 ControllerId, Can_ErrorStateTy
         development error CAN_E_UNINIT */
         Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CTRL_ERR_STATE, CAN_E_UNINIT );
     }
-    else if( ControllerId > CAN_NUMBER_OF_CONTROLLERS )
+    else if( ControllerId >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If development error detection for the Can module is enabled:
         if the parameter ControllerId is out of range, the function Can_GetControllerErrorState shall
@@ -380,7 +380,7 @@ Std_ReturnType Can_GetControllerMode( uint8 Controller, Can_ControllerStateType 
         not yet initialized.⌋ */
         Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CTRL_MODE, CAN_E_UNINIT );
     }
-    else if( Controller > CAN_NUMBER_OF_CONTROLLERS )
+    else if( Controller >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If parameter Controller of Can_GetControllerMode() has an invalid value, the CanDrv shall
         report development error code CAN_E_PARAM_CONTROLLER to the Det_ReportError service of the DET. */
@@ -431,7 +431,7 @@ Std_ReturnType Can_GetControllerRxErrorCounter( uint8 ControllerId, uint8 *RxErr
         raise development error CAN_E_UNINIT and return E_NOT_OK. */
         Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CTRL_RX_ERR_CNT, CAN_E_UNINIT );
     }
-    else if( ControllerId > CAN_NUMBER_OF_CONTROLLERS )
+    else if( ControllerId >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If development error detection for the Can module is enabled:
         if the parameter ControllerId is out of range, the function Can_GetControllerRxErrorCounter
@@ -482,7 +482,7 @@ Std_ReturnType Can_GetControllerTxErrorCounter( uint8 ControllerId, uint8 *TxErr
         raise development error CAN_E_UNINIT */
         Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CTRL_TX_ERR_CNT, CAN_E_UNINIT );
     }
-    else if( ControllerId > CAN_NUMBER_OF_CONTROLLERS )
+    else if( ControllerId >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If development error detection for the Can module is enabled:
         if the parameter ControllerId is out of range, the function Can_GetControllerTxErrorCounter
@@ -530,7 +530,7 @@ Std_ReturnType Can_GetCurrentTime( uint8 ControllerId, Can_TimeStampType *timeSt
         fails, the function shall raise the development error CAN_E_UNINIT. */
         Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CURRENT_TIME, CAN_E_UNINIT );
     }
-    else if( ControllerId > CAN_NUMBER_OF_CONTROLLERS )
+    else if( ControllerId >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If development error detection is enabled:
         the function shall check the parameter ControllerId for being valid. If the check fails,
