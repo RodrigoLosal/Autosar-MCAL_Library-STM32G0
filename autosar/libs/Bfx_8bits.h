@@ -53,11 +53,11 @@ static inline void Bfx_ClrBit_u8u8( uint8 *Data, uint8 BitPn )
  *
  * @reqs   SWS_Bfx_00016, SWS_Bfx_00017, SWS_Bfx_00020
  */
-static inline boolean Bfx_GetBit_u8u8_u8( uint8 *Data, uint8 BitPn )
+static inline boolean Bfx_GetBit_u8u8_u8( uint8 Data, uint8 BitPn )
 {
     boolean Result;
 
-    Result = ( *Data >> BitPn ) & 1u;
+    Result = ( Data >> BitPn ) & 1u;
 
     return Result;
 }
