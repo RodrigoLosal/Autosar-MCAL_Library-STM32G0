@@ -299,7 +299,7 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
  *
  * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Controller CAN controller to be de-initialized
- *
+ * 
  * @reqs    SWS_Can_00223
  */
 void Can_Arch_DeInit( Can_HwUnit *HwUnit, uint8 Controller )
@@ -308,7 +308,7 @@ void Can_Arch_DeInit( Can_HwUnit *HwUnit, uint8 Controller )
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the Can controller register structure*/
     Can_RegisterType *Can = ControllerConfig->BaseAddress;
-
+    
     /* Request initialisation */
     Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_INIT_BIT );
 
@@ -352,8 +352,8 @@ void Can_Arch_DeInit( Can_HwUnit *HwUnit, uint8 Controller )
  *
  * @retval  E_OK: Service request accepted, setting of (new) baud rate started
  *          E_NOT_OK: Service request not accepted
- *
- * @reqs    SWS_Can_00255,
+ * 
+ * @reqs    SWS_Can_00255, SWS_Can_00256, SWS_Can_00260, SWS_Can_00422
  */
 Std_ReturnType Can_Arch_SetBaudrate( Can_HwUnit *HwUnit, uint8 Controller, uint16 BaudRateConfigID )
 {
