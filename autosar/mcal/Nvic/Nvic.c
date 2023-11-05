@@ -142,7 +142,7 @@ uint32 CDD_Nvic_GetPendingIrq( Nvic_IrqType irq )
     uint32 pending;
     if( ( ( (uint32)irq >= NVIC_MIN_IRQ ) ) && ( (uint32)irq <= NVIC_MAX_IRQ ) )
     {
-        pending = Bfx_GetBit_u32u8_u8( (uint32 *)&NVIC->ISPR[ FIRST_INDEX ], ( (uint32)irq ) & IRQ_MASK );
+        pending = Bfx_GetBit_u32u8_u8( NVIC->ISPR[ FIRST_INDEX ], ( (uint32)irq ) & IRQ_MASK );
     }
     else
     {
