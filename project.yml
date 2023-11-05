@@ -38,6 +38,7 @@
     - autosar/mcal/Dio/Dio.c
     - autosar/mcal/Gpt/Gpt.c
     - autosar/mcal/Can/Can.c
+    - autosar/mcal/Can/Can_Arch.c
   :utilities:
     - gcovr
   :reports:
