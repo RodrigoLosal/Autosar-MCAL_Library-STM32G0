@@ -13,6 +13,26 @@
 
 #include "Can_Types.h"
 
+/**
+ * @defgroup CAN_frame_format CAN Frame Format
+ *
+ * @{ */
+#define CAN_FRAME_CLASSIC     0x00000000u                                     /*!< Classic mode                      */
+#define CAN_FRAME_FD_NO_BRS   ( (uint32)1u << 8u )                            /*!< FD mode without BitRate Switching */
+#define CAN_FRAME_FD_BRS      ( ( (uint32)1u << 8u ) | ( (uint32)1u << 9u ) ) /*!< FD mode with BitRate Switching    */
+/**
+ * @} */
+
+/**
+ * @defgroup CAN_Hardware_Object_Type CAN Hardware Object Type
+ *
+ * @{ */
+#define CAN_HOH_TYPE_RECEIVE  0x00u /*!< Receive object */
+#define CAN_HOH_TYPE_TRANSMIT 0x01u /*!< Transmit object */
+/**
+ * @} */
+
+
 void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Controller );
 void Can_Arch_DeInit( Can_HwUnit *HwUnit, uint8 Controller );
 Std_ReturnType Can_Arch_SetBaudrate( Can_HwUnit *HwUnit, uint8 Controller, uint16 BaudRateConfigID );
