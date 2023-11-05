@@ -38,6 +38,8 @@
  * @typedef EcucIntegerParamDef
  */
 #define CAN_NUMBER_OF_CONTROLLERS 2
+#define CAN_CONTROLLER_0          0
+#define CAN_CONTROLLER_1          1
 
 /**
  * @brief Specifies the number of buadrate configuration for controller 0
@@ -49,7 +51,9 @@
  * @brief Specifies the number of hardware objects to mange by each controller.
  * @typedef EcucIntegerParamDef
  */
-#define CAN_NUMBER_OF_HOHS        1
+#define CAN_NUMBER_OF_HOHS        2
+#define CAN_HTH_0                 0
+#define CAN_HRH_0                 1
 
 /**
  * @brief Switches the development error detection and notification on or off.

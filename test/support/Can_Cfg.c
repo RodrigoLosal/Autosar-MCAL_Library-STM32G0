@@ -33,6 +33,9 @@ const Can_HardwareObject Hohs[ CAN_NUMBER_OF_HOHS ] =
 {
     { 
         .ObjectType = CAN_HOH_TYPE_TRANSMIT 
+    },
+    { 
+        .ObjectType = CAN_HOH_TYPE_RECEIVE 
     } 
 };
 /* clang-format on */
@@ -43,6 +46,6 @@ const Can_HardwareObject Hohs[ CAN_NUMBER_OF_HOHS ] =
 /* clang-format off */
 const Can_ConfigType CanConfig =
 {
-    .Hohs         = NULL_PTR 
+    .Hohs         = Hohs 
 };
 /* clang-format on */

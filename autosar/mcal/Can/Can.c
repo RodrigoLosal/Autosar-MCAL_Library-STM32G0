@@ -604,6 +604,8 @@ void Can_EnableEgressTimeStamp( Can_HwHandleType Hth )
  *          E_NOT_OK: failed to read time stamp.
  *
  * @reqs    SWS_CAN_91027, SWS_CAN_00529, SWS_CAN_00530, SWS_CAN_00531, SWS_CAN_00532
+ *
+ * @todo    need to define what is a invalid TxPduId
  */
 Std_ReturnType Can_GetEgressTimeStamp( PduIdType TxPduId, Can_HwHandleType Hth, Can_TimeStampType *timeStampPtr )
 {
@@ -616,7 +618,7 @@ Std_ReturnType Can_GetEgressTimeStamp( PduIdType TxPduId, Can_HwHandleType Hth, 
         the function shall raise the development error CAN_E_UNINIT. */
         Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_EGRESS_TS, CAN_E_UNINIT );
     }
-    else if( TxPduId != 0 )
+    else if( TxPduId == 0 )
     {
         /* If development error detection is enabled:
         the function shall check the parameter TxPduId for being valid. If the check fails, the
