@@ -70,7 +70,7 @@ Dio_LevelType Dio_ReadChannel( Dio_ChannelType ChannelId )
                 ChannelId <= DIO_PIN_PF_00 && ChannelId >= DIO_PIN_PF_04 ||
                 , DIO_E_PARAM_INVALID_CHANNEL_ID );
 
-    return Bfx_GetBit_u32u8_u8( (uint32 *)&Dio->IDR, Pin );
+    return Bfx_GetBit_u32u8_u8( Dio->IDR, Pin );
 }
 
 /**
@@ -120,7 +120,7 @@ Dio_LevelType Dio_FlipChannel( Dio_ChannelType ChannelId )
                 ChannelId <= DIO_PIN_PF_00 && ChannelId >= DIO_PIN_PF_04 ||
                 , DIO_E_PARAM_INVALID_CHANNEL_ID );
 
-    return Bfx_GetBit_u32u8_u8( (uint32 *)&Dio->IDR, Pin );
+    return Bfx_GetBit_u32u8_u8( Dio->IDR, Pin );
 }
 
 /**
