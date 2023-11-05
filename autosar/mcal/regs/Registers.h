@@ -242,4 +242,105 @@ typedef struct
 #define TIM7      ( (Gpt_RegisterType *)TIM7_BASE ) /*!< Access to TIM7 registers*/
 /**@}*/
 
+/**
+ * @brief CAN Controller Area Network
+ */
+typedef struct
+{
+    volatile uint32 CREL;   /*!< FDCAN Core Release register,                                     Address offset: 0x000 */
+    volatile uint32 ENDN;   /*!< FDCAN Endian register,                                           Address offset: 0x004 */
+    uint32 RESERVED1;       /*!< Reserved,                                                                        0x008 */
+    volatile uint32 DBTP;   /*!< FDCAN Data Bit Timing & Prescaler register,                      Address offset: 0x00C */
+    volatile uint32 TEST;   /*!< FDCAN Test register,                                             Address offset: 0x010 */
+    volatile uint32 RWD;    /*!< FDCAN RAM Watchdog register,                                     Address offset: 0x014 */
+    volatile uint32 CCCR;   /*!< FDCAN CC Control register,                                       Address offset: 0x018 */
+    volatile uint32 NBTP;   /*!< FDCAN Nominal Bit Timing & Prescaler register,                   Address offset: 0x01C */
+    volatile uint32 TSCC;   /*!< FDCAN Timestamp Counter Configuration register,                  Address offset: 0x020 */
+    volatile uint32 TSCV;   /*!< FDCAN Timestamp Counter Value register,                          Address offset: 0x024 */
+    volatile uint32 TOCC;   /*!< FDCAN Timeout Counter Configuration register,                    Address offset: 0x028 */
+    volatile uint32 TOCV;   /*!< FDCAN Timeout Counter Value register,                            Address offset: 0x02C */
+    uint32 RESERVED2[ 4 ];  /*!< Reserved,                                                                0x030 - 0x03C */
+    volatile uint32 ECR;    /*!< FDCAN Error Counter register,                                    Address offset: 0x040 */
+    volatile uint32 PSR;    /*!< FDCAN Protocol Status register,                                  Address offset: 0x044 */
+    volatile uint32 TDCR;   /*!< FDCAN Transmitter Delay Compensation register,                   Address offset: 0x048 */
+    uint32 RESERVED3;       /*!< Reserved,                                                                        0x04C */
+    volatile uint32 IR;     /*!< FDCAN Interrupt register,                                        Address offset: 0x050 */
+    volatile uint32 IE;     /*!< FDCAN Interrupt Enable register,                                 Address offset: 0x054 */
+    volatile uint32 ILS;    /*!< FDCAN Interrupt Line Select register,                            Address offset: 0x058 */
+    volatile uint32 ILE;    /*!< FDCAN Interrupt Line Enable register,                            Address offset: 0x05C */
+    uint32 RESERVED4[ 8 ];  /*!< Reserved,                                                                0x060 - 0x07C */
+    volatile uint32 RXGFC;  /*!< FDCAN Global Filter Configuration register,                      Address offset: 0x080 */
+    volatile uint32 XIDAM;  /*!< FDCAN Extended ID AND Mask register,                             Address offset: 0x084 */
+    volatile uint32 HPMS;   /*!< FDCAN High Priority Message Status register,                     Address offset: 0x088 */
+    uint32 RESERVED5;       /*!< Reserved,                                                                        0x08C */
+    volatile uint32 RXF0S;  /*!< FDCAN Rx FIFO 0 Status register,                                 Address offset: 0x090 */
+    volatile uint32 RXF0A;  /*!< FDCAN Rx FIFO 0 Acknowledge register,                            Address offset: 0x094 */
+    volatile uint32 RXF1S;  /*!< FDCAN Rx FIFO 1 Status register,                                 Address offset: 0x098 */
+    volatile uint32 RXF1A;  /*!< FDCAN Rx FIFO 1 Acknowledge register,                            Address offset: 0x09C */
+    uint32 RESERVED6[ 8 ];  /*!< Reserved,                                                                0x0A0 - 0x0BC */
+    volatile uint32 TXBC;   /*!< FDCAN Tx Buffer Configuration register,                          Address offset: 0x0C0 */
+    volatile uint32 TXFQS;  /*!< FDCAN Tx FIFO/Queue Status register,                             Address offset: 0x0C4 */
+    volatile uint32 TXBRP;  /*!< FDCAN Tx Buffer Request Pending register,                        Address offset: 0x0C8 */
+    volatile uint32 TXBAR;  /*!< FDCAN Tx Buffer Add Request register,                            Address offset: 0x0CC */
+    volatile uint32 TXBCR;  /*!< FDCAN Tx Buffer Cancellation Request register,                   Address offset: 0x0D0 */
+    volatile uint32 TXBTO;  /*!< FDCAN Tx Buffer Transmission Occurred register,                  Address offset: 0x0D4 */
+    volatile uint32 TXBCF;  /*!< FDCAN Tx Buffer Cancellation Finished register,                  Address offset: 0x0D8 */
+    volatile uint32 TXBTIE; /*!< FDCAN Tx Buffer Transmission Interrupt Enable register,          Address offset: 0x0DC */
+    volatile uint32 TXBCIE; /*!< FDCAN Tx Buffer Cancellation Finished Interrupt Enable register, Address offset: 0x0E0 */
+    volatile uint32 TXEFS;  /*!< FDCAN Tx Event FIFO Status register,                             Address offset: 0x0E4 */
+    volatile uint32 TXEFA;  /*!< FDCAN Tx Event FIFO Acknowledge register,                        Address offset: 0x0E8 */
+} Can_RegisterType;
+
+/**
+ * @defgroup  CAN_Base_address CAN Base Address
+ * 
+ * @{ */
+#define CAN1_BASE ( PERIPH_BASE + 0x00006400UL )    /*!< CAN1 Base Address */
+#define CAN2_BASE ( PERIPH_BASE + 0x00006800UL )    /*!< CAN2 Base Address */
+#define CAN1      ( (Can_RegisterType *)CAN1_BASE ) /*!< Access to CAN1 Registers */
+#define CAN2      ( (Can_RegisterType *)CAN2_BASE ) /*!< Access to CAN2 Registers */
+/**
+ * @} */
+
+/**
+ * @brief CAN Controller Area Network Configuration
+ */
+typedef struct
+{
+    volatile uint32 CKDIV; /*!< FDCAN clock divider register,                            Address offset: 0x100 + 0x000 */
+} CanConfig_RegisterType;
+
+/**
+ * @defgroup  CAN_Config_Base_address CAN Config Base Address
+ * 
+ * @{ */
+#define CAN_CONFIG_BASE ( PERIPH_BASE + 0x00006500UL ) /*!< CAN Config Base Address */
+#define CAN_CONFIG      ( (CanConfig_RegisterType *)CAN_CONFIG_BASE )   /*!< Access to CAN Config Registers */
+/**
+ * @} */
+
+/**
+ * @brief SRAM CAN for Hardware objects
+ */
+typedef struct
+{
+    volatile uint32 FLSSA[ 28 ]; /*!< Standart filters*/
+    volatile uint32 FLESA[ 16 ]; /*!< Extended filters*/
+    volatile uint32 F0SA[ 54 ];  /*!< Reception FIFO 0*/
+    volatile uint32 F1SA[ 54 ];  /*!< Reception FIFO 1*/
+    volatile uint32 EFSA[ 6 ];   /*!< Event FIFO*/
+    volatile uint32 TBSA[ 54 ];  /*!< Transmission buffer*/
+} SramCan_RegisterType;
+
+/**
+ * @defgroup  SRAM_CAN_Base_address SRAM CAN Base Address
+ * 
+ * @{ */
+#define SRAMCAN1_BASE ( APBPERIPH_BASE + 0x0000B400UL )         /*!< SRAM CAN1 Base Address */
+#define SRAMCAN2_BASE ( APBPERIPH_BASE + 0x0000B800UL )         /*!< SRAM CAN2 Base Address */
+#define SRAMCAN1      ( (SramCan_RegisterType *)SRAMCAN1_BASE ) /*!< Access to SRAM CAN1 Registers */
+#define SRAMCAN2      ( (SramCan_RegisterType *)SRAMCAN2_BASE ) /*!< Access to SRAM CAN2 Registers */
+/**
+ * @} */
+
 #endif

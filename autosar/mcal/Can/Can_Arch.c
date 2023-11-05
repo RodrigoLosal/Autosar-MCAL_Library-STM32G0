@@ -27,9 +27,101 @@
  */
 void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Controller )
 {
-    (void)HwUnit;
-    (void)Config;
-    (void)Controller;
+        (void)HwUnit;
+    /*Get the Can controller register structure*/
+    Can_RegisterType *Can = Config->Controllers[ Controller ].BaseAddress;
+
+    /* Configure Clock divider */
+    CAN_CONFIG->CKDIV = Config->ClockDivider;
+
+    /* Request initialisation */
+    Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_INIT_BIT );
+
+    /* Wait until the INIT bit into CCCR register is set */
+    while( Bfx_GetBit_u32u8_u8( (uint32 *)Can->CCCR, CCCR_INIT_BIT ) == FALSE )
+    {
+        /*Wee need to stablish a timeout counter to avois a potential endless loop,
+        according to AUTOSAR a Os tick shall be used, but for the moment it will
+        remain empty*/
+    }
+
+    /* Enable configuration change */
+    Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_CCE_BIT );
+
+    /* Set the no automatic retransmission */
+    Bfx_PutBit_u32u8u8( (uint32 *)Can->CCCR, CCCR_DAR_BIT, Config->Controllers[ Controller ].AutoRetransmission );
+
+    /* Set the transmit pause feature */
+    Bfx_PutBit_u32u8u8( (uint32 *)Can->CCCR, CCCR_TXP_BIT, Config->Controllers[ Controller ].TransmitPause );
+
+    /* Set the Protocol Exception Handling */
+    Bfx_PutBit_u32u8u8( (uint32 *)Can->CCCR, CCCR_PXHD_BIT, Config->Controllers[ Controller ].ProtocolException );
+
+    /* Set FDCAN Frame Format */
+    Bfx_ClrBitMask_u32u32( (uint32 *)Can->CCCR, CAN_FRAME_FD_BRS );
+    Bfx_SetBitMask_u32u32( (uint32 *)Can->CCCR, Config->Controllers[ Controller ].FrameFormat );
+
+    /* Reset FDCAN Operation Mode */
+    Bfx_ClrBitMask_u32u32( (uint32 *)Can->CCCR, ( ( 1u << CCCR_TEST_BIT ) | ( 1u << CCCR_MON_BIT ) | ( 1u << CCCR_ASM_BIT ) ) );
+    Bfx_ClrBit_u32u8( (uint32 *)Can->TEST, TEST_LBCK_BIT );
+
+    /* Set FDCAN Operating Mode:
+                 | Normal | Restricted |    Bus     | Internal | External
+                 |        | Operation  | Monitoring | LoopBack | LoopBack
+       CCCR.TEST |   0    |     0      |     0      |    1     |    1
+       CCCR.MON  |   0    |     0      |     1      |    1     |    0
+       TEST.LBCK |   0    |     0      |     0      |    1     |    1
+       CCCR.ASM  |   0    |     1      |     0      |    0     |    0
+    */
+    if( Config->Controllers[ Controller ].Mode == CAN_MODE_RESTRICTED_OPERATION )
+    {
+        /* Enable Restricted Operation mode */
+        Bfx_ClrBit_u32u8( (uint32 *)Can->CCCR, CCCR_ASM_BIT );
+    }
+    else if( Config->Controllers[ Controller ].Mode != CAN_MODE_NORMAL )
+    {
+        if( Config->Controllers[ Controller ].Mode != CAN_MODE_BUS_MONITORING )
+        {
+            /* Enable write access to TEST register */
+            Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_TEST_BIT );
+            /* Enable LoopBack mode */
+            Bfx_SetBit_u32u8( (uint32 *)Can->TEST, TEST_LBCK_BIT );
+
+            if( Config->Controllers[ Controller ].Mode == CAN_MODE_INTERNAL_LOOPBACK )
+            {
+                /* Enable Internal LoopBack mode */
+                Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_MON_BIT );
+            }
+        }
+        else
+        {
+            /* Enable bus monitoring mode */
+            Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_MON_BIT );
+        }
+    }
+    else
+    {
+        /* Nothing to do: normal mode */
+    }
+
+    /* Select between Tx FIFO and Tx Queue operation modes */
+    Bfx_ClrBitMask_u32u32( (uint32 *)Can->TXBC, CAN_TX_QUEUE_OPERATION );
+    Bfx_SetBitMask_u32u32( (uint32 *)Can->TXBC, Config->Controllers[ Controller ].TxFifoQueueMode );
+
+    /* Standard filter elements number */
+    Bfx_PutBits_u32u8u8u32( (uint32 *)Can->RXGFC, RXGFC_LSS_BIT, 5u, Config->Controllers[ Controller ].StdFiltersNbr );
+
+    /* Extended filter elements number */
+    Bfx_PutBits_u32u8u8u32( (uint32 *)Can->RXGFC, RXGFC_LSE_BIT, 4u, Config->Controllers[ Controller ].ExtFiltersNbr );
+
+    /* Flush the allocated Message RAM area */
+    //(void)memset( (void *)Config->Hohs->SramRef, 0x00, sizeof( SRAMCAN1 ) );
+
+    /* Initialize the Latest Tx request buffer index */
+    // HwUnit.Config->Controllers[ Controller ].LatestTxFifoQRequest = 0U;
+
+    /* Setup the interrupt to line 0 or 1*/
+    Can_SetupConfiguredInterrupts( &Config->Controllers[ Controller ], Can );
 }
 
 /**
