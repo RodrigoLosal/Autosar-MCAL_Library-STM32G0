@@ -74,7 +74,7 @@ void Can_Init( const Can_ConfigType *Config )
         for( uint8 Controller = 0; Controller < CAN_NUMBER_OF_CONTROLLERS; Controller++ )
         {
             /*Init driver */
-            Can_Arch_Init( &HwUnit, Config, &Config->Controllers[ Controller ] );
+            Can_Arch_Init( &HwUnit, Config, Controller );
             /*set configured state*/
             HwUnit.ControllerState[ Controller ] = CAN_CS_STOPPED;
         }

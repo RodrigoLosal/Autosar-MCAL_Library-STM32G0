@@ -266,7 +266,7 @@
  * @} */
 
 
-void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, const Can_Controller *Controller );
+void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Controller );
 void Can_Arch_DeInit( Can_HwUnit *HwUnit, uint8 Controller );
 Std_ReturnType Can_Arch_SetBaudrate( Can_HwUnit *HwUnit, uint8 Controller, uint16 BaudRateConfigID );
 Std_ReturnType Can_Arch_SetControllerMode( Can_HwUnit *HwUnit, uint8 Controller, Can_ControllerStateType Transition );
