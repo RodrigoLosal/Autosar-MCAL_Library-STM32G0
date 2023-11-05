@@ -11,6 +11,7 @@
 #ifndef CAN_ARCH_H__
 #define CAN_ARCH_H__
 
+#include "Can_Types.h"
 
 void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Controller );
 void Can_Arch_DeInit( Can_HwUnit *HwUnit, uint8 Controller );
