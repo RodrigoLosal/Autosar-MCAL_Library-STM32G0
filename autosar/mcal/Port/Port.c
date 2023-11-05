@@ -108,7 +108,7 @@ void Port_Init( const Port_ConfigType *ConfigPtr )
 
         for( uint8 Pin = 0u; Pin < MAX_PIN_NUMBER; Pin++ )
         {
-            if( Bfx_GetBit_u32u8_u8( (uint32 *)&ConfigPtr[ Port ].Pins, Pin ) == TRUE )
+            if( Bfx_GetBit_u16u8_u8( ConfigPtr[ Port ].Pins, Pin ) == TRUE )
             {
                 /*change values on PUPDR*/
                 Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->PUPDR, ( Pin << MUL_BY_TWO ), TWO_BITS, ConfigPtr[ Port ].Pull );
@@ -252,7 +252,7 @@ void Port_RefreshPortDirection( void )
         {
             for( uint8 Pin = 0u; Pin < MAX_PIN_NUMBER; Pin++ )
             {
-                if( Bfx_GetBit_u32u8_u8( (uint32 *)&LocalConfigPtr[ Port ].Pins, Pin ) == TRUE )
+                if( Bfx_GetBit_u32u8_u8( LocalConfigPtr[ Port ].Pins, Pin ) == TRUE )
                 {
                     /*change values on MODER*/
                     Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->MODER, ( Pin << MUL_BY_TWO ), TWO_BITS, GET_HIGH_NIBBLE( LocalConfigPtr[ Port ].Mode ) );
