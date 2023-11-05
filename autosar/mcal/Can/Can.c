@@ -32,6 +32,7 @@
  * @brief  Variable for the initial value of the port configuration array.
  */
 /* clang-format off */
+/* cppcheck-suppress misra-c2012-8.4 ; qualifier is declared at Can.h */
 CAN_STATIC Can_HwUnit HwUnit =
 {
     .HwUnitState     = CAN_CS_UNINIT,
