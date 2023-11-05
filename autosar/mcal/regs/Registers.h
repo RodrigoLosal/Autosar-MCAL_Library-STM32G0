@@ -289,33 +289,18 @@ typedef struct
     volatile uint32 TXBCIE; /*!< FDCAN Tx Buffer Cancellation Finished Interrupt Enable register, Address offset: 0x0E0 */
     volatile uint32 TXEFS;  /*!< FDCAN Tx Event FIFO Status register,                             Address offset: 0x0E4 */
     volatile uint32 TXEFA;  /*!< FDCAN Tx Event FIFO Acknowledge register,                        Address offset: 0x0E8 */
+    uint32 RESERVED7[ 5 ];  /*!< Reserved,                                                                0x0EC - 0x0FC */
+    volatile uint32 CKDIV;  /*!< FDCAN clock divider register,                                     Address offset: 0x100 */
 } Can_RegisterType;
 
 /**
  * @defgroup  CAN_Base_address CAN Base Address
- * 
+ *
  * @{ */
 #define CAN1_BASE ( PERIPH_BASE + 0x00006400UL )    /*!< CAN1 Base Address */
 #define CAN2_BASE ( PERIPH_BASE + 0x00006800UL )    /*!< CAN2 Base Address */
 #define CAN1      ( (Can_RegisterType *)CAN1_BASE ) /*!< Access to CAN1 Registers */
 #define CAN2      ( (Can_RegisterType *)CAN2_BASE ) /*!< Access to CAN2 Registers */
-/**
- * @} */
-
-/**
- * @brief CAN Controller Area Network Configuration
- */
-typedef struct
-{
-    volatile uint32 CKDIV; /*!< FDCAN clock divider register,                            Address offset: 0x100 + 0x000 */
-} CanConfig_RegisterType;
-
-/**
- * @defgroup  CAN_Config_Base_address CAN Config Base Address
- * 
- * @{ */
-#define CAN_CONFIG_BASE ( PERIPH_BASE + 0x00006500UL ) /*!< CAN Config Base Address */
-#define CAN_CONFIG      ( (CanConfig_RegisterType *)CAN_CONFIG_BASE )   /*!< Access to CAN Config Registers */
 /**
  * @} */
 
@@ -334,7 +319,7 @@ typedef struct
 
 /**
  * @defgroup  SRAM_CAN_Base_address SRAM CAN Base Address
- * 
+ *
  * @{ */
 #define SRAMCAN1_BASE ( APBPERIPH_BASE + 0x0000B400UL )         /*!< SRAM CAN1 Base Address */
 #define SRAMCAN2_BASE ( APBPERIPH_BASE + 0x0000B800UL )         /*!< SRAM CAN2 Base Address */
