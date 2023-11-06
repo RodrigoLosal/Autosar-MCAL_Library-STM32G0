@@ -154,6 +154,13 @@ typedef struct _HwHthObject
 
 
 static void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can_RegisterType *Can );
+static void Can_Isr_RxFifo0NewMessage( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_RxFifo0Full( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_RxFifo0MessageLost( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_RxFifo1NewMessage( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_RxFifo1Full( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_RxFifo1MessageLost( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_HighPriorityMessageRx( Can_HwUnit *HwUnit, uint8 Controller );
 
 /**
  * @brief    **Can low level Initialization**
@@ -503,11 +510,21 @@ Std_ReturnType Can_Arch_SetControllerMode( Can_HwUnit *HwUnit, uint8 Controller,
  *
  * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Controller CAN controller for which interrupts shall be enabled.
+ * 
+ * @reqs    SWS_Can_00208
  */
 void Can_Arch_EnableControllerInterrupts( Can_HwUnit *HwUnit, uint8 Controller )
 {
-    (void)HwUnit;
-    (void)Controller;
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the Can controller register structure*/
+    Can_RegisterType *Can = ControllerConfig->BaseAddress;
+
+    /* Enable Interrupt line 0 */
+    Bfx_SetBit_u32u8( (uint32 *)Can->ILE, CAN_INTERRUPT_LINE0 );
+
+    /* Enable Interrupt line 1 */
+    Bfx_SetBit_u32u8( (uint32 *)Can->ILE, CAN_INTERRUPT_LINE1 );
 }
 
 /**
@@ -519,11 +536,21 @@ void Can_Arch_EnableControllerInterrupts( Can_HwUnit *HwUnit, uint8 Controller )
  *
  * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Controller CAN controller for which interrupts shall be disabled.
+ * 
+ * @reqs    SWS_Can_00049
  */
 void Can_Arch_DisableControllerInterrupts( Can_HwUnit *HwUnit, uint8 Controller )
 {
-    (void)HwUnit;
-    (void)Controller;
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the Can controller register structure*/
+    Can_RegisterType *Can = ControllerConfig->BaseAddress;
+
+    /* Disable interrupt line 0 */
+    Bfx_ClrBit_u32u8( (uint32 *)Can->ILE, CAN_INTERRUPT_LINE0 );
+
+    /* Disable interrupt line 1 */
+    Bfx_ClrBit_u32u8( (uint32 *)Can->ILE, CAN_INTERRUPT_LINE1 );
 }
 
 /**
@@ -746,6 +773,50 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
 }
 
 /**
+ * @brief    **Can Interrupt Handler**
+ *
+ * This function is the interrupt handler for the Can controller, it will check the interrupt flags
+ * and call the corresponding callback functions.
+ */
+void Can_Arch_IsrMainHandler( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the Can controller register structure*/
+    Can_RegisterType *Can = ControllerConfig->BaseAddress;
+
+    /* clang-format off */
+    void (*IsrPointer[])(Can_HwUnit*, uint8) = 
+    {
+        Can_Isr_RxFifo0NewMessage,
+        Can_Isr_RxFifo0Full,
+        Can_Isr_RxFifo0MessageLost,
+        Can_Isr_RxFifo1NewMessage,
+        Can_Isr_RxFifo1Full,
+        Can_Isr_RxFifo1MessageLost,
+        Can_Isr_HighPriorityMessageRx
+    };
+    /* clang-format on */
+
+    for( uint8 Interrupt = 0u; Interrupt < sizeof( IsrPointer ); Interrupt++ )
+    {
+        /* High Priority Message interrupt management */
+        if( Bfx_GetBit_u32u8_u8( (uint32 *)&Can->IR, Interrupt ) == STD_ON )
+        {
+            if( Bfx_GetBit_u32u8_u8( (uint32 *)&Can->IE, Interrupt ) == STD_ON )
+            {
+                /* Clear the High Priority Message flag */
+                Bfx_SetBit_u32u8( (uint32 *)&Can->IR, Interrupt );
+
+                /* High Priority Message Callback */
+                IsrPointer[ Interrupt ]( HwUnit, Controller );
+            }
+        }
+    }
+}
+
+
+/**
  * @brief    **setup Can controller interrupts**
  *
  * This function setup the interrupts for the Can controller, tkaes the values in Line0ActiveITs and
@@ -794,4 +865,88 @@ static void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can
     {
         Bfx_SetBitMask_u32u32( (uint32 *)Can->TXBCIE, Controller->TxBufferAbortITs );
     }
+}
+
+/**
+ * @brief    **Can Rx Fifo 0 New Message Callback**
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ */
+static void Can_Isr_RxFifo0NewMessage( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    (void)HwUnit;
+    (void)Controller;
+}
+
+/**
+ * @brief    **Can Rx Fifo 0 Full Callback**
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ */
+static void Can_Isr_RxFifo0Full( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    (void)HwUnit;
+    (void)Controller;
+}
+
+/**
+ * @brief    **Can Rx Fifo 0 Message Lost Callback**
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ */
+static void Can_Isr_RxFifo0MessageLost( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    (void)HwUnit;
+    (void)Controller;
+}
+
+/**
+ * @brief    **Can Rx Fifo 1 New Message Callback**
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ */
+static void Can_Isr_RxFifo1NewMessage( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    (void)HwUnit;
+    (void)Controller;
+}
+
+/**
+ * @brief    **Can Rx Fifo 1 Full Callback**
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ */
+static void Can_Isr_RxFifo1Full( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    (void)HwUnit;
+    (void)Controller;
+}
+
+/**
+ * @brief    **Can Rx Fifo 1 Message Lost Callback**
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ */
+static void Can_Isr_RxFifo1MessageLost( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    (void)HwUnit;
+    (void)Controller;
+}
+
+/**
+ * @brief    **Can Tx Fifo/Queue Error Callback**
+ * 
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ */
+static void Can_Isr_HighPriorityMessageRx( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    (void)HwUnit;
+    (void)Controller;
 }
