@@ -188,7 +188,7 @@ Std_ReturnType Can_SetControllerMode( uint8 Controller, Can_ControllerStateType 
         development error CAN_E_PARAM_CONTROLLER */
         Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_SET_CTRL_MODE, CAN_E_PARAM_CONTROLLER );
     }
-    else if( Transition > CAN_CS_WAKEUP )
+    else if( ( Transition >= CAN_CS_STARTED ) && ( Transition <= CAN_CS_SLEEP ) )
     {
         /* If development error detection for the Can module is enabled:
         if an invalid transition has been requested, the function Can_SetControllerMode shall raise
@@ -718,7 +718,7 @@ Std_ReturnType Can_GetIngressTimeStamp( Can_HwHandleType Hrh, Can_TimeStampType 
 Std_ReturnType Can_Write( Can_HwHandleType Hth, const Can_PduType *PduInfo )
 {
     Std_ReturnType ReturnValue = E_NOT_OK;
-    uint8 FdFlag               = Bfx_GetBit_u32u8_u8( (uint32 *)PduInfo->id, 30u );
+    uint8 FdFlag               = Bfx_GetBit_u32u8_u8( PduInfo->id, 30u );
     uint8 FdMode               = HwUnit.Config->Controllers[ Hth ].FrameFormat;
 
     /*Validate DET error according to SWS_Can_00216, SWS_Can_00217, SWS_Can_00219 */
