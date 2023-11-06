@@ -637,12 +637,12 @@ Std_ReturnType Can_Arch_GetControllerErrorState( Can_HwUnit *HwUnit, uint8 Contr
  *
  * @retval  E_OK: request accepted
  *          E_NOT_OK: request not accepted
+ *
+ * @reqs    SWS_Can_91014, SWS_Can_91015
  */
 Std_ReturnType Can_Arch_GetControllerMode( Can_HwUnit *HwUnit, uint8 Controller, Can_ControllerStateType *ControllerModePtr )
 {
-    (void)HwUnit;
-    (void)Controller;
-    (void)ControllerModePtr;
+    *ControllerModePtr = HwUnit->ControllerState[ Controller ];
 
     return E_NOT_OK;
 }
@@ -659,12 +659,15 @@ Std_ReturnType Can_Arch_GetControllerMode( Can_HwUnit *HwUnit, uint8 Controller,
  *
  * @retval  E_OK: Rx error counter available.
  *          E_NOT_OK: Wrong ControllerId, or Rx error counter not available.
+ *
+ * @reqs    SWS_Can_00511, SWS_Can_00515
  */
 Std_ReturnType Can_Arch_GetControllerRxErrorCounter( Can_HwUnit *HwUnit, uint8 ControllerId, uint8 *RxErrorCounterPtr )
 {
-    (void)HwUnit;
-    (void)ControllerId;
-    (void)RxErrorCounterPtr;
+    const Can_RegisterType *Can = HwUnit->Config->Controllers[ ControllerId ].BaseAddress;
+
+    /* Read the error counters register */
+    *RxErrorCounterPtr = Bfx_GetBits_u32u8u8_u32( Can->ECR, ECR_REC_BIT, ECR_REC_SIZE );
 
     return E_NOT_OK;
 }
@@ -680,12 +683,15 @@ Std_ReturnType Can_Arch_GetControllerRxErrorCounter( Can_HwUnit *HwUnit, uint8 C
  *
  * @retval  E_OK: Tx error counter available.
  *          E_NOT_OK: Wrong ControllerId, or Tx error counter not
+ *
+ * @reqs    SWS_Can_00516, SWS_Can_00520
  */
 Std_ReturnType Can_Arch_GetControllerTxErrorCounter( Can_HwUnit *HwUnit, uint8 ControllerId, uint8 *TxErrorCounterPtr )
 {
-    (void)HwUnit;
-    (void)ControllerId;
-    (void)TxErrorCounterPtr;
+    const Can_RegisterType *Can = HwUnit->Config->Controllers[ ControllerId ].BaseAddress;
+
+    /* Read the error counters register */
+    *TxErrorCounterPtr = Bfx_GetBits_u32u8u8_u32( Can->ECR, ECR_TEC_BIT, ECR_TEC_SIZE );
 
     return E_NOT_OK;
 }
