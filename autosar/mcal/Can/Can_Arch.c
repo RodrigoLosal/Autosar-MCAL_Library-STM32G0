@@ -299,7 +299,7 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
  *
  * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Controller CAN controller to be de-initialized
- * 
+ *
  * @reqs    SWS_Can_00223
  */
 void Can_Arch_DeInit( Can_HwUnit *HwUnit, uint8 Controller )
@@ -308,7 +308,7 @@ void Can_Arch_DeInit( Can_HwUnit *HwUnit, uint8 Controller )
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the Can controller register structure*/
     Can_RegisterType *Can = ControllerConfig->BaseAddress;
-    
+
     /* Request initialisation */
     Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_INIT_BIT );
 
@@ -352,8 +352,8 @@ void Can_Arch_DeInit( Can_HwUnit *HwUnit, uint8 Controller )
  *
  * @retval  E_OK: Service request accepted, setting of (new) baud rate started
  *          E_NOT_OK: Service request not accepted
- * 
- * @reqs    SWS_Can_00255, SWS_Can_00256, SWS_Can_00260, SWS_Can_00422
+ *
+ * @reqs    SWS_Can_00255, SWS_Can_00256, SWS_Can_00260, SWS_Can_00422, SWS_Can_00500
  */
 Std_ReturnType Can_Arch_SetBaudrate( Can_HwUnit *HwUnit, uint8 Controller, uint16 BaudRateConfigID )
 {
@@ -402,14 +402,96 @@ Std_ReturnType Can_Arch_SetBaudrate( Can_HwUnit *HwUnit, uint8 Controller, uint1
  *
  * @retval  E_OK: request accepted
  *          E_NOT_OK: request not accepted
+ *
+ * @reqs    SWS_Can_00261, SWS_Can_00409, SWS_Can_00265, SWS_Can_00266, SWS_Can_00411, SWS_Can_00017
+ *          SWS_Can_00384
  */
 Std_ReturnType Can_Arch_SetControllerMode( Can_HwUnit *HwUnit, uint8 Controller, Can_ControllerStateType Transition )
 {
-    (void)HwUnit;
-    (void)Controller;
-    (void)Transition;
+    Std_ReturnType RetVal = E_NOT_OK;
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the Can controller register structure*/
+    Can_RegisterType *Can = ControllerConfig->BaseAddress;
 
-    return E_NOT_OK;
+    switch( Transition )
+    {
+        case CAN_CS_STARTED:
+            /*Transition shall be carried out from STOPPED to STARTED*/
+            if( HwUnit->ControllerState[ Controller ] == CAN_CS_STOPPED )
+            {
+                /* Request leave initialisation */
+                Bfx_ClrBit_u32u8( (uint32 *)Can->CCCR, CCCR_INIT_BIT );
+
+                /* Change CAN peripheral state */
+                HwUnit->ControllerState[ Controller ] = CAN_CS_STARTED;
+
+                RetVal = E_OK;
+            }
+            break;
+
+        case CAN_CS_STOPPED:
+            /*Transition shall be carried out from STARTED to STOPPED*/
+            if( HwUnit->ControllerState[ Controller ] == CAN_CS_STARTED )
+            {
+                /* Request initialisation */
+                Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_INIT_BIT );
+
+                /* Wait until the INIT bit into CCCR register is set */
+                while( Bfx_GetBit_u32u8_u8( (uint32 *)Can->CCCR, CCCR_INIT_BIT ) == FALSE )
+                {
+                    /*Wee need to stablish a timeout counter to avois a potential endless loop,
+                    according to AUTOSAR a Os tick shall be used, but for the moment it will
+                    remain empty*/
+                }
+
+                /* Exit from Sleep mode */
+                Bfx_ClrBit_u32u8( (uint32 *)Can->CCCR, CCCR_CSR_BIT );
+
+                /* Wait until FDCAN exits sleep mode */
+                while( Bfx_GetBit_u32u8_u8( (uint32 *)Can->CCCR, CCCR_CSA_BIT ) == FALSE )
+                {
+                    /*Wee need to stablish a timeout counter to avois a potential endless loop,
+                    according to AUTOSAR a Os tick shall be used, but for the moment it will
+                    remain empty*/
+                }
+
+                /* Enable configuration change */
+                Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_CCE_BIT );
+
+                /* Change CAN peripheral state */
+                HwUnit->ControllerState[ Controller ] = CAN_CS_STOPPED;
+
+                RetVal = E_OK;
+            }
+            break;
+
+        case CAN_CS_SLEEP:
+            /*Transition shall be carried out from STOPPED to SLEEP*/
+            if( HwUnit->ControllerState[ Controller ] == CAN_CS_STOPPED )
+            {
+                /* Request clock stop */
+                Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_CSR_BIT );
+
+                /* Wait until CAN is ready for power down */
+                while( Bfx_GetBit_u32u8_u8( (uint32 *)Can->CCCR, CCCR_CSA_BIT ) == FALSE )
+                {
+                    /*Wee need to stablish a timeout counter to avois a potential endless loop,
+                    according to AUTOSAR a Os tick shall be used, but for the moment it will
+                    remain empty*/
+                }
+
+                /* Change CAN peripheral state */
+                HwUnit->ControllerState[ Controller ] = CAN_CS_SLEEP;
+            }
+            break;
+
+        default:
+            RetVal = E_NOT_OK;
+            break;
+    }
+
+    return RetVal;
 }
 
 /**
