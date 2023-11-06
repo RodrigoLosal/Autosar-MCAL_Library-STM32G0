@@ -197,10 +197,10 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
     }
 
     /* Request initialisation */
-    Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_INIT_BIT );
+    Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_INIT_BIT );
 
     /* Wait until the INIT bit into CCCR register is set */
-    while( Bfx_GetBit_u32u8_u8( (uint32 *)Can->CCCR, CCCR_INIT_BIT ) == FALSE )
+    while( Bfx_GetBit_u32u8_u8( (uint32 *)&Can->CCCR, CCCR_INIT_BIT ) == FALSE )
     {
         /*Wee need to stablish a timeout counter to avois a potential endless loop,
         according to AUTOSAR a Os tick shall be used, but for the moment it will
@@ -208,24 +208,24 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
     }
 
     /* Enable configuration change */
-    Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_CCE_BIT );
+    Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_CCE_BIT );
 
     /* Set the no automatic retransmission */
-    Bfx_PutBit_u32u8u8( (uint32 *)Can->CCCR, CCCR_DAR_BIT, ControllerConfig->AutoRetransmission );
+    Bfx_PutBit_u32u8u8( (uint32 *)&Can->CCCR, CCCR_DAR_BIT, ControllerConfig->AutoRetransmission );
 
     /* Set the transmit pause feature */
-    Bfx_PutBit_u32u8u8( (uint32 *)Can->CCCR, CCCR_TXP_BIT, ControllerConfig->TransmitPause );
+    Bfx_PutBit_u32u8u8( (uint32 *)&Can->CCCR, CCCR_TXP_BIT, ControllerConfig->TransmitPause );
 
     /* Set the Protocol Exception Handling */
-    Bfx_PutBit_u32u8u8( (uint32 *)Can->CCCR, CCCR_PXHD_BIT, ControllerConfig->ProtocolException );
+    Bfx_PutBit_u32u8u8( (uint32 *)&Can->CCCR, CCCR_PXHD_BIT, ControllerConfig->ProtocolException );
 
     /* Set FDCAN Frame Format */
-    Bfx_ClrBitMask_u32u32( (uint32 *)Can->CCCR, CAN_FRAME_FD_BRS );
-    Bfx_SetBitMask_u32u32( (uint32 *)Can->CCCR, ControllerConfig->FrameFormat );
+    Bfx_ClrBitMask_u32u32( (uint32 *)&Can->CCCR, CAN_FRAME_FD_BRS );
+    Bfx_SetBitMask_u32u32( (uint32 *)&Can->CCCR, ControllerConfig->FrameFormat );
 
     /* Reset FDCAN Operation Mode */
-    Bfx_ClrBitMask_u32u32( (uint32 *)Can->CCCR, ( ( 1u << CCCR_TEST_BIT ) | ( 1u << CCCR_MON_BIT ) | ( 1u << CCCR_ASM_BIT ) ) );
-    Bfx_ClrBit_u32u8( (uint32 *)Can->TEST, TEST_LBCK_BIT );
+    Bfx_ClrBitMask_u32u32( (uint32 *)&Can->CCCR, ( ( 1u << CCCR_TEST_BIT ) | ( 1u << CCCR_MON_BIT ) | ( 1u << CCCR_ASM_BIT ) ) );
+    Bfx_ClrBit_u32u8( (uint32 *)&Can->TEST, TEST_LBCK_BIT );
 
     /* Set FDCAN Operating Mode:
                  | Normal | Restricted |    Bus     | Internal | External
@@ -238,27 +238,27 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
     if( ControllerConfig->Mode == CAN_MODE_RESTRICTED_OPERATION )
     {
         /* Enable Restricted Operation mode */
-        Bfx_ClrBit_u32u8( (uint32 *)Can->CCCR, CCCR_ASM_BIT );
+        Bfx_ClrBit_u32u8( (uint32 *)&Can->CCCR, CCCR_ASM_BIT );
     }
     else if( ControllerConfig->Mode != CAN_MODE_NORMAL )
     {
         if( ControllerConfig->Mode != CAN_MODE_BUS_MONITORING )
         {
             /* Enable write access to TEST register */
-            Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_TEST_BIT );
+            Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_TEST_BIT );
             /* Enable LoopBack mode */
-            Bfx_SetBit_u32u8( (uint32 *)Can->TEST, TEST_LBCK_BIT );
+            Bfx_SetBit_u32u8( (uint32 *)&Can->TEST, TEST_LBCK_BIT );
 
             if( ControllerConfig->Mode == CAN_MODE_INTERNAL_LOOPBACK )
             {
                 /* Enable Internal LoopBack mode */
-                Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_MON_BIT );
+                Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_MON_BIT );
             }
         }
         else
         {
             /* Enable bus monitoring mode */
-            Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_MON_BIT );
+            Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_MON_BIT );
         }
     }
     else
@@ -267,29 +267,29 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
     }
 
     /* Set the default nominal bit timing register */
-    Bfx_PutBits_u32u8u8u32( (uint32 *)Can->NBTP, NBTP_NSJW_BIT, NBTP_NSJW_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].SyncJumpWidth - 1u ) );
-    Bfx_PutBits_u32u8u8u32( (uint32 *)Can->NBTP, NBTP_NTSEG1_BIT, NBTP_NTSEG1_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].Seg1 - 1u ) );
-    Bfx_PutBits_u32u8u8u32( (uint32 *)Can->NBTP, NBTP_NTSEG2_BIT, NBTP_NTSEG2_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].Seg2 - 1u ) );
-    Bfx_PutBits_u32u8u8u32( (uint32 *)Can->NBTP, NBTP_NBRP_BIT, NBTP_NBRP_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].Prescaler - 1u ) );
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NSJW_BIT, NBTP_NSJW_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].SyncJumpWidth - 1u ) );
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NTSEG1_BIT, NBTP_NTSEG1_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].Seg1 - 1u ) );
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NTSEG2_BIT, NBTP_NTSEG2_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].Seg2 - 1u ) );
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NBRP_BIT, NBTP_NBRP_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].Prescaler - 1u ) );
 
     /*set default data bit timing register id FD is active*/
     if( ( ControllerConfig->FrameFormat == CAN_FRAME_FD_BRS ) )
     {
-        Bfx_PutBits_u32u8u8u32( (uint32 *)Can->DBTP, DBTP_DSJW_BIT, DBTP_DSJW_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].FdSyncJumpWidth - 1u ) );
-        Bfx_PutBits_u32u8u8u32( (uint32 *)Can->DBTP, DBTP_DTSEG1_BIT, DBTP_DTSEG1_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].FdSeg1 - 1u ) );
-        Bfx_PutBits_u32u8u8u32( (uint32 *)Can->DBTP, DBTP_DTSEG2_BIT, DBTP_DTSEG2_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].FdSeg2 - 1u ) );
-        Bfx_PutBits_u32u8u8u32( (uint32 *)Can->DBTP, DBTP_DBRP_BIT, DBTP_DBRP_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].FdPrescaler - 1u ) );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DSJW_BIT, DBTP_DSJW_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].FdSyncJumpWidth - 1u ) );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DTSEG1_BIT, DBTP_DTSEG1_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].FdSeg1 - 1u ) );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DTSEG2_BIT, DBTP_DTSEG2_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].FdSeg2 - 1u ) );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DBRP_BIT, DBTP_DBRP_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].FdPrescaler - 1u ) );
     }
 
     /* Select between Tx FIFO and Tx Queue operation modes */
-    Bfx_ClrBitMask_u32u32( (uint32 *)Can->TXBC, CAN_TX_QUEUE_OPERATION );
-    Bfx_SetBitMask_u32u32( (uint32 *)Can->TXBC, ControllerConfig->TxFifoQueueMode );
+    Bfx_ClrBitMask_u32u32( (uint32 *)&Can->TXBC, CAN_TX_QUEUE_OPERATION );
+    Bfx_SetBitMask_u32u32( (uint32 *)&Can->TXBC, ControllerConfig->TxFifoQueueMode );
 
     /* Standard filter elements number */
-    Bfx_PutBits_u32u8u8u32( (uint32 *)Can->RXGFC, RXGFC_LSS_BIT, 5u, ControllerConfig->StdFiltersNbr );
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_LSS_BIT, 5u, ControllerConfig->StdFiltersNbr );
 
     /* Extended filter elements number */
-    Bfx_PutBits_u32u8u8u32( (uint32 *)Can->RXGFC, RXGFC_LSE_BIT, 4u, ControllerConfig->ExtFiltersNbr );
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_LSE_BIT, 4u, ControllerConfig->ExtFiltersNbr );
 
     /* Setup the interrupt to line 0 or 1*/
     Can_SetupConfiguredInterrupts( &Config->Controllers[ Controller ], Can );
@@ -317,10 +317,10 @@ void Can_Arch_DeInit( Can_HwUnit *HwUnit, uint8 Controller )
     Can_RegisterType *Can = ControllerConfig->BaseAddress;
 
     /* Request initialisation */
-    Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_INIT_BIT );
+    Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_INIT_BIT );
 
     /* Wait until the INIT bit into CCCR register is set */
-    while( Bfx_GetBit_u32u8_u8( (uint32 *)Can->CCCR, CCCR_INIT_BIT ) == FALSE )
+    while( Bfx_GetBit_u32u8_u8( (uint32 *)&Can->CCCR, CCCR_INIT_BIT ) == FALSE )
     {
         /*Wee need to stablish a timeout counter to avois a potential endless loop,
         according to AUTOSAR a Os tick shall be used, but for the moment it will
@@ -328,10 +328,10 @@ void Can_Arch_DeInit( Can_HwUnit *HwUnit, uint8 Controller )
     }
 
     /* Exit from Sleep mode */
-    Bfx_ClrBit_u32u8( (uint32 *)Can->CCCR, CCCR_CSR_BIT );
+    Bfx_ClrBit_u32u8( (uint32 *)&Can->CCCR, CCCR_CSR_BIT );
 
     /* Wait until FDCAN exits sleep mode */
-    while( Bfx_GetBit_u32u8_u8( (uint32 *)Can->CCCR, CCCR_CSA_BIT ) == FALSE )
+    while( Bfx_GetBit_u32u8_u8( (uint32 *)&Can->CCCR, CCCR_CSA_BIT ) == FALSE )
     {
         /*Wee need to stablish a timeout counter to avois a potential endless loop,
         according to AUTOSAR a Os tick shall be used, but for the moment it will
@@ -339,11 +339,11 @@ void Can_Arch_DeInit( Can_HwUnit *HwUnit, uint8 Controller )
     }
 
     /* Enable configuration change */
-    Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_CCE_BIT );
+    Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_CCE_BIT );
 
     /* Disable interrupt lines */
-    Bfx_ClrBit_u32u8( (uint32 *)Can->ILE, CAN_INTERRUPT_LINE0 );
-    Bfx_ClrBit_u32u8( (uint32 *)Can->ILE, CAN_INTERRUPT_LINE1 );
+    Bfx_ClrBit_u32u8( (uint32 *)&Can->ILE, CAN_INTERRUPT_LINE0 );
+    Bfx_ClrBit_u32u8( (uint32 *)&Can->ILE, CAN_INTERRUPT_LINE1 );
 }
 
 /**
@@ -376,18 +376,18 @@ Std_ReturnType Can_Arch_SetBaudrate( Can_HwUnit *HwUnit, uint8 Controller, uint1
         const Can_ControllerBaudrateConfig *Baudrate = &ControllerConfig->BaudrateConfigs[ BaudRateConfigID ];
 
         /* Set the nominal bit timing register */
-        Bfx_PutBits_u32u8u8u32( (uint32 *)Can->NBTP, NBTP_NSJW_BIT, NBTP_NSJW_SIZE, ( Baudrate->SyncJumpWidth - 1u ) );
-        Bfx_PutBits_u32u8u8u32( (uint32 *)Can->NBTP, NBTP_NTSEG1_BIT, NBTP_NTSEG1_SIZE, ( Baudrate->Seg1 - 1u ) );
-        Bfx_PutBits_u32u8u8u32( (uint32 *)Can->NBTP, NBTP_NTSEG2_BIT, NBTP_NTSEG2_SIZE, ( Baudrate->Seg2 - 1u ) );
-        Bfx_PutBits_u32u8u8u32( (uint32 *)Can->NBTP, NBTP_NBRP_BIT, NBTP_NBRP_SIZE, ( Baudrate->Prescaler - 1u ) );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NSJW_BIT, NBTP_NSJW_SIZE, ( Baudrate->SyncJumpWidth - 1u ) );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NTSEG1_BIT, NBTP_NTSEG1_SIZE, ( Baudrate->Seg1 - 1u ) );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NTSEG2_BIT, NBTP_NTSEG2_SIZE, ( Baudrate->Seg2 - 1u ) );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NBRP_BIT, NBTP_NBRP_SIZE, ( Baudrate->Prescaler - 1u ) );
 
         /* If FD operation with BRS is selected, set the data bit timing register */
         if( ( HwUnit->Config->Controllers[ Controller ].FrameFormat == CAN_FRAME_FD_BRS ) )
         {
-            Bfx_PutBits_u32u8u8u32( (uint32 *)Can->DBTP, DBTP_DSJW_BIT, DBTP_DSJW_SIZE, ( Baudrate->FdSyncJumpWidth - 1u ) );
-            Bfx_PutBits_u32u8u8u32( (uint32 *)Can->DBTP, DBTP_DTSEG1_BIT, DBTP_DTSEG1_SIZE, ( Baudrate->FdSeg1 - 1u ) );
-            Bfx_PutBits_u32u8u8u32( (uint32 *)Can->DBTP, DBTP_DTSEG2_BIT, DBTP_DTSEG2_SIZE, ( Baudrate->FdSeg2 - 1u ) );
-            Bfx_PutBits_u32u8u8u32( (uint32 *)Can->DBTP, DBTP_DBRP_BIT, DBTP_DBRP_SIZE, ( Baudrate->FdPrescaler - 1u ) );
+            Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DSJW_BIT, DBTP_DSJW_SIZE, ( Baudrate->FdSyncJumpWidth - 1u ) );
+            Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DTSEG1_BIT, DBTP_DTSEG1_SIZE, ( Baudrate->FdSeg1 - 1u ) );
+            Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DTSEG2_BIT, DBTP_DTSEG2_SIZE, ( Baudrate->FdSeg2 - 1u ) );
+            Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DBRP_BIT, DBTP_DBRP_SIZE, ( Baudrate->FdPrescaler - 1u ) );
         }
 
         RetVal = E_OK;
@@ -428,7 +428,7 @@ Std_ReturnType Can_Arch_SetControllerMode( Can_HwUnit *HwUnit, uint8 Controller,
             if( HwUnit->ControllerState[ Controller ] == CAN_CS_STOPPED )
             {
                 /* Request leave initialisation */
-                Bfx_ClrBit_u32u8( (uint32 *)Can->CCCR, CCCR_INIT_BIT );
+                Bfx_ClrBit_u32u8( (uint32 *)&Can->CCCR, CCCR_INIT_BIT );
 
                 /* Change CAN peripheral state */
                 HwUnit->ControllerState[ Controller ] = CAN_CS_STARTED;
@@ -442,7 +442,7 @@ Std_ReturnType Can_Arch_SetControllerMode( Can_HwUnit *HwUnit, uint8 Controller,
             if( HwUnit->ControllerState[ Controller ] == CAN_CS_STARTED )
             {
                 /* Request initialisation */
-                Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_INIT_BIT );
+                Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_INIT_BIT );
 
                 /* Wait until the INIT bit into CCCR register is set */
                 while( Bfx_GetBit_u32u8_u8( (uint32 *)Can->CCCR, CCCR_INIT_BIT ) == FALSE )
@@ -453,7 +453,7 @@ Std_ReturnType Can_Arch_SetControllerMode( Can_HwUnit *HwUnit, uint8 Controller,
                 }
 
                 /* Exit from Sleep mode */
-                Bfx_ClrBit_u32u8( (uint32 *)Can->CCCR, CCCR_CSR_BIT );
+                Bfx_ClrBit_u32u8( (uint32 *)&Can->CCCR, CCCR_CSR_BIT );
 
                 /* Wait until FDCAN exits sleep mode */
                 while( Bfx_GetBit_u32u8_u8( (uint32 *)Can->CCCR, CCCR_CSA_BIT ) == FALSE )
@@ -464,7 +464,7 @@ Std_ReturnType Can_Arch_SetControllerMode( Can_HwUnit *HwUnit, uint8 Controller,
                 }
 
                 /* Enable configuration change */
-                Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_CCE_BIT );
+                Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_CCE_BIT );
 
                 /* Change CAN peripheral state */
                 HwUnit->ControllerState[ Controller ] = CAN_CS_STOPPED;
@@ -478,10 +478,10 @@ Std_ReturnType Can_Arch_SetControllerMode( Can_HwUnit *HwUnit, uint8 Controller,
             if( HwUnit->ControllerState[ Controller ] == CAN_CS_STOPPED )
             {
                 /* Request clock stop */
-                Bfx_SetBit_u32u8( (uint32 *)Can->CCCR, CCCR_CSR_BIT );
+                Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_CSR_BIT );
 
                 /* Wait until CAN is ready for power down */
-                while( Bfx_GetBit_u32u8_u8( (uint32 *)Can->CCCR, CCCR_CSA_BIT ) == FALSE )
+                while( Bfx_GetBit_u32u8_u8( (uint32 *)&Can->CCCR, CCCR_CSA_BIT ) == FALSE )
                 {
                     /*Wee need to stablish a timeout counter to avois a potential endless loop,
                     according to AUTOSAR a Os tick shall be used, but for the moment it will
@@ -510,7 +510,7 @@ Std_ReturnType Can_Arch_SetControllerMode( Can_HwUnit *HwUnit, uint8 Controller,
  *
  * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Controller CAN controller for which interrupts shall be enabled.
- * 
+ *
  * @reqs    SWS_Can_00208
  */
 void Can_Arch_EnableControllerInterrupts( Can_HwUnit *HwUnit, uint8 Controller )
@@ -521,10 +521,10 @@ void Can_Arch_EnableControllerInterrupts( Can_HwUnit *HwUnit, uint8 Controller )
     Can_RegisterType *Can = ControllerConfig->BaseAddress;
 
     /* Enable Interrupt line 0 */
-    Bfx_SetBit_u32u8( (uint32 *)Can->ILE, CAN_INTERRUPT_LINE0 );
+    Bfx_SetBit_u32u8( (uint32 *)&Can->ILE, CAN_INTERRUPT_LINE0 );
 
     /* Enable Interrupt line 1 */
-    Bfx_SetBit_u32u8( (uint32 *)Can->ILE, CAN_INTERRUPT_LINE1 );
+    Bfx_SetBit_u32u8( (uint32 *)&Can->ILE, CAN_INTERRUPT_LINE1 );
 }
 
 /**
@@ -536,7 +536,7 @@ void Can_Arch_EnableControllerInterrupts( Can_HwUnit *HwUnit, uint8 Controller )
  *
  * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Controller CAN controller for which interrupts shall be disabled.
- * 
+ *
  * @reqs    SWS_Can_00049
  */
 void Can_Arch_DisableControllerInterrupts( Can_HwUnit *HwUnit, uint8 Controller )
@@ -547,10 +547,10 @@ void Can_Arch_DisableControllerInterrupts( Can_HwUnit *HwUnit, uint8 Controller 
     Can_RegisterType *Can = ControllerConfig->BaseAddress;
 
     /* Disable interrupt line 0 */
-    Bfx_ClrBit_u32u8( (uint32 *)Can->ILE, CAN_INTERRUPT_LINE0 );
+    Bfx_ClrBit_u32u8( (uint32 *)&Can->ILE, CAN_INTERRUPT_LINE0 );
 
     /* Disable interrupt line 1 */
-    Bfx_ClrBit_u32u8( (uint32 *)Can->ILE, CAN_INTERRUPT_LINE1 );
+    Bfx_ClrBit_u32u8( (uint32 *)&Can->ILE, CAN_INTERRUPT_LINE1 );
 }
 
 /**
@@ -801,9 +801,9 @@ void Can_Arch_IsrMainHandler( Can_HwUnit *HwUnit, uint8 Controller )
     for( uint8 Interrupt = 0u; Interrupt < sizeof( IsrPointer ); Interrupt++ )
     {
         /* High Priority Message interrupt management */
-        if( Bfx_GetBit_u32u8_u8( (uint32 *)&Can->IR, Interrupt ) == STD_ON )
+        if( Bfx_GetBit_u32u8_u8( (uint32 *)Can->IR, Interrupt ) == STD_ON )
         {
-            if( Bfx_GetBit_u32u8_u8( (uint32 *)&Can->IE, Interrupt ) == STD_ON )
+            if( Bfx_GetBit_u32u8_u8( (uint32 *)Can->IE, Interrupt ) == STD_ON )
             {
                 /* Clear the High Priority Message flag */
                 Bfx_SetBit_u32u8( (uint32 *)&Can->IR, Interrupt );
@@ -828,42 +828,42 @@ void Can_Arch_IsrMainHandler( Can_HwUnit *HwUnit, uint8 Controller )
 static void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can_RegisterType *Can )
 {
     /* Enable the slected interrupts to their corresponding interrupt lines */
-    Bfx_SetBitMask_u32u32( (uint32 *)Can->IE, Controller->Line0ActiveITs | Controller->Line1ActiveITs );
+    Bfx_SetBitMask_u32u32( (uint32 *)&Can->IE, Controller->Line0ActiveITs | Controller->Line1ActiveITs );
 
     /* Assign group of interrupts Rx Fifo 0 to line 0 or line 1*/
-    Bfx_PutBit_u32u8u8( (uint32 *)Can->ILS, CAN_IT_GROUP_RX_FIFO0, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_RX_FIFO0 ) != 0 ) );
+    Bfx_PutBit_u32u8u8( (uint32 *)&Can->ILS, CAN_IT_GROUP_RX_FIFO0, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_RX_FIFO0 ) != 0 ) );
 
     /* Assign group of interrupts Rx Fifo 1 to line 0 or line 1*/
-    Bfx_PutBit_u32u8u8( (uint32 *)Can->ILS, CAN_IT_GROUP_RX_FIFO1, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_RX_FIFO1 ) != 0 ) );
+    Bfx_PutBit_u32u8u8( (uint32 *)&Can->ILS, CAN_IT_GROUP_RX_FIFO1, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_RX_FIFO1 ) != 0 ) );
 
     /* Assign group of interrupts SMSG to line 0 or line 1*/
-    Bfx_PutBit_u32u8u8( (uint32 *)Can->ILS, CAN_IT_GROUP_SMSG, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_SMSG ) != 0 ) );
+    Bfx_PutBit_u32u8u8( (uint32 *)&Can->ILS, CAN_IT_GROUP_SMSG, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_SMSG ) != 0 ) );
 
     /* Assign group of interrupts Tx Fifo/Queue Error to line 0 or line 1*/
-    Bfx_PutBit_u32u8u8( (uint32 *)Can->ILS, CAN_IT_GROUP_TX_FIFO_ERROR, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_TX_FIFO_ERROR ) != 0 ) );
+    Bfx_PutBit_u32u8u8( (uint32 *)&Can->ILS, CAN_IT_GROUP_TX_FIFO_ERROR, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_TX_FIFO_ERROR ) != 0 ) );
 
     /* Assign group of interrupts Tx Event Fifo to line 0 or line 1*/
-    Bfx_PutBit_u32u8u8( (uint32 *)Can->ILS, CAN_IT_GROUP_MISC, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_MISC ) != 0 ) );
+    Bfx_PutBit_u32u8u8( (uint32 *)&Can->ILS, CAN_IT_GROUP_MISC, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_MISC ) != 0 ) );
 
     /* Assign group of interrupts Bit line errors to line 0 or line 1*/
-    Bfx_PutBit_u32u8u8( (uint32 *)Can->ILS, CAN_IT_GROUP_BIT_LINE_ERROR, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_BIT_LINE_ERROR ) != 0 ) );
+    Bfx_PutBit_u32u8u8( (uint32 *)&Can->ILS, CAN_IT_GROUP_BIT_LINE_ERROR, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_BIT_LINE_ERROR ) != 0 ) );
 
     /* Assign group of interrupts Protocol errors to line 0 or line 1*/
-    Bfx_PutBit_u32u8u8( (uint32 *)Can->ILS, CAN_IT_GROUP_PROTOCOL_ERROR, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_PROTOCOL_ERROR ) != 0 ) );
+    Bfx_PutBit_u32u8u8( (uint32 *)&Can->ILS, CAN_IT_GROUP_PROTOCOL_ERROR, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_PROTOCOL_ERROR ) != 0 ) );
 
 
     /* Enable Tx Buffer Transmission Interrupt to set TC flag in IR register,
          but interrupt will only occur if TC is enabled in IE register */
     if( ( ( Controller->Line1ActiveITs & CAN_IT_TX_COMPLETE ) != 0u ) || ( ( Controller->Line0ActiveITs & CAN_IT_TX_COMPLETE ) != 0u ) )
     {
-        Bfx_SetBitMask_u32u32( (uint32 *)Can->TXBTIE, Controller->TxBufferITs );
+        Bfx_SetBitMask_u32u32( (uint32 *)&Can->TXBTIE, Controller->TxBufferITs );
     }
 
     /* Enable Tx Buffer Cancellation Finished Interrupt to set TCF flag in IR register,
          but interrupt will only occur if TCF is enabled in IE register */
     if( ( ( Controller->Line1ActiveITs & CAN_IT_TX_ABORT_COMPLETE ) != 0u ) || ( ( Controller->Line0ActiveITs & CAN_IT_TX_ABORT_COMPLETE ) != 0u ) )
     {
-        Bfx_SetBitMask_u32u32( (uint32 *)Can->TXBCIE, Controller->TxBufferAbortITs );
+        Bfx_SetBitMask_u32u32( (uint32 *)&Can->TXBCIE, Controller->TxBufferAbortITs );
     }
 }
 
@@ -941,7 +941,7 @@ static void Can_Isr_RxFifo1MessageLost( Can_HwUnit *HwUnit, uint8 Controller )
 
 /**
  * @brief    **Can Tx Fifo/Queue Error Callback**
- * 
+ *
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
  */
