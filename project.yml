@@ -26,7 +26,7 @@
     - TEST           # define the macro UTEST to remove the static qualifier
   
 
-# Plugins to add extra fcuntionality to ceedling, like code coverage and pretty reports
+# Plugins to add extra functionality to ceedling, like code coverage and pretty reports
 :plugins: 
   :load_paths:
     - "#{Ceedling.load_path}"
@@ -90,6 +90,10 @@
         - -fsigned-char
         - -fomit-frame-pointer
         - -fverbose-asm
+        # Extra flags to avoid cast warnings in the HAL library
+        - -Wno-int-to-pointer-cast 
+        - -Wno-pointer-to-int-cast
+        - -Wno-error=address
   :gcov:        # flags when GCC runs with ceedling gcov:all
     :compile:
       :*:
@@ -105,4 +109,8 @@
         - -fsigned-char
         - -fomit-frame-pointer
         - -fverbose-asm
+        # Extra flags to avoid cast warnings in the HAL library
+        - -Wno-int-to-pointer-cast 
+        - -Wno-pointer-to-int-cast
+        - -Wno-error=address
         
