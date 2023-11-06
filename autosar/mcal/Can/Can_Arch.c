@@ -143,6 +143,34 @@
  * @} */
 
 /**
+ * @defgroup ID_Msg_bits ID message bits
+ *
+ * @{ */
+#define MSG_ID_BIT           31u /*!< ID bit */
+#define MSG_FROMAT_BIT       30u /*!< Fromat ID bit */
+/**
+ * @} */
+
+/**
+ * @defgroup ID_Type_msg    ID Type message (bit 31) from id message
+ *
+ * @{ */
+#define MSG_STANDARD_ID      0u
+#define MSG_EXTENDED_ID      1u
+/**
+ * @} */
+
+/**
+ * @defgroup Frame_Type_msg    Frame Type message (bit 30) from id message
+ *
+ * @{ */
+#define MSG_CLASSIC_FORMAT   0u
+#define MSG_FD_FORMAT        1u
+/**
+ * @} */
+
+
+/**
  * @brief  Tx Hardware objecj descriptor.
  */
 typedef struct _HwHthObject
@@ -154,6 +182,7 @@ typedef struct _HwHthObject
 
 
 static void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can_RegisterType *Can );
+static uint8 Can_GetClosestDlcWithPadding( uint8 Dlc, uint32 *RamBuffer, uint8 PaddingValue );
 static void Can_Isr_RxFifo0NewMessage( Can_HwUnit *HwUnit, uint8 Controller );
 static void Can_Isr_RxFifo0Full( Can_HwUnit *HwUnit, uint8 Controller );
 static void Can_Isr_RxFifo0MessageLost( Can_HwUnit *HwUnit, uint8 Controller );
@@ -361,6 +390,7 @@ void Can_Arch_DeInit( Can_HwUnit *HwUnit, uint8 Controller )
  *          E_NOT_OK: Service request not accepted
  *
  * @reqs    SWS_Can_00255, SWS_Can_00256, SWS_Can_00260, SWS_Can_00422, SWS_Can_00500
+ *          SWS_Can_00062
  */
 Std_ReturnType Can_Arch_SetBaudrate( Can_HwUnit *HwUnit, uint8 Controller, uint16 BaudRateConfigID )
 {
@@ -762,14 +792,92 @@ Std_ReturnType Can_Arch_GetIngressTimeStamp( Can_HwUnit *HwUnit, Can_HwHandleTyp
  *          E_NOT_OK: development error occurred
  *          CAN_BUSY: No TX hardware buffer available or pre-emptive call of Can_Write that can't be
  *          implemented re-entrant (see Can_ReturnType)
+ *
+ * @reqs    SWS_Can_00213, SWS_Can_00214, SWS_Can_00275, SWS_Can_00277, SWS_Can_00401, SWS_Can_00402
+ *          SWS_Can_00403, SWS_Can_00011, SWS_Can_00486, SWS_Can_00502
  */
 Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const Can_PduType *PduInfo )
 {
-    (void)HwUnit;
-    (void)Hth;
-    (void)PduInfo;
+    Std_ReturnType RetVal = E_NOT_OK;
+    uint8 DataLenght;
+    uint32 RamBuffer[ 16u ];
 
-    return E_NOT_OK;
+    /* get controller configuration */
+    const Can_RegisterType *Can = HwUnit->Config->Hohs[ Hth ].ControllerRef;
+
+    /* Check that the Tx FIFO/Queue is not full*/
+    if( ( Bfx_GetBit_u32u8_u8( (uint32 *)Can->TXFQS, TXFQS_TFQF_BIT ) == FALSE ) )
+    {
+        /* Retrieve the Tx FIFO PutIndex */
+        uint32 PutIndex = Bfx_GetBits_u32u8u8_u32( Can->TXFQS, TXFQS_TFQPI_BIT, TXFQS_TFQPI_SIZE );
+
+        /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
+        HwHthObject *HthObject = (HwHthObject *)&HwUnit->Config->Hohs[ Hth ].SramRef->TBSA;
+
+        /*get the message ID type*/
+        uint8 IdType = Bfx_GetBit_u32u8_u8( (uint32 *)&PduInfo->id, MSG_ID_BIT );
+
+        /* Set the message ID, standard (11 bits) or extended (29 bits) */
+        if( IdType == MSG_STANDARD_ID )
+        {
+            Bfx_PutBits_u32u8u8u32( &HthObject[ PutIndex ].TBSAHeader1, TX_BUFFER_ID_11_BITS, TX_BUFFER_ID_11_SIZE, PduInfo->id );
+            /* Write the ID type bit */
+            Bfx_ClrBit_u32u8( &HthObject[ PutIndex ].TBSAHeader1, TX_BUFFER_XTD_BIT );
+        }
+        else
+        {
+            Bfx_PutBits_u32u8u8u32( &HthObject[ PutIndex ].TBSAHeader1, TX_BUFFER_ID_29_BITS, TX_BUFFER_ID_29_SIZE, PduInfo->id );
+            /* Write the ID type bit */
+            Bfx_SetBit_u32u8( &HthObject[ PutIndex ].TBSAHeader1, TX_BUFFER_XTD_BIT );
+        }
+
+        /* Get the type of frame to send */
+        uint8 FrameType = Bfx_GetBit_u32u8_u8( (uint32 *)&PduInfo->id, MSG_FROMAT_BIT );
+
+        /* Set the frame */
+        if( FrameType == MSG_CLASSIC_FORMAT )
+        {
+            /*Frame format*/
+            Bfx_ClrBit_u32u8( &HthObject[ PutIndex ].TBSAHeader2, TX_BUFFER_FDF_BIT );
+            /* Set the actual data lenght (DLC) */
+            DataLenght = PduInfo->length;
+        }
+        else
+        {
+            /*Frame format*/
+            Bfx_SetBit_u32u8( &HthObject[ PutIndex ].TBSAHeader2, TX_BUFFER_FDF_BIT );
+            /* Get the actual data lenght (DLC) */
+            DataLenght = Can_GetClosestDlcWithPadding( PduInfo->length, RamBuffer, HwUnit->Config->Hohs[ Hth ].FdPaddingValue );
+        }
+
+        /*Store Tx Events*/
+        Bfx_SetBit_u32u8( &HthObject[ PutIndex ].TBSAHeader2, TX_BUFFER_EFC_BIT );
+
+        /* copy message into a 32bit wide buffer*/
+        for( uint8 Byte = 0; Byte < DataLenght; Byte++ )
+        {
+            ( (uint8 *)RamBuffer )[ Byte ] = PduInfo->sdu[ Byte ];
+        }
+        /* Write message data lenght */
+        Bfx_PutBits_u32u8u8u32( &HthObject[ PutIndex ].TBSAHeader2, TX_BUFFER_DLC_BIT, TX_BUFFER_DLC_SIZE, DataLenght );
+
+        /* Write Tx payload to the message RAM */
+        for( uint8 Word = 0; Word < DataLenght; Word++ )
+        {
+            HthObject[ PutIndex ].TBSAPayload[ Word ] = RamBuffer[ Word ];
+        }
+
+        /* Activate the corresponding transmission request */
+        Bfx_SetBit_u32u8( (uint32 *)Can->TXBAR, PutIndex );
+
+        RetVal = E_OK;
+    }
+    else
+    {
+        RetVal = CAN_BUSY;
+    }
+
+    return RetVal;
 }
 
 /**
@@ -865,6 +973,65 @@ static void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can
     {
         Bfx_SetBitMask_u32u32( (uint32 *)&Can->TXBCIE, Controller->TxBufferAbortITs );
     }
+}
+
+/**
+ * @brief    **Determine data lenth to send**
+ *
+ * This function determines the data lenght to send according to the CAN FD specification, in case
+ * the actual data lenght do not match with any of the available data lenghts, the function will
+ * return the closest data lenght with padding.
+ *
+ * @param    Dlc: Data lenght to send
+ * @param    RamBuffer: Pointer to the buffer where the data will be stored
+ * @param    PaddingValue: Value to use for padding
+ *
+ * @retval  DataLenght: Define with for data lenght to send
+ */
+static uint8 Can_GetClosestDlcWithPadding( uint8 Dlc, uint32 *RamBuffer, uint8 PaddingValue )
+{
+    uint8 DataLenght = 0u;
+
+    /*set padding value*/
+    for( uint8 Byte = 0u; Byte < Dlc; Byte++ )
+    {
+        ( (uint8 *)RamBuffer )[ Byte ] = PaddingValue;
+    }
+
+    if( ( Dlc > 8u ) && ( Dlc <= 12u ) )
+    {
+        DataLenght = CAN_OBJECT_PL_12;
+    }
+    else if( ( Dlc > 12u ) && ( Dlc <= 16u ) )
+    {
+        DataLenght = CAN_OBJECT_PL_16;
+    }
+    else if( ( Dlc > 16u ) && ( Dlc <= 20u ) )
+    {
+        DataLenght = CAN_OBJECT_PL_20;
+    }
+    else if( ( Dlc > 20u ) && ( Dlc <= 24u ) )
+    {
+        DataLenght = CAN_OBJECT_PL_24;
+    }
+    else if( ( Dlc > 24u ) && ( Dlc <= 32u ) )
+    {
+        DataLenght = CAN_OBJECT_PL_32;
+    }
+    else if( ( Dlc > 32u ) && ( Dlc <= 48u ) )
+    {
+        DataLenght = CAN_OBJECT_PL_48;
+    }
+    else if( ( Dlc > 48u ) && ( Dlc <= 64u ) )
+    {
+        DataLenght = CAN_OBJECT_PL_64;
+    }
+    else
+    {
+        DataLenght = CAN_OBJECT_PL_8;
+    }
+
+    return DataLenght;
 }
 
 /**
