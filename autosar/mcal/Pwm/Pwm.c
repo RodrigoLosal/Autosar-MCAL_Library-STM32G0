@@ -8,7 +8,6 @@
  * It allows the selection of the duty cycle and the signal period time.
  */
 #include "Std_Types.h"
-#include "Pwm_Cfg.h"
 #include "Pwm.h"
 
 /**
