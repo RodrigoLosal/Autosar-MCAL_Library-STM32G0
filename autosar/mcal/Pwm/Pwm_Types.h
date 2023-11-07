@@ -1,3 +1,11 @@
+/**
+ * @file    Pwm_Types.h
+ * @brief   **Pwm Driver Types**
+ * @author  Jazmin Melendrez
+ *
+ * The header contains the type definitions that are used by the Pwm module. The file is implemented
+ * as a means of abstraction from the hardware, making the low level interfaces available for upper layers.
+ */
 #ifndef PWM_TYPES_H__
 #define PWM_TYPES_H__
 

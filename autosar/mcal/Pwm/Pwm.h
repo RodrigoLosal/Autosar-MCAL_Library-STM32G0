@@ -1,3 +1,12 @@
+/**
+ * @file    Pwm.h
+ * @brief   **Pwm Driver header**
+ * @author  Jazmin Melendrez
+ *
+ * The driver provides functions for initialization and control of the microcontroller internal
+ * PWM stage (pulse width modulation). The PWM module generates pulses with variable pulse width.
+ * It allows the selection of the duty cycle and the signal period time.
+ */
 #ifndef PWM_H__
 #define PWM_H__
 
