@@ -2,7 +2,6 @@
 #define PWM_TYPES_H__
 
 #include "Registers.h"
-#include "ComStack_Types.h"
 #include "Pwm_GeneralTypes.h"
 
 /**
