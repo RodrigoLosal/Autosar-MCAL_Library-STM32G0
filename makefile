@@ -9,7 +9,7 @@ SRCS += Can.c Can_Lcfg.c Can_Arch.c  Pwm.c Pwm_Lcfg.c
 LINKER = linker.ld
 
 #List of subdirectories for MCAL modules
-MCAL_MODULES = Can Dio Fls Gpt Mcu Nvic Port Spi
+MCAL_MODULES = Can Dio Fls Gpt Mcu Nvic Port Spi Pwm
 
 #directorios con archivos a compilar (.c y .s)
 SRC_PATHS  = .
