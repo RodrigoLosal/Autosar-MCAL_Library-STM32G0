@@ -1,15 +1,15 @@
-#ifndef Pwm_TYPES_H__
-#define Pwm_TYPES_H__
+#ifndef PWM_TYPES_H__
+#define PWM_TYPES_H__
 
 #include "Registers.h"
 #include "ComStack_Types.h"
-#include "Can_GeneralTypes.h"
+#include "Pwm_GeneralTypes.h"
 
 /**
  * @brief **Hardware unit configuration structure**
  *
- * This structure contains the paramters to configure the hardware unit incuding the controllers and the
- * hardware objects
+ * This is the type of data structure containing the initialization data for the PWM driver. The
+ * contents of the initialization data structure are hardware specific.
  *
  * @reqs SWS_Pwm_00111
  */
