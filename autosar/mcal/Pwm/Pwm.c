@@ -22,6 +22,7 @@
  */
 void Pwm_Init( const Pwm_ConfigType *ConfigPtr )
 {
+    (void)ConfigPtr;
 }
 
 /**
@@ -47,6 +48,8 @@ void Pwm_DeInit( void )
  */
 void Pwm_SetDutyCycle( Pwm_ChannelType ChannelNumber, uint16 DutyCycle )
 {
+    (void)ChannelNumber;
+    (void)DutyCycle;
 }
 
 /**
@@ -62,6 +65,9 @@ void Pwm_SetDutyCycle( Pwm_ChannelType ChannelNumber, uint16 DutyCycle )
  */
 void Pwm_SetPeriodAndDuty( Pwm_ChannelType ChannelNumber, Pwm_PeriodType Period, uint16 DutyCycle )
 {
+    (void)ChannelNumber;
+    (void)Period;
+    (void)DutyCycle;
 }
 
 /**
@@ -75,6 +81,7 @@ void Pwm_SetPeriodAndDuty( Pwm_ChannelType ChannelNumber, Pwm_PeriodType Period,
  */
 void Pwm_SetOutputToIdle( Pwm_ChannelType ChannelNumber )
 {
+    (void)ChannelNumber;
 }
 
 /**
@@ -90,6 +97,7 @@ void Pwm_SetOutputToIdle( Pwm_ChannelType ChannelNumber )
  */
 Pwm_OutputStateType Pwm_GetOutputState( Pwm_ChannelType ChannelNumber )
 {
+    (void)ChannelNumber;
     return PWM_LOW;
 }
 
@@ -104,6 +112,7 @@ Pwm_OutputStateType Pwm_GetOutputState( Pwm_ChannelType ChannelNumber )
  */
 void Pwm_DisableNotification( Pwm_ChannelType ChannelNumber )
 {
+    (void)ChannelNumber;
 }
 
 /**
@@ -118,6 +127,8 @@ void Pwm_DisableNotification( Pwm_ChannelType ChannelNumber )
  */
 void Pwm_EnableNotification( Pwm_ChannelType ChannelNumber, Pwm_EdgeNotificationType Notification )
 {
+    (void)ChannelNumber;
+    (void)Notification;
 }
 
 /**
@@ -131,6 +142,7 @@ void Pwm_EnableNotification( Pwm_ChannelType ChannelNumber, Pwm_EdgeNotification
  *                  PWM_SEQUENCE_ERROR: wrong API call sequence.
  *                  PWM_HW_FAILURE: the HW module has a failure which prevents it to enter the
  *                  required power state
+ *
  * @retval  E_OK: Power Mode changed
  *          E_NOT_OK: request rejected
  *
@@ -138,6 +150,7 @@ void Pwm_EnableNotification( Pwm_ChannelType ChannelNumber, Pwm_EdgeNotification
  */
 Std_ReturnType Pwm_SetPowerState( Pwm_PowerStateRequestResultType *Result )
 {
+    (void)Result;
     return E_NOT_OK;
 }
 
@@ -149,6 +162,7 @@ Std_ReturnType Pwm_SetPowerState( Pwm_PowerStateRequestResultType *Result )
  * @param    CurrentPowerState The current power mode of the PWM HW Unit is returned in this parameter
  * @param    Result If the API returns E_OK: PWM_SERVICE_ACCEPTED: Current power mode was returned.
  *                  If the API returns E_NOT_OK: PWM_NOT_INIT: PWM Module not initialized.
+ *
  * @retval  E_OK: Mode could be read
  *          E_NOT_OK: Service is rejected
  *
@@ -156,6 +170,8 @@ Std_ReturnType Pwm_SetPowerState( Pwm_PowerStateRequestResultType *Result )
  */
 Std_ReturnType Pwm_GetCurrentPowerState( Pwm_PowerStateType *CurrentPowerState, Pwm_PowerStateRequestResultType *Result )
 {
+    (void)CurrentPowerState;
+    (void)Result;
     return E_NOT_OK;
 }
 
@@ -167,6 +183,7 @@ Std_ReturnType Pwm_GetCurrentPowerState( Pwm_PowerStateType *CurrentPowerState, 
  * @param    TargetPowerState The Target power mode of the PWM HW Unit is returned in this parameter.
  * @param    Result If the API returns E_OK: PWM_SERVICE_ACCEPTED:Target power mode was returned.
  *                  If the API returns E_NOT_OK: PWM_NOT_INIT: PWM Module not initialized.
+ *
  * @retval  E_OK: Mode could be read
  *          E_NOT_OK: Service is rejected
  *
@@ -174,6 +191,8 @@ Std_ReturnType Pwm_GetCurrentPowerState( Pwm_PowerStateType *CurrentPowerState, 
  */
 Std_ReturnType Pwm_GetTargetPowerState( Pwm_PowerStateType *TargetPowerState, Pwm_PowerStateRequestResultType *Result )
 {
+    (void)TargetPowerState;
+    (void)Result;
     return E_NOT_OK;
 }
 
@@ -190,6 +209,7 @@ Std_ReturnType Pwm_GetTargetPowerState( Pwm_PowerStateType *TargetPowerState, Pw
  *                  PWM_POWER_STATE_NOT_SUPP: PWM Module does not support the requested power state.
  *                  PWM_TRANS_NOT_POSSIBLE: PWM Module cannot transition directly from the current
  *                  power state to the requested power state or the HW peripheral is still busy
+ *
  * @retval  E_OK: Preparation process started
  *          E_NOT_OK: Service is rejected
  *
@@ -197,6 +217,9 @@ Std_ReturnType Pwm_GetTargetPowerState( Pwm_PowerStateType *TargetPowerState, Pw
  */
 Std_ReturnType Pwm_PreparePowerState( Pwm_PowerStateType PowerState, Pwm_PowerStateRequestResultType *Result )
 {
+    (void)PowerState;
+    (void)Result;
+
     return E_NOT_OK;
 }
 
@@ -211,4 +234,5 @@ Std_ReturnType Pwm_PreparePowerState( Pwm_PowerStateType PowerState, Pwm_PowerSt
  */
 void Pwm_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
+    (void)versioninfo;
 }
