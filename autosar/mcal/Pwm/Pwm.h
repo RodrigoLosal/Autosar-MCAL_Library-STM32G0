@@ -34,7 +34,8 @@
 #define PWM_E_PARAM_POINTER             0x15u /*!< API Pwm_GetVersionInfo is called with a NULL parameter. */
 #define PWM_E_POWER_STATE_NOT_SUPPORTED 0x17u /*!< The requested power state is not supported by the PWM module. */
 #define PWM_E_TRANSITION_NOT_POSSIBLE   0x18u /*!< The requested power state is not reachable from the current one. */
-#define PWM_E_PERIPHERAL_NOT_PREPARED   0x19u /*!< PWM_E_PERIPHERAL_NOT_PREPARED*/
+#define PWM_E_PERIPHERAL_NOT_PREPARED   0x19u /*!< PWM_E_PERIPHERAL_NOT_PREPARED. */
+#define PWM_E_NOT_DISENGAGED            0x16u /*!< API Pwm_SetPowerState is called while the PWM module is still in use.*/
 /**
  * @} */
 
