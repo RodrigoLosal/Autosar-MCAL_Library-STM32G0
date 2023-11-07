@@ -8,6 +8,7 @@
  * It allows the selection of the duty cycle and the signal period time.
  */
 #include "Std_Types.h"
+#include "Pwm_Cfg.h"
 #include "Pwm.h"
 
 /**
@@ -15,7 +16,7 @@
  *
  * Service for PWM initialization.
  *
- * @param    Config Pointer to driver configuration
+ * @param    ConfigPtr Pointer to driver configuration
  *
  * @reqs    SWS_Pwm_00095
  */
