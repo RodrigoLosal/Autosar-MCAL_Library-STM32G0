@@ -90,6 +90,7 @@ void Pwm_SetOutputToIdle( Pwm_ChannelType ChannelNumber )
  */
 Pwm_OutputStateType Pwm_GetOutputState( Pwm_ChannelType ChannelNumber )
 {
+    return PWM_LOW;
 }
 
 /**
@@ -137,6 +138,7 @@ void Pwm_EnableNotification( Pwm_ChannelType ChannelNumber, Pwm_EdgeNotification
  */
 Std_ReturnType Pwm_SetPowerState( Pwm_PowerStateRequestResultType *Result )
 {
+    return E_NOT_OK;
 }
 
 /**
@@ -154,6 +156,7 @@ Std_ReturnType Pwm_SetPowerState( Pwm_PowerStateRequestResultType *Result )
  */
 Std_ReturnType Pwm_GetCurrentPowerState( Pwm_PowerStateType *CurrentPowerState, Pwm_PowerStateRequestResultType *Result )
 {
+    return E_NOT_OK;
 }
 
 /**
@@ -171,6 +174,7 @@ Std_ReturnType Pwm_GetCurrentPowerState( Pwm_PowerStateType *CurrentPowerState, 
  */
 Std_ReturnType Pwm_GetTargetPowerState( Pwm_PowerStateType *TargetPowerState, Pwm_PowerStateRequestResultType *Result )
 {
+    return E_NOT_OK;
 }
 
 /**
@@ -193,6 +197,7 @@ Std_ReturnType Pwm_GetTargetPowerState( Pwm_PowerStateType *TargetPowerState, Pw
  */
 Std_ReturnType Pwm_PreparePowerState( Pwm_PowerStateType PowerState, Pwm_PowerStateRequestResultType *Result )
 {
+    return E_NOT_OK;
 }
 
 /**
