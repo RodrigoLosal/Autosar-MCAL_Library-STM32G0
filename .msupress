@@ -6,9 +6,6 @@
 misra-c2012-2.5:autosar/mcal/Dio/Dio.h
 misra-c2012-2.5:autosar/mcal/Port/Port.h
 misra-c2012-2.5:autosar/mcal/Can/Can.h
-<<<<<<< HEAD
 misra-c2012-2.5:autosar/mcal/Can/Can_Arch.h
-=======
 misra-c2012-2.5:autosar/mcal/Pwm/Pwm.h
 misra-c2012-2.7:autosar/mcal/Pwm/Pwm.c
->>>>>>> 8dddd18 (Misra rules were suppressed)
