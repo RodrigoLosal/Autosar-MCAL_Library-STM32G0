@@ -3,7 +3,9 @@
  * @brief   **Pwm Stack Types**
  * @author  Jazmin Melendrez
  *
- * This is the implementation of the Pwm Stack types
+ *This file contains general type definitions for the PWM stack, used in the PWM module.
+ *It includes type definitions for PWM channels, periods, output states, edge notifications,
+ *channel classes, power state requests, and active power states.
  */
 #ifndef PWM_GENERAL_TYPES_H__
 #define PWM_GENERAL_TYPES_H__
