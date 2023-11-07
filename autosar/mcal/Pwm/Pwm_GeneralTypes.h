@@ -52,9 +52,9 @@ typedef enum _Pwm_EdgeNotificationType
  */
 typedef enum _Pwm_ChannelClassType
 {
-    PWM_VARIABLE_PERIOD = 0x00, /*!< The PWM channel has a variable period. The duty cycle and the period can be changed.*/
-    PWM_FIXED_PERIOD,           /*!< The PWM channel has a fixed period. Only the duty cycle can be changed. */
-    PWM_FIXED_PERIOD_SHIFTED    /*!<The PWM channel has a fixed shifted period. Impossible to change it ( only if supported by hardware)*/
+    PWM_VARIABLE_PERIOD = 0x00, /*!< Variable Period. The duty cycle and the period can be changed.*/
+    PWM_FIXED_PERIOD,           /*!< Fixed Period. Only the duty cycle can be changed. */
+    PWM_FIXED_PERIOD_SHIFTED    /*!<TFixed Shifted Period. Impossible to change it*/
 } Pwm_ChannelClassType;
 
 /**
@@ -67,9 +67,9 @@ typedef enum _Pwm_PowerStateRequestResultType
     PWM_SERVICE_ACCEPTED = 0x00, /*!< Power state change executed. */
     PWM_NOT_INIT,                /*!< PWM Module not initialized. */
     PWM_SEQUENCE_ERROR,          /*!<Wrong API call sequence.*/
-    PWM_HW_FAILURE,              /*!< The HW module has a failure which prevents it to enter the required power state. */
-    PWM_POWER_STATE_NOT_SUPP,    /*!< PWM Module does not support the requested power state. */
-    PWM_TRANS_NOT_POSSIBLE       /*!< PWM Module cannot transition directly from the current power state to the requested power state or the HW peripheral is still busy.*/
+    PWM_HW_FAILURE,              /*!< Hardware failure prevents state change.*/
+    PWM_POWER_STATE_NOT_SUPP,    /*!< Power State not supported.  */
+    PWM_TRANS_NOT_POSSIBLE       /*!< Transition not possible or HW busy.*/
 } Pwm_PowerStateRequestResultType;
 
 /**
