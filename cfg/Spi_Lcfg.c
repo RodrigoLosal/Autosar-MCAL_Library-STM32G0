@@ -10,8 +10,9 @@
 /**
  * @brief Spi driver configuration.
  */
+/* clang-format off */
 const Spi_ConfigType SpiConfig =
 {
-.dummy = 0x12345678;
-}
-;
+    .dummy = 0x12345678;
+};
+/* clang-format off */
