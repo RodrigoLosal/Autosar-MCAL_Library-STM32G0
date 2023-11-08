@@ -213,10 +213,10 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
     /*Get the Can controller register structure*/
     Can_RegisterType *Can = ControllerConfig->BaseAddress;
     /* get default baudrate values */
-    uint8 DefaultBaudrate = ControllerConfig->DefaultBaudrate;
+    const Can_ControllerBaudrateConfig *DefaultBaudrate = ControllerConfig->DefaultBaudrate;
 
     /* Configure Clock divider */
-    Can->CKDIV = Config->ClockDivider;
+    Can->CKDIV = ControllerConfig->ClockDivider;
 
     /* Flush the allocated Message RAM area */
     for( uint8 i = 0u; i < ( sizeof( SramCan_RegisterType ) / sizeof( uint32 ) ); i++ )
@@ -296,18 +296,18 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
     }
 
     /* Set the default nominal bit timing register */
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NSJW_BIT, NBTP_NSJW_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].SyncJumpWidth - 1u ) );
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NTSEG1_BIT, NBTP_NTSEG1_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].Seg1 - 1u ) );
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NTSEG2_BIT, NBTP_NTSEG2_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].Seg2 - 1u ) );
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NBRP_BIT, NBTP_NBRP_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].Prescaler - 1u ) );
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NSJW_BIT, NBTP_NSJW_SIZE, ( DefaultBaudrate->SyncJumpWidth - 1u ) );
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NTSEG1_BIT, NBTP_NTSEG1_SIZE, ( DefaultBaudrate->Seg1 - 1u ) );
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NTSEG2_BIT, NBTP_NTSEG2_SIZE, ( DefaultBaudrate->Seg2 - 1u ) );
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NBRP_BIT, NBTP_NBRP_SIZE, ( DefaultBaudrate->Prescaler - 1u ) );
 
     /*set default data bit timing register id FD is active*/
     if( ( ControllerConfig->FrameFormat == CAN_FRAME_FD_BRS ) )
     {
-        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DSJW_BIT, DBTP_DSJW_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].FdSyncJumpWidth - 1u ) );
-        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DTSEG1_BIT, DBTP_DTSEG1_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].FdSeg1 - 1u ) );
-        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DTSEG2_BIT, DBTP_DTSEG2_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].FdSeg2 - 1u ) );
-        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DBRP_BIT, DBTP_DBRP_SIZE, ( ControllerConfig->BaudrateConfigs[ DefaultBaudrate ].FdPrescaler - 1u ) );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DSJW_BIT, DBTP_DSJW_SIZE, ( DefaultBaudrate->FdSyncJumpWidth - 1u ) );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DTSEG1_BIT, DBTP_DTSEG1_SIZE, ( DefaultBaudrate->FdSeg1 - 1u ) );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DTSEG2_BIT, DBTP_DTSEG2_SIZE, ( DefaultBaudrate->FdSeg2 - 1u ) );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DBRP_BIT, DBTP_DBRP_SIZE, ( DefaultBaudrate->FdPrescaler - 1u ) );
     }
 
     /* Select between Tx FIFO and Tx Queue operation modes */
@@ -511,7 +511,7 @@ Std_ReturnType Can_Arch_SetControllerMode( Can_HwUnit *HwUnit, uint8 Controller,
                 Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_CSR_BIT );
 
                 /* Wait until CAN is ready for power down */
-                while( Bfx_GetBit_u32u8_u8( (uint32 *)&Can->CCCR, CCCR_CSA_BIT ) == FALSE )
+                while( Bfx_GetBit_u32u8_u8( Can->CCCR, CCCR_CSA_BIT ) == FALSE )
                 {
                     /*Wee need to stablish a timeout counter to avois a potential endless loop,
                     according to AUTOSAR a Os tick shall be used, but for the moment it will
@@ -809,7 +809,7 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
     uint32 RamBuffer[ 16u ];
 
     /* get controller configuration */
-    const Can_RegisterType *Can = HwUnit->Config->Hohs[ Hth ].ControllerRef;
+    const Can_RegisterType *Can = HwUnit->Config->Hohs[ Hth ].ControllerRef->BaseAddress;
 
     /* Check that the Tx FIFO/Queue is not full*/
     if( ( Bfx_GetBit_u32u8_u8( Can->TXFQS, TXFQS_TFQF_BIT ) == FALSE ) )
@@ -821,7 +821,7 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
         HwHthObject *HthObject = (HwHthObject *)&HwUnit->Config->Hohs[ Hth ].SramRef->TBSA;
 
         /*get the message ID type*/
-        uint8 IdType = Bfx_GetBit_u32u8_u8( (uint32 *)&PduInfo->id, MSG_ID_BIT );
+        uint8 IdType = Bfx_GetBit_u32u8_u8( PduInfo->id, MSG_ID_BIT );
 
         /* Set the message ID, standard (11 bits) or extended (29 bits) */
         if( IdType == MSG_STANDARD_ID )

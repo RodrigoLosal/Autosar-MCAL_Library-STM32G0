@@ -79,8 +79,8 @@ typedef struct _Can_Controller
     uint32 Mode; /*!< Specifies the CAN peripheral operation mode.
                      This parameter can be a value of @ref CAN_mode   */
 
-    uint32 ClockDivider;  /*!< Specifies the clock divider for the CAN controller
-                            This parameter can be a value of @ref CAN_clock_divider */
+    uint32 ClockDivider; /*!< Specifies the clock divider for the CAN controller
+                           This parameter can be a value of @ref CAN_clock_divider */
 
     uint32 FrameFormat; /*!< Specifies the CAN frame format FD or Classic.
                             This parameter can be a value of @ref CAN_frame_format     */
@@ -121,11 +121,13 @@ typedef struct _Can_Controller
     SramCan_RegisterType *SramBA; /*!< Reference to the SRAM location where the HOH is mapped to
                                        this paramter must be SRAMCAN1 or SRAMCAN2 */
 
-    Can_ControllerBaudrateConfig *DefaultBaudrate; /*!< Reference to baudrate configuration container configured for the
+    const Can_ControllerBaudrateConfig *DefaultBaudrate; /*!< Reference to baudrate configuration container configured for the
                                Can Controller*/
 
     const Can_ControllerBaudrateConfig *BaudrateConfigs; /*!< This container contains bit timing related configuration
                                                          parameters */
+
+    uint8 BaudrateConfigsCount; /*!< Number of baudrate configurations for the controller */
 } Can_Controller;
 
 
@@ -191,8 +193,8 @@ typedef struct _Can_ConfigType
  */
 typedef struct _Can_HwUnit
 {
-    const Can_ConfigType *Config;             /*!< Pointer to the configuration structure */
     uint8 HwUnitState;                        /*!< CAN hardware unit state */
+    const Can_ConfigType *Config;             /*!< Pointer to the configuration structure */
     Can_ControllerStateType *ControllerState; /*!< CAN controller states */
 } Can_HwUnit;
 

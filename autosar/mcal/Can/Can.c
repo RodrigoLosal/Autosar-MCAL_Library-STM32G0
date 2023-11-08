@@ -45,7 +45,7 @@ CAN_STATIC Can_ControllerStateType CtrlState[ CAN_NUMBER_OF_CONTROLLERS ] =
 CAN_STATIC Can_HwUnit HwUnit =
 {
     .HwUnitState     = CAN_CS_UNINIT,
-    .Config          = NULL_PTR,
+    .Config          = &CanConfig,
     .ControllerState = CtrlState
 };
 /* clang-format on */

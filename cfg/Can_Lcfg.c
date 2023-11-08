@@ -15,8 +15,8 @@
 
 /**
  * @brief Array with baudrate values for controller 0
- * 
-*/
+ *
+ */
 /* clang-format off */
 const Can_ControllerBaudrateConfig BaudratesCtrl0[ CAN_NUMBER_OF_BAUDRATES_CTRL0 ] =
 {
@@ -111,7 +111,8 @@ const Can_Controller Controllers[ CAN_NUMBER_OF_CONTROLLERS ] =
         .TxBufferITs = 0,
         .TxBufferAbortITs = 0,
         .DefaultBaudrate = &BaudratesCtrl0[ CAN_BAUDRATE_CTRL0_100K ],
-        .BaudrateConfigs = BaudratesCtrl0
+        .BaudrateConfigs = BaudratesCtrl0,
+        .BaudrateConfigsCount = CAN_NUMBER_OF_BAUDRATES_CTRL0
     },
     {
         .Mode = CAN_MODE_NORMAL,
@@ -126,7 +127,8 @@ const Can_Controller Controllers[ CAN_NUMBER_OF_CONTROLLERS ] =
         .TxBufferITs = 0,
         .TxBufferAbortITs = 0,
         .DefaultBaudrate = &BaudratesCtrl1[ CAN_BAUDRATE_CTRL1_500K ],
-        .BaudrateConfigs = BaudratesCtrl1
+        .BaudrateConfigs = BaudratesCtrl1,
+        .BaudrateConfigsCount = CAN_NUMBER_OF_BAUDRATES_CTRL1
     }
 };
 /* clang-format on */
