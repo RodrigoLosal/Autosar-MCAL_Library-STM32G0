@@ -248,7 +248,7 @@
  * @} */
 
 /**
- * @defgroup CAN_Hardware_Object_Type CAN Hardware Object Type
+ * @defgroup CAN_Hardware_Handler_Type CAN Hardware Handler Type
  *
  * @{ */
 #define CAN_FULL                       0x00u /*!< Full CAN */

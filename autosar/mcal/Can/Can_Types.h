@@ -79,6 +79,9 @@ typedef struct _Can_Controller
     uint32 Mode; /*!< Specifies the CAN peripheral operation mode.
                      This parameter can be a value of @ref CAN_mode   */
 
+    uint32 ClockDivider;  /*!< Specifies the clock divider for the CAN controller
+                            This parameter can be a value of @ref CAN_clock_divider */
+
     uint32 FrameFormat; /*!< Specifies the CAN frame format FD or Classic.
                             This parameter can be a value of @ref CAN_frame_format     */
 
@@ -112,23 +115,14 @@ typedef struct _Can_Controller
     uint32 TxBufferAbortITs; /*!< Specifies the buffers to be interrupt enable on Tx Abort.
                                  This parameter can be a value of @ref CAN_TxBuffer */
 
-    uint8 BusoffProcessing; /*!< Enables / disables API Can_MainFunction_BusOff() for handling busoff
-                                events in polling mode. @ref CAN_Processing */
-
-    uint8 RxProcessing; /*!< Enables / disables API Can_MainFunction_Read() for handling PDU
-                            reception events in polling mode. @ref CAN_Processing */
-
-    uint8 TxProcessing; /*!< Enables / disables API Can_MainFunction_Write() for handling PDU
-                            reception events in polling mode. @ref CAN_Processing */
-
-    uint8 DefaultBaudrate; /*!< Reference to baudrate configuration container configured for the
-                               Can Controller*/
-
     Can_RegisterType *BaseAddress; /*!< Base address of the Mcu CAN controller
                                        this paramter must be CAN1 or CAN2 */
 
     SramCan_RegisterType *SramBA; /*!< Reference to the SRAM location where the HOH is mapped to
                                        this paramter must be SRAMCAN1 or SRAMCAN2 */
+
+    Can_ControllerBaudrateConfig *DefaultBaudrate; /*!< Reference to baudrate configuration container configured for the
+                               Can Controller*/
 
     const Can_ControllerBaudrateConfig *BaudrateConfigs; /*!< This container contains bit timing related configuration
                                                          parameters */
@@ -142,8 +136,8 @@ typedef struct _Can_Controller
  */
 typedef struct _Can_HardwareObject
 {
-    uint8 HandleType; /*!< Specifies the type of a hardware object.
-                          This paramter can be a set of @ref CAN_Hardware_Object_Type */
+    uint8 HandleType; /*!< Specifies the type (Full-CAN or Basic-CAN) of a hardware object.
+                          This paramter can be a set of @ref CAN_Hardware_Handler_Type */
 
     uint16 HwObjectCount; /*!< Number of hardware objects used to implement one HOH.
                               On stm32g0 microcontroller this numnber is fixed to 3 for HTH and HRH */
@@ -185,7 +179,6 @@ typedef struct _Can_HardwareObject
  */
 typedef struct _Can_ConfigType
 {
-    uint32 ClockDivider;               /*!< Specifies the clock divider for the CAN controller */
     const Can_Controller *Controllers; /*!< Pointer to the controller structure */
     const Can_HardwareObject *Hohs;    /*!< Pointer to the hardware object structure */
 } Can_ConfigType;

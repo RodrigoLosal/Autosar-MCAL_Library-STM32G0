@@ -54,7 +54,17 @@
  * @brief Specifies the number of buadrate configuration for controller 0
  * @typedef EcucIntegerParamDef
  */
-#define CAN_NUMBER_OF_BAUDRATES   1
+#define CAN_NUMBER_OF_BAUDRATES_CTRL0   2
+#define CAN_BAUDRATE_CTRL0_100K   0
+#define CAN_BAUDRATE_CTRL0_500K   1
+
+/**
+ * @brief Specifies the number of buadrate configuration for controller 0
+ * @typedef EcucIntegerParamDef
+ */
+#define CAN_NUMBER_OF_BAUDRATES_CTRL1   2
+#define CAN_BAUDRATE_CTRL1_100K   0
+#define CAN_BAUDRATE_CTRL1_500K   1
 
 /**
  * @brief Specifies the number of hardware objects to mange by each controller.

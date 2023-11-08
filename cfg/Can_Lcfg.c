@@ -14,14 +14,120 @@
 
 
 /**
+ * @brief Array with baudrate values for controller 0
+ * 
+*/
+/* clang-format off */
+const Can_ControllerBaudrateConfig BaudratesCtrl0[ CAN_NUMBER_OF_BAUDRATES_CTRL0 ] =
+{
+    {
+        .BaudRate = 100000,
+        .PropSeg = 16,
+        .Seg1 = 13,
+        .Seg2 = 2,
+        .SyncJumpWidth = 1,
+        .Prescaler = 6,
+        .FdPropSeg = 16,
+        .FdSeg1 = 13,
+        .FdSeg2 = 2,
+        .FdPrescaler = 6,
+        .FdSspOffset = 0,
+        .FdSyncJumpWidth = 1,
+        .FdTxBitRateSwitch = STD_OFF
+    },
+    {
+        .BaudRate = 1000000,
+        .PropSeg = 16,
+        .Seg1 = 13,
+        .Seg2 = 2,
+        .SyncJumpWidth = 1,
+        .Prescaler = 6,
+        .FdPropSeg = 16,
+        .FdSeg1 = 13,
+        .FdSeg2 = 2,
+        .FdPrescaler = 6,
+        .FdSspOffset = 0,
+        .FdSyncJumpWidth = 1,
+        .FdTxBitRateSwitch = STD_OFF
+    } 
+};
+
+/**
+ * @brief Array with baudrate values for controller 0
+ * 
+*/
+/* clang-format off */
+const Can_ControllerBaudrateConfig BaudratesCtrl1[ CAN_NUMBER_OF_BAUDRATES_CTRL1 ] =
+{
+    {
+        .BaudRate = 100000,
+        .PropSeg = 16,
+        .Seg1 = 13,
+        .Seg2 = 2,
+        .SyncJumpWidth = 1,
+        .Prescaler = 6,
+        .FdPropSeg = 16,
+        .FdSeg1 = 13,
+        .FdSeg2 = 2,
+        .FdPrescaler = 6,
+        .FdSspOffset = 0,
+        .FdSyncJumpWidth = 1,
+        .FdTxBitRateSwitch = STD_OFF
+    },
+    {
+        .BaudRate = 1000000,
+        .PropSeg = 16,
+        .Seg1 = 13,
+        .Seg2 = 2,
+        .SyncJumpWidth = 1,
+        .Prescaler = 6,
+        .FdPropSeg = 16,
+        .FdSeg1 = 13,
+        .FdSeg2 = 2,
+        .FdPrescaler = 6,
+        .FdSspOffset = 0,
+        .FdSyncJumpWidth = 1,
+        .FdTxBitRateSwitch = STD_OFF
+    } 
+};
+
+
+/**
  * @brief Array with the configuration for each controller.
  */
 /* clang-format off */
 const Can_Controller Controllers[ CAN_NUMBER_OF_CONTROLLERS ] =
 {
-    { 
-        .FrameFormat = CAN_FRAME_CLASSIC 
-    } 
+    {
+        .Mode = CAN_MODE_NORMAL,
+        .ClockDivider = CAN_CLOCK_DIV1,
+        .FrameFormat = CAN_FRAME_CLASSIC,
+        .TransmitPause = STD_OFF,
+        .ProtocolException = STD_OFF,
+        .AutoRetransmission = STD_ON,
+        .TxFifoQueueMode = CAN_TX_FIFO_OPERATION,
+        .Line0ActiveITs = 0,
+        .Line1ActiveITs = 0,
+        .TxBufferITs = 0,
+        .TxBufferAbortITs = 0,
+        .DefaultBaudrate = &BaudratesCtrl0[ CAN_BAUDRATE_CTRL0_100K ],
+        .BaudrateConfigs = BaudratesCtrl0
+    },
+    {
+        .Mode = CAN_MODE_NORMAL,
+        .ClockDivider = CAN_CLOCK_DIV1,
+        .FrameFormat = CAN_FRAME_CLASSIC,
+        .TransmitPause = STD_OFF,
+        .ProtocolException = STD_OFF,
+        .AutoRetransmission = STD_ON,
+        .TxFifoQueueMode = CAN_TX_FIFO_OPERATION,
+        .Line0ActiveITs = 0,
+        .Line1ActiveITs = 0,
+        .TxBufferITs = 0,
+        .TxBufferAbortITs = 0,
+        .DefaultBaudrate = &BaudratesCtrl1[ CAN_BAUDRATE_CTRL1_500K ],
+        .BaudrateConfigs = BaudratesCtrl1
+    }
 };
 /* clang-format on */
 
@@ -31,8 +137,14 @@ const Can_Controller Controllers[ CAN_NUMBER_OF_CONTROLLERS ] =
 /* clang-format off */
 const Can_HardwareObject Hohs[ CAN_NUMBER_OF_HOHS ] =
 {
-    { 
-        .ObjectType = CAN_HOH_TYPE_TRANSMIT 
+    {
+        .HandleType = CAN_FULL,
+        .HwObjectCount = 3,
+        .IdType = CAN_ID_STANDARD,
+        .ObjectPayloadLength = 8,
+        .ObjectType = CAN_HOH_TYPE_TRANSMIT,
+        .ControllerRef = &Controllers[ CAN_CONTROLLER_0 ],
+        .SramRef = SRAMCAN1,
     } 
 };
 /* clang-format on */
@@ -43,6 +155,7 @@ const Can_HardwareObject Hohs[ CAN_NUMBER_OF_HOHS ] =
 /* clang-format off */
 const Can_ConfigType CanConfig =
 {
-    .Hohs         = NULL_PTR 
+    .Controllers = Controllers,
+    .Hohs         = Hohs 
 };
 /* clang-format on */
