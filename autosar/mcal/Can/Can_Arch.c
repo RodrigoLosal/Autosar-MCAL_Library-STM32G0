@@ -229,7 +229,7 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
     Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_INIT_BIT );
 
     /* Wait until the INIT bit into CCCR register is set */
-    while( Bfx_GetBit_u32u8_u8( (uint32 *)&Can->CCCR, CCCR_INIT_BIT ) == FALSE )
+    while( Bfx_GetBit_u32u8_u8( Can->CCCR, CCCR_INIT_BIT ) == FALSE )
     {
         /*Wee need to stablish a timeout counter to avois a potential endless loop,
         according to AUTOSAR a Os tick shall be used, but for the moment it will
@@ -349,7 +349,7 @@ void Can_Arch_DeInit( Can_HwUnit *HwUnit, uint8 Controller )
     Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_INIT_BIT );
 
     /* Wait until the INIT bit into CCCR register is set */
-    while( Bfx_GetBit_u32u8_u8( (uint32 *)&Can->CCCR, CCCR_INIT_BIT ) == FALSE )
+    while( Bfx_GetBit_u32u8_u8( Can->CCCR, CCCR_INIT_BIT ) == FALSE )
     {
         /*Wee need to stablish a timeout counter to avois a potential endless loop,
         according to AUTOSAR a Os tick shall be used, but for the moment it will
@@ -360,7 +360,7 @@ void Can_Arch_DeInit( Can_HwUnit *HwUnit, uint8 Controller )
     Bfx_ClrBit_u32u8( (uint32 *)&Can->CCCR, CCCR_CSR_BIT );
 
     /* Wait until FDCAN exits sleep mode */
-    while( Bfx_GetBit_u32u8_u8( (uint32 *)&Can->CCCR, CCCR_CSA_BIT ) == FALSE )
+    while( Bfx_GetBit_u32u8_u8( Can->CCCR, CCCR_CSA_BIT ) == FALSE )
     {
         /*Wee need to stablish a timeout counter to avois a potential endless loop,
         according to AUTOSAR a Os tick shall be used, but for the moment it will
@@ -475,7 +475,7 @@ Std_ReturnType Can_Arch_SetControllerMode( Can_HwUnit *HwUnit, uint8 Controller,
                 Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_INIT_BIT );
 
                 /* Wait until the INIT bit into CCCR register is set */
-                while( Bfx_GetBit_u32u8_u8( (uint32 *)Can->CCCR, CCCR_INIT_BIT ) == FALSE )
+                while( Bfx_GetBit_u32u8_u8( Can->CCCR, CCCR_INIT_BIT ) == FALSE )
                 {
                     /*Wee need to stablish a timeout counter to avois a potential endless loop,
                     according to AUTOSAR a Os tick shall be used, but for the moment it will
@@ -486,7 +486,7 @@ Std_ReturnType Can_Arch_SetControllerMode( Can_HwUnit *HwUnit, uint8 Controller,
                 Bfx_ClrBit_u32u8( (uint32 *)&Can->CCCR, CCCR_CSR_BIT );
 
                 /* Wait until FDCAN exits sleep mode */
-                while( Bfx_GetBit_u32u8_u8( (uint32 *)Can->CCCR, CCCR_CSA_BIT ) == FALSE )
+                while( Bfx_GetBit_u32u8_u8( Can->CCCR, CCCR_CSA_BIT ) == FALSE )
                 {
                     /*Wee need to stablish a timeout counter to avois a potential endless loop,
                     according to AUTOSAR a Os tick shall be used, but for the moment it will
@@ -812,7 +812,7 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
     const Can_RegisterType *Can = HwUnit->Config->Hohs[ Hth ].ControllerRef;
 
     /* Check that the Tx FIFO/Queue is not full*/
-    if( ( Bfx_GetBit_u32u8_u8( (uint32 *)Can->TXFQS, TXFQS_TFQF_BIT ) == FALSE ) )
+    if( ( Bfx_GetBit_u32u8_u8( Can->TXFQS, TXFQS_TFQF_BIT ) == FALSE ) )
     {
         /* Retrieve the Tx FIFO PutIndex */
         uint32 PutIndex = Bfx_GetBits_u32u8u8_u32( Can->TXFQS, TXFQS_TFQPI_BIT, TXFQS_TFQPI_SIZE );
@@ -838,7 +838,7 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
         }
 
         /* Get the type of frame to send */
-        uint8 FrameType = Bfx_GetBit_u32u8_u8( (uint32 *)&PduInfo->id, MSG_FROMAT_BIT );
+        uint8 FrameType = Bfx_GetBit_u32u8_u8( PduInfo->id, MSG_FROMAT_BIT );
 
         /* Set the frame */
         if( FrameType == MSG_CLASSIC_FORMAT )
@@ -874,7 +874,7 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
         }
 
         /* Activate the corresponding transmission request */
-        Bfx_SetBit_u32u8( (uint32 *)Can->TXBAR, PutIndex );
+        Bfx_SetBit_u32u8( (uint32 *)&Can->TXBAR, PutIndex );
 
         RetVal = E_OK;
     }
@@ -915,9 +915,9 @@ void Can_Arch_IsrMainHandler( Can_HwUnit *HwUnit, uint8 Controller )
     for( uint8 Interrupt = 0u; Interrupt < sizeof( IsrPointer ); Interrupt++ )
     {
         /* High Priority Message interrupt management */
-        if( Bfx_GetBit_u32u8_u8( (uint32 *)Can->IR, Interrupt ) == STD_ON )
+        if( Bfx_GetBit_u32u8_u8( Can->IR, Interrupt ) == STD_ON )
         {
-            if( Bfx_GetBit_u32u8_u8( (uint32 *)Can->IE, Interrupt ) == STD_ON )
+            if( Bfx_GetBit_u32u8_u8( Can->IE, Interrupt ) == STD_ON )
             {
                 /* Clear the High Priority Message flag */
                 Bfx_SetBit_u32u8( (uint32 *)&Can->IR, Interrupt );
