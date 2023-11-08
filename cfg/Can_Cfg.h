@@ -49,7 +49,21 @@
  * @brief Specifies the number of hardware objects to mange by each controller.
  * @typedef EcucIntegerParamDef
  */
-#define CAN_NUMBER_OF_HOHS        1
+#define CAN_NUMBER_OF_HOHS        2
+
+/**
+ * @defgroup HOHs Can hardware object
+ *
+ * Specifies the transmit hardware objects an its corresponding controller, where the most significant
+ * nibble represent the controller ID and the least significant nibble represent the HOH ID.
+ *
+ * @typedef EcucIntegerParamDef
+ *
+ * @{ */
+#define CAN_HTH_0_CTRL_0          0x00u /*!< HOH zero to controller one */
+#define CAN_HRH_0_CTRL_0          0x01u /*!< HOH one to controller one */
+/**
+ * @} */
 
 /**
  * @brief Switches the development error detection and notification on or off.

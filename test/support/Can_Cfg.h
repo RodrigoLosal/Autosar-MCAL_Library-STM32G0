@@ -38,8 +38,19 @@
  * @typedef EcucIntegerParamDef
  */
 #define CAN_NUMBER_OF_CONTROLLERS 2
-#define CAN_CONTROLLER_0          0
-#define CAN_CONTROLLER_1          1
+
+/**
+ * @defgroup Controller_IDs Can controllers
+ *
+ * Specifies the controller IDs starting from zero and up to CAN_NUMBER_OF_CONTROLLERS - 1
+ *
+ * @typedef EcucIntegerParamDef
+ *
+ * @{ */
+#define CAN_CONTROLLER_0          0 /*!< Controller zero */
+#define CAN_CONTROLLER_1          1 /*!< Controller one  */
+/**
+ * @} */
 
 /**
  * @brief Specifies the number of buadrate configuration for controller 0
@@ -52,15 +63,28 @@
  * @brief Specifies the number of hardware objects to mange by each controller.
  * @typedef EcucIntegerParamDef
  */
-#define CAN_NUMBER_OF_HOHS        2
-#define CAN_HTH_0                 0
-#define CAN_HRH_0                 1
+#define CAN_NUMBER_OF_HOHS        3
+
+/**
+ * @defgroup HOHs_IDs Can hardware object
+ *
+ * Specifies the transmit hardware objects an its corresponding controller, where the most significant
+ * nibble represent the controller ID and the least significant nibble represent the HOH ID.
+ *
+ * @typedef EcucIntegerParamDef
+ *
+ * @{ */
+#define CAN_HTH_0_CTRL_0          0
+#define CAN_HRH_0_CTRL_0          1
+#define CAN_HTH_0_CTRL_1          2
+/**
+ * @} */
 
 /**
  * @brief Switches the development error detection and notification on or off.
  * @typedef EcucBooleanParamDef
  */
-#define CAN_DEV_ERROR_DETECT      STD_OFF
+#define CAN_DEV_ERROR_DETECT      STD_ON
 
 /**
  * @brief Enables/Disables the Global Time APIs used when hardware timestamping is supported.

@@ -295,16 +295,31 @@ void test__Can_SetControllerMode__when_Controller_is_unkown( void )
 }
 
 /**
- * @brief   **Test SetControllerMode when Transition is unkown**
+ * @brief   **Test SetControllerMode when Transition is invalid**
  *
  * The test checks that the function does not call the Can_Arch_SetControllerMode function when the Transition
  * is out of range.
  */
-void test__Can_SetControllerMode__when_Transition_is_unkown( void )
+void test__Can_SetControllerMode__when_Transition_is_invalid( void )
 {
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_SetControllerMode( CAN_CONTROLLER_0, 0xFF );
+    Std_ReturnType Return = Can_SetControllerMode( CAN_CONTROLLER_0, CAN_CS_UNINIT );
+
+    TEST_ASSERT_EQUAL_MESSAGE( E_NOT_OK, Return, "Return value should be E_NOT_OK" );
+}
+
+/**
+ * @brief   **Test SetControllerMode when Transition is invalid**
+ *
+ * The test checks that the function does not call the Can_Arch_SetControllerMode function when the Transition
+ * is out of range.
+ */
+void test__Can_SetControllerMode__when_Transition_is_invalid2( void )
+{
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Std_ReturnType Return = Can_SetControllerMode( CAN_CONTROLLER_0, CAN_CS_WAKEUP );
 
     TEST_ASSERT_EQUAL_MESSAGE( E_NOT_OK, Return, "Return value should be E_NOT_OK" );
 }
@@ -803,7 +818,7 @@ void test__Can_EnableEgressTimeStamp__when_not_ready_value_in_HwUnitState( void 
 
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Can_EnableEgressTimeStamp( CAN_HTH_0 );
+    Can_EnableEgressTimeStamp( CAN_HTH_0_CTRL_0 );
 
     /* test is testing if Det_ReportError was called */
 }
@@ -818,7 +833,7 @@ void test__Can_EnableEgressTimeStamp__when_Hth_is_unkown( void )
 {
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Can_EnableEgressTimeStamp( CAN_HRH_0 );
+    Can_EnableEgressTimeStamp( CAN_HRH_0_CTRL_0 );
 
     /* test is testing if Det_ReportError was called */
 }
@@ -832,7 +847,7 @@ void test__Can_EnableEgressTimeStamp__when_all_values_are_correct( void )
 {
     Can_Arch_EnableEgressTimeStamp_Ignore( );
 
-    Can_EnableEgressTimeStamp( CAN_HTH_0 );
+    Can_EnableEgressTimeStamp( CAN_HTH_0_CTRL_0 );
 
     /* test is testing if Can_Arch_EnableEgressTimeStamp was called */
 }
@@ -850,7 +865,7 @@ void test__Can_GetEgressTimeStamp__when_not_ready_value_in_HwUnitState( void )
 
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetEgressTimeStamp( CAN_VALID_TX_PDU_ID, CAN_HTH_0, &EgressTimeStamp );
+    Std_ReturnType Return = Can_GetEgressTimeStamp( CAN_VALID_TX_PDU_ID, CAN_HTH_0_CTRL_0, &EgressTimeStamp );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
 }
@@ -867,7 +882,7 @@ void test__Can_GetEgressTimeStamp__when_Hth_is_unkown( void )
 
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetEgressTimeStamp( CAN_VALID_TX_PDU_ID, CAN_HRH_0, &EgressTimeStamp );
+    Std_ReturnType Return = Can_GetEgressTimeStamp( CAN_VALID_TX_PDU_ID, CAN_HRH_0_CTRL_0, &EgressTimeStamp );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
 }
@@ -882,7 +897,7 @@ void test__Can_GetEgressTimeStamp__when_EgressTimeStamp_is_NULL( void )
 {
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetEgressTimeStamp( CAN_VALID_TX_PDU_ID, CAN_HTH_0, NULL_PTR );
+    Std_ReturnType Return = Can_GetEgressTimeStamp( CAN_VALID_TX_PDU_ID, CAN_HTH_0_CTRL_0, NULL_PTR );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
 }
@@ -901,7 +916,7 @@ void test__Can_GetEgressTimeStamp__when_TxPduId_is_invalid( void )
 
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetEgressTimeStamp( CAN_INVALID_TX_PDU_ID, CAN_HTH_0, &EgressTimeStamp );
+    Std_ReturnType Return = Can_GetEgressTimeStamp( CAN_INVALID_TX_PDU_ID, CAN_HTH_0_CTRL_0, &EgressTimeStamp );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
 }
@@ -917,7 +932,7 @@ void test__Can_GetEgressTimeStamp__when_all_values_are_correct( void )
 
     Can_Arch_GetEgressTimeStamp_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetEgressTimeStamp( CAN_VALID_TX_PDU_ID, CAN_HTH_0, &EgressTimeStamp );
+    Std_ReturnType Return = Can_GetEgressTimeStamp( CAN_VALID_TX_PDU_ID, CAN_HTH_0_CTRL_0, &EgressTimeStamp );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_OK, "Return value should be E_OK" );
 }
@@ -935,7 +950,7 @@ void test__Can_GetIngressTimeStamp__when_not_ready_value_in_HwUnitState( void )
 
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetIngressTimeStamp( CAN_HRH_0, &IngressTimeStamp );
+    Std_ReturnType Return = Can_GetIngressTimeStamp( CAN_HRH_0_CTRL_0, &IngressTimeStamp );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
 }
@@ -952,7 +967,7 @@ void test__Can_GetIngressTimeStamp__when_Hrh_is_unkown( void )
 
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetIngressTimeStamp( CAN_HTH_0, &IngressTimeStamp );
+    Std_ReturnType Return = Can_GetIngressTimeStamp( CAN_HTH_0_CTRL_0, &IngressTimeStamp );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
 }
@@ -967,7 +982,7 @@ void test__Can_GetIngressTimeStamp__when_IngressTimeStamp_is_NULL( void )
 {
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetIngressTimeStamp( CAN_HRH_0, NULL_PTR );
+    Std_ReturnType Return = Can_GetIngressTimeStamp( CAN_HRH_0_CTRL_0, NULL_PTR );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
 }
@@ -983,7 +998,197 @@ void test__Can_GetIngressTimeStamp__when_all_values_are_correct( void )
 
     Can_Arch_GetIngressTimeStamp_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_GetIngressTimeStamp( CAN_HRH_0, &IngressTimeStamp );
+    Std_ReturnType Return = Can_GetIngressTimeStamp( CAN_HRH_0_CTRL_0, &IngressTimeStamp );
 
     TEST_ASSERT_EQUAL_MESSAGE( Return, E_OK, "Return value should be E_OK" );
+}
+
+/**
+ * @brief   **Test Can_Write when not CAN_CS_READY**
+ *
+ * The test checks that the function does not call the Can_Arch_Write function when CAN module
+ * is not intialized (when HwUnitState is not CAN_CS_READY).
+ */
+void test__Can_Write__when_not_ready_value_in_HwUnitState( void )
+{
+    Can_PduType PduInfo;
+    HwUnit.HwUnitState = CAN_CS_UNINIT;
+
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Std_ReturnType Return = Can_Write( CAN_HTH_0_CTRL_0, &PduInfo );
+
+    TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
+}
+/**
+ * @brief   **Test Can_Write when Hth is not for transmit**
+ *
+ * The test checks that the function does not call the Can_Arch_Write function when the Hth
+ * is not for transmit.
+ */
+void test__Can_Write__when_Hth_is_unkown( void )
+{
+    Can_PduType PduInfo;
+
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Std_ReturnType Return = Can_Write( CAN_HRH_0_CTRL_0, &PduInfo );
+
+    TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
+}
+
+/**
+ * @brief   **Test Can_Write when PduInfo is NULL**
+ *
+ * The test checks that the function does not call the Can_Arch_Write function when the PduInfo
+ * is NULL.
+ */
+void test__Can_Write__when_PduInfo_is_NULL( void )
+{
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Std_ReturnType Return = Can_Write( CAN_HTH_0_CTRL_0, NULL_PTR );
+
+    TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
+}
+
+/**
+ * @brief   **Test Can_Write when lenght is bigger than 64**
+ *
+ * The test checks that the function does not call the Can_Arch_Write function when the lenght
+ * is bigger than 64.
+ */
+void test__Can_Write__when_lenght_is_bigger_than_64( void )
+{
+    uint8 message[ 8 ];
+    Can_PduType PduInfo;
+
+    PduInfo.length = 65;
+    PduInfo.id     = 0x000007ff;
+    PduInfo.sdu    = message;
+
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Std_ReturnType Return = Can_Write( CAN_HTH_0_CTRL_0, &PduInfo );
+
+    TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
+}
+
+/**
+ * @brief   **Test Can_Write when lenght is bigger than 8 in frame classic**
+ *
+ * The test checks that the function does not call the Can_Arch_Write function when the lenght
+ * is bigger than 8 in frame classic.
+ */
+void test__Can_Write__when_lenght_is_bigger_than_8_in_frame_classic( void )
+{
+    uint8 message[ 8 ];
+    Can_PduType PduInfo;
+
+    PduInfo.length = 9;
+    PduInfo.id     = 0x000007ff;
+    PduInfo.sdu    = message;
+
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Std_ReturnType Return = Can_Write( CAN_HTH_0_CTRL_0, &PduInfo );
+
+    TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
+}
+
+/**
+ * @brief   **Test Can_Write when frame is bigger than 8 but CAN mode is not FD**
+ *
+ * The test checks that the function does not call the Can_Arch_Write function when the frame
+ * is bigger than 8 but CAN mode is not FD.
+ */
+void test__Can_Write__when_frame_is_bigger_than_8_but_CAN_mode_is_not_FD( void )
+{
+    uint8 message[ 8 ];
+    Can_PduType PduInfo;
+
+    PduInfo.length = 9;
+    PduInfo.id     = 0x000007ff;
+    PduInfo.sdu    = message;
+
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Std_ReturnType Return = Can_Write( CAN_HTH_0_CTRL_1, &PduInfo );
+
+    TEST_ASSERT_EQUAL_MESSAGE( Return, E_NOT_OK, "Return value should be E_NOT_OK" );
+}
+
+/**
+ * @brief   **Test Can_Write when all paramters are right**
+ *
+ * The test checks that the function calls the Can_Arch_Write function when all paramters are right.
+ */
+void test__Can_Write__when_all_paramters_are_right( void )
+{
+    uint8 message[ 8 ];
+    Can_PduType PduInfo;
+
+    PduInfo.length = 8;
+    PduInfo.id     = 0x000007ff;
+    PduInfo.sdu    = message;
+
+    Can_Arch_Write_IgnoreAndReturn( E_OK );
+
+    Std_ReturnType Return = Can_Write( CAN_HTH_0_CTRL_0, &PduInfo );
+
+    TEST_ASSERT_EQUAL_MESSAGE( Return, E_OK, "Return value should be E_OK" );
+}
+
+/**
+ * @brief   **Test Can_Write when all paramters are right and CAN mode is FD**
+ *
+ * The test checks that the function calls the Can_Arch_Write function when all paramters are right and CAN mode is FD.
+ */
+void test__Can_Write__when_all_paramters_are_right_and_CAN_mode_is_FD( void )
+{
+    uint8 message[ 64 ];
+    Can_PduType PduInfo;
+
+    PduInfo.length = 64;
+    PduInfo.id     = 0x400007ff;
+    PduInfo.sdu    = message;
+
+    Can_Arch_Write_IgnoreAndReturn( E_OK );
+
+    Std_ReturnType Return = Can_Write( CAN_HTH_0_CTRL_1, &PduInfo );
+
+    TEST_ASSERT_EQUAL_MESSAGE( Return, E_OK, "Return value should be E_OK" );
+}
+
+/**
+ * @brief   **Test Can_GetVersionInfo when null**
+ *
+ * The test checks that the function does not call the Can_Arch_GetVersionInfo function when the versioninfo
+ * is NULL.
+ */
+void test__Can_GetVersionInfo__when_null( void )
+{
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Can_GetVersionInfo( NULL_PTR );
+
+    /* test is testing if Det_ReportError was called */
+}
+
+/**
+ * @brief   **Test Can_GetVersionInfo when all values are correct**
+ *
+ * The test checks that the function calls the Can_Arch_GetVersionInfo function when all values are correct.
+ */
+void test__Can_GetVersionInfo__when_all_values_are_correct( void )
+{
+    Std_VersionInfoType versioninfo;
+
+    Can_GetVersionInfo( &versioninfo );
+
+    TEST_ASSERT_EQUAL_MESSAGE( versioninfo.vendorID, CAN_MODULE_ID, "vendorID should be 0" );
+    TEST_ASSERT_EQUAL_MESSAGE( versioninfo.moduleID, CAN_VENDOR_ID, "moduleID should be 0" );
+    TEST_ASSERT_EQUAL_MESSAGE( versioninfo.sw_major_version, CAN_SW_MAJOR_VERSION, "sw_major_version should be 1" );
+    TEST_ASSERT_EQUAL_MESSAGE( versioninfo.sw_minor_version, CAN_SW_MINOR_VERSION, "sw_minor_version should be 0" );
+    TEST_ASSERT_EQUAL_MESSAGE( versioninfo.sw_patch_version, CAN_SW_PATCH_VERSION, "sw_patch_version should be 0" );
 }

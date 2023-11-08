@@ -16,16 +16,26 @@
 /**
  * @brief Array with the configuration for each controller.
  */
+/* clang-format off */
 const Can_Controller Controllers[ CAN_NUMBER_OF_CONTROLLERS ] =
 {
-{ .FrameFormat = CAN_FRAME_CLASSIC } };
+    { 
+        .FrameFormat = CAN_FRAME_CLASSIC 
+    } 
+};
+/* clang-format on */
 
 /**
  * @brief Array with the configuration for each hardware object.
  */
+/* clang-format off */
 const Can_HardwareObject Hohs[ CAN_NUMBER_OF_HOHS ] =
 {
-{ .ObjectType = CAN_HOH_TYPE_TRANSMIT } };
+    { 
+        .ObjectType = CAN_HOH_TYPE_TRANSMIT 
+    } 
+};
+/* clang-format on */
 
 /**
  * @brief Can driver configuration.

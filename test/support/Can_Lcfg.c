@@ -21,6 +21,9 @@ const Can_Controller Controllers[ CAN_NUMBER_OF_CONTROLLERS ] =
 {
     { 
         .FrameFormat = CAN_FRAME_CLASSIC 
+    },
+    { 
+        .FrameFormat = CAN_FRAME_FD_NO_BRS 
     } 
 };
 /* clang-format on */
@@ -32,10 +35,16 @@ const Can_Controller Controllers[ CAN_NUMBER_OF_CONTROLLERS ] =
 const Can_HardwareObject Hohs[ CAN_NUMBER_OF_HOHS ] =
 {
     { 
-        .ObjectType = CAN_HOH_TYPE_TRANSMIT 
+        .ObjectType = CAN_HOH_TYPE_TRANSMIT,
+        .ControllerRef = &Controllers[ CAN_CONTROLLER_0 ]
     },
     { 
-        .ObjectType = CAN_HOH_TYPE_RECEIVE 
+        .ObjectType = CAN_HOH_TYPE_RECEIVE,
+        .ControllerRef = &Controllers[ CAN_CONTROLLER_0 ]
+    }, 
+    { 
+        .ObjectType = CAN_HOH_TYPE_TRANSMIT,
+        .ControllerRef = &Controllers[ CAN_CONTROLLER_1 ]
     } 
 };
 /* clang-format on */
@@ -46,6 +55,7 @@ const Can_HardwareObject Hohs[ CAN_NUMBER_OF_HOHS ] =
 /* clang-format off */
 const Can_ConfigType CanConfig =
 {
+    .Controllers = Controllers,
     .Hohs         = Hohs 
 };
 /* clang-format on */

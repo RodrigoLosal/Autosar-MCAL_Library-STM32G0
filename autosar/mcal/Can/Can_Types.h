@@ -41,8 +41,10 @@ typedef struct _Can_Controller
  */
 typedef struct _Can_HardwareObject
 {
-    uint8 ObjectType; /*!< Select the type of HOH object, for Tx or Rx
-                          This paramter can be a set of  @ref CAN_Hardware_Object_Type */
+    uint8 ObjectType;                    /*!< Select the type of HOH object, for Tx or Rx
+                                             This paramter can be a set of  @ref CAN_Hardware_Object_Type */
+    const Can_Controller *ControllerRef; /*!< Reference to CAN Controller to which the HOH is associated to
+                                         this paramter must be a address of a valid controller structure  */
 } Can_HardwareObject;
 
 
