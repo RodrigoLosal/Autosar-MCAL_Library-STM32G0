@@ -11,7 +11,6 @@
 #include "Std_Types.h"
 #include "Pwm_Cfg.h"
 #include "Pwm_Arch.h"
-#include "Bfx.h"
 
 /**
  * @brief    **Pwm low level Initialization**
@@ -229,16 +228,4 @@ Std_ReturnType Pwm_Arch_PreparePowerState( Pwm_HwUnit *HwUnit, Pwm_PowerStateTyp
     (void)PowerState;
     (void)Result;
     return E_NOT_OK;
-}
-
-/**
- * @brief    **Pwm low level Get Version Info**
- *
- * This function returns the version information of this module.
- *
- * @param    versioninfo Pointer to where to store the version information of this module.
- */
-void Pwm_Arch_GetVersionInfo( Std_VersionInfoType *versioninfo )
-{
-    (void)versioninfo;
 }
