@@ -49,6 +49,7 @@
     - autosar/mcal/Can/Can.c
     - autosar/mcal/Can/Can_Arch.c
     - autosar/mcal/Pwm/Pwm.c
+    - autosar/mcal/Pwm/Pwm_Arch.c
   :utilities:
     - gcovr
   :reports:
