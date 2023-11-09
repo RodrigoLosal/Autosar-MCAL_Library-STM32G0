@@ -142,6 +142,9 @@
 /**
  * @} */
 
+#define PSR_BO_BIT          7u  /*!< Bus_Off bit */
+#define PSR_EP_BIT          5u  /*!< Protocol_Error bit */
+
 /**
  * @defgroup TX_Buffer_bits TX Buffer header register bits
  *
@@ -678,11 +681,30 @@ Std_ReturnType Can_Arch_CheckWakeup( Can_HwUnit *HwUnit, uint8 Controller )
  */
 Std_ReturnType Can_Arch_GetControllerErrorState( Can_HwUnit *HwUnit, uint8 ControllerId, Can_ErrorStateType *ErrorStatePtr )
 {
-    (void)HwUnit;
-    (void)ControllerId;
-    (void)ErrorStatePtr;
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ ControllerId ];
+    /*Get the Can controller register structure*/
+    Can_RegisterType *Can = ControllerConfig->BaseAddress;
 
-    return E_NOT_OK;
+    /*Inquire is bus off status*/
+    if( Bfx_GetBit_u32u8_u8( Can->PSR, PSR_BO_BIT ) == STD_ON )
+    {
+        *ErrorStatePtr = CAN_ERRORSTATE_BUSOFF;
+    }
+    else
+    {
+        /*Eror passive or active state*/
+        if( Bfx_GetBit_u32u8_u8( Can->PSR, PSR_EP_BIT ) == STD_ON )
+        {
+            *ErrorStatePtr = CAN_ERRORSTATE_PASSIVE;
+        }
+        else
+        {
+            *ErrorStatePtr = CAN_ERRORSTATE_ACTIVE;
+        }
+    }
+
+    return E_OK;
 }
 
 /**
