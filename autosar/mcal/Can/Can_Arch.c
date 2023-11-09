@@ -115,6 +115,8 @@
 #define TXFQS_TFQF_BIT       20u /*!< Tx FIFO/Queue Full */
 #define TXFQS_TFQPI_BIT      16u /*!< Tx FIFO/Queue Put Index */
 #define TXFQS_TFQPI_SIZE     2u  /*!< Tx FIFO/Queue Put Index bitfiled size*/
+#define TXFQS_TFQGI_BIT      8u  /*!< Tx FIFO/Queue Get Index */
+#define TXFQS_TFQGI_SIZE     2u  /*!< Tx FIFO/Queue Get Index bitfiled size*/
 /**
  * @} */
 
@@ -129,6 +131,7 @@
 #define TX_BUFFER_BRS_BIT    20u /*!< Bit rate switch bit */
 #define TX_BUFFER_FDF_BIT    21u /*!< FD format bit */
 #define TX_BUFFER_EFC_BIT    23u /*!< Event FIFO Control bit */
+#define TX_BUFFER_MM_BIT     24u /*!< Message Marker bit */
 /**
  * @} */
 
@@ -139,6 +142,7 @@
 #define TX_BUFFER_ID_11_SIZE 11u /*!< Tx standard ID bitfield size */
 #define TX_BUFFER_ID_29_SIZE 29u /*!< Tx extended ID bitfield size */
 #define TX_BUFFER_DLC_SIZE   4u  /*!< Data length code bitfield size */
+#define TX_BUFFER_MM_SIZE    8u  /*!< Message Marker bitfield size */
 /**
  * @} */
 
@@ -190,6 +194,12 @@ static void Can_Isr_RxFifo1NewMessage( Can_HwUnit *HwUnit, uint8 Controller );
 static void Can_Isr_RxFifo1Full( Can_HwUnit *HwUnit, uint8 Controller );
 static void Can_Isr_RxFifo1MessageLost( Can_HwUnit *HwUnit, uint8 Controller );
 static void Can_Isr_HighPriorityMessageRx( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_TransmissionCompleted( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_TransmissionCancellationFinished( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_TxEventFifoElementLost( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_TxEventFifoFull( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_TxEventFifoNewEntry( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_TxFifoEmpty( Can_HwUnit *HwUnit, uint8 Controller );
 
 /**
  * @brief    **Can low level Initialization**
@@ -837,6 +847,9 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
             Bfx_SetBit_u32u8( &HthObject[ PutIndex ].TBSAHeader1, TX_BUFFER_XTD_BIT );
         }
 
+        /* Store the PduId into FIFO events  */
+        Bfx_PutBits_u32u8u8u32( &HthObject[ PutIndex ].TBSAHeader1, TX_BUFFER_MM_BIT, TX_BUFFER_MM_SIZE, PduInfo->swPduHandle );
+
         /* Get the type of frame to send */
         uint8 FrameType = Bfx_GetBit_u32u8_u8( PduInfo->id, MSG_FROMAT_BIT );
 
@@ -908,7 +921,13 @@ void Can_Arch_IsrMainHandler( Can_HwUnit *HwUnit, uint8 Controller )
         Can_Isr_RxFifo1NewMessage,
         Can_Isr_RxFifo1Full,
         Can_Isr_RxFifo1MessageLost,
-        Can_Isr_HighPriorityMessageRx
+        Can_Isr_HighPriorityMessageRx,
+        Can_Isr_TransmissionCompleted,
+        Can_Isr_TransmissionCancellationFinished,
+        Can_Isr_TxEventFifoElementLost,
+        Can_Isr_TxEventFifoFull,
+        Can_Isr_TxEventFifoNewEntry,
+        Can_Isr_TxFifoEmpty
     };
     /* clang-format on */
 
@@ -1122,4 +1141,87 @@ static void Can_Isr_HighPriorityMessageRx( Can_HwUnit *HwUnit, uint8 Controller 
 {
     (void)HwUnit;
     (void)Controller;
+}
+
+/**
+ * @brief    **Can Transmission completed Callback**
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ */
+static void Can_Isr_TransmissionCompleted( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the Can controller register structure*/
+    Can_RegisterType *Can = ControllerConfig->BaseAddress;
+
+    uint8 GetIndex     = Bfx_GetBits_u32u8u8_u32( Can->TXFQS, TXFQS_TFQGI_BIT, TXFQS_TFQGI_SIZE );
+    PduIdType CanPduId = Bfx_GetBits_u32u8u8_u32( ControllerConfig->SramBA->EFSA[ GetIndex ], TX_BUFFER_MM_BIT, TX_BUFFER_MM_SIZE );
+
+    (void)CanPduId;
+    // Call to CanIf_TxConfirmation( CanPduId );
+}
+
+/**
+ * @brief    **Can Transmission cancellation finished Callback**
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ */
+static void Can_Isr_TransmissionCancellationFinished( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    (void)HwUnit;
+    (void)Controller;
+}
+
+/**
+ * @brief    **Can Tx Event Fifo Element Lost Callback**
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ */
+static void Can_Isr_TxEventFifoElementLost( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    (void)HwUnit;
+    (void)Controller;
+}
+
+/**
+ * @brief    **Can Tx Event Fifo Full Callback**
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ */
+static void Can_Isr_TxEventFifoFull( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    (void)HwUnit;
+    (void)Controller;
+}
+
+/**
+ * @brief    **Can Tx Event Fifo New Entry Callback**
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ */
+static void Can_Isr_TxEventFifoNewEntry( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    (void)HwUnit;
+    (void)Controller;
+}
+
+/**
+ * @brief    **Can Tx Event Fifo Watermark Reached Callback**
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ *
+ * @reqs    SWS_Can_00016
+ */
+static void Can_Isr_TxFifoEmpty( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    (void)HwUnit;
+    (void)Controller;
+
+    // Call to CanIf_TxConfirmation( PduInfo->swPduHandle );
 }
