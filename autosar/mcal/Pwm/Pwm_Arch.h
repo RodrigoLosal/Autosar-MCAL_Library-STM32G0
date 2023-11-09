@@ -25,6 +25,6 @@ Std_ReturnType Pwm_Arch_SetPowerState( Pwm_HwUnit *HwUnit, Pwm_PowerStateRequest
 Std_ReturnType Pwm_Arch_GetCurrentPowerState( Pwm_HwUnit *HwUnit, Pwm_PowerStateType *CurrentPowerState, Pwm_PowerStateRequestResultType *Result );
 Std_ReturnType Pwm_Arch_GetTargetPowerState( Pwm_HwUnit *HwUnit, Pwm_PowerStateType *TargetPowerState, Pwm_PowerStateRequestResultType *Result );
 Std_ReturnType Pwm_Arch_PreparePowerState( Pwm_HwUnit *HwUnit, Pwm_PowerStateType PowerState, Pwm_PowerStateRequestResultType *Result );
-void Pwm_Arch_GetVersionInfo( Pwm_HwUnit *HwUnit, Std_VersionInfoType *versioninfo );
+void Pwm_Arch_GetVersionInfo( Std_VersionInfoType *versioninfo );
 
 #endif

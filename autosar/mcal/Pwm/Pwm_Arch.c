@@ -163,7 +163,7 @@ Std_ReturnType Pwm_Arch_SetPowerState( Pwm_HwUnit *HwUnit, Pwm_PowerStateRequest
 /**
  * @brief    **Pwm low level Get Current Power State**
  *
- *This function provides the current power state of a specified PWM hardware unit.
+ * This function provides the current power state of a specified PWM hardware unit.
  *
  *
  * @param    HwUnit Pointer to the hardware unit configuration
@@ -185,8 +185,8 @@ Std_ReturnType Pwm_Arch_GetCurrentPowerState( Pwm_HwUnit *HwUnit, Pwm_PowerState
 /**
  * @brief    **Pwm low level Get Target Power State**
  *
- *The API returns the requested power state of the HW unit. This shall coincide with the 
- *current power state if no transition is ongoing.
+ * The API returns the requested power state of the HW unit. This shall coincide with the
+ * current power state if no transition is ongoing.
  *
  * @param    HwUnit Pointer to the hardware unit configuration
  * @param    TargetPowerState The Target power mode of the PWM HW Unit is returned in this parameter.
@@ -207,8 +207,8 @@ Std_ReturnType Pwm_Arch_GetTargetPowerState( Pwm_HwUnit *HwUnit, Pwm_PowerStateT
 /**
  * @brief    **Pwm low level Prepare Power State**
  *
- *This API starts the needed process to allow the PWM HW module to enter the requested power state.
- *Initiates all actions needed to enable a HW module to enter the target power state.
+ * This API starts the needed process to allow the PWM HW module to enter the requested power state.
+ * Initiates all actions needed to enable a HW module to enter the target power state.
  *
  * @param    HwUnit Pointer to the hardware unit configuration.
  * @param    PowerState The Target power mode of the PWM HW Unit is returned in this parameter.
@@ -234,13 +234,12 @@ Std_ReturnType Pwm_Arch_PreparePowerState( Pwm_HwUnit *HwUnit, Pwm_PowerStateTyp
 /**
  * @brief    **Pwm low level Get Version Info**
  *
- *This function returns the version information of this module.
+ * This function returns the version information of this module.
  *
  * @param    HwUnit Pointer to the hardware unit configuration.
  * @param    versioninfo Pointer to where to store the version information of this module.
  */
-void Pwm_Arch_GetVersionInfo( Pwm_HwUnit *HwUnit, Std_VersionInfoType *versioninfo )
+void Pwm_Arch_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
-    (void)HwUnit;
     (void)versioninfo;
 }
