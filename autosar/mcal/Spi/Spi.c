@@ -60,6 +60,7 @@ Std_ReturnType Spi_WriteIB( Spi_ChannelType Channel, const Spi_DataBufferType *D
     (void)DataBufferPtr;
 }
 
+#if SPI_SUPPORT_CONCURRENT_SYNC_TRANSMIT == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief    **Spi Asynchronous Transmit**
  *
@@ -76,6 +77,7 @@ Std_ReturnType Spi_AsyncTransmit( Spi_SequenceType Sequence )
 {
     (void)Sequence;
 }
+#endif
 
 /**
  * @brief    **Spi Read in the Internal Buffer**
@@ -199,6 +201,7 @@ Std_ReturnType Spi_SyncTransmit( Spi_SequenceType Sequence )
     (void)Sequence;
 }
 
+#if SPI_HW_STATUS_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief    **Spi get Hardware microcontroller peripheral Unit Status**
  *
@@ -215,7 +218,9 @@ Spi_StatusType Spi_GetHWUnitStatus( Spi_HWUnitType HWUnit )
 {
     (void)HWUnit;
 }
+#endif
 
+#if SPI_CANCEL_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief    **Spi cancel**
  *
@@ -229,6 +234,7 @@ void Spi_Cancel( Spi_SequenceType Sequence )
 {
     (void)Sequence;
 }
+#endif
 
 /**
  * @brief    **Spi set asynchronous mode**
