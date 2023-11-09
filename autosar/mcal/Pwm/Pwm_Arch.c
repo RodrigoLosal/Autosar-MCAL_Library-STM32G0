@@ -236,7 +236,6 @@ Std_ReturnType Pwm_Arch_PreparePowerState( Pwm_HwUnit *HwUnit, Pwm_PowerStateTyp
  *
  * This function returns the version information of this module.
  *
- * @param    HwUnit Pointer to the hardware unit configuration.
  * @param    versioninfo Pointer to where to store the version information of this module.
  */
 void Pwm_Arch_GetVersionInfo( Std_VersionInfoType *versioninfo )
