@@ -258,7 +258,8 @@
 
 /**
  * @defgroup CAN_Processing CAN Controller Rx, Tx type of processing
- */
+ *
+ * @{ */
 #define CAN_PROCESSING_INTERRUPT       0x00u /*!< Interrupt processing */
 #define CAN_PROCESSING_POLLING         0x01u /*!< Polling processing   */
 #define CAN_PROCESSING_MIXED           0x02u /*!< Mixed processing     */

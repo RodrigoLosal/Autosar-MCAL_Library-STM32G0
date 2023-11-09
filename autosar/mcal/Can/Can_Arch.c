@@ -12,6 +12,7 @@
 #include "Can_Cfg.h"
 #include "Can_Arch.h"
 #include "Bfx.h"
+#include "CanIf.h"
 
 /**
  * @defgroup CCR_bits CCCR register bits
@@ -50,7 +51,7 @@
  * @} */
 
 /**
- * @defgroup NBTP_bits NBTP register bit sizes
+ * @defgroup NBTP_sizes NBTP register bit sizes
  *
  * @{ */
 #define NBTP_NSJW_SIZE       7u /*!< Nominal Jump Width bitfiled size*/
@@ -72,7 +73,7 @@
  * @} */
 
 /**
- * @defgroup DBTP_bits DBTP register bit sizes
+ * @defgroup DBTP_sizes DBTP register bit sizes
  *
  * @{ */
 #define DBTP_DSJW_SIZE       0u  /*!< Data Jump Width bitfiled size*/
@@ -84,7 +85,8 @@
 
 /**
  * @defgroup RXGFC_bits RXGFC register bits
- */
+ *
+ * @{ */
 #define RXGFC_LSS_BIT        16u /*!< List Size Standard */
 #define RXGFC_LSE_BIT        24u /*!< List Size Extended */
 /**
@@ -100,7 +102,7 @@
  * @} */
 
 /**
- * @defgroup ECR_bits ECR register bit sizes
+ * @defgroup ECR_sizes ECR register bit sizes
  *
  * @{ */
 #define ECR_TEC_SIZE         8u /*!< Transmit Error Counter bitfiled size*/
@@ -115,8 +117,28 @@
 #define TXFQS_TFQF_BIT       20u /*!< Tx FIFO/Queue Full */
 #define TXFQS_TFQPI_BIT      16u /*!< Tx FIFO/Queue Put Index */
 #define TXFQS_TFQPI_SIZE     2u  /*!< Tx FIFO/Queue Put Index bitfiled size*/
-#define TXFQS_TFQGI_BIT      8u  /*!< Tx FIFO/Queue Get Index */
-#define TXFQS_TFQGI_SIZE     2u  /*!< Tx FIFO/Queue Get Index bitfiled size*/
+/**
+ * @} */
+
+/**
+ * @defgroup TXEFS_bits TXEFS register bit sizes
+ *
+ * @{ */
+#define TXEFS_EFGI_BIT       8u /*!< Tx FIFO/Queue Get Index */
+#define TXEFS_EFFL_BIT       0u /*!< Tx FIFO/Queue Fill Level */
+#define TXEFS_EFGI_SIZE      0u /*!< Tx FIFO/Queue Get Index bitfiled size*/
+#define TXEFS_EFFL_SIZE      3u /*!< Tx FIFO/Queue Fill Level bitfiled size*/
+/**
+ * @} */
+
+/**
+ * @defgroup RXF0s_bits RXF0S register bits
+ *
+ * @{ */
+#define RXF0S_F0GI_BIT       8 /*!< Rx FIFO 0 Get Index */
+#define RXF0S_F0FL_BIT       0 /*!< Rx FIFO 0 Fill Level */
+#define RXF0S_F0GI_SIZE      3 /*!< Rx FIFO 0 Get Index bitfiled size*/
+#define RXF0S_F0FL_SIZE      4 /*!< Rx FIFO 0 Fill Level */
 /**
  * @} */
 
@@ -136,7 +158,7 @@
  * @} */
 
 /**
- * @defgroup TX_Buffer_bits TX Buffer header register bit sizes
+ * @defgroup TX_Buffer_bit_sizes TX Buffer header register bit sizes
  *
  * @{ */
 #define TX_BUFFER_ID_11_SIZE 11u /*!< Tx standard ID bitfield size */
@@ -147,11 +169,35 @@
  * @} */
 
 /**
+ * @defgroup RX_Buffer_bits RX Buffer header register bits
+ *
+ * @{ */
+#define RX_BUFFER_ID_11_BITS 18u /*!< Rx standard ID bit */
+#define RX_BUFFER_ID_29_BITS 0u  /*!< Rx extended ID bit */
+#define RX_BUFFER_DLC_BIT    16u /*!< Data length code bit */
+#define RX_BUFFER_XTD_BIT    30u /*!< Extended identifier bit */
+#define RX_BUFFER_FDF_BIT    21u /*!< FD format bit */
+#define RX_BUFFER_MM_BIT     24u /*!< Message Marker bit */
+/**
+ * @} */
+
+/**
+ * @defgroup RX_Buffer_bit_sizes rX Buffer header register bit sizes
+ *
+ * @{ */
+#define RX_BUFFER_ID_11_SIZE 11u /*!< Rx standard ID bitfield size */
+#define RX_BUFFER_ID_29_SIZE 29u /*!< Rx extended ID bitfield size */
+#define RX_BUFFER_DLC_SIZE   4u  /*!< Data length code bitfield size */
+#define RX_BUFFER_MM_SIZE    8u  /*!< Message Marker bitfield size */
+/**
+ * @} */
+
+/**
  * @defgroup ID_Msg_bits ID message bits
  *
  * @{ */
 #define MSG_ID_BIT           31u /*!< ID bit */
-#define MSG_FROMAT_BIT       30u /*!< Fromat ID bit */
+#define MSG_FORMAT_BIT       30u /*!< Fromat ID bit */
 /**
  * @} */
 
@@ -159,8 +205,8 @@
  * @defgroup ID_Type_msg    ID Type message (bit 31) from id message
  *
  * @{ */
-#define MSG_STANDARD_ID      0u
-#define MSG_EXTENDED_ID      1u
+#define MSG_STANDARD_ID      0u /*!< Standard ID */
+#define MSG_EXTENDED_ID      1u /*!< Extended ID */
 /**
  * @} */
 
@@ -168,8 +214,8 @@
  * @defgroup Frame_Type_msg    Frame Type message (bit 30) from id message
  *
  * @{ */
-#define MSG_CLASSIC_FORMAT   0u
-#define MSG_FD_FORMAT        1u
+#define MSG_CLASSIC_FORMAT   0u /*!< Classic format */
+#define MSG_FD_FORMAT        1u /*!< FD format */
 /**
  * @} */
 
@@ -187,6 +233,9 @@ typedef struct _HwHthObject
 
 static void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can_RegisterType *Can );
 static uint8 Can_GetClosestDlcWithPadding( uint8 Dlc, uint32 *RamBuffer, uint8 PaddingValue );
+static uint8 Can_GetTxPduId( const Can_Controller *Controller, PduIdType *CanPduId );
+static uint8 Can_GetMessage( HwHthObject *Fifo, const Can_Controller *Controller, PduInfoType *PduInfo, uint32 *CanId );
+
 static void Can_Isr_RxFifo0NewMessage( Can_HwUnit *HwUnit, uint8 Controller );
 static void Can_Isr_RxFifo0Full( Can_HwUnit *HwUnit, uint8 Controller );
 static void Can_Isr_RxFifo0MessageLost( Can_HwUnit *HwUnit, uint8 Controller );
@@ -215,6 +264,7 @@ static void Can_Isr_TxFifoEmpty( Can_HwUnit *HwUnit, uint8 Controller );
  *
  * @reqs    SWS_Can_00237, SWS_Can_00236, SWS_Can_00238, SWS_Can_00239, SWS_Can_00419, SWS_Can_00250,
  *          SWS_Can_00053, SWS_Can_00407, SWS_Can_00021, SWS_Can_00291, SWS_Can_00413, SWS_Can_00223
+ *          SWS_Can_00245
  */
 void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Controller )
 {
@@ -810,7 +860,7 @@ Std_ReturnType Can_Arch_GetIngressTimeStamp( Can_HwUnit *HwUnit, Can_HwHandleTyp
  *          implemented re-entrant (see Can_ReturnType)
  *
  * @reqs    SWS_Can_00213, SWS_Can_00214, SWS_Can_00275, SWS_Can_00277, SWS_Can_00401, SWS_Can_00402
- *          SWS_Can_00403, SWS_Can_00011, SWS_Can_00486, SWS_Can_00502
+ *          SWS_Can_00403, SWS_Can_00011, SWS_Can_00486, SWS_Can_00502, SWS_Can_00276
  */
 Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const Can_PduType *PduInfo )
 {
@@ -851,7 +901,7 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
         Bfx_PutBits_u32u8u8u32( &HthObject[ PutIndex ].TBSAHeader1, TX_BUFFER_MM_BIT, TX_BUFFER_MM_SIZE, PduInfo->swPduHandle );
 
         /* Get the type of frame to send */
-        uint8 FrameType = Bfx_GetBit_u32u8_u8( PduInfo->id, MSG_FROMAT_BIT );
+        uint8 FrameType = Bfx_GetBit_u32u8_u8( PduInfo->id, MSG_FORMAT_BIT );
 
         /* Set the frame */
         if( FrameType == MSG_CLASSIC_FORMAT )
@@ -904,6 +954,11 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
  *
  * This function is the interrupt handler for the Can controller, it will check the interrupt flags
  * and call the corresponding callback functions.
+ *
+ * @param    HwUnit Pointer to the hardware unit configuration
+ * @param    Controller CAN controller for which the status shall be changed.
+ *
+ * @reqs    SWS_Can_00420
  */
 void Can_Arch_IsrMainHandler( Can_HwUnit *HwUnit, uint8 Controller )
 {
@@ -1060,27 +1115,157 @@ static uint8 Can_GetClosestDlcWithPadding( uint8 Dlc, uint32 *RamBuffer, uint8 P
 }
 
 /**
+ * @brief    **Get an CAN PduId from the Tx Event FIFO zone**
+ *
+ * This function gets the oldest CAN PduId from the Tx Event FIFO zone, it also returns the number
+ * of elements in the Tx Event FIFO zone., the CAN Pdu id is actually store into the MM field of the
+ * Tx Event FIFO element.
+ *
+ * @param    Controller CAN controller for which the status shall be changed.
+ * @param    CanPduId Pointer to the variable where the CAN PduId will be stored.
+ *
+ * @retval  Number of elements left in the Tx Event FIFO zone.
+ */
+static uint8 Can_GetTxPduId( const Can_Controller *Controller, PduIdType *CanPduId )
+{
+    /*Get the Can controller register structure*/
+    Can_RegisterType *Can = Controller->BaseAddress;
+
+    /* Calculate Tx event FIFO element address */
+    uint8 GetIndex = Bfx_GetBits_u32u8u8_u32( Can->TXEFS, TXEFS_EFGI_BIT, TXEFS_EFGI_SIZE );
+
+    /* Get the CAN Pdu store in the message marker field */
+    *CanPduId = Bfx_GetBits_u32u8u8_u32( Controller->SramBA->EFSA[ GetIndex ], TX_BUFFER_MM_BIT, TX_BUFFER_MM_SIZE );
+
+    /* Acknowledge the Tx Event FIFO that the oldest element is read so that it increments the GetIndex */
+    Can->TXEFA = GetIndex;
+
+    return Bfx_GetBits_u32u8u8_u32( Can->TXEFS, TXEFS_EFFL_BIT, TXEFS_EFFL_SIZE );
+}
+
+/**
+ * @brief    **Get a Message from one of the the Rx FIFOs**
+ *
+ * This function gets the oldest message from one of the the Rx FIFOs, it also returns the message
+ * ID and the data lenght, the message is actually store into the TBSAHeader1, TBSAHeader2 and
+ * TBSAPayload fields of the Rx FIFO element.
+ *
+ * @param    Fifo Pointer to the Rx FIFO element.
+ * @param    Controller CAN controller for which the status shall be changed.
+ * @param    PduInfo Pointer to the variable where the message will be stored.
+ * @param    CanId Pointer to the variable where the message ID will be stored.
+ *
+ * @retval  Number of elements left in the Rx FIFO zone.
+ */
+static uint8 Can_GetMessage( HwHthObject *Fifo, const Can_Controller *Controller, PduInfoType *PduInfo, uint32 *CanId )
+{
+    static const uint8 DlcToBytes[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 32, 48, 64 };
+    /*Get the Can controller register structure*/
+    Can_RegisterType *Can = Controller->BaseAddress;
+
+    /* Get Rx FIFO Get index */
+    uint8 GetIndex = Bfx_GetBits_u32u8u8_u32( Can->RXF0S, RXF0S_F0GI_BIT, RXF0S_F0GI_SIZE );
+
+    /* Retrieve DataLength */
+    PduInfo->SduLength = Bfx_GetBits_u32u8u8_u32( Fifo[ GetIndex ].TBSAHeader1, RX_BUFFER_DLC_BIT, RX_BUFFER_DLC_SIZE );
+    PduInfo->SduLength = DlcToBytes[ PduInfo->SduLength ];
+
+    /*Retrieve message ID Type*/
+    uint8 IdType = Bfx_GetBit_u32u8_u8( Fifo[ GetIndex ].TBSAHeader1, RX_BUFFER_XTD_BIT );
+
+    /* Set the message ID, standard (11 bits) or extended (29 bits) */
+    if( IdType == MSG_STANDARD_ID )
+    {
+        *CanId = Bfx_GetBits_u32u8u8_u32( Fifo[ GetIndex ].TBSAHeader1, RX_BUFFER_ID_11_BITS, RX_BUFFER_ID_11_SIZE );
+    }
+    else
+    {
+        *CanId = Bfx_GetBits_u32u8u8_u32( Fifo[ GetIndex ].TBSAHeader1, RX_BUFFER_ID_29_BITS, RX_BUFFER_ID_29_SIZE );
+    }
+    /* Bit indication for standart or extended */
+    Bfx_PutBit_u32u8u8( CanId, MSG_ID_BIT, IdType );
+
+    /* Set frame type*/
+    uint8 Format = Bfx_GetBit_u32u8_u8( Fifo[ GetIndex ].TBSAHeader2, RX_BUFFER_FDF_BIT );
+    /* Bit indication for Classic or FD frame */
+    Bfx_PutBit_u32u8u8( CanId, MSG_FORMAT_BIT, Format );
+
+    /* Retrieve Rx payload */
+    PduInfo->SduDataPtr = (uint8 *)&Fifo[ GetIndex ].TBSAPayload;
+
+    /* Acknowledge the Rx FIFO 0 that the oldest element is read so that it increments the GetIndex */
+    Can->RXF0A = GetIndex;
+
+    /* Check that the Rx FIFO 0 is not empty */
+    return Bfx_GetBits_u32u8u8_u32( Can->RXF0S, RXF0S_F0FL_BIT, RXF0S_F0FL_SIZE );
+}
+
+
+/**
  * @brief    **Can Rx Fifo 0 New Message Callback**
+ *
+ * This function is the callback for the Rx Fifo 0 New Message interrupt, it will read the oldest
+ * message arrived and pass it to the upper layer.
  *
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
+ *
+ * @reqs    SWS_Can_00489, SWS_Can_00501, SWS_Can_00423, SWS_Can_00279
  */
 static void Can_Isr_RxFifo0NewMessage( Can_HwUnit *HwUnit, uint8 Controller )
 {
-    (void)HwUnit;
-    (void)Controller;
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
+    HwHthObject *HrhObject = (HwHthObject *)ControllerConfig->SramBA->F0SA;
+
+    PduInfoType PduInfo;
+    Can_HwType Mailbox;
+
+    /* Set Hoh and controller Ids */
+    Mailbox.Hoh          = 0u;
+    Mailbox.ControllerId = Controller;
+
+    /* Read the oldest message arrived */
+    (void)Can_GetMessage( HrhObject, ControllerConfig, &PduInfo, &Mailbox.CanId );
+    /* Pass the messages to upper layer */
+    CanIf_RxIndication( &Mailbox, &PduInfo );
 }
 
 /**
  * @brief    **Can Rx Fifo 0 Full Callback**
  *
+ * This function is the callback for the Rx Fifo 0 Full interrupt, it will read all the messages
+ * arrived and pass them to the upper layer.
+ *
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
+ *
+ * @reqs    SWS_Can_00489, SWS_Can_00501, SWS_Can_00423, SWS_Can_00279
  */
 static void Can_Isr_RxFifo0Full( Can_HwUnit *HwUnit, uint8 Controller )
 {
-    (void)HwUnit;
-    (void)Controller;
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
+    HwHthObject *HrhObject = (HwHthObject *)ControllerConfig->SramBA->F0SA;
+
+    PduInfoType PduInfo;
+    Can_HwType Mailbox;
+    uint8 Msgs;
+
+    do
+    {
+        /* Set Hoh and controller Ids, same for all messages */
+        Mailbox.Hoh          = 0u;
+        Mailbox.ControllerId = Controller;
+
+        /* Read the oldest message arrived */
+        Msgs = Can_GetMessage( HrhObject, ControllerConfig, &PduInfo, &Mailbox.CanId );
+        /* Pass the messages to upper layer */
+        CanIf_RxIndication( &Mailbox, &PduInfo );
+        /*read all the messages untill the Fifo is empty*/
+    } while( Msgs > 0 );
 }
 
 /**
@@ -1098,25 +1283,68 @@ static void Can_Isr_RxFifo0MessageLost( Can_HwUnit *HwUnit, uint8 Controller )
 /**
  * @brief    **Can Rx Fifo 1 New Message Callback**
  *
+ * This function is the callback for the Rx Fifo 1 New Message interrupt, it will read the oldest
+ * message arrived and pass it to the upper layer.
+ *
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
+ *
+ * @reqs    SWS_Can_00489, SWS_Can_00501, SWS_Can_00423, SWS_Can_00279
  */
 static void Can_Isr_RxFifo1NewMessage( Can_HwUnit *HwUnit, uint8 Controller )
 {
-    (void)HwUnit;
-    (void)Controller;
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
+    HwHthObject *HrhObject = (HwHthObject *)ControllerConfig->SramBA->F1SA;
+
+    PduInfoType PduInfo;
+    Can_HwType Mailbox;
+
+    /* Set Hoh and controller Ids */
+    Mailbox.Hoh          = 0u;
+    Mailbox.ControllerId = Controller;
+
+    /* Read the oldest message arrived */
+    (void)Can_GetMessage( HrhObject, ControllerConfig, &PduInfo, &Mailbox.CanId );
+    /* Pass the messages to upper layer */
+    CanIf_RxIndication( &Mailbox, &PduInfo );
 }
 
 /**
  * @brief    **Can Rx Fifo 1 Full Callback**
  *
+ * This function is the callback for the Rx Fifo 1 Full interrupt, it will read all the messages
+ * arrived and pass them to the upper layer.
+ *
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
+ *
+ * @reqs    SWS_Can_00489, SWS_Can_00501, SWS_Can_00423, SWS_Can_00279
  */
 static void Can_Isr_RxFifo1Full( Can_HwUnit *HwUnit, uint8 Controller )
 {
-    (void)HwUnit;
-    (void)Controller;
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
+    HwHthObject *HrhObject = (HwHthObject *)ControllerConfig->SramBA->F1SA;
+
+    PduInfoType PduInfo;
+    Can_HwType Mailbox;
+    uint8 Msgs;
+
+    do
+    {
+        /* Set Hoh and controller Ids, same for all messages */
+        Mailbox.Hoh          = 0u;
+        Mailbox.ControllerId = Controller;
+
+        /* Read the oldest message arrived */
+        Msgs = Can_GetMessage( HrhObject, ControllerConfig, &PduInfo, &Mailbox.CanId );
+        /* Pass the messages to upper layer */
+        CanIf_RxIndication( &Mailbox, &PduInfo );
+        /*read all the messages untill the Fifo is empty*/
+    } while( Msgs > 0 );
 }
 
 /**
@@ -1146,20 +1374,29 @@ static void Can_Isr_HighPriorityMessageRx( Can_HwUnit *HwUnit, uint8 Controller 
 /**
  * @brief    **Can Transmission completed Callback**
  *
+ * This function is the callback for the Transmission completed interrupt, it will read the
+ * PduId of the recent message transmitted and pass it to the upper layer.
+ *
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
+ *
+ * @note    This interrupt callback shall not be called if Can_Isr_TxEventFifoNewEntry
+ *          is been use
+ *
+ * @reqs    SWS_Can_00016
  */
 static void Can_Isr_TransmissionCompleted( Can_HwUnit *HwUnit, uint8 Controller )
 {
+    /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
-    /*Get the Can controller register structure*/
-    Can_RegisterType *Can = ControllerConfig->BaseAddress;
 
-    uint8 GetIndex     = Bfx_GetBits_u32u8u8_u32( Can->TXFQS, TXFQS_TFQGI_BIT, TXFQS_TFQGI_SIZE );
-    PduIdType CanPduId = Bfx_GetBits_u32u8u8_u32( ControllerConfig->SramBA->EFSA[ GetIndex ], TX_BUFFER_MM_BIT, TX_BUFFER_MM_SIZE );
+    PduIdType CanPduId;
 
-    (void)CanPduId;
-    // Call to CanIf_TxConfirmation( CanPduId );
+    /*Get the PduId store in the MMS field*/
+    (void)Can_GetTxPduId( ControllerConfig, &CanPduId );
+
+    /*Pass the PduId od the senede message to upper layer*/
+    CanIf_TxConfirmation( CanPduId );
 }
 
 /**
@@ -1189,39 +1426,89 @@ static void Can_Isr_TxEventFifoElementLost( Can_HwUnit *HwUnit, uint8 Controller
 /**
  * @brief    **Can Tx Event Fifo Full Callback**
  *
+ * This function is the callback for the Tx Event Fifo Full interrupt, it will read the
+ * PduId of the all recent message transmitted and pass it to the upper layer.
+ *
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
+ *
+ * @note    This interrupt callback shall not be called if Can_Isr_TxFifoEmpty
+ *          is been use
+ *
+ * @reqs    SWS_Can_00016
  */
 static void Can_Isr_TxEventFifoFull( Can_HwUnit *HwUnit, uint8 Controller )
 {
-    (void)HwUnit;
-    (void)Controller;
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+
+    PduIdType CanPduId;
+    uint8 Msgs;
+
+    do
+    {
+        /*Get the PduId store in the MMS field*/
+        Msgs = Can_GetTxPduId( ControllerConfig, &CanPduId );
+        /*Pass the PduId od the senede message to upper layer*/
+        CanIf_TxConfirmation( CanPduId );
+    } while( Msgs > 0u );
 }
 
 /**
  * @brief    **Can Tx Event Fifo New Entry Callback**
  *
- * @param    HwUnit: Pointer to the hardware unit configuration
- * @param    Controller: CAN controller for which the status shall be changed.
- */
-static void Can_Isr_TxEventFifoNewEntry( Can_HwUnit *HwUnit, uint8 Controller )
-{
-    (void)HwUnit;
-    (void)Controller;
-}
-
-/**
- * @brief    **Can Tx Event Fifo Watermark Reached Callback**
+ * This function is the callback for the Tx Event Fifo New Entry interrupt, it will read the
+ * PduId of the recent message transmitted and pass it to the upper layer.
  *
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
+ *
+ * @note    This interrupt callback shall not be called if Can_Isr_TransmissionCompleted
+ *          is been use
+ *
+ * @reqs    SWS_Can_00016
+ */
+static void Can_Isr_TxEventFifoNewEntry( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+
+    PduIdType CanPduId;
+
+    /*Get the PduId store in the MMS field*/
+    (void)Can_GetTxPduId( ControllerConfig, &CanPduId );
+
+    /*Pass the PduId od the senede message to upper layer*/
+    CanIf_TxConfirmation( CanPduId );
+}
+
+/**
+ * @brief    **Can Tx Event Fifo Empty Callback**
+ *
+ * This function is the callback for the Tx Event Fifo Empty interrupt, it will read the
+ * PduId of the all recent message transmitted and pass it to the upper layer.
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ *
+ * @note    This interrupt callback shall not be called if Can_Isr_TxEventFifoFull
+ *          is been use
  *
  * @reqs    SWS_Can_00016
  */
 static void Can_Isr_TxFifoEmpty( Can_HwUnit *HwUnit, uint8 Controller )
 {
-    (void)HwUnit;
-    (void)Controller;
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
 
-    // Call to CanIf_TxConfirmation( PduInfo->swPduHandle );
+    PduIdType CanPduId;
+    uint8 Msgs;
+
+    do
+    {
+        /*Get the PduId store in the MMS field*/
+        Msgs = Can_GetTxPduId( ControllerConfig, &CanPduId );
+        /*Pass the PduId od the senede message to upper layer*/
+        CanIf_TxConfirmation( CanPduId );
+    } while( Msgs > 0u );
 }
