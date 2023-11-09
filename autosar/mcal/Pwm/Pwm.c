@@ -232,5 +232,5 @@ Std_ReturnType Pwm_PreparePowerState( Pwm_PowerStateType PowerState, Pwm_PowerSt
  */
 void Pwm_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
-    Pwm_Arch_GetVersionInfo( versioninfo );
+    (void)versioninfo;
 }
