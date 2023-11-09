@@ -9,6 +9,17 @@
  */
 #include "Std_Types.h"
 #include "Pwm.h"
+#include "Pwm_Arch.h"
+
+/**
+ * @brief  Variable for the initial value of the port configuration array.
+ */
+/* clang-format off */
+static Pwm_HwUnit HwUnit_Pwm =
+{
+.Config = NULL_PTR,
+};
+/* clang-format on */
 
 /**
  * @brief    **Pwm Initialization**
@@ -21,7 +32,8 @@
  */
 void Pwm_Init( const Pwm_ConfigType *ConfigPtr )
 {
-    (void)ConfigPtr;
+    Pwm_Arch_Init( &HwUnit_Pwm, ConfigPtr );
+    HwUnit_Pwm.Config = ConfigPtr;
 }
 
 /**
@@ -34,7 +46,6 @@ void Pwm_Init( const Pwm_ConfigType *ConfigPtr )
 void Pwm_DeInit( void )
 {
 }
-
 /**
  * @brief    **Pwm Set Duty Cycle**
  *
@@ -47,8 +58,7 @@ void Pwm_DeInit( void )
  */
 void Pwm_SetDutyCycle( Pwm_ChannelType ChannelNumber, uint16 DutyCycle )
 {
-    (void)ChannelNumber;
-    (void)DutyCycle;
+    Pwm_Arch_SetDutyCycle( &HwUnit_Pwm, ChannelNumber, DutyCycle );
 }
 
 /**
@@ -64,9 +74,7 @@ void Pwm_SetDutyCycle( Pwm_ChannelType ChannelNumber, uint16 DutyCycle )
  */
 void Pwm_SetPeriodAndDuty( Pwm_ChannelType ChannelNumber, Pwm_PeriodType Period, uint16 DutyCycle )
 {
-    (void)ChannelNumber;
-    (void)Period;
-    (void)DutyCycle;
+    Pwm_Arch_SetPeriodAndDuty( &HwUnit_Pwm, ChannelNumber, Period, DutyCycle );
 }
 
 /**
@@ -80,7 +88,7 @@ void Pwm_SetPeriodAndDuty( Pwm_ChannelType ChannelNumber, Pwm_PeriodType Period,
  */
 void Pwm_SetOutputToIdle( Pwm_ChannelType ChannelNumber )
 {
-    (void)ChannelNumber;
+    Pwm_Arch_SetOutputToIdle( &HwUnit_Pwm, ChannelNumber );
 }
 
 /**
@@ -89,6 +97,7 @@ void Pwm_SetOutputToIdle( Pwm_ChannelType ChannelNumber )
  * Function to read the internal state of the PWM output signal.
  *
  * @param    ChannelNumber Numeric identifier of the PWM
+ *
  * @retval  PWM_HIGH: The PWM output state is high
  *          PWM_LOW: The PWM output state is low
  *
@@ -96,8 +105,7 @@ void Pwm_SetOutputToIdle( Pwm_ChannelType ChannelNumber )
  */
 Pwm_OutputStateType Pwm_GetOutputState( Pwm_ChannelType ChannelNumber )
 {
-    (void)ChannelNumber;
-    return PWM_LOW;
+    return Pwm_Arch_GetOutputState( &HwUnit_Pwm, ChannelNumber );
 }
 
 /**
@@ -111,7 +119,7 @@ Pwm_OutputStateType Pwm_GetOutputState( Pwm_ChannelType ChannelNumber )
  */
 void Pwm_DisableNotification( Pwm_ChannelType ChannelNumber )
 {
-    (void)ChannelNumber;
+    Pwm_Arch_DisableNotification( &HwUnit_Pwm, ChannelNumber );
 }
 
 /**
@@ -126,8 +134,7 @@ void Pwm_DisableNotification( Pwm_ChannelType ChannelNumber )
  */
 void Pwm_EnableNotification( Pwm_ChannelType ChannelNumber, Pwm_EdgeNotificationType Notification )
 {
-    (void)ChannelNumber;
-    (void)Notification;
+    Pwm_Arch_EnableNotification( &HwUnit_Pwm, ChannelNumber, Notification );
 }
 
 /**
@@ -149,8 +156,7 @@ void Pwm_EnableNotification( Pwm_ChannelType ChannelNumber, Pwm_EdgeNotification
  */
 Std_ReturnType Pwm_SetPowerState( Pwm_PowerStateRequestResultType *Result )
 {
-    (void)Result;
-    return E_NOT_OK;
+    return Pwm_Arch_SetPowerState( &HwUnit_Pwm, Result );
 }
 
 /**
@@ -169,9 +175,7 @@ Std_ReturnType Pwm_SetPowerState( Pwm_PowerStateRequestResultType *Result )
  */
 Std_ReturnType Pwm_GetCurrentPowerState( Pwm_PowerStateType *CurrentPowerState, Pwm_PowerStateRequestResultType *Result )
 {
-    (void)CurrentPowerState;
-    (void)Result;
-    return E_NOT_OK;
+    return Pwm_Arch_GetCurrentPowerState( &HwUnit_Pwm, CurrentPowerState, Result );
 }
 
 /**
@@ -190,9 +194,7 @@ Std_ReturnType Pwm_GetCurrentPowerState( Pwm_PowerStateType *CurrentPowerState, 
  */
 Std_ReturnType Pwm_GetTargetPowerState( Pwm_PowerStateType *TargetPowerState, Pwm_PowerStateRequestResultType *Result )
 {
-    (void)TargetPowerState;
-    (void)Result;
-    return E_NOT_OK;
+    return Pwm_Arch_GetTargetPowerState( &HwUnit_Pwm, TargetPowerState, Result );
 }
 
 /**
@@ -216,10 +218,7 @@ Std_ReturnType Pwm_GetTargetPowerState( Pwm_PowerStateType *TargetPowerState, Pw
  */
 Std_ReturnType Pwm_PreparePowerState( Pwm_PowerStateType PowerState, Pwm_PowerStateRequestResultType *Result )
 {
-    (void)PowerState;
-    (void)Result;
-
-    return E_NOT_OK;
+    return Pwm_Arch_PreparePowerState( &HwUnit_Pwm, PowerState, Result );
 }
 
 /**
@@ -233,5 +232,5 @@ Std_ReturnType Pwm_PreparePowerState( Pwm_PowerStateType PowerState, Pwm_PowerSt
  */
 void Pwm_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
-    (void)versioninfo;
+    Pwm_Arch_GetVersionInfo( &HwUnit_Pwm, versioninfo );
 }
