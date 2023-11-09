@@ -93,6 +93,15 @@
  * @} */
 
 /**
+ * @defgroup RXGFC_size RXGFC register bit sizes
+ *
+ * @{ */
+#define RXGFC_LSS_SIZE       5u /*!< List Size Standard */
+#define RXGFC_LSE_SIZE       4u /*!< List Size Extended */
+/**
+ * @} */
+
+/**
  * @defgroup ECR_bits ECR register bits
  *
  * @{ */
@@ -142,8 +151,8 @@
 /**
  * @} */
 
-#define PSR_BO_BIT          7u  /*!< Bus_Off bit */
-#define PSR_EP_BIT          5u  /*!< Protocol_Error bit */
+#define PSR_BO_BIT           7u /*!< Bus_Off bit */
+#define PSR_EP_BIT           5u /*!< Protocol_Error bit */
 
 /**
  * @defgroup TX_Buffer_bits TX Buffer header register bits
@@ -180,7 +189,6 @@
 #define RX_BUFFER_DLC_BIT    16u /*!< Data length code bit */
 #define RX_BUFFER_XTD_BIT    30u /*!< Extended identifier bit */
 #define RX_BUFFER_FDF_BIT    21u /*!< FD format bit */
-#define RX_BUFFER_MM_BIT     24u /*!< Message Marker bit */
 /**
  * @} */
 
@@ -191,7 +199,6 @@
 #define RX_BUFFER_ID_11_SIZE 11u /*!< Rx standard ID bitfield size */
 #define RX_BUFFER_ID_29_SIZE 29u /*!< Rx extended ID bitfield size */
 #define RX_BUFFER_DLC_SIZE   4u  /*!< Data length code bitfield size */
-#define RX_BUFFER_MM_SIZE    8u  /*!< Message Marker bitfield size */
 /**
  * @} */
 
@@ -209,6 +216,7 @@
  *
  * @{ */
 #define MSG_STANDARD_ID      0u /*!< Standard ID */
+/* cppcheck-suppress misra-c2012-2.5 ; just for docs*/
 #define MSG_EXTENDED_ID      1u /*!< Extended ID */
 /**
  * @} */
@@ -218,6 +226,7 @@
  *
  * @{ */
 #define MSG_CLASSIC_FORMAT   0u /*!< Classic format */
+/* cppcheck-suppress misra-c2012-2.5 ; just for docs*/
 #define MSG_FD_FORMAT        1u /*!< FD format */
 /**
  * @} */
@@ -288,11 +297,22 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
         ( (uint32 *)ControllerConfig->SramBA )[ i ] = 0x00000000u;
     }
 
+    /* Exit from Sleep mode */
+    Bfx_ClrBit_u32u8( (uint32 *)&Can->CCCR, CCCR_CSR_BIT );
+
+    /* Wait until the CSA bit into CCCR register is set */
+    while( Bfx_GetBit_u32u8_u8( Can->CCCR, CCCR_CSA_BIT ) == STD_ON )
+    {
+        /*Wee need to stablish a timeout counter to avois a potential endless loop,
+        according to AUTOSAR a Os tick shall be used, but for the moment it will
+        remain empty*/
+    }
+
     /* Request initialisation */
     Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_INIT_BIT );
 
     /* Wait until the INIT bit into CCCR register is set */
-    while( Bfx_GetBit_u32u8_u8( Can->CCCR, CCCR_INIT_BIT ) == FALSE )
+    while( Bfx_GetBit_u32u8_u8( Can->CCCR, CCCR_INIT_BIT ) == STD_OFF )
     {
         /*Wee need to stablish a timeout counter to avois a potential endless loop,
         according to AUTOSAR a Os tick shall be used, but for the moment it will
@@ -378,10 +398,10 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
     Bfx_SetBitMask_u32u32( (uint32 *)&Can->TXBC, ControllerConfig->TxFifoQueueMode );
 
     /* Standard filter elements number */
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_LSS_BIT, 5u, ControllerConfig->StdFiltersNbr );
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_LSS_BIT, RXGFC_LSS_SIZE, ControllerConfig->StdFiltersNbr );
 
     /* Extended filter elements number */
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_LSE_BIT, 4u, ControllerConfig->ExtFiltersNbr );
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_LSE_BIT, RXGFC_LSE_SIZE, ControllerConfig->ExtFiltersNbr );
 
     /* Setup the interrupt to line 0 or 1*/
     Can_SetupConfiguredInterrupts( &Config->Controllers[ Controller ], Can );
@@ -504,7 +524,7 @@ Std_ReturnType Can_Arch_SetBaudrate( Can_HwUnit *HwUnit, uint8 Controller, uint1
  *          E_NOT_OK: request not accepted
  *
  * @reqs    SWS_Can_00261, SWS_Can_00409, SWS_Can_00265, SWS_Can_00266, SWS_Can_00411, SWS_Can_00017
- *          SWS_Can_00384
+ *          SWS_Can_00384, SWS_Can_00257, SWS_Can_00282
  */
 Std_ReturnType Can_Arch_SetControllerMode( Can_HwUnit *HwUnit, uint8 Controller, Can_ControllerStateType Transition )
 {
@@ -534,6 +554,9 @@ Std_ReturnType Can_Arch_SetControllerMode( Can_HwUnit *HwUnit, uint8 Controller,
             /*Transition shall be carried out from STARTED to STOPPED*/
             if( HwUnit->ControllerState[ Controller ] == CAN_CS_STARTED )
             {
+                /* Add cancellation request for all buffers */
+                Can->TXBCR = 0x03u;
+
                 /* Request initialisation */
                 Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_INIT_BIT );
 
@@ -892,6 +915,8 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
 
     /* get controller configuration */
     const Can_RegisterType *Can = HwUnit->Config->Hohs[ Hth ].ControllerRef->BaseAddress;
+    /* get controller */
+    const Can_Controller *ControllerConfig = HwUnit->Config->Hohs[ Hth ].ControllerRef;
 
     /* Check that the Tx FIFO/Queue is not full*/
     if( ( Bfx_GetBit_u32u8_u8( Can->TXFQS, TXFQS_TFQF_BIT ) == FALSE ) )
@@ -939,6 +964,8 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
             Bfx_SetBit_u32u8( &HthObject[ PutIndex ].TBSAHeader2, TX_BUFFER_FDF_BIT );
             /* Get the actual data lenght (DLC) */
             DataLenght = Can_GetClosestDlcWithPadding( PduInfo->length, RamBuffer, HwUnit->Config->Hohs[ Hth ].FdPaddingValue );
+            /* Bit rate switch */
+            Bfx_PutBit_u32u8u8( &HthObject[ PutIndex ].TBSAHeader2, TX_BUFFER_BRS_BIT, ControllerConfig->DefaultBaudrate->FdTxBitRateSwitch );
         }
 
         /*Store Tx Events*/
@@ -980,7 +1007,7 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
  * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Controller CAN controller for which the status shall be changed.
  *
- * @reqs    SWS_Can_00420
+ * @reqs    SWS_Can_00420, SWS_Can_00033
  */
 void Can_Arch_IsrMainHandler( Can_HwUnit *HwUnit, uint8 Controller )
 {
@@ -1293,13 +1320,20 @@ static void Can_Isr_RxFifo0Full( Can_HwUnit *HwUnit, uint8 Controller )
 /**
  * @brief    **Can Rx Fifo 0 Message Lost Callback**
  *
+ * A messages haven't read on time and it was overwritten or not by a new message.
+ * if FIfo is in blocking mode the message will never overwrite but this ISR will be called
+ *
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
+ *
+ * @reqs    SWS_Can_00395
  */
 static void Can_Isr_RxFifo0MessageLost( Can_HwUnit *HwUnit, uint8 Controller )
 {
     (void)HwUnit;
     (void)Controller;
+
+    // Det_ReportRuntimeError(CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_SET_BAUDRATE, CAN_E_DATALOST );
 }
 
 /**
@@ -1372,13 +1406,20 @@ static void Can_Isr_RxFifo1Full( Can_HwUnit *HwUnit, uint8 Controller )
 /**
  * @brief    **Can Rx Fifo 1 Message Lost Callback**
  *
+ * A messages haven't read on time and it was overwritten or not by a new message.
+ * if FIfo is in blocking mode the message will never overwrite but this ISR will be called
+ *
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
+ *
+ * @reqs    SWS_Can_00395
  */
 static void Can_Isr_RxFifo1MessageLost( Can_HwUnit *HwUnit, uint8 Controller )
 {
     (void)HwUnit;
     (void)Controller;
+
+    // Det_ReportRuntimeError(CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_SET_BAUDRATE, CAN_E_DATALOST );
 }
 
 /**
