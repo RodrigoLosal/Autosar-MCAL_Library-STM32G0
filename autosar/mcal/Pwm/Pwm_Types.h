@@ -25,4 +25,14 @@ typedef struct _Pwm_ConfigType
     uint32 dummy; /*!< dummy element for the moment */
 } Pwm_ConfigType;
 
+/**
+ * @brief **Hardware control unit structure**
+ *
+ * This structure contains the hardware unit configuration and the state of the hardware
+ * unit pointers to controller structures.
+ */
+typedef struct _Pwm_HwUnit
+{
+    const Pwm_ConfigType *Config; /*!< Pointer to the configuration structure */
+} Pwm_HwUnit;
 #endif /* PWM_TYPES_H__ */
