@@ -13,16 +13,17 @@
 #include "Std_Types.h"
 #include "Registers.h"
 #include "Gpt.h"
+#include "Gpt_Arch.h"
 
 /**
  * @brief Global GPT register array.
  */
-static Gpt_RegisterType *channels[ GPT_NUMBER_OF_CHANNELS ] = { TIM6, TIM7 }; /* cppcheck-suppress misra-config ; The define is already available through Gpt.h */
+static Gpt_RegisterType *channels[ GPT_NUMBER_OF_CHANNELS ] = { TIM6, TIM7 };
 
 /**
  * @brief  Variable for the initial value of the GPT configuration array.
  */
-static const Gpt_ConfigType *LocalGptConfigPtr = NULL_PTR;
+static const Gpt_ConfigType *LocalGptConfigPtr[ GPT_NUMBER_OF_CHANNELS ] = { NULL_PTR };
 
 /**
  * @brief Initialize the GPT registers to the configuration stored on ConfigPtr.
@@ -43,11 +44,12 @@ void Gpt_Init( const Gpt_ConfigType *ConfigPtr )
     for( uint8 ChannelsToInit = 0; ChannelsToInit < GPT_NUMBER_OF_CHANNELS; ChannelsToInit++ )
     {
         channel = channels[ ( &ConfigPtr[ ChannelsToInit ] )->GptChannelId ];
+        Bfx_SetBits_u32u8u8u8( (uint32 *)&channel->PSC, GPT_PRESCALER_LSB, GPT_PRESCALER_MSB, RESET );                                   /*Clearing the value of the prescaler on TIMx_PSC*/
         Bfx_SetBitMask_u32u32( (uint32 *)&channel->PSC, (uint32)( &ConfigPtr[ ChannelsToInit ] )->GptChannelPrescaler );                 /*Writing the value of the prescaler on TIMx_PSC*/
         Bfx_PutBit_u32u8u8( (uint32 *)&channel->CR1, GPT_ONE_PULSE_MODE_BIT, (uint32)( &ConfigPtr[ ChannelsToInit ] )->GptChannelMode ); /*Writing the OPM: bit of TIMx_CR1 for continuous or one-pulse mode*/
         Bfx_ClrBit_u32u8( (uint32 *)&channel->SR, GPT_INTERRUPT_FLAG_BIT ); /*Clearing the Status Register Flag*/                        /*Clearing the update interrupt flag of TIMx_SR*/
+        LocalGptConfigPtr[ ChannelsToInit ] = ConfigPtr;
     }
-    LocalGptConfigPtr = ConfigPtr;
 }
 
 /**
@@ -67,6 +69,7 @@ void Gpt_DeInit( void )
     {
         channel = channels[ ChannelsToDeinit ];
         Bfx_SetBits_u32u8u8u8( (uint32 *)&channel->PSC, GPT_PRESCALER_LSB, GPT_PRESCALER_MSB, RESET );   /*Clearing the value of the prescaler on TIMx_PSC*/
+        Bfx_ClrBit_u32u8( (uint32 *)&channel->CR1, GPT_ONE_PULSE_MODE_BIT );                             /*Clearing the OPM: bit of TIMx_CR1*/
         Bfx_ClrBit_u32u8( (uint32 *)&channel->SR, GPT_INTERRUPT_FLAG_BIT );                              /*Clearing the update interrupt flag of TIMx_SR*/
         Bfx_SetBits_u32u8u8u8( (uint32 *)&channel->ARR, GPT_AUTO_RELOAD_LSB, GPT_AUTO_RELOAD_MSB, SET ); /*Setting back the reset value of TIMx_ARR*/
     }
@@ -227,9 +230,9 @@ void Gpt_DisableNotification( Gpt_ChannelType Channel )
 #if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_Notification_Channel0( void )
 {
-    if( Bfx_GetBit_u32u8_u8( TIM6->SR, GPT_INTERRUPT_FLAG_BIT ) == TRUE ) /*Checking if the update interrupt flag of TIMx_SR is set*/
+    if( Bfx_GetBit_u32u8_u8( (uint32 *)&TIM6->SR, GPT_INTERRUPT_FLAG_BIT ) == TRUE ) /*Checking if the update interrupt flag of TIMx_SR is set*/
     {
-        LocalGptConfigPtr->GptNotification[ GPT_CHANNEL_0 ]( );
+        LocalGptConfigPtr[ GPT_CHANNEL_0 ]->GptNotification( );
         Bfx_ClrBit_u32u8( (uint32 *)&TIM6->SR, GPT_INTERRUPT_FLAG_BIT ); /*Clearing the update interrupt flag of TIMx_SR*/
     }
 }
@@ -248,9 +251,9 @@ void Gpt_Notification_Channel0( void )
 #if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_Notification_Channel1( void )
 {
-    if( Bfx_GetBit_u32u8_u8( TIM7->SR, GPT_INTERRUPT_FLAG_BIT ) == TRUE ) /*Checking if the update interrupt flag of TIMx_SR is set*/
+    if( Bfx_GetBit_u32u8_u8( (uint32 *)&TIM7->SR, GPT_INTERRUPT_FLAG_BIT ) == TRUE ) /*Checking if the update interrupt flag of TIMx_SR is set*/
     {
-        LocalGptConfigPtr->GptNotification[ GPT_CHANNEL_1 ]( );
+        LocalGptConfigPtr[ GPT_CHANNEL_1 ]->GptNotification( );
         Bfx_ClrBit_u32u8( (uint32 *)&TIM7->SR, GPT_INTERRUPT_FLAG_BIT ); /*Clearing the update interrupt flag of TIMx_SR*/
     }
 }

@@ -11,6 +11,8 @@
 #ifndef GPT_CFG_H_
 #define GPT_CFG_H_
 
+#include "Gpt_Types.h"
+
 /**
  * @brief   **Number of channels to configure**
  *
