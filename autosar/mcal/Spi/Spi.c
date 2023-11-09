@@ -3,8 +3,11 @@
  * @brief   **Spi Driver**
  * @author  Manuel Alejandro Ascencio Ysordia
  *
- * The Can module provides servic ...
- * ...
+ * The SPI module provides services to initiate transmissions with a terminal buffer and call callback functions
+ * to notify events. Additionally, you have the option of having an external buffer to have more memory capacity.
+ * This module has the possibility of several JOBs, Channels and sequences.
+ *
+ * A Job is composed of one or several Channels with the same Chip Select (CS) .
  */
 
 #include "Std_Types.h"
@@ -170,6 +173,7 @@ Spi_SeqResultType Spi_GetSequenceResult( Spi_SequenceType Sequence )
     (void)Sequence;
 }
 
+#if SPI_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief    **Spi get version information**
  *
@@ -183,6 +187,7 @@ void Spi_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
     (void)versioninfo;
 }
+#endif
 
 /**
  * @brief    **Spi synchronous transmit**

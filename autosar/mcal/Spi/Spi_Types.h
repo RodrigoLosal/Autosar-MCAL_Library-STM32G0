@@ -1,3 +1,13 @@
+/**
+ * @file    Spi_Types.h
+ * @brief   **Spi Driver**
+ * @author  Manuel Alejandro Ascencio Ysordia
+ *
+ * The header contains the type definitions that are used by the Spi module. The file is implemnted
+ * as a means of abstraction from the hardware, this way we can avoid to include Arch headers in
+ * the actual driver header, making the low level interfaces available for upper layers.
+ */
+
 #ifndef SPI_TYPES_H__
 #define SPI_TYPES_H__
 

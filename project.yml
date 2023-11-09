@@ -57,17 +57,62 @@
     - HtmlDetailed
   :gcovr:
     :report_exclude:
+
+
+# Configure the mock generator
+:cmock:
+  :mock_prefix: mock_         # Generate mock version using mock prefix
+  :treat_externs: :include
+  :when_no_prototypes: :warn
+  :enforce_strict_ordering: TRUE
+  :plugins:
+    - :ignore                 # Generate <function>_Ignore and <function>_IgnoreAndReturn
+    - :ignore_arg             # Generate <function>_IgnoreArg_<param_name>
+    - :expect_any_args        # Generate <function>_func_ExpectAnyArgs and <function>_func_ExpectAnyArgsAndReturn
+    - :array                  # Generate <function>_ExpectWithArray and <function>_ExpectWithArrayAndReturn
+    - :callback               # Generate <function>_ 
+    - :return_thru_ptr        # Generate <function>_ReturnArrayThruPtr_<param_name> and <function>_ReturnMemThruPtr_<param_name>
+  
     
-:tools:
-  :test_compiler:
-    :executable: gcc
-    :name: test_compiler
-    :arguments:
-      - -I"$": COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
-      - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
-      - -D$: COLLECTION_DEFINES_TEST_AND_VENDOR
-      - -DGNU_COMPILER
-      - -g3
-      - -c ${1}
-      - -o ${2}
-      #- -O0, -pedantic, -Werror, -Wstrict-prototypes, -fsigned-char, -fomit-frame-pointer, -fverbose-asm
+# extra flags to add to default compiler GCC whe run commands ceedling test:all and ceedling gcov:all
+# these flags are the same written in the makefile used to build the project plus three extra flags
+# for some reason are needed by GCC to avoid cast warnings in HAL library
+:flags:
+  :test:        # flags when GCC runs with ceedling test:all
+    :compile:
+      :*:
+        - -O0
+        - -ffunction-sections
+        - -fdata-sections
+        - -fno-builtin
+        - -std=c99
+        - -pedantic
+        - -Wall
+        - -Werror
+        - -Wstrict-prototypes
+        - -fsigned-char
+        - -fomit-frame-pointer
+        - -fverbose-asm
+        # Extra flags to avoid cast warnings in the HAL library
+        - -Wno-int-to-pointer-cast 
+        - -Wno-pointer-to-int-cast
+        - -Wno-error=address
+  :gcov:        # flags when GCC runs with ceedling gcov:all
+    :compile:
+      :*:
+        - -O0
+        - -ffunction-sections
+        - -fdata-sections
+        - -fno-builtin
+        - -std=c99
+        - -pedantic
+        - -Wall
+        - -Werror
+        - -Wstrict-prototypes
+        - -fsigned-char
+        - -fomit-frame-pointer
+        - -fverbose-asm
+        # Extra flags to avoid cast warnings in the HAL library
+        - -Wno-int-to-pointer-cast 
+        - -Wno-pointer-to-int-cast
+        - -Wno-error=address

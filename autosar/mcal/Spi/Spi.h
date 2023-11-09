@@ -3,8 +3,9 @@
  * @brief   **Spi Driver**
  * @author  Manuel Alejandro Ascencio Ysordia
  *
- * The Spi module provides servic ...
- * ...
+ * The SPI module provides services to initiate transmissions with a terminal buffer and call callback functions
+ * to notify events. Additionally, you have the option of having an external buffer to have more memory capacity.
+ * This module has the possibility of several JOBs, Channels and sequences.
  */
 #ifndef SPI_H__
 #define SPI_H__
