@@ -52,8 +52,9 @@ typedef enum _Pwm_EdgeNotificationType
  *
  * @reqs    SWS_Pwm_00110
  */
+/* cppcheck-suppress misra-c2012-2.3 ; the enum name it is neccesary */
 typedef enum _Pwm_ChannelClassType
-{
+{                               /* cppcheck-suppress misra-c2012-2.4 ; this macro is neccesary */
     PWM_VARIABLE_PERIOD = 0x00, /*!< Variable Period. The duty cycle and the period can be changed.*/
     PWM_FIXED_PERIOD,           /*!< Fixed Period. Only the duty cycle can be changed. */
     PWM_FIXED_PERIOD_SHIFTED    /*!<TFixed Shifted Period. Impossible to change it*/
