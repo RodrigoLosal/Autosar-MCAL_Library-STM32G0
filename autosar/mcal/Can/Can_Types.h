@@ -76,6 +76,9 @@ typedef struct _Can_ControllerBaudrateConfig
  */
 typedef struct _Can_Controller
 {
+    uint8 ControllerId : 4; /*!< Specifies the ID of a CAN controller.
+                                This parameter can be a value of @ref CAN_controllers */
+
     uint32 Mode; /*!< Specifies the CAN peripheral operation mode.
                      This parameter can be a value of @ref CAN_mode   */
 
@@ -124,6 +127,23 @@ typedef struct _Can_Controller
     uint8 BaudrateConfigsCount; /*!< Number of baudrate configurations for the controller */
 } Can_Controller;
 
+/**
+ * @brief **CAN Hardware Filter**
+ *
+ * This container contains the configuration parameters of the CAN hardware filter.
+ */
+typedef struct _Can_HwFilter
+{
+    uint32 HwFilterCode; /*!< Specifies (together with the filter mask) the identifiers range that
+                             passes the hardware filter */
+
+    uint32 HwFilterMask; /*!< Describes a mask for hardware-based filtering of CAN identifiers */
+
+    uint32 HwFilterType;       /*!< Specifies the type of the hardware filter.
+                                   This parameter can be a value of @ref CAN_filter_type */
+    Can_IdType HwFilterIdType; /*!< Specifies whether the HOH handles standard identifiers or
+                                extended, @ref CAN_Id_Type */
+} Can_HwFilter;
 
 /**
  * @brief **CAN Hardware Object**
@@ -153,12 +173,9 @@ typedef struct _Can_HardwareObject
     uint8 FdPaddingValue; /*!< Specifies the value which is used to pad unspecified data in CAN FD frames > 8
                               bytes for transmission. Any number form 0x00 to 0xff. */
 
-    uint32 HwFilter; /*!< This container is only valid for HRHs and contains the configuration */
+    const Can_HwFilter *HwFilter; /*!< Reference to array of hardware filters structures*/
 
-    uint32 HwFilterCode; /*!< Specifies (together with the filter mask) the identifiers range that
-                             passes the hardware filter */
-
-    uint32 HwFilterMask; /*!< Describes a mask for hardware-based filtering of CAN identifiers */
+    uint8 HwFilterCount; /*!< Number of hardware filters used to implement */
 
     const Can_Controller *ControllerRef; /*!< Reference to CAN Controller to which the HOH is associated to
                                          this paramter must be a address of a valid controller structure  */

@@ -214,6 +214,16 @@
  * @} */
 
 /**
+ * @defgroup CAN_Filter_Type CAN Filter Type
+ *
+ * @{ */
+#define CAN_FILTER_TYPE_RANGE          0x00u /*!< Range filter type */
+#define CAN_FILTER_TYPE_DUAL           0x01u /*!< Dual filter type  */
+#define CAN_FILTER_TYPE_CLASSIC        0x02u /*!< Classic filter type */
+/**
+ * @} */
+
+/**
  * @defgroup CAN_Hardware_Object_Type CAN Hardware Object Type
  *
  * @{ */

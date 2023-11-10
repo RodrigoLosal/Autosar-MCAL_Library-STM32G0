@@ -86,6 +86,9 @@
 /**
  * @} */
 
+#define CAN_N_OF_FIFO0_FILTERS        2u /*!< Number of filters for FIFO0 */
+#define CAN_N_OF_FIFO1_FILTERS        2u
+
 /**
  * @brief Switches the development error detection and notification on or off.
  * @typedef EcucBooleanParamDef

@@ -99,6 +99,7 @@ const Can_ControllerBaudrateConfig BaudratesCtrl1[ CAN_NUMBER_OF_BAUDRATES_CTRL1
 const Can_Controller Controllers[ CAN_NUMBER_OF_CONTROLLERS ] =
 {
     {
+        .ControllerId = CAN_CONTROLLER_0,
         .Mode = CAN_MODE_NORMAL,
         .ClockDivider = CAN_CLOCK_DIV1,
         .FrameFormat = CAN_FRAME_CLASSIC,
@@ -113,6 +114,7 @@ const Can_Controller Controllers[ CAN_NUMBER_OF_CONTROLLERS ] =
         .BaudrateConfigsCount = CAN_NUMBER_OF_BAUDRATES_CTRL0
     },
     {
+        .ControllerId = CAN_CONTROLLER_1,
         .Mode = CAN_MODE_NORMAL,
         .ClockDivider = CAN_CLOCK_DIV1,
         .FrameFormat = CAN_FRAME_CLASSIC,
@@ -126,6 +128,42 @@ const Can_Controller Controllers[ CAN_NUMBER_OF_CONTROLLERS ] =
         .BaudrateConfigs = BaudratesCtrl1,
         .BaudrateConfigsCount = CAN_NUMBER_OF_BAUDRATES_CTRL1
     }
+};
+/* clang-format on */
+
+/* clang-format off */
+const Can_HwFilter Fifo0Filters[ CAN_N_OF_FIFO0_FILTERS ] =
+{
+    { 
+        .HwFilterCode   = 0x00000000,
+        .HwFilterMask   = 0x00000000,
+        .HwFilterType   = CAN_FILTER_TYPE_RANGE,
+        .HwFilterIdType = CAN_ID_STANDARD 
+    },
+    { 
+        .HwFilterCode   = 0x00000000,
+        .HwFilterMask   = 0x00000000,
+        .HwFilterType   = CAN_FILTER_TYPE_RANGE,
+        .HwFilterIdType = CAN_ID_STANDARD 
+    } 
+};
+/* clang-format on */
+
+/* clang-format off */
+const Can_HwFilter Fifo1Filters[ CAN_N_OF_FIFO1_FILTERS ] =
+{
+    { 
+        .HwFilterCode   = 0x00000000,
+        .HwFilterMask   = 0x00000000,
+        .HwFilterType   = CAN_FILTER_TYPE_RANGE,
+        .HwFilterIdType = CAN_ID_STANDARD 
+    },
+    { 
+        .HwFilterCode   = 0x00000000,
+        .HwFilterMask   = 0x00000000,
+        .HwFilterType   = CAN_FILTER_TYPE_RANGE,
+        .HwFilterIdType = CAN_ID_STANDARD 
+    } 
 };
 /* clang-format on */
 
@@ -151,7 +189,9 @@ const Can_HardwareObject Hohs[ CAN_NUMBER_OF_HOHS ] =
         .IdType = CAN_ID_STANDARD,
         .ObjectPayloadLength = 8,
         .ObjectType = CAN_HOH_TYPE_RECEIVE,
-        .ControllerRef = &Controllers[ CAN_CONTROLLER_0 ]
+        .ControllerRef = &Controllers[ CAN_CONTROLLER_0 ],
+        .HwFilter = Fifo0Filters,
+        .HwFilterCount = CAN_N_OF_FIFO0_FILTERS
     },
     {
         .CanObjectId = CAN_OBJ_HRH_RX01,
@@ -160,7 +200,9 @@ const Can_HardwareObject Hohs[ CAN_NUMBER_OF_HOHS ] =
         .IdType = CAN_ID_STANDARD,
         .ObjectPayloadLength = 8,
         .ObjectType = CAN_HOH_TYPE_RECEIVE,
-        .ControllerRef = &Controllers[ CAN_CONTROLLER_0 ]
+        .ControllerRef = &Controllers[ CAN_CONTROLLER_0 ],
+        .HwFilter = Fifo1Filters,
+        .HwFilterCount = CAN_N_OF_FIFO1_FILTERS
     } 
 };
 /* clang-format on */

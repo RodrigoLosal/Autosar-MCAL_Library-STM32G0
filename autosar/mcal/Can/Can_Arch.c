@@ -89,6 +89,8 @@
  * @{ */
 #define RXGFC_LSS_BIT        16u /*!< List Size Standard */
 #define RXGFC_LSE_BIT        24u /*!< List Size Extended */
+#define RXGFC_ANFS_BIT       4u  /*!< Accept Non-matching Frames Standard */
+#define RXGFC_ANFE_BIT       2u  /*!< Accept Non-matching Frames Extended */
 /**
  * @} */
 
@@ -98,6 +100,8 @@
  * @{ */
 #define RXGFC_LSS_SIZE       5u /*!< List Size Standard */
 #define RXGFC_LSE_SIZE       4u /*!< List Size Extended */
+#define RXGFC_ANFS_SIZE      2u /*!< Accept Non-matching Frames Standard */
+#define RXGFC_ANFE_SIZE      2u /*!< Accept Non-matching Frames Extended */
 /**
  * @} */
 
@@ -231,6 +235,30 @@
 /**
  * @} */
 
+/**
+ * @defgroup STD_Filter_bits    Standard ID Filter bits
+ *
+ * @{ */
+#define FLSSA_SFID1_BIT      0u  /*!< Standard ID Filter 1 */
+#define FLSSA_SFID2_BIT      16u /*!< Standard ID Filter 2 */
+#define FLSSA_SFEC_BIT       30u /*!< Standard ID Filter Element Configuration */
+#define FLSSA_SFT_BIT        28u /*!< Standard ID Filter Type */
+#define FLSSA_SFT_SIZE       2u  /*!< Standard ID Filter Type bitfield size */
+#define FLSSA_SFEC_SIZE      3u  /*!< Standard ID Filter 1 bitfield size */
+/**
+ * @} */
+
+/**
+ * @defgroup EXT_Filter_bits    Extended ID Filter bits
+ *
+ * @{ */
+#define FLESA_EFID_BIT       0u
+#define FLESA_EFEC_BIT       29u /*!< Extended ID Filter Element Configuration */
+#define FLESA_EFT_BIT        30u /*!< Extended ID Filter Type */
+#define FLESA_EFT_SIZE       2u  /*!< Extended ID Filter Type bitfield size */
+#define FLESA_EFEC_SIZE      3u  /*!< Extended ID Filter 1 bitfield size */
+/**
+ * @} */
 
 /**
  * @brief  Tx Hardware objecj descriptor.
@@ -242,8 +270,14 @@ typedef struct _HwHthObject
     uint32 ObjPayload[ 16 ]; /*!< Tx Buffer Standard Address Payload */
 } HwHthObject;
 
+typedef struct _HwExtFilter
+{
+    uint32 ExtFilterHeader1; /*!< Extended Filter Standard Address Header 1 */
+    uint32 ExtFilterHeader2; /*!< Extended Filter Standard Address Header 2 */
+} HwExtFilter;
 
 static void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can_RegisterType *Can );
+static void Can_SetupConfiguredFilters( const Can_Controller *Controller, const Can_HardwareObject *HwObjects, Can_RegisterType *Can );
 static uint8 Can_GetClosestDlcWithPadding( uint8 Dlc, uint32 *RamBuffer, uint8 PaddingValue );
 static uint8 Can_GetTxPduId( const Can_Controller *Controller, PduIdType *CanPduId );
 static uint8 Can_GetMessage( HwHthObject *Fifo, const Can_Controller *Controller, PduInfoType *PduInfo, uint32 *CanId );
@@ -397,11 +431,7 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
     Bfx_ClrBitMask_u32u32( (uint32 *)&Can->TXBC, CAN_TX_QUEUE_OPERATION );
     Bfx_SetBitMask_u32u32( (uint32 *)&Can->TXBC, ControllerConfig->TxFifoQueueMode );
 
-    /* Standard filter elements number */
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_LSS_BIT, RXGFC_LSS_SIZE, ControllerConfig->StdFiltersNbr );
-
-    /* Extended filter elements number */
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_LSE_BIT, RXGFC_LSE_SIZE, ControllerConfig->ExtFiltersNbr );
+    Can_SetupConfiguredFilters( Config->Controllers, Config->Hohs, Can );
 
     /* Setup the interrupt to line 0 or 1*/
     Can_SetupConfiguredInterrupts( &Config->Controllers[ Controller ], Can );
@@ -1056,6 +1086,62 @@ void Can_Arch_IsrMainHandler( Can_HwUnit *HwUnit, uint8 Controller )
     }
 }
 
+static void Can_SetupConfiguredFilters( const Can_Controller *Controller, const Can_HardwareObject *HwObjects, Can_RegisterType *Can )
+{
+    uint8 StdFilterIndex     = 0u;
+    uint8 ExtFilterIndex     = 0u;
+    uint8 ControllerHwObjs[] = { 0, CAN_OBJ_HRH_RX00, CAN_OBJ_HRH_RX10 };
+
+    for( uint8 Fifo = 1u; Fifo < 3u; Fifo++ )
+    {
+        const Can_HardwareObject *HwObject = &HwObjects[ ControllerHwObjs[ Controller->ControllerId ] + Fifo ];
+        /* set the filter only if filters are availables*/
+        if( HwObject->HwFilter != NULL_PTR )
+        {
+            /* Set Filter configuration for FIFO */
+            for( uint8 Filter = 0; Filter < HwObject->HwFilterCount; Filter++ )
+            {
+                /* Set the filter ID, standard (11 bits) or extended (29 bits) */
+                if( ( HwObject->IdType == CAN_ID_STANDARD ) || ( ( HwObject->IdType == CAN_ID_MIXED ) && ( HwObject->HwFilter->HwFilterIdType == CAN_ID_STANDARD ) ) )
+                {
+                    uint32 *StdFilter            = (uint32 *)&HwObject->ControllerRef->SramBA->FLSSA[ StdFilterIndex ];
+                    const Can_HwFilter *HwFilter = &HwObject->HwFilter[ Filter ];
+
+                    Bfx_PutBits_u32u8u8u32( StdFilter, FLSSA_SFID1_BIT, RX_BUFFER_ID_11_BITS, HwFilter->HwFilterCode );
+                    Bfx_PutBits_u32u8u8u32( StdFilter, FLSSA_SFID2_BIT, RX_BUFFER_ID_11_BITS, HwFilter->HwFilterMask );
+                    Bfx_PutBits_u32u8u8u32( StdFilter, FLSSA_SFT_BIT, FLSSA_SFT_SIZE, HwFilter->HwFilterType );
+                    Bfx_PutBits_u32u8u8u32( StdFilter, FLSSA_SFEC_BIT, FLSSA_SFEC_SIZE, Fifo );
+                    StdFilterIndex++;
+                }
+                else if( ( HwObject->IdType == CAN_ID_EXTENDED ) || ( ( HwObject->IdType == CAN_ID_MIXED ) && ( HwObject->HwFilter->HwFilterIdType == CAN_ID_EXTENDED ) ) )
+                {
+                    HwExtFilter *ExtFilter       = (HwExtFilter *)&HwObject->ControllerRef->SramBA->FLESA[ ExtFilterIndex ];
+                    const Can_HwFilter *HwFilter = &HwObject->HwFilter[ Filter ];
+
+                    Bfx_PutBits_u32u8u8u32( &ExtFilter->ExtFilterHeader1, FLESA_EFID_BIT, RX_BUFFER_ID_29_BITS, HwFilter->HwFilterCode );
+                    Bfx_PutBits_u32u8u8u32( &ExtFilter->ExtFilterHeader2, FLESA_EFID_BIT, RX_BUFFER_ID_29_BITS, HwFilter->HwFilterMask );
+                    Bfx_PutBits_u32u8u8u32( &ExtFilter->ExtFilterHeader2, FLESA_EFT_BIT, FLESA_EFT_SIZE, HwFilter->HwFilterType );
+                    Bfx_PutBits_u32u8u8u32( &ExtFilter->ExtFilterHeader1, FLESA_EFEC_BIT, FLESA_EFEC_SIZE, Fifo );
+                    ExtFilterIndex++;
+                }
+                else
+                {
+                    /*Do nothing*/
+                }
+            }
+        }
+    }
+
+    /* Standard filter elements number */
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_LSS_BIT, RXGFC_LSS_SIZE, StdFilterIndex );
+    /*Reject all messages that do not match with filters*/
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_ANFS_BIT, RXGFC_ANFS_SIZE, 3u );
+
+    /* Extended filter elements number */
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_LSE_BIT, RXGFC_LSE_SIZE, ExtFilterIndex );
+    /*Reject all messages that do not match with filters*/
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_ANFE_BIT, RXGFC_ANFE_SIZE, 3u );
+}
 
 /**
  * @brief    **setup Can controller interrupts**
