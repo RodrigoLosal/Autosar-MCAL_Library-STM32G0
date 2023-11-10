@@ -8,32 +8,12 @@
 #ifndef DET_H__
 #define DET_H__
 
-/**
- * @defgroup DET_Ids Dt Id number for module and each API
- *
- * @{ */
-#define DET_ID_INIT                     0x00u /*!< Det_Init() api service id */
-#define DET_ID_REPORT_ERROR             0x01u /*!< Det_ReportError() api service id */
-#define DET_ID_DE_START                 0x02u /*!< Det_Start() api service id */  
-#define DET_ID_GET_VERSION_INFO         0x03u /*!< Det_GetVersionInfo() api service id */  
-#define DET_ID_REPORT_RUNTIME_ERROR     0x04u /*!< Det_ReportRuntimeError() api service id */                 
-#define DET_ID_REPORT_TRANSIENT_FAULT   0x05u /*!< Det_ReportTransientFault() api service id */   
-/**
- * @} */
-
-/**
- * @defgroup DET_Error_Type Det Developtment Error Types
- *
- * @{ */
-#define DET_E_PARAM_POINTER             0x01u/*!< Det_GetVersionInfo called with null parameter pointer */
-/**
- * @} */
-
-void Det_Init ( const Det_ConfigType* ConfigPtr );
-Std_ReturnType Det_ReportError ( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, uint8 ErrorId );
+void Det_Init( const Det_ConfigType *ConfigPtr );
+void Det_Start( void );
+Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, uint8 ErrorId );
 Std_ReturnType Det_ReportRuntimeError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, uint8 ErrorId );
-Std_ReturnType Det_ReportTransientFault (uint16 ModuleId, uint8 InstanceId, uint8 ApiId, uint8 FaultId );
+Std_ReturnType Det_ReportTransientFault( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, uint8 FaultId );
 #if DET_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
-void Det_GetVersionInfo( Std_VersionInfoType* versioninfo );
+void Det_GetVersionInfo( Std_VersionInfoType *versioninfo );
 #endif
 #endif

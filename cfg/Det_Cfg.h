@@ -17,10 +17,10 @@
  * @defgroup DET_SWC_Ids DET software version and Ids
  *
  * {@ */
-#define DET_MODULE_ID             0u /*!< Det Module ID */
-#define DET_INSTANCE_ID           0u /*!< Det Instance ID */
-#define DET_APILD_ID              0u /*!< Det Apild ID */
-#define DET_FAULT_ID              0u /*!< Det Fault ID */
+#define DET_MODULE_ID        0u /*!< Det Module ID */
+#define DET_INSTANCE_ID      0u /*!< Det Instance ID */
+#define DET_APILD_ID         0u /*!< Det Apild ID */
+#define DET_FAULT_ID         0u /*!< Det Fault ID */
 /**
  * @} */
 
@@ -28,9 +28,9 @@
  * @defgroup DET_SWC_Ids DET software version and Ids
  *
  * {@ */
-#define DET_SW_MAJOR_VERSION      0u /*!< Det Module Major Version */
-#define DET_SW_MINOR_VERSION      0u /*!< Det Module Minor Version */
-#define DET_SW_PATCH_VERSION      0u /*!< Det Module Patch Version */
+#define DET_SW_MAJOR_VERSION 0u /*!< Det Module Major Version */
+#define DET_SW_MINOR_VERSION 0u /*!< Det Module Minor Version */
+#define DET_SW_PATCH_VERSION 0u /*!< Det Module Patch Version */
 /**
  * @} */
 
@@ -38,6 +38,6 @@
  * @brief Specifies if the Det_GetVersionInfo API shall be supported.
  * @typedef EcucBooleanParamDef
  */
-#define DET_VERSION_INFO_API      STD_ON
+#define DET_VERSION_INFO_API STD_ON
 
 #endif /* DET_CFG_H__ */
