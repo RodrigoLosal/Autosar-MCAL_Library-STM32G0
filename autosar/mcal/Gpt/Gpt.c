@@ -230,7 +230,7 @@ void Gpt_DisableNotification( Gpt_ChannelType Channel )
 #if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_Notification_Channel0( void )
 {
-    if( Bfx_GetBit_u32u8_u8( (uint32 *)&TIM6->SR, GPT_INTERRUPT_FLAG_BIT ) == TRUE ) /*Checking if the update interrupt flag of TIMx_SR is set*/
+    if( Bfx_GetBit_u32u8_u8( (uint32)&TIM6->SR, GPT_INTERRUPT_FLAG_BIT ) == TRUE ) /*Checking if the update interrupt flag of TIMx_SR is set*/
     {
         LocalGptConfigPtr[ GPT_CHANNEL_0 ]->GptNotification( );
         Bfx_ClrBit_u32u8( (uint32 *)&TIM6->SR, GPT_INTERRUPT_FLAG_BIT ); /*Clearing the update interrupt flag of TIMx_SR*/
@@ -251,7 +251,7 @@ void Gpt_Notification_Channel0( void )
 #if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_Notification_Channel1( void )
 {
-    if( Bfx_GetBit_u32u8_u8( (uint32 *)&TIM7->SR, GPT_INTERRUPT_FLAG_BIT ) == TRUE ) /*Checking if the update interrupt flag of TIMx_SR is set*/
+    if( Bfx_GetBit_u32u8_u8( (uint32)&TIM7->SR, GPT_INTERRUPT_FLAG_BIT ) == TRUE ) /*Checking if the update interrupt flag of TIMx_SR is set*/
     {
         LocalGptConfigPtr[ GPT_CHANNEL_1 ]->GptNotification( );
         Bfx_ClrBit_u32u8( (uint32 *)&TIM7->SR, GPT_INTERRUPT_FLAG_BIT ); /*Clearing the update interrupt flag of TIMx_SR*/
