@@ -51,6 +51,7 @@
     - autosar/mcal/Port/Port.c
     - autosar/mcal/Dio/Dio.c
     - autosar/mcal/Gpt/Gpt.c
+    - autosar/mcal/Gpt/Gpt_Arch.c
     - autosar/mcal/Can/Can_Arch.c
     - autosar/mcal/Pwm/Pwm.c
     - autosar/mcal/Pwm/Pwm_Arch.c
