@@ -18,6 +18,7 @@
 /**
  * @brief Global GPT register array.
  */
+/* cppcheck-suppress misra-config ; The GPT_NUMBER_OF_CHANNELS define is already available through Gpt.h */
 static Gpt_RegisterType *channels[ GPT_NUMBER_OF_CHANNELS ] = { TIM6, TIM7 };
 
 /**
