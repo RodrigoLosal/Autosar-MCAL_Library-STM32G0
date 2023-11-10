@@ -36,10 +36,11 @@ void Det_Init( const Det_ConfigType *ConfigPtr )
  *
  * @retval Std_ReturnType: never returns a value, but has a return type for compatibility with services and hooks.
  *
- * @note Det_ReportError may be callable in interrupt context. Since the DET
- * can be called in normal mode or in interrupt context from stack or integration) 
- * this has to be considered during implementation of the hook functions:
- * Det_ReportError can be called in interrupt context; this should be considered when halting the system.
+ * @note    Det_ReportError may be callable in interrupt context. Since the DET
+ *          can be called in normal mode or in interrupt context from stack or 
+ *          integration) this has to be considered during implementation of the
+ *          hook functions:Det_ReportError can be called in interrupt context; 
+ *          this should be considered when halting the system.
  *
  * @reqs    SWS_Det_00009
  */
@@ -77,11 +78,11 @@ void Det_Start( void )
  *
  * @retval Std_ReturnType: returns always E_OK (is required for services)
  *
- * @note Det_ReportRuntime Error may be callable in interrupt context. Since 
- * the DET can be called in normal mode or in interrupt context (from stack 
- * or integration) this has to be considered during implementation of the hook 
- * functions:Det_ReportRuntimeError can be called in interrupt context; this 
- * hook should be reentrant and sufficiently performant.
+ * @note    Det_ReportRuntime Error may be callable in interrupt context. Since 
+ *          the DET can be called in normal mode or in interrupt context (from 
+ *          stack or integration) this has to be considered during implementation
+ *          of the hook unctions:Det_ReportRuntimeError can be called in interrupt 
+ *          context; this hook should be reentrant and sufficiently performant.
  *
  * @reqs    SWS_Det_01001
  */
@@ -108,15 +109,15 @@ Std_ReturnType Det_ReportRuntimeError( uint16 ModuleId, uint8 InstanceId, uint8 
  * @param   FaultId    ID of detected transient fault (defined in SWS of calling module).
  *
  * @retval  If no callout exists it shall return E_OK, otherwise it shall return the value of the configured callout.
- * In case several callouts are configured the logical or (sum) of the callout return values shall be returned.
- * Rationale: since E_OK=0, E_OK will be only returned if all are E_OK, and for multiple error codes there is a good
- * chance to detect several of them.
+ *          In case several callouts are configured the logical or (sum) of the callout return values shall be returned.
+ *          Rationale: since E_OK=0, E_OK will be only returned if all are E_OK, and for multiple error codes there is a
+ *          good chance to detect several of them.
  *
- * @note Det_ReportTransient Fault may be callable in interrupt context. Since 
- * the DET can be called in normal mode or in interrupt context (from stack or 
- * integration) this has to be considered during implementation of the hook 
- * functions: Det_ReportTransientFault can be called in interrupt context; 
- * this hook should be reentrant and sufficiently performant.
+ * @note    Det_ReportTransient Fault may be callable in interrupt context. Since 
+ *          the DET can be called in normal mode or in interrupt context (from stack
+ *          or integration) this has to be considered during implementation of the 
+ *          hook functions: Det_ReportTransientFault can be called in interrupt context; 
+ *          this hook should be reentrant and sufficiently performant.
  *
  *
  * @reqs    SWS_Det_01003
