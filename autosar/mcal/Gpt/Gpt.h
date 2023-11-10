@@ -12,6 +12,8 @@
 #ifndef GPT_H__
 #define GPT_H__
 
+#include "Gpt_Cfg.h" /* cppcheck-suppress misra-c2012-20.1 ; it is necesary to use a define for this function */
+
 /**
  * @defgroup    Bit state defines
  * @{ */
@@ -35,8 +37,6 @@
 #define GPT_UPDATE_DISABLE_BIT 1u  /*!< TIMx_CR1 -> UDIS: Update disable bit */
 /**
  * @} */
-
-#include "Gpt_Cfg.h" /* cppcheck-suppress misra-c2012-20.1 ; it is necesary to use a define for this function */
 
 void Gpt_Init( const Gpt_ConfigType *ConfigPtr );
 
