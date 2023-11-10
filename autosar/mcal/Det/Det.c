@@ -39,7 +39,7 @@ void Det_Init( const Det_ConfigType *ConfigPtr )
  * @note    Det_ReportError may be callable in interrupt context. Since the DET can be called in normal mode or in 
  *          interrupt context from stack or integration) this has to be considered during implementation of the hook
  *          functions:Det_ReportError can be called in interrupt context; this should be considered when halting the 
- *          system.Configuration for DET driver, this file as per AUTOSAR indication is not application dependant.
+ *          system.
  * 
  * @reqs    SWS_Det_00009
  */
