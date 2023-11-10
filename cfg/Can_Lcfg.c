@@ -108,8 +108,6 @@ const Can_Controller Controllers[ CAN_NUMBER_OF_CONTROLLERS ] =
         .TxFifoQueueMode = CAN_TX_FIFO_OPERATION,
         .Line0ActiveITs = 0,
         .Line1ActiveITs = 0,
-        .TxBufferITs = 0,
-        .TxBufferAbortITs = 0,
         .DefaultBaudrate = &BaudratesCtrl0[ CAN_BAUDRATE_CTRL0_100K ],
         .BaudrateConfigs = BaudratesCtrl0,
         .BaudrateConfigsCount = CAN_NUMBER_OF_BAUDRATES_CTRL0
@@ -124,8 +122,6 @@ const Can_Controller Controllers[ CAN_NUMBER_OF_CONTROLLERS ] =
         .TxFifoQueueMode = CAN_TX_FIFO_OPERATION,
         .Line0ActiveITs = 0,
         .Line1ActiveITs = 0,
-        .TxBufferITs = 0,
-        .TxBufferAbortITs = 0,
         .DefaultBaudrate = &BaudratesCtrl1[ CAN_BAUDRATE_CTRL1_500K ],
         .BaudrateConfigs = BaudratesCtrl1,
         .BaudrateConfigsCount = CAN_NUMBER_OF_BAUDRATES_CTRL1
@@ -140,13 +136,31 @@ const Can_Controller Controllers[ CAN_NUMBER_OF_CONTROLLERS ] =
 const Can_HardwareObject Hohs[ CAN_NUMBER_OF_HOHS ] =
 {
     {
+        .CanObjectId = CAN_OBJ_HTH_TX00,
         .HandleType = CAN_FULL,
         .HwObjectCount = 3,
         .IdType = CAN_ID_STANDARD,
         .ObjectPayloadLength = 8,
         .ObjectType = CAN_HOH_TYPE_TRANSMIT,
-        .ControllerRef = &Controllers[ CAN_CONTROLLER_0 ],
-        .SramRef = SRAMCAN1,
+        .ControllerRef = &Controllers[ CAN_CONTROLLER_0 ]
+    },
+    {
+        .CanObjectId = CAN_OBJ_HRH_RX00,
+        .HandleType = CAN_FULL,
+        .HwObjectCount = 3,
+        .IdType = CAN_ID_STANDARD,
+        .ObjectPayloadLength = 8,
+        .ObjectType = CAN_HOH_TYPE_RECEIVE,
+        .ControllerRef = &Controllers[ CAN_CONTROLLER_0 ]
+    },
+    {
+        .CanObjectId = CAN_OBJ_HRH_RX01,
+        .HandleType = CAN_FULL,
+        .HwObjectCount = 3,
+        .IdType = CAN_ID_STANDARD,
+        .ObjectPayloadLength = 8,
+        .ObjectType = CAN_HOH_TYPE_RECEIVE,
+        .ControllerRef = &Controllers[ CAN_CONTROLLER_0 ]
     } 
 };
 /* clang-format on */

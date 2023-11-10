@@ -237,9 +237,9 @@
  */
 typedef struct _HwHthObject
 {
-    uint32 TBSAHeader1;       /*!< Tx Buffer Standard Address Header 1 */
-    uint32 TBSAHeader2;       /*!< Tx Buffer Standard Address Header 2 */
-    uint32 TBSAPayload[ 16 ]; /*!< Tx Buffer Standard Address Payload */
+    uint32 ObjHeader1;       /*!< Tx Buffer Standard Address Header 1 */
+    uint32 ObjHeader2;       /*!< Tx Buffer Standard Address Header 2 */
+    uint32 ObjPayload[ 16 ]; /*!< Tx Buffer Standard Address Payload */
 } HwHthObject;
 
 
@@ -925,7 +925,7 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
         uint32 PutIndex = Bfx_GetBits_u32u8u8_u32( Can->TXFQS, TXFQS_TFQPI_BIT, TXFQS_TFQPI_SIZE );
 
         /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-        HwHthObject *HthObject = (HwHthObject *)&HwUnit->Config->Hohs[ Hth ].SramRef->TBSA;
+        HwHthObject *HthObject = (HwHthObject *)&HwUnit->Config->Hohs[ Hth ].ControllerRef->SramBA->TBSA;
 
         /*get the message ID type*/
         uint8 IdType = Bfx_GetBit_u32u8_u8( PduInfo->id, MSG_ID_BIT );
@@ -933,19 +933,19 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
         /* Set the message ID, standard (11 bits) or extended (29 bits) */
         if( IdType == MSG_STANDARD_ID )
         {
-            Bfx_PutBits_u32u8u8u32( &HthObject[ PutIndex ].TBSAHeader1, TX_BUFFER_ID_11_BITS, TX_BUFFER_ID_11_SIZE, PduInfo->id );
+            Bfx_PutBits_u32u8u8u32( &HthObject[ PutIndex ].ObjHeader1, TX_BUFFER_ID_11_BITS, TX_BUFFER_ID_11_SIZE, PduInfo->id );
             /* Write the ID type bit */
-            Bfx_ClrBit_u32u8( &HthObject[ PutIndex ].TBSAHeader1, TX_BUFFER_XTD_BIT );
+            Bfx_ClrBit_u32u8( &HthObject[ PutIndex ].ObjHeader1, TX_BUFFER_XTD_BIT );
         }
         else
         {
-            Bfx_PutBits_u32u8u8u32( &HthObject[ PutIndex ].TBSAHeader1, TX_BUFFER_ID_29_BITS, TX_BUFFER_ID_29_SIZE, PduInfo->id );
+            Bfx_PutBits_u32u8u8u32( &HthObject[ PutIndex ].ObjHeader1, TX_BUFFER_ID_29_BITS, TX_BUFFER_ID_29_SIZE, PduInfo->id );
             /* Write the ID type bit */
-            Bfx_SetBit_u32u8( &HthObject[ PutIndex ].TBSAHeader1, TX_BUFFER_XTD_BIT );
+            Bfx_SetBit_u32u8( &HthObject[ PutIndex ].ObjHeader1, TX_BUFFER_XTD_BIT );
         }
 
         /* Store the PduId into FIFO events  */
-        Bfx_PutBits_u32u8u8u32( &HthObject[ PutIndex ].TBSAHeader1, TX_BUFFER_MM_BIT, TX_BUFFER_MM_SIZE, PduInfo->swPduHandle );
+        Bfx_PutBits_u32u8u8u32( &HthObject[ PutIndex ].ObjHeader1, TX_BUFFER_MM_BIT, TX_BUFFER_MM_SIZE, PduInfo->swPduHandle );
 
         /* Get the type of frame to send */
         uint8 FrameType = Bfx_GetBit_u32u8_u8( PduInfo->id, MSG_FORMAT_BIT );
@@ -954,35 +954,39 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
         if( FrameType == MSG_CLASSIC_FORMAT )
         {
             /*Frame format*/
-            Bfx_ClrBit_u32u8( &HthObject[ PutIndex ].TBSAHeader2, TX_BUFFER_FDF_BIT );
+            Bfx_ClrBit_u32u8( &HthObject[ PutIndex ].ObjHeader2, TX_BUFFER_FDF_BIT );
             /* Set the actual data lenght (DLC) */
             DataLenght = PduInfo->length;
         }
         else
         {
             /*Frame format*/
-            Bfx_SetBit_u32u8( &HthObject[ PutIndex ].TBSAHeader2, TX_BUFFER_FDF_BIT );
+            Bfx_SetBit_u32u8( &HthObject[ PutIndex ].ObjHeader2, TX_BUFFER_FDF_BIT );
             /* Get the actual data lenght (DLC) */
             DataLenght = Can_GetClosestDlcWithPadding( PduInfo->length, RamBuffer, HwUnit->Config->Hohs[ Hth ].FdPaddingValue );
             /* Bit rate switch */
-            Bfx_PutBit_u32u8u8( &HthObject[ PutIndex ].TBSAHeader2, TX_BUFFER_BRS_BIT, ControllerConfig->DefaultBaudrate->FdTxBitRateSwitch );
+            if( ( ControllerConfig->FrameFormat == CAN_FRAME_FD_BRS ) && ( ControllerConfig->DefaultBaudrate->FdTxBitRateSwitch == STD_ON ) )
+            {
+                Bfx_SetBit_u32u8( &HthObject[ PutIndex ].ObjHeader2, TX_BUFFER_BRS_BIT );
+            }
         }
 
         /*Store Tx Events*/
-        Bfx_SetBit_u32u8( &HthObject[ PutIndex ].TBSAHeader2, TX_BUFFER_EFC_BIT );
+        Bfx_SetBit_u32u8( &HthObject[ PutIndex ].ObjHeader2, TX_BUFFER_EFC_BIT );
 
         /* copy message into a 32bit wide buffer*/
-        for( uint8 Byte = 0; Byte < DataLenght; Byte++ )
+        for( uint8 Byte = 0; Byte < PduInfo->length; Byte++ )
         {
             ( (uint8 *)RamBuffer )[ Byte ] = PduInfo->sdu[ Byte ];
         }
-        /* Write message data lenght */
-        Bfx_PutBits_u32u8u8u32( &HthObject[ PutIndex ].TBSAHeader2, TX_BUFFER_DLC_BIT, TX_BUFFER_DLC_SIZE, DataLenght );
 
-        /* Write Tx payload to the message RAM */
-        for( uint8 Word = 0; Word < DataLenght; Word++ )
+        /* Write message data lenght */
+        Bfx_PutBits_u32u8u8u32( &HthObject[ PutIndex ].ObjHeader2, TX_BUFFER_DLC_BIT, TX_BUFFER_DLC_SIZE, DataLenght );
+
+        /* Write Tx payload with padding value to the message RAM */
+        for( uint8 Word = 0; Word < ( DataLenght / sizeof( uint32 ) ); Word++ )
         {
-            HthObject[ PutIndex ].TBSAPayload[ Word ] = RamBuffer[ Word ];
+            HthObject[ PutIndex ].ObjPayload[ Word ] = RamBuffer[ Word ];
         }
 
         /* Activate the corresponding transmission request */
@@ -1093,14 +1097,14 @@ static void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can
          but interrupt will only occur if TC is enabled in IE register */
     if( ( ( Controller->Line1ActiveITs & CAN_IT_TX_COMPLETE ) != 0u ) || ( ( Controller->Line0ActiveITs & CAN_IT_TX_COMPLETE ) != 0u ) )
     {
-        Bfx_SetBitMask_u32u32( (uint32 *)&Can->TXBTIE, Controller->TxBufferITs );
+        Can->TXBTIE = CAN_TX_BUFFER0 | CAN_TX_BUFFER1 | CAN_TX_BUFFER2;
     }
 
     /* Enable Tx Buffer Cancellation Finished Interrupt to set TCF flag in IR register,
          but interrupt will only occur if TCF is enabled in IE register */
     if( ( ( Controller->Line1ActiveITs & CAN_IT_TX_ABORT_COMPLETE ) != 0u ) || ( ( Controller->Line0ActiveITs & CAN_IT_TX_ABORT_COMPLETE ) != 0u ) )
     {
-        Bfx_SetBitMask_u32u32( (uint32 *)&Can->TXBCIE, Controller->TxBufferAbortITs );
+        Can->TXBCIE = CAN_TX_BUFFER0 | CAN_TX_BUFFER1 | CAN_TX_BUFFER2;
     }
 }
 
@@ -1120,44 +1124,53 @@ static void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can
 static uint8 Can_GetClosestDlcWithPadding( uint8 Dlc, uint32 *RamBuffer, uint8 PaddingValue )
 {
     uint8 DataLenght = 0u;
-
-    /*set padding value*/
-    for( uint8 Byte = 0u; Byte < Dlc; Byte++ )
-    {
-        ( (uint8 *)RamBuffer )[ Byte ] = PaddingValue;
-    }
+    uint8 Counter;
 
     if( ( Dlc > 8u ) && ( Dlc <= 12u ) )
     {
         DataLenght = CAN_OBJECT_PL_12;
+        Counter    = 12;
     }
     else if( ( Dlc > 12u ) && ( Dlc <= 16u ) )
     {
         DataLenght = CAN_OBJECT_PL_16;
+        Counter    = 16;
     }
     else if( ( Dlc > 16u ) && ( Dlc <= 20u ) )
     {
         DataLenght = CAN_OBJECT_PL_20;
+        Counter    = 20;
     }
     else if( ( Dlc > 20u ) && ( Dlc <= 24u ) )
     {
         DataLenght = CAN_OBJECT_PL_24;
+        Counter    = 24;
     }
     else if( ( Dlc > 24u ) && ( Dlc <= 32u ) )
     {
         DataLenght = CAN_OBJECT_PL_32;
+        Counter    = 32;
     }
     else if( ( Dlc > 32u ) && ( Dlc <= 48u ) )
     {
         DataLenght = CAN_OBJECT_PL_48;
+        Counter    = 48;
     }
     else if( ( Dlc > 48u ) && ( Dlc <= 64u ) )
     {
         DataLenght = CAN_OBJECT_PL_64;
+        Counter    = 64;
     }
     else
     {
         DataLenght = CAN_OBJECT_PL_8;
+        Counter    = 8;
+    }
+
+    /*set padding value*/
+    for( uint8 Byte = 0u; Byte < Counter; Byte++ )
+    {
+        ( (uint8 *)RamBuffer )[ Byte ] = PaddingValue;
     }
 
     return DataLenght;
@@ -1196,8 +1209,8 @@ static uint8 Can_GetTxPduId( const Can_Controller *Controller, PduIdType *CanPdu
  * @brief    **Get a Message from one of the the Rx FIFOs**
  *
  * This function gets the oldest message from one of the the Rx FIFOs, it also returns the message
- * ID and the data lenght, the message is actually store into the TBSAHeader1, TBSAHeader2 and
- * TBSAPayload fields of the Rx FIFO element.
+ * ID and the data lenght, the message is actually store into the ObjHeader1, ObjHeader2 and
+ * ObjPayload fields of the Rx FIFO element.
  *
  * @param    Fifo Pointer to the Rx FIFO element.
  * @param    Controller CAN controller for which the status shall be changed.
@@ -1216,31 +1229,31 @@ static uint8 Can_GetMessage( HwHthObject *Fifo, const Can_Controller *Controller
     uint8 GetIndex = Bfx_GetBits_u32u8u8_u32( Can->RXF0S, RXF0S_F0GI_BIT, RXF0S_F0GI_SIZE );
 
     /* Retrieve DataLength */
-    PduInfo->SduLength = Bfx_GetBits_u32u8u8_u32( Fifo[ GetIndex ].TBSAHeader1, RX_BUFFER_DLC_BIT, RX_BUFFER_DLC_SIZE );
+    PduInfo->SduLength = Bfx_GetBits_u32u8u8_u32( Fifo[ GetIndex ].ObjHeader1, RX_BUFFER_DLC_BIT, RX_BUFFER_DLC_SIZE );
     PduInfo->SduLength = DlcToBytes[ PduInfo->SduLength ];
 
     /*Retrieve message ID Type*/
-    uint8 IdType = Bfx_GetBit_u32u8_u8( Fifo[ GetIndex ].TBSAHeader1, RX_BUFFER_XTD_BIT );
+    uint8 IdType = Bfx_GetBit_u32u8_u8( Fifo[ GetIndex ].ObjHeader1, RX_BUFFER_XTD_BIT );
 
     /* Set the message ID, standard (11 bits) or extended (29 bits) */
     if( IdType == MSG_STANDARD_ID )
     {
-        *CanId = Bfx_GetBits_u32u8u8_u32( Fifo[ GetIndex ].TBSAHeader1, RX_BUFFER_ID_11_BITS, RX_BUFFER_ID_11_SIZE );
+        *CanId = Bfx_GetBits_u32u8u8_u32( Fifo[ GetIndex ].ObjHeader1, RX_BUFFER_ID_11_BITS, RX_BUFFER_ID_11_SIZE );
     }
     else
     {
-        *CanId = Bfx_GetBits_u32u8u8_u32( Fifo[ GetIndex ].TBSAHeader1, RX_BUFFER_ID_29_BITS, RX_BUFFER_ID_29_SIZE );
+        *CanId = Bfx_GetBits_u32u8u8_u32( Fifo[ GetIndex ].ObjHeader1, RX_BUFFER_ID_29_BITS, RX_BUFFER_ID_29_SIZE );
     }
     /* Bit indication for standart or extended */
     Bfx_PutBit_u32u8u8( CanId, MSG_ID_BIT, IdType );
 
     /* Set frame type*/
-    uint8 Format = Bfx_GetBit_u32u8_u8( Fifo[ GetIndex ].TBSAHeader2, RX_BUFFER_FDF_BIT );
+    uint8 Format = Bfx_GetBit_u32u8_u8( Fifo[ GetIndex ].ObjHeader2, RX_BUFFER_FDF_BIT );
     /* Bit indication for Classic or FD frame */
     Bfx_PutBit_u32u8u8( CanId, MSG_FORMAT_BIT, Format );
 
     /* Retrieve Rx payload */
-    PduInfo->SduDataPtr = (uint8 *)&Fifo[ GetIndex ].TBSAPayload;
+    PduInfo->SduDataPtr = (uint8 *)&Fifo[ GetIndex ].ObjPayload;
 
     /* Acknowledge the Rx FIFO 0 that the oldest element is read so that it increments the GetIndex */
     Can->RXF0A = GetIndex;
@@ -1272,7 +1285,7 @@ static void Can_Isr_RxFifo0NewMessage( Can_HwUnit *HwUnit, uint8 Controller )
     Can_HwType Mailbox;
 
     /* Set Hoh and controller Ids */
-    Mailbox.Hoh          = 0u;
+    Mailbox.Hoh          = ( Controller == CAN_CONTROLLER_0 ) ? CAN_OBJ_HRH_RX00 : CAN_OBJ_HRH_RX10;
     Mailbox.ControllerId = Controller;
 
     /* Read the oldest message arrived */
@@ -1306,7 +1319,7 @@ static void Can_Isr_RxFifo0Full( Can_HwUnit *HwUnit, uint8 Controller )
     do
     {
         /* Set Hoh and controller Ids, same for all messages */
-        Mailbox.Hoh          = 0u;
+        Mailbox.Hoh          = ( Controller == CAN_CONTROLLER_0 ) ? CAN_OBJ_HRH_RX00 : CAN_OBJ_HRH_RX10;
         Mailbox.ControllerId = Controller;
 
         /* Read the oldest message arrived */
@@ -1358,7 +1371,7 @@ static void Can_Isr_RxFifo1NewMessage( Can_HwUnit *HwUnit, uint8 Controller )
     Can_HwType Mailbox;
 
     /* Set Hoh and controller Ids */
-    Mailbox.Hoh          = 0u;
+    Mailbox.Hoh          = ( Controller == CAN_CONTROLLER_0 ) ? CAN_OBJ_HRH_RX01 : CAN_OBJ_HRH_RX11;
     Mailbox.ControllerId = Controller;
 
     /* Read the oldest message arrived */
@@ -1392,7 +1405,7 @@ static void Can_Isr_RxFifo1Full( Can_HwUnit *HwUnit, uint8 Controller )
     do
     {
         /* Set Hoh and controller Ids, same for all messages */
-        Mailbox.Hoh          = 0u;
+        Mailbox.Hoh          = ( Controller == CAN_CONTROLLER_0 ) ? CAN_OBJ_HRH_RX01 : CAN_OBJ_HRH_RX11;
         Mailbox.ControllerId = Controller;
 
         /* Read the oldest message arrived */
@@ -1477,13 +1490,20 @@ static void Can_Isr_TransmissionCancellationFinished( Can_HwUnit *HwUnit, uint8 
 /**
  * @brief    **Can Tx Event Fifo Element Lost Callback**
  *
+ * A messages event haven't read on time and it was overwritten or not by a new message.
+ * if FIfo is in blocking mode the message will never overwrite but this ISR will be called
+ *
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
+ *
+ * @reqs    SWS_Can_00395
  */
 static void Can_Isr_TxEventFifoElementLost( Can_HwUnit *HwUnit, uint8 Controller )
 {
     (void)HwUnit;
     (void)Controller;
+
+    // Det_ReportRuntimeError(CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_SET_BAUDRATE, CAN_E_DATALOST );
 }
 
 /**

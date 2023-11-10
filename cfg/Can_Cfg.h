@@ -70,7 +70,7 @@
  * @brief Specifies the number of hardware objects to mange by each controller.
  * @typedef EcucIntegerParamDef
  */
-#define CAN_NUMBER_OF_HOHS            2
+#define CAN_NUMBER_OF_HOHS            3
 
 /**
  * @defgroup HOHs Can hardware object

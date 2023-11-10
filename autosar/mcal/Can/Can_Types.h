@@ -109,12 +109,6 @@ typedef struct _Can_Controller
     uint32 Line1ActiveITs; /*!< Specifies the interrupts to be enabled on Line1.
                                This parameter can be a value of CAN_IT_<interrupt> */
 
-    uint32 TxBufferITs; /*!< Specifies the buffers to be interrupt enable on Tx.
-                            This parameter can be a value of @ref CAN_TxBuffer */
-
-    uint32 TxBufferAbortITs; /*!< Specifies the buffers to be interrupt enable on Tx Abort.
-                                 This parameter can be a value of @ref CAN_TxBuffer */
-
     Can_RegisterType *BaseAddress; /*!< Base address of the Mcu CAN controller
                                        this paramter must be CAN1 or CAN2 */
 
@@ -138,6 +132,9 @@ typedef struct _Can_Controller
  */
 typedef struct _Can_HardwareObject
 {
+    uint8 CanObjectId; /*!< Specifies the ID of a hardware object.
+                           This paramter can be a set of @ref CAN_Hohs */
+
     uint8 HandleType; /*!< Specifies the type (Full-CAN or Basic-CAN) of a hardware object.
                           This paramter can be a set of @ref CAN_Hardware_Handler_Type */
 
@@ -165,9 +162,6 @@ typedef struct _Can_HardwareObject
 
     const Can_Controller *ControllerRef; /*!< Reference to CAN Controller to which the HOH is associated to
                                          this paramter must be a address of a valid controller structure  */
-
-    SramCan_RegisterType *SramRef; /*!< Reference to the SRAM location where the HOH is mapped to
-                                       this paramter must be SRAMCAN1 or SRAMCAN2 */
 } Can_HardwareObject;
 
 

@@ -266,6 +266,19 @@
 /**
  * @} */
 
+/**
+ * @defgroup CAN_Hohs CAN Hardware Object Handlers
+ *
+ * @{ */
+#define CAN_OBJ_HTH_TX00               0u /*!< HTH zero to controller zero */
+#define CAN_OBJ_HRH_RX00               1u /*!< HRH zero to controller zero */
+#define CAN_OBJ_HRH_RX01               2u /*!< HRH one to controller zero */
+#define CAN_OBJ_HTH_TX10               3u /*!< HTH zero to controller one  */
+#define CAN_OBJ_HRH_RX10               4u /*!< HRH zero to controller one  */
+#define CAN_OBJ_HRH_RX11               5u /*!< HRH one to controller one   */
+/**
+ * @} */
+
 
 void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Controller );
 void Can_Arch_DeInit( Can_HwUnit *HwUnit, uint8 Controller );
