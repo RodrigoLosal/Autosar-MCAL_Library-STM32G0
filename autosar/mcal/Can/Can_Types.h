@@ -85,19 +85,19 @@ typedef struct _Can_Controller
     uint32 ClockDivider; /*!< Specifies the clock divider for the CAN controller
                            This parameter can be a value of @ref CAN_clock_divider */
 
-    uint32 FrameFormat; /*!< Specifies the CAN frame format FD or Classic.
+    uint8 FrameFormat; /*!< Specifies the CAN frame format FD or Classic.
                             This parameter can be a value of @ref CAN_frame_format     */
 
-    uint32 TransmitPause; /*!< Enable or disable the Transmit Pause feature.
+    uint8 TransmitPause; /*!< Enable or disable the Transmit Pause feature.
                               This parameter can be set to STD_ON or STD_OFF  */
 
-    uint32 ProtocolException; /*!< Enable or disable the Protocol Exception Handling.
+    uint8 ProtocolException; /*!< Enable or disable the Protocol Exception Handling.
                                   This parameter can be set to STD_ON or STD_OFF  */
 
-    uint32 AutoRetransmission; /*!< Enable or disable the automatic retransmission mode.
+    uint8 AutoRetransmission; /*!< Enable or disable the automatic retransmission mode.
                                    This parameter can be set to STD_ON or STD_OFF  */
 
-    uint32 TxFifoQueueMode; /*!< Tx FIFO/Queue Mode selection. Queue mode is basically multiplexed tx
+    uint8 TxFifoQueueMode; /*!< Tx FIFO/Queue Mode selection. Queue mode is basically multiplexed tx
                                 This parameter can be a value of @ref CAN_txFifoQueue_Mode */
 
     uint32 StdFiltersNbr; /*!< Specifies the number of standard Message ID filters.

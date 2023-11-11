@@ -40,9 +40,8 @@
  * @defgroup CAN_frame_format CAN Frame Format
  *
  * @{ */
-#define CAN_FRAME_CLASSIC              0x00000000u                                     /*!< Classic mode                      */
-#define CAN_FRAME_FD_NO_BRS            ( (uint32)1u << 8u )                            /*!< FD mode without BitRate Switching */
-#define CAN_FRAME_FD_BRS               ( ( (uint32)1u << 8u ) | ( (uint32)1u << 9u ) ) /*!< FD mode with BitRate Switching    */
+#define CAN_FRAME_CLASSIC              0u /*!< Classic mode                      */
+#define CAN_FRAME_FD                   1u /*!< FD mode with BitRate Switching    */
 /**
  * @} */
 
@@ -50,8 +49,8 @@
  * @defgroup CAN_txFifoQueue_Mode CAN Tx FIFO/Queue Mode
  *
  * @{ */
-#define CAN_TX_FIFO_OPERATION          0x00000000u           /*!< FIFO mode  */
-#define CAN_TX_QUEUE_OPERATION         ( (uint32)1u << 24u ) /*!< Queue mode */
+#define CAN_TX_FIFO_OPERATION          0u /*!< FIFO mode  */
+#define CAN_TX_QUEUE_OPERATION         1u /*!< Queue mode */
 /**
  * @} */
 
@@ -59,20 +58,11 @@
  * @defgroup CAN_mode CAN Operating Mode
  *
  * @{ */
-#define CAN_MODE_NORMAL                0x00u /*!< Normal mode               */
-#define CAN_MODE_RESTRICTED_OPERATION  0x01u /*!< Restricted Operation mode */
-#define CAN_MODE_BUS_MONITORING        0x02u /*!< Bus Monitoring mode       */
-#define CAN_MODE_INTERNAL_LOOPBACK     0x03u /*!< Internal LoopBack mode    */
-#define CAN_MODE_EXTERNAL_LOOPBACK     0x04u /*!< External LoopBack mode    */
-/**
- * @} */
-
-/**
- * @defgroup CAN_Hardware_Object_Type CAN Hardware Object Type
- *
- * @{ */
-#define CAN_HOH_TYPE_RECEIVE           0x00u /*!< Receive object */
-#define CAN_HOH_TYPE_TRANSMIT          0x01u /*!< Transmit object */
+#define CAN_MODE_NORMAL                0u /*!< Normal mode               */
+#define CAN_MODE_RESTRICTED_OPERATION  1u /*!< Restricted Operation mode */
+#define CAN_MODE_BUS_MONITORING        2u /*!< Bus Monitoring mode       */
+#define CAN_MODE_INTERNAL_LOOPBACK     3u /*!< Internal LoopBack mode    */
+#define CAN_MODE_EXTERNAL_LOOPBACK     4u /*!< External LoopBack mode    */
 /**
  * @} */
 
@@ -80,9 +70,9 @@
  * @defgroup CAN_TxBuffer CAN Trnasmit Buffers
  *
  * @{ */
-#define CAN_TX_BUFFER0                 0x00000001u /*!< Add message to Tx Buffer 0  */
-#define CAN_TX_BUFFER1                 0x00000002u /*!< Add message to Tx Buffer 1  */
-#define CAN_TX_BUFFER2                 0x00000004u /*!< Add message to Tx Buffer 2  */
+#define CAN_TX_BUFFER0                 1u /*!< Add message to Tx Buffer 0  */
+#define CAN_TX_BUFFER1                 2u /*!< Add message to Tx Buffer 1  */
+#define CAN_TX_BUFFER2                 4u /*!< Add message to Tx Buffer 2  */
 /**
  * @} */
 
@@ -227,8 +217,8 @@
  * @defgroup CAN_Hardware_Object_Type CAN Hardware Object Type
  *
  * @{ */
-#define CAN_HOH_TYPE_RECEIVE           0x00u /*!< Receive object */
-#define CAN_HOH_TYPE_TRANSMIT          0x01u /*!< Transmit object */
+#define CAN_HOH_TYPE_RECEIVE           0u /*!< Receive object */
+#define CAN_HOH_TYPE_TRANSMIT          1u /*!< Transmit object */
 /**
  * @} */
 

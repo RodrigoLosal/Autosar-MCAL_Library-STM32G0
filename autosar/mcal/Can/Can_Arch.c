@@ -26,6 +26,8 @@
 #define CCCR_MON_BIT         5u  /*!< Bus monitoring mode bit */
 #define CCCR_DAR_BIT         6u  /*!< Disable automatic retransmission bit */
 #define CCCR_TEST_BIT        7u  /*!< Test mode enable bit */
+#define CCCR_FDOE_BIT        8u  /*!< FD operation enable bit */
+#define CCCR_BRSE_BIT        9u  /*!< Bit rate switch enable bit */
 #define CCCR_PXHD_BIT        12u /*!< Protocol exception handling disable bit */
 #define CCCR_TXP_BIT         14u /*!< Transmit pause bit */
 /**
@@ -82,6 +84,8 @@
 #define DBTP_DBRP_SIZE       16u /*!< Nominal Baud Rate Preescaler bitfiled size*/
 /**
  * @} */
+
+#define TXBC_TFQM_BIT        24u /*!< Tx FIFO/Queue Mode bit */
 
 /**
  * @defgroup RXGFC_bits RXGFC register bits
@@ -216,26 +220,6 @@
  * @} */
 
 /**
- * @defgroup ID_Type_msg    ID Type message (bit 31) from id message
- *
- * @{ */
-#define MSG_STANDARD_ID      0u /*!< Standard ID */
-/* cppcheck-suppress misra-c2012-2.5 ; just for docs*/
-#define MSG_EXTENDED_ID      1u /*!< Extended ID */
-/**
- * @} */
-
-/**
- * @defgroup Frame_Type_msg    Frame Type message (bit 30) from id message
- *
- * @{ */
-#define MSG_CLASSIC_FORMAT   0u /*!< Classic format */
-/* cppcheck-suppress misra-c2012-2.5 ; just for docs*/
-#define MSG_FD_FORMAT        1u /*!< FD format */
-/**
- * @} */
-
-/**
  * @defgroup STD_Filter_bits    Standard ID Filter bits
  *
  * @{ */
@@ -278,6 +262,7 @@ typedef struct _HwExtFilter
 
 static void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can_RegisterType *Can );
 static void Can_SetupConfiguredFilters( const Can_Controller *Controller, const Can_HardwareObject *HwObjects, Can_RegisterType *Can );
+static void Can_SetupBaudrateConfig( const Can_ControllerBaudrateConfig *Baudrate, Can_RegisterType *Can );
 static uint8 Can_GetClosestDlcWithPadding( uint8 Dlc, uint32 *RamBuffer, uint8 PaddingValue );
 static uint8 Can_GetTxPduId( const Can_Controller *Controller, PduIdType *CanPduId );
 static uint8 Can_GetMessage( HwHthObject *Fifo, const Can_Controller *Controller, PduInfoType *PduInfo, uint32 *CanId );
@@ -318,8 +303,6 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
     const Can_Controller *ControllerConfig = &Config->Controllers[ Controller ];
     /*Get the Can controller register structure*/
     Can_RegisterType *Can = ControllerConfig->BaseAddress;
-    /* get default baudrate values */
-    const Can_ControllerBaudrateConfig *DefaultBaudrate = ControllerConfig->DefaultBaudrate;
 
     /* Configure Clock divider */
     Can->CKDIV = ControllerConfig->ClockDivider;
@@ -365,9 +348,8 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
     /* Set the Protocol Exception Handling */
     Bfx_PutBit_u32u8u8( (uint32 *)&Can->CCCR, CCCR_PXHD_BIT, ControllerConfig->ProtocolException );
 
-    /* Set FDCAN Frame Format */
-    Bfx_ClrBitMask_u32u32( (uint32 *)&Can->CCCR, CAN_FRAME_FD_BRS );
-    Bfx_SetBitMask_u32u32( (uint32 *)&Can->CCCR, ControllerConfig->FrameFormat );
+    /* Set CAN Frame Format */
+    Bfx_PutBit_u32u8u8( (uint32 *)&Can->CCCR, CCCR_FDOE_BIT, ControllerConfig->FrameFormat );
 
     /* Reset FDCAN Operation Mode */
     Bfx_ClrBitMask_u32u32( (uint32 *)&Can->CCCR, ( ( 1u << CCCR_TEST_BIT ) | ( 1u << CCCR_MON_BIT ) | ( 1u << CCCR_ASM_BIT ) ) );
@@ -413,24 +395,12 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
     }
 
     /* Set the default nominal bit timing register */
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NSJW_BIT, NBTP_NSJW_SIZE, ( DefaultBaudrate->SyncJumpWidth - 1u ) );
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NTSEG1_BIT, NBTP_NTSEG1_SIZE, ( DefaultBaudrate->Seg1 - 1u ) );
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NTSEG2_BIT, NBTP_NTSEG2_SIZE, ( DefaultBaudrate->Seg2 - 1u ) );
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NBRP_BIT, NBTP_NBRP_SIZE, ( DefaultBaudrate->Prescaler - 1u ) );
-
-    /*set default data bit timing register id FD is active*/
-    if( ( ControllerConfig->FrameFormat == CAN_FRAME_FD_BRS ) )
-    {
-        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DSJW_BIT, DBTP_DSJW_SIZE, ( DefaultBaudrate->FdSyncJumpWidth - 1u ) );
-        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DTSEG1_BIT, DBTP_DTSEG1_SIZE, ( DefaultBaudrate->FdSeg1 - 1u ) );
-        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DTSEG2_BIT, DBTP_DTSEG2_SIZE, ( DefaultBaudrate->FdSeg2 - 1u ) );
-        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DBRP_BIT, DBTP_DBRP_SIZE, ( DefaultBaudrate->FdPrescaler - 1u ) );
-    }
+    Can_SetupBaudrateConfig( ControllerConfig->DefaultBaudrate, Can );
 
     /* Select between Tx FIFO and Tx Queue operation modes */
-    Bfx_ClrBitMask_u32u32( (uint32 *)&Can->TXBC, CAN_TX_QUEUE_OPERATION );
-    Bfx_SetBitMask_u32u32( (uint32 *)&Can->TXBC, ControllerConfig->TxFifoQueueMode );
+    Bfx_PutBit_u32u8u8( (uint32 *)&Can->TXBC, TXBC_TFQM_BIT, ControllerConfig->TxFifoQueueMode );
 
+    /* Setup filter for Fifo 0 and Fifo 1*/
     Can_SetupConfiguredFilters( Config->Controllers, Config->Hohs, Can );
 
     /* Setup the interrupt to line 0 or 1*/
@@ -518,20 +488,8 @@ Std_ReturnType Can_Arch_SetBaudrate( Can_HwUnit *HwUnit, uint8 Controller, uint1
         /* get baudrate configuration */
         const Can_ControllerBaudrateConfig *Baudrate = &ControllerConfig->BaudrateConfigs[ BaudRateConfigID ];
 
-        /* Set the nominal bit timing register */
-        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NSJW_BIT, NBTP_NSJW_SIZE, ( Baudrate->SyncJumpWidth - 1u ) );
-        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NTSEG1_BIT, NBTP_NTSEG1_SIZE, ( Baudrate->Seg1 - 1u ) );
-        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NTSEG2_BIT, NBTP_NTSEG2_SIZE, ( Baudrate->Seg2 - 1u ) );
-        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NBRP_BIT, NBTP_NBRP_SIZE, ( Baudrate->Prescaler - 1u ) );
-
-        /* If FD operation with BRS is selected, set the data bit timing register */
-        if( ( HwUnit->Config->Controllers[ Controller ].FrameFormat == CAN_FRAME_FD_BRS ) )
-        {
-            Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DSJW_BIT, DBTP_DSJW_SIZE, ( Baudrate->FdSyncJumpWidth - 1u ) );
-            Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DTSEG1_BIT, DBTP_DTSEG1_SIZE, ( Baudrate->FdSeg1 - 1u ) );
-            Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DTSEG2_BIT, DBTP_DTSEG2_SIZE, ( Baudrate->FdSeg2 - 1u ) );
-            Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DBRP_BIT, DBTP_DBRP_SIZE, ( Baudrate->FdPrescaler - 1u ) );
-        }
+        /* Set the new baud rate */
+        Can_SetupBaudrateConfig( Baudrate, Can );
 
         RetVal = E_OK;
     }
@@ -945,8 +903,6 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
 
     /* get controller configuration */
     const Can_RegisterType *Can = HwUnit->Config->Hohs[ Hth ].ControllerRef->BaseAddress;
-    /* get controller */
-    const Can_Controller *ControllerConfig = HwUnit->Config->Hohs[ Hth ].ControllerRef;
 
     /* Check that the Tx FIFO/Queue is not full*/
     if( ( Bfx_GetBit_u32u8_u8( Can->TXFQS, TXFQS_TFQF_BIT ) == FALSE ) )
@@ -961,7 +917,7 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
         uint8 IdType = Bfx_GetBit_u32u8_u8( PduInfo->id, MSG_ID_BIT );
 
         /* Set the message ID, standard (11 bits) or extended (29 bits) */
-        if( IdType == MSG_STANDARD_ID )
+        if( IdType == CAN_ID_STANDARD )
         {
             Bfx_PutBits_u32u8u8u32( &HthObject[ PutIndex ].ObjHeader1, TX_BUFFER_ID_11_BITS, TX_BUFFER_ID_11_SIZE, PduInfo->id );
             /* Write the ID type bit */
@@ -981,7 +937,7 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
         uint8 FrameType = Bfx_GetBit_u32u8_u8( PduInfo->id, MSG_FORMAT_BIT );
 
         /* Set the frame */
-        if( FrameType == MSG_CLASSIC_FORMAT )
+        if( FrameType == CAN_FRAME_CLASSIC )
         {
             /*Frame format*/
             Bfx_ClrBit_u32u8( &HthObject[ PutIndex ].ObjHeader2, TX_BUFFER_FDF_BIT );
@@ -995,7 +951,7 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
             /* Get the actual data lenght (DLC) */
             DataLenght = Can_GetClosestDlcWithPadding( PduInfo->length, RamBuffer, HwUnit->Config->Hohs[ Hth ].FdPaddingValue );
             /* Bit rate switch */
-            if( ( ControllerConfig->FrameFormat == CAN_FRAME_FD_BRS ) && ( ControllerConfig->DefaultBaudrate->FdTxBitRateSwitch == STD_ON ) )
+            if( Bfx_GetBit_u32u8_u8( Can->CCCR, CCCR_BRSE_BIT ) == STD_ON )
             {
                 Bfx_SetBit_u32u8( &HthObject[ PutIndex ].ObjHeader2, TX_BUFFER_BRS_BIT );
             }
@@ -1141,6 +1097,27 @@ static void Can_SetupConfiguredFilters( const Can_Controller *Controller, const 
     Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_LSE_BIT, RXGFC_LSE_SIZE, ExtFilterIndex );
     /*Reject all messages that do not match with filters*/
     Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_ANFE_BIT, RXGFC_ANFE_SIZE, 3u );
+}
+
+static void Can_SetupBaudrateConfig( const Can_ControllerBaudrateConfig *Baudrate, Can_RegisterType *Can )
+{
+    /* Set the default nominal bit timing register */
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NSJW_BIT, NBTP_NSJW_SIZE, ( Baudrate->SyncJumpWidth - 1u ) );
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NTSEG1_BIT, NBTP_NTSEG1_SIZE, ( Baudrate->Seg1 - 1u ) );
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NTSEG2_BIT, NBTP_NTSEG2_SIZE, ( Baudrate->Seg2 - 1u ) );
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NBRP_BIT, NBTP_NBRP_SIZE, ( Baudrate->Prescaler - 1u ) );
+
+    /*set default data bit timing register if FD is active*/
+    if( Baudrate->FdTxBitRateSwitch == STD_ON )
+    {
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DSJW_BIT, DBTP_DSJW_SIZE, ( Baudrate->FdSyncJumpWidth - 1u ) );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DTSEG1_BIT, DBTP_DTSEG1_SIZE, ( Baudrate->FdSeg1 - 1u ) );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DTSEG2_BIT, DBTP_DTSEG2_SIZE, ( Baudrate->FdSeg2 - 1u ) );
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->DBTP, DBTP_DBRP_BIT, DBTP_DBRP_SIZE, ( Baudrate->FdPrescaler - 1u ) );
+    }
+
+    /* set data bit rate switch */
+    Bfx_PutBit_u32u8u8( (uint32 *)Can->CCCR, CCCR_BRSE_BIT, Baudrate->FdTxBitRateSwitch );
 }
 
 /**
@@ -1322,7 +1299,7 @@ static uint8 Can_GetMessage( HwHthObject *Fifo, const Can_Controller *Controller
     uint8 IdType = Bfx_GetBit_u32u8_u8( Fifo[ GetIndex ].ObjHeader1, RX_BUFFER_XTD_BIT );
 
     /* Set the message ID, standard (11 bits) or extended (29 bits) */
-    if( IdType == MSG_STANDARD_ID )
+    if( IdType == CAN_ID_STANDARD )
     {
         *CanId = Bfx_GetBits_u32u8u8_u32( Fifo[ GetIndex ].ObjHeader1, RX_BUFFER_ID_11_BITS, RX_BUFFER_ID_11_SIZE );
     }
