@@ -564,7 +564,7 @@ Std_ReturnType Can_Arch_SetBaudrate( Can_HwUnit *HwUnit, uint8 Controller, uint1
  *          E_NOT_OK: request not accepted
  *
  * @reqs    SWS_Can_00261, SWS_Can_00409, SWS_Can_00265, SWS_Can_00266, SWS_Can_00411, SWS_Can_00017
- *          SWS_Can_00384, SWS_Can_00257, SWS_Can_00282
+ *          SWS_Can_00384, SWS_Can_00257, SWS_Can_00282, SWS_Can_00426, SWS_Can_00425
  */
 Std_ReturnType Can_Arch_SetControllerMode( Can_HwUnit *HwUnit, uint8 Controller, Can_ControllerStateType Transition )
 {
@@ -741,6 +741,8 @@ Std_ReturnType Can_Arch_CheckWakeup( Can_HwUnit *HwUnit, uint8 Controller )
  *
  * @retval  E_OK: request accepted
  *          E_NOT_OK: request not accepted
+ * 
+ * @reqs    SWS_Can_91008
  */
 Std_ReturnType Can_Arch_GetControllerErrorState( Can_HwUnit *HwUnit, uint8 ControllerId, Can_ErrorStateType *ErrorStatePtr )
 {
