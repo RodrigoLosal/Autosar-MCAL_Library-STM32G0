@@ -113,8 +113,9 @@
  * @defgroup ECR_bits ECR register bits
  *
  * @{ */
-#define ECR_TEC_BIT          0u /*!< Transmit Error Counter */
-#define ECR_REC_BIT          8u /*!< Receive Error Counter */
+#define ECR_TEC_BIT          0u  /*!< Transmit Error Counter */
+#define ECR_REC_BIT          8u  /*!< Receive Error Counter */
+#define ECR_RP_BIT           15u /*!< Receive Error Passive */
 /**
  * @} */
 
@@ -324,6 +325,13 @@ static void Can_Isr_TxEventFifoElementLost( Can_HwUnit *HwUnit, uint8 Controller
 static void Can_Isr_TxEventFifoFull( Can_HwUnit *HwUnit, uint8 Controller );
 static void Can_Isr_TxEventFifoNewEntry( Can_HwUnit *HwUnit, uint8 Controller );
 static void Can_Isr_TxFifoEmpty( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_TimestampWraparound( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_MessageRamAccessFailure( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_TimeoutOccurred( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_ErrorLoggingOverflow( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_ErrorPassive( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_WarningStatus( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_BusOffStatus( Can_HwUnit *HwUnit, uint8 Controller );
 
 /**
  * @brief    **Can low level Initialization**
@@ -805,6 +813,7 @@ Std_ReturnType Can_Arch_GetControllerRxErrorCounter( Can_HwUnit *HwUnit, uint8 C
 
     /* Read the error counters register */
     *RxErrorCounterPtr = Bfx_GetBits_u32u8u8_u32( Can->ECR, ECR_REC_BIT, ECR_REC_SIZE );
+    Bfx_PutBit_u32u8u8( (uint32 *)RxErrorCounterPtr, 7u, Bfx_GetBit_u32u8_u8( Can->PSR, ECR_RP_BIT ) );
 
     return E_NOT_OK;
 }
@@ -1065,7 +1074,14 @@ void Can_Arch_IsrMainHandler( Can_HwUnit *HwUnit, uint8 Controller )
         Can_Isr_TxEventFifoElementLost,
         Can_Isr_TxEventFifoFull,
         Can_Isr_TxEventFifoNewEntry,
-        Can_Isr_TxFifoEmpty
+        Can_Isr_TxFifoEmpty,
+        Can_Isr_TimestampWraparound,
+        Can_Isr_MessageRamAccessFailure,
+        Can_Isr_TimeoutOccurred,
+        Can_Isr_ErrorLoggingOverflow,
+        Can_Isr_ErrorPassive,
+        Can_Isr_WarningStatus,
+        Can_Isr_BusOffStatus
     };
     /* clang-format on */
 
@@ -1722,4 +1738,69 @@ static void Can_Isr_TxFifoEmpty( Can_HwUnit *HwUnit, uint8 Controller )
         /*Pass the PduId od the senede message to upper layer*/
         CanIf_TxConfirmation( CanPduId );
     } while( Msgs > 0u );
+}
+
+static void Can_Isr_TimestampWraparound( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    (void)HwUnit;
+    (void)Controller;
+}
+
+static void Can_Isr_MessageRamAccessFailure( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    (void)HwUnit;
+    (void)Controller;
+}
+
+static void Can_Isr_TimeoutOccurred( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    (void)HwUnit;
+    (void)Controller;
+}
+
+static void Can_Isr_ErrorLoggingOverflow( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    (void)HwUnit;
+    (void)Controller;
+}
+
+static void Can_Isr_ErrorPassive( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    (void)HwUnit;
+    (void)Controller;
+}
+
+static void Can_Isr_WarningStatus( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    (void)HwUnit;
+    (void)Controller;
+}
+
+
+/**
+ * @brief    **Can Bus Off Callback**
+ *
+ * This function is the callback for the Bus Off interrupt, it will set the controller mode to
+ * stopped and notify the upper layer that the controller is in bus off mode.
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ *
+ * @reqs    SWS_Can_00020, SWS_Can_00272, SWS_Can_00273, SWS_Can_00274
+ */
+static void Can_Isr_BusOffStatus( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the Can controller register structure*/
+    Can_RegisterType *Can = ControllerConfig->BaseAddress;
+
+    /* make sure the transition when to Bus_Off and not the other way around */
+    if( Bfx_GetBit_u32u8_u8( Can->PSR, PSR_BO_BIT ) == STD_ON )
+    {
+        /* set controller mode to stopped **/
+        Can_Arch_SetControllerMode( HwUnit, Controller, CAN_CS_STOPPED );
+        /* Notify Bus off */
+        CanIf_ControllerBusOff( ControllerConfig->ControllerId );
+    }
 }

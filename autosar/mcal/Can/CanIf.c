@@ -12,3 +12,8 @@ void CanIf_RxIndication( const Can_HwType *Mailbox, const PduInfoType *PduInfoPt
     (void)Mailbox;
     (void)PduInfoPtr;
 }
+
+void CanIf_ControllerBusOff( uint8 ControllerId )
+{
+    (void)ControllerId;
+}
