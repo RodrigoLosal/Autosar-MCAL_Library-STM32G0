@@ -741,7 +741,7 @@ Std_ReturnType Can_Arch_CheckWakeup( Can_HwUnit *HwUnit, uint8 Controller )
  *
  * @retval  E_OK: request accepted
  *          E_NOT_OK: request not accepted
- * 
+ *
  * @reqs    SWS_Can_91008
  */
 Std_ReturnType Can_Arch_GetControllerErrorState( Can_HwUnit *HwUnit, uint8 ControllerId, Can_ErrorStateType *ErrorStatePtr )
