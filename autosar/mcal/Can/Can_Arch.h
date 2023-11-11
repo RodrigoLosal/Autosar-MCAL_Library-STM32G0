@@ -241,9 +241,9 @@
  * @defgroup CAN_Id_Type CAN ID Type to be handle by the HOHs
  *
  * @{ */
-#define CAN_ID_STANDARD                0x00u /*!< Standard ID */
-#define CAN_ID_EXTENDED                0x01u /*!< Extended ID */
-#define CAN_ID_MIXED                   0x02u /*!< Mixed ID    */
+#define CAN_ID_STANDARD                0u /*!< Standard ID */
+#define CAN_ID_EXTENDED                1u /*!< Extended ID */
+#define CAN_ID_MIXED                   2u /*!< Mixed ID    */
 /**
  * @} */
 
@@ -253,16 +253,6 @@
  * @{ */
 #define CAN_FULL                       0x00u /*!< Full CAN */
 #define CAN_BASIC                      0x01u /*!< Basic CAN */
-/**
- * @} */
-
-/**
- * @defgroup CAN_Processing CAN Controller Rx, Tx type of processing
- *
- * @{ */
-#define CAN_PROCESSING_INTERRUPT       0x00u /*!< Interrupt processing */
-#define CAN_PROCESSING_POLLING         0x01u /*!< Polling processing   */
-#define CAN_PROCESSING_MIXED           0x02u /*!< Mixed processing     */
 /**
  * @} */
 

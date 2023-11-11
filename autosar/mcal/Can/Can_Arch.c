@@ -133,16 +133,30 @@
  * @{ */
 #define TXFQS_TFQF_BIT       20u /*!< Tx FIFO/Queue Full */
 #define TXFQS_TFQPI_BIT      16u /*!< Tx FIFO/Queue Put Index */
-#define TXFQS_TFQPI_SIZE     2u  /*!< Tx FIFO/Queue Put Index bitfiled size*/
 /**
  * @} */
 
 /**
- * @defgroup TXEFS_bits TXEFS register bit sizes
+ * @defgroup TXFQS_sizes TXFQS register bit sizes
+ *
+ * @{ */
+#define TXFQS_TFQPI_SIZE     2u /*!< Tx FIFO/Queue Put Index bitfiled size*/
+/**
+ * @} */
+
+/**
+ * @defgroup TXEFS_bits TXEFS register bits
  *
  * @{ */
 #define TXEFS_EFGI_BIT       8u /*!< Tx FIFO/Queue Get Index */
 #define TXEFS_EFFL_BIT       0u /*!< Tx FIFO/Queue Fill Level */
+/**
+ * @} */
+
+/**
+ * @defgroup TXEFS_sizes TXEFS register bit sizes
+ *
+ * @{ */
 #define TXEFS_EFGI_SIZE      0u /*!< Tx FIFO/Queue Get Index bitfiled size*/
 #define TXEFS_EFFL_SIZE      3u /*!< Tx FIFO/Queue Fill Level bitfiled size*/
 /**
@@ -154,13 +168,26 @@
  * @{ */
 #define RXF0S_F0GI_BIT       8 /*!< Rx FIFO 0 Get Index */
 #define RXF0S_F0FL_BIT       0 /*!< Rx FIFO 0 Fill Level */
+/**
+ * @} */
+
+/**
+ * @defgroup RXF0s_sizes RXF0S register bit sizes
+ *
+ * @{ */
 #define RXF0S_F0GI_SIZE      3 /*!< Rx FIFO 0 Get Index bitfiled size*/
 #define RXF0S_F0FL_SIZE      4 /*!< Rx FIFO 0 Fill Level */
 /**
  * @} */
 
+/**
+ * @defgroup PSRs_bits PASR register bits
+ *
+ * @{ */
 #define PSR_BO_BIT           7u /*!< Bus_Off bit */
 #define PSR_EP_BIT           5u /*!< Protocol_Error bit */
+/**
+ * @} */
 
 /**
  * @defgroup TX_Buffer_bits TX Buffer header register bits
@@ -227,8 +254,15 @@
 #define FLSSA_SFID2_BIT      16u /*!< Standard ID Filter 2 */
 #define FLSSA_SFEC_BIT       30u /*!< Standard ID Filter Element Configuration */
 #define FLSSA_SFT_BIT        28u /*!< Standard ID Filter Type */
-#define FLSSA_SFT_SIZE       2u  /*!< Standard ID Filter Type bitfield size */
-#define FLSSA_SFEC_SIZE      3u  /*!< Standard ID Filter 1 bitfield size */
+/**
+ * @} */
+
+/**
+ * @defgroup STD_Filter_sizes    Standard ID Filter bit sizes
+ *
+ * @{ */
+#define FLSSA_SFT_SIZE       2u /*!< Standard ID Filter Type bitfield size */
+#define FLSSA_SFEC_SIZE      3u /*!< Standard ID Filter 1 bitfield size */
 /**
  * @} */
 
@@ -236,24 +270,34 @@
  * @defgroup EXT_Filter_bits    Extended ID Filter bits
  *
  * @{ */
-#define FLESA_EFID_BIT       0u
+#define FLESA_EFID_BIT       0u  /*!< Extended ID Filter 1 */
 #define FLESA_EFEC_BIT       29u /*!< Extended ID Filter Element Configuration */
 #define FLESA_EFT_BIT        30u /*!< Extended ID Filter Type */
-#define FLESA_EFT_SIZE       2u  /*!< Extended ID Filter Type bitfield size */
-#define FLESA_EFEC_SIZE      3u  /*!< Extended ID Filter 1 bitfield size */
+/**
+ * @} */
+
+/**
+ * @defgroup EXT_Filter_sizes    Extended ID Filter bit sizes
+ *
+ * @{ */
+#define FLESA_EFT_SIZE       2u /*!< Extended ID Filter Type bitfield size */
+#define FLESA_EFEC_SIZE      3u /*!< Extended ID Filter 1 bitfield size */
 /**
  * @} */
 
 /**
  * @brief  Tx Hardware objecj descriptor.
  */
-typedef struct _HwHthObject
+typedef struct _HwObjectHandler
 {
     uint32 ObjHeader1;       /*!< Tx Buffer Standard Address Header 1 */
     uint32 ObjHeader2;       /*!< Tx Buffer Standard Address Header 2 */
     uint32 ObjPayload[ 16 ]; /*!< Tx Buffer Standard Address Payload */
-} HwHthObject;
+} HwObjectHandler;
 
+/**
+ * @brief  Extended Filter descriptor.
+ */
 typedef struct _HwExtFilter
 {
     uint32 ExtFilterHeader1; /*!< Extended Filter Standard Address Header 1 */
@@ -265,7 +309,7 @@ static void Can_SetupConfiguredFilters( const Can_Controller *Controller, const 
 static void Can_SetupBaudrateConfig( const Can_ControllerBaudrateConfig *Baudrate, Can_RegisterType *Can );
 static uint8 Can_GetClosestDlcWithPadding( uint8 Dlc, uint32 *RamBuffer, uint8 PaddingValue );
 static uint8 Can_GetTxPduId( const Can_Controller *Controller, PduIdType *CanPduId );
-static uint8 Can_GetMessage( HwHthObject *Fifo, const Can_Controller *Controller, PduInfoType *PduInfo, uint32 *CanId );
+static uint8 Can_GetMessage( HwObjectHandler *Fifo, const Can_Controller *Controller, PduInfoType *PduInfo, uint32 *CanId );
 
 static void Can_Isr_RxFifo0NewMessage( Can_HwUnit *HwUnit, uint8 Controller );
 static void Can_Isr_RxFifo0Full( Can_HwUnit *HwUnit, uint8 Controller );
@@ -911,7 +955,7 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
         uint32 PutIndex = Bfx_GetBits_u32u8u8_u32( Can->TXFQS, TXFQS_TFQPI_BIT, TXFQS_TFQPI_SIZE );
 
         /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-        HwHthObject *HthObject = (HwHthObject *)&HwUnit->Config->Hohs[ Hth ].ControllerRef->SramBA->TBSA;
+        HwObjectHandler *HthObject = (HwObjectHandler *)&HwUnit->Config->Hohs[ Hth ].ControllerRef->SramBA->TBSA;
 
         /*get the message ID type*/
         uint8 IdType = Bfx_GetBit_u32u8_u8( PduInfo->id, MSG_ID_BIT );
@@ -1042,6 +1086,17 @@ void Can_Arch_IsrMainHandler( Can_HwUnit *HwUnit, uint8 Controller )
     }
 }
 
+/**
+ * @brief    **Setup reception Filters**
+ *
+ * This function sets up the reception filters for the given controller. It will set the filters
+ * for the standard and extended ID's. The function will only set the filters if the HwFilter
+ * pointer is not NULL.
+ *
+ * @param    Controller CAN controller for which the status shall be changed.
+ * @param    HwObjects Hardware objects configuration
+ * @param    Can Register structure of the CAN controller
+ */
 static void Can_SetupConfiguredFilters( const Can_Controller *Controller, const Can_HardwareObject *HwObjects, Can_RegisterType *Can )
 {
     uint8 StdFilterIndex     = 0u;
@@ -1099,6 +1154,16 @@ static void Can_SetupConfiguredFilters( const Can_Controller *Controller, const 
     Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_ANFE_BIT, RXGFC_ANFE_SIZE, 3u );
 }
 
+/**
+ * @brief    **setup Can controller baudrate**
+ *
+ * This function sets up the baudrate for the given controller. It will set the baudrate for the
+ * nominal and data bit timing registers. The function will only set the baudrate if the Baudrate
+ * pointer is not NULL.
+ *
+ * @param    Baudrate: Baudrate configuration
+ * @param    Can: Register structure of the CAN controller
+ */
 static void Can_SetupBaudrateConfig( const Can_ControllerBaudrateConfig *Baudrate, Can_RegisterType *Can )
 {
     /* Set the default nominal bit timing register */
@@ -1282,7 +1347,7 @@ static uint8 Can_GetTxPduId( const Can_Controller *Controller, PduIdType *CanPdu
  *
  * @retval  Number of elements left in the Rx FIFO zone.
  */
-static uint8 Can_GetMessage( HwHthObject *Fifo, const Can_Controller *Controller, PduInfoType *PduInfo, uint32 *CanId )
+static uint8 Can_GetMessage( HwObjectHandler *Fifo, const Can_Controller *Controller, PduInfoType *PduInfo, uint32 *CanId )
 {
     static const uint8 DlcToBytes[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 32, 48, 64 };
     /*Get the Can controller register structure*/
@@ -1342,7 +1407,7 @@ static void Can_Isr_RxFifo0NewMessage( Can_HwUnit *HwUnit, uint8 Controller )
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    HwHthObject *HrhObject = (HwHthObject *)ControllerConfig->SramBA->F0SA;
+    HwObjectHandler *HrhObject = (HwObjectHandler *)ControllerConfig->SramBA->F0SA;
 
     PduInfoType PduInfo;
     Can_HwType Mailbox;
@@ -1373,7 +1438,7 @@ static void Can_Isr_RxFifo0Full( Can_HwUnit *HwUnit, uint8 Controller )
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    HwHthObject *HrhObject = (HwHthObject *)ControllerConfig->SramBA->F0SA;
+    HwObjectHandler *HrhObject = (HwObjectHandler *)ControllerConfig->SramBA->F0SA;
 
     PduInfoType PduInfo;
     Can_HwType Mailbox;
@@ -1428,7 +1493,7 @@ static void Can_Isr_RxFifo1NewMessage( Can_HwUnit *HwUnit, uint8 Controller )
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    HwHthObject *HrhObject = (HwHthObject *)ControllerConfig->SramBA->F1SA;
+    HwObjectHandler *HrhObject = (HwObjectHandler *)ControllerConfig->SramBA->F1SA;
 
     PduInfoType PduInfo;
     Can_HwType Mailbox;
@@ -1459,7 +1524,7 @@ static void Can_Isr_RxFifo1Full( Can_HwUnit *HwUnit, uint8 Controller )
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    HwHthObject *HrhObject = (HwHthObject *)ControllerConfig->SramBA->F1SA;
+    HwObjectHandler *HrhObject = (HwObjectHandler *)ControllerConfig->SramBA->F1SA;
 
     PduInfoType PduInfo;
     Can_HwType Mailbox;

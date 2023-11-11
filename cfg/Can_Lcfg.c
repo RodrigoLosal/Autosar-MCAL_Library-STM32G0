@@ -21,6 +21,7 @@
 const Can_ControllerBaudrateConfig BaudratesCtrl0[ CAN_NUMBER_OF_BAUDRATES_CTRL0 ] =
 {
     {
+        .BaudRateConfigID = CAN_BAUDRATE_CTRL1_100K,
         .BaudRate = 100000,
         .PropSeg = 16,
         .Seg1 = 13,
@@ -36,6 +37,7 @@ const Can_ControllerBaudrateConfig BaudratesCtrl0[ CAN_NUMBER_OF_BAUDRATES_CTRL0
         .FdTxBitRateSwitch = STD_OFF
     },
     {
+        .BaudRateConfigID = CAN_BAUDRATE_CTRL1_500K,
         .BaudRate = 1000000,
         .PropSeg = 16,
         .Seg1 = 13,
@@ -60,6 +62,7 @@ const Can_ControllerBaudrateConfig BaudratesCtrl0[ CAN_NUMBER_OF_BAUDRATES_CTRL0
 const Can_ControllerBaudrateConfig BaudratesCtrl1[ CAN_NUMBER_OF_BAUDRATES_CTRL1 ] =
 {
     {
+        .BaudRateConfigID = CAN_BAUDRATE_CTRL0_100K,
         .BaudRate = 100000,
         .PropSeg = 16,
         .Seg1 = 13,
@@ -75,6 +78,7 @@ const Can_ControllerBaudrateConfig BaudratesCtrl1[ CAN_NUMBER_OF_BAUDRATES_CTRL1
         .FdTxBitRateSwitch = STD_OFF
     },
     {
+        .BaudRateConfigID = CAN_BAUDRATE_CTRL0_500K,
         .BaudRate = 1000000,
         .PropSeg = 16,
         .Seg1 = 13,

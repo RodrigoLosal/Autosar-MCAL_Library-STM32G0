@@ -24,6 +24,10 @@
  */
 typedef struct _Can_ControllerBaudrateConfig
 {
+    uint8 BaudRateConfigID /*!< Unique identifier for a baudrate configuration
+                                This parameter value is defined in Can_Cfg.h */
+    ;
+
     uint32 BaudRate; /*!< Baudrate in Kbps
                          The field is only for indication purposes */
 
@@ -76,8 +80,8 @@ typedef struct _Can_ControllerBaudrateConfig
  */
 typedef struct _Can_Controller
 {
-    uint8 ControllerId : 4; /*!< Specifies the ID of a CAN controller.
-                                This parameter can be a value of @ref CAN_controllers */
+    uint8 ControllerId; /*!< Specifies the ID of a CAN controller.
+                            This parameter value is defined in Can_Cfg.h */
 
     uint32 Mode; /*!< Specifies the CAN peripheral operation mode.
                      This parameter can be a value of @ref CAN_mode   */
@@ -100,12 +104,6 @@ typedef struct _Can_Controller
     uint8 TxFifoQueueMode; /*!< Tx FIFO/Queue Mode selection. Queue mode is basically multiplexed tx
                                 This parameter can be a value of @ref CAN_txFifoQueue_Mode */
 
-    uint32 StdFiltersNbr; /*!< Specifies the number of standard Message ID filters.
-                              This parameter must be a number between 0 and 28 */
-
-    uint32 ExtFiltersNbr; /*!< Specifies the number of extended Message ID filters.
-                              This parameter must be a number between 0 and 8 */
-
     uint32 Line0ActiveITs; /*!< Specifies the interrupts to be enabled on Line0.
                                This parameter can be a value of CAN_IT_<interrupt> */
 
@@ -119,7 +117,7 @@ typedef struct _Can_Controller
                                        this paramter must be SRAMCAN1 or SRAMCAN2 */
 
     const Can_ControllerBaudrateConfig *DefaultBaudrate; /*!< Reference to baudrate configuration container configured for the
-                               Can Controller*/
+                                                        Can Controller*/
 
     const Can_ControllerBaudrateConfig *BaudrateConfigs; /*!< This container contains bit timing related configuration
                                                          parameters */
@@ -139,8 +137,9 @@ typedef struct _Can_HwFilter
 
     uint32 HwFilterMask; /*!< Describes a mask for hardware-based filtering of CAN identifiers */
 
-    uint32 HwFilterType;       /*!< Specifies the type of the hardware filter.
-                                   This parameter can be a value of @ref CAN_filter_type */
+    uint32 HwFilterType; /*!< Specifies the type of the hardware filter.
+                             This parameter can be a value of @ref CAN_Id_Type */
+
     Can_IdType HwFilterIdType; /*!< Specifies whether the HOH handles standard identifiers or
                                 extended, @ref CAN_Id_Type */
 } Can_HwFilter;
