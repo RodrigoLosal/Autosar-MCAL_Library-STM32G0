@@ -15,7 +15,7 @@
  * @brief **Hardware dependent structure**
  *
  * A pointer to this type is provided to MCU initialization routines for configuration
- * 
+ *
  * @reqs SWS_Mcu_00249
  */
 typedef struct _Mcu_ConfigType
@@ -30,14 +30,14 @@ typedef struct _Mcu_ConfigType
  */
 typedef enum _Mcu_PllStatusType
 {
-    MCU_PLL_LOCKED = 0x00,      /*!< The PLL is locked         */
-    MCU_PLL_UNLOCKED,           /*!< The PLL is unlocked       */
-    MCU_PLL_STATUS_UNDEFINED    /*!< The PLL Status is unknown */
+    MCU_PLL_LOCKED = 0x00,   /*!< The PLL is locked         */
+    MCU_PLL_UNLOCKED,        /*!< The PLL is unlocked       */
+    MCU_PLL_STATUS_UNDEFINED /*!< The PLL Status is unknown */
 } Mcu_PllStatusType;
 
 /**
  * @brief   **ID for a clock setting**
- * 
+ *
  * The range is dependent on the number of different clock settings provided in the
  * configuration structure
  *
@@ -52,10 +52,10 @@ typedef uint32 Mcu_ClockType;
  */
 typedef enum _Mcu_ResetType
 {
-    MCU_POWER_ON_RESET = 0x00,      /*!< Power On Reset                */
-    MCU_WATCHDOG_RESET,             /*!< Internal Watchdog Timer Reset */
-    MCU_SW_RESET,                   /*!< Software Reset                */
-    MCU_RESET_UNDEFINED             /*!< Reset is undefined            */
+    MCU_POWER_ON_RESET = 0x00, /*!< Power On Reset                */
+    MCU_WATCHDOG_RESET,        /*!< Internal Watchdog Timer Reset */
+    MCU_SW_RESET,              /*!< Software Reset                */
+    MCU_RESET_UNDEFINED        /*!< Reset is undefined            */
 } Mcu_ResetType;
 
 /**
@@ -83,13 +83,13 @@ typedef uint32 Mcu_RamSectionType;
  * @brief   **RAM state (valid or invalid)**
  *
  * Ram State data type returned by the function Mcu_GetRamState of the Mcu module
- * 
+ *
  * @reqs    SWS_Mcu_00256
  */
 typedef enum _Mcu_RamStateType
 {
-    MCU_RAMSTATE_INVALID = 0x00,    /*!< Ram content is not valid or unknown */
-    MCU_RAMSTATE_VALID,             /*!< Ram content is valid                */
+    MCU_RAMSTATE_INVALID = 0x00, /*!< Ram content is not valid or unknown */
+    MCU_RAMSTATE_VALID,          /*!< Ram content is valid                */
 } Mcu_RamStateType;
 
 #endif
