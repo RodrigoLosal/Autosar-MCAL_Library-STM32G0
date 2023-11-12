@@ -9,20 +9,6 @@
 #ifndef DET_H__
 #define DET_H__
 
-#include "Det_Cfg.h"
-
-/**
- * @brief **Det Config type**
- *
- * 	Configuration data structure of the Det module
- *
- * @reqs SWS_Det_00210
- */
-typedef struct _Det_ConfigType
-{
-    uint32 dummy; /*!< dummy element for the moment */
-} Det_ConfigType;
-
 /**
  * @defgroup DET_Ids Dt Id number for module and each API
  *
@@ -36,7 +22,6 @@ typedef struct _Det_ConfigType
 /**
  * @} */
 
-
 /**
  * @defgroup DET_Error_Type Det Developtment Error Types
  *
@@ -44,6 +29,20 @@ typedef struct _Det_ConfigType
 #define DET_E_PARAM_POINTER           0x01u /*!< Det_GetVersionInfo called with null parameter pointer */
 /**
  * @} */
+
+/**
+ * @brief **Det Config type**
+ *
+ * 	Configuration data structure of the Det module
+ *
+ * @reqs SWS_Det_00210
+ */
+typedef struct _Det_ConfigType
+{
+    uint32 dummy; /*!< dummy element for the moment */
+} Det_ConfigType;
+
+#include "Det_Cfg.h"
 
 void Det_Init( const Det_ConfigType *ConfigPtr );
 void Det_Start( void );
