@@ -1,0 +1,259 @@
+/**
+ * @file CanIf.c
+ * @brief Header file for the CAN interface.
+ * @author Diego Perez
+ *
+ * The CAN Interface module provides CAN communication abstracted access to the CAN Driver and CAN
+ * Transceiver Driver services for control and supervision of the CAN network. The CAN Interface
+ * forwards downwards the status change requests from the CAN State Manager to the lower layer CAN
+ * device drivers, and upwards the CAN Driver / CAN Transceiver Driver events are forwarded by the
+ * CAN Interface module to e.g. the corresponding NM module.
+ */
+#include "Can.h"
+#include "CanIf.h"
+
+/**
+ * @brief Initializes the CAN interface.
+ *
+ * This service Initializes internal and external interfaces of the CAN Interface for the further processing.
+ *
+ * @param[in] ConfigPtr Pointer to the CAN Interface configuration structure.
+ *
+ * @reqs    SWS_CANIF_00001
+ */
+void CanIf_Init( const CanIf_ConfigType *ConfigPtr )
+{
+    (void)ConfigPtr;
+}
+
+/**
+ * @brief Deinitializes the CAN interface.
+ *
+ * De-initializes the CanIf module. Caller of the CanIf_DeInit() function has to be sure there are no on-going
+ * transmissions/receptions, nor any pending transmission confirmations.
+ *
+ * @reqs    SWS_CANIF_91002
+ */
+void CanIf_DeInit( void )
+{
+}
+
+/**
+ * @brief Sets the CAN controller mode.
+ *
+ * This service calls the corresponding CAN Driver service for changing of the CAN controller mode.
+ *
+ * @param[in] ControllerId CAN controller for which the status shall be changed.
+ * @param[in] ControllerMode Requested mode transition.
+ *
+ * @return  E_OK: Controller mode request has been accepted
+ *          E_NOT_OK: Controller mode request has not been accepted
+ *
+ * @reqs    SWS_CANIF_00003
+ */
+Std_ReturnType CanIf_SetControllerMode( uint8 ControllerId, Can_ControllerStateType ControllerMode )
+{
+    (void)ControllerId;
+    (void)ControllerMode;
+    return E_NOT_OK;
+}
+
+/**
+ * @brief Gets the CAN controller mode.
+ *
+ * This service calls the corresponding CAN Driver service for getting the current CAN controller mode.
+ *
+ * @param[in] ControllerId CAN controller for which the status shall be changed.
+ * @param[out] ControllerModePtr Pointer to a memory location, where the current mode of the CAN
+ *                               controller will be stored.
+ *
+ * @return  E_OK: Controller mode request has been accepted
+ *          E_NOT_OK: Controller mode request has not been accepted
+ *
+ * @reqs    SWS_CANIF_00004
+ */
+Std_ReturnType CanIf_GetControllerMode( uint8 ControllerId, Can_ControllerStateType *ControllerModePtr )
+{
+    (void)ControllerId;
+    (void)ControllerModePtr;
+    return E_NOT_OK;
+}
+
+/**
+ * @brief Gets the CAN controller error state.
+ *
+ * This service calls the corresponding CAN Driver service for getting the current CAN controller
+ * error state.
+ *
+ * @param[in] ControllerId CAN controller for which the status shall be changed.
+ * @param[out] ErrorStatePtr Pointer to a memory location, where the current error state of the
+ *                          CAN controller will be stored.
+ *
+ * @return  E_OK: Controller mode request has been accepted
+ *          E_NOT_OK: Controller mode request has not been accepted
+ *
+ * @reqs    SWS_CANIF_00005
+ */
+Std_ReturnType CanIf_GetControllerErrorState( uint8 ControllerId, Can_ErrorStateType *ErrorStatePtr )
+{
+    (void)ControllerId;
+    (void)ErrorStatePtr;
+    return E_NOT_OK;
+}
+
+/**
+ * @brief Transmits a CAN L-PDU.
+ *
+ * This service calls the corresponding CAN Driver service for transmission of a CAN L-PDU.
+ *
+ * @param[in] TxPduId Identifier of the PDU to be transmitted
+ * @param[in] PduInfoPtr Length of and pointer to the PDU data and pointer to MetaData.
+ *
+ * @return  E_OK: Transmit request has been accepted
+ *          E_NOT_OK: Transmit request has not been accepted
+ *
+ * @reqs    SWS_CANIF_00005
+ */
+Std_ReturnType CanIf_Transmit( PduIdType TxPduId, const PduInfoType *PduInfoPtr )
+{
+    (void)TxPduId;
+    (void)PduInfoPtr;
+    return E_NOT_OK;
+}
+
+/**
+ * @brief Reads the received data of a CAN L-PDU from the receive buffer.
+ *
+ * This service provides the Data Length and the received data of the requested CanIfRxSduId to the
+ * calling upper layer.
+ *
+ * @param[in] CanIfRxSduId Receive L-SDU handle specifying the corresponding CAN L-SDU ID and implicitly
+ *                          the CAN Driver instance as well as the corresponding CAN controller device.
+ * @param[out] CanIfRxInfoPtr Contains the length (SduLength) of the received PDU, a pointer to a buffer
+ *                              (SduDataPtr) containing the PDU, and the MetaData related to this PDU.
+ *
+ * @return  E_OK: Request for L-SDU data has been accepted
+ *          E_NOT_OK: No valid data has been received
+ *
+ * @reqs    SWS_CANIF_00194
+ */
+Std_ReturnType CanIf_ReadRxPduData( PduIdType CanIfRxSduId, PduInfoType *CanIfRxInfoPtr )
+{
+    (void)CanIfRxSduId;
+    (void)CanIfRxInfoPtr;
+    return E_NOT_OK;
+}
+
+/**
+ * @brief Read the Tx notification status of a CAN L-PDU.
+ *
+ * This service returns the confirmation status (confirmation occurred or not) of a specific static or
+ * dynamic CAN Tx L-PDU, requested by the CanIfTxSduId.
+ *
+ * @param[in] CanIfTxSduId L-SDU handle to be transmitted. This handle specifies the corresponding CAN
+ *                          L-SDU ID and implicitly the CAN Driver instance as well as the corresponding
+ *                          CAN controller device.
+ *
+ * @return  Current confirmation status of the corresponding CAN Tx L-PDU.
+ *
+ * @reqs    SWS_CANIF_00202
+ */
+CanIf_NotifStatusType CanIf_ReadTxNotifStatus( PduIdType CanIfTxSduId )
+{
+    (void)CanIfTxSduId;
+    return CANIF_NO_NOTIFICATION;
+}
+
+/**
+ * @brief Sets the requested PDU mode.
+ *
+ * This service returns the indication status (indication occurred or not) of a specific CAN Rx L-PDU,
+ * requested by the CanIfRxSduId.
+ *
+ * @param[in] CanIfRxSduId Receive L-SDU handle specifying the corresponding CAN L-SDU ID and implicitly
+ *                          the CAN Driver instance as well as the corresponding CAN controller device.
+ *
+ * @return  Current indication status of the corresponding CAN Rx L-PDU.
+ *
+ * @reqs    SWS_CANIF_00230
+ */
+CanIf_NotifStatusType CanIf_ReadRxNotifStatus( PduIdType CanIfRxSduId )
+{
+    (void)CanIfRxSduId;
+    return CANIF_NO_NOTIFICATION;
+}
+
+/**
+ * @brief Sets the requested PDU mode.
+ *
+ * This service sets the requested mode at the L-PDUs of a predefined logical PDU channel.
+ *
+ * @param[in] ControllerId All PDUs of the own ECU connected to the corresponding CanIf ControllerId,
+ *                          which is assigned to a physical CAN controller are addressed.
+ * @param[in] PduModeRequest Requested PDU mode change.
+ *
+ * @return  E_OK: Request for mode transition has been accepted.
+ *          E_NOT_OK: Request for mode transition has not been accepted.
+ *
+ * @reqs    SWS_CANIF_00008
+ */
+Std_ReturnType CanIf_SetPduMode( uint8 ControllerId, CanIf_PduModeType PduModeRequest )
+{
+    (void)ControllerId;
+    (void)PduModeRequest;
+    return E_NOT_OK;
+}
+
+/**
+ * @brief Gets the requested PDU mode.
+ *
+ * This service returns the requested mode of the L-PDUs of a predefined logical PDU channel.
+ *
+ * @param[in] ControllerId All PDUs of the own ECU connected to the corresponding CanIf ControllerId,
+ *                          which is assigned to a physical CAN controller are addressed.
+ * @param[out] PduModePtr Pointer to a memory location, where the requested PDU mode is stored.
+ *
+ * @return  E_OK: PDU mode request has been accepted
+ *          E_NOT_OK: PDU mode request has not been accepted
+ *
+ * @reqs    SWS_CANIF_00009
+ */
+Std_ReturnType CanIf_GetPduMode( uint8 ControllerId, CanIf_PduModeType *PduModePtr )
+{
+    (void)ControllerId;
+    (void)PduModePtr;
+    return E_NOT_OK;
+}
+
+/**
+ * @brief Gets the version information of the CAN interface.
+ *
+ * This service returns the version information of this module.
+ *
+ * @param[out] VersionInfo Pointer to where to store the version information of this module.
+ *
+ * @reqs    SWS_CANIF_00158
+ */
+void CanIf_GetVersionInfo( Std_VersionInfoType *VersionInfo )
+{
+    (void)VersionInfo;
+}
+
+/**
+ * @brief Sets the CAN controller baudrate.
+ *
+ * This service reconfigures the corresponding CAN identifier of the requested CAN L-PDU.
+ *
+ * @param[in] CanIfTxSduId L-SDU handle to be transmitted. This handle specifies the corresponding CAN
+ *                         L-SDU ID and implicitly the CAN Driver instance as well as the corresponding
+ *                        CAN controller device.
+ * @param[in] CanId Standard/Extended CAN ID of CAN L-SDU that shall be transmitted as FD or conventional
+ *                  CAN frame.
+ *
+ * @reqs    SWS_CANIF_00189
+ */
+void CanIf_SetDynamicTxId( PduIdType CanIfTxSduId, Can_IdType CanId )
+{
+    (void)CanIfTxSduId;
+    (void)CanId;
+}
