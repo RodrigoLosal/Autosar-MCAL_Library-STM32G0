@@ -4,7 +4,7 @@
  * @author  Oscar Gonzalez
  *
  * The driver Default Error Tracer serve as a mechanisim for reporting and tracing
- * development and runtime errors within the Basic Software. 
+ * development and runtime errors within the Basic Software.
  */
 #ifndef DET_H__
 #define DET_H__
