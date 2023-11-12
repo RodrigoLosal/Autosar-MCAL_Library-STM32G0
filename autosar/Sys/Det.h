@@ -42,7 +42,7 @@ typedef struct _Det_ConfigType
     uint32 dummy; /*!< dummy element for the moment */
 } Det_ConfigType;
 
-#include "Det_Cfg.h"
+#include "Det_Cfg.h" /* cppcheck-suppress misra-c2012-20.1 ; it is necesary to use a define for this function */
 
 void Det_Init( const Det_ConfigType *ConfigPtr );
 void Det_Start( void );
