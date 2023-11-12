@@ -11,8 +11,6 @@
 #ifndef DET_CFG_H__
 #define DET_CFG_H__
 
-#include "Det_Types.h"
-
 /**
  * @defgroup DET_SWC_Ids DET software version and Ids
  *

@@ -23,6 +23,28 @@ typedef struct _Det_ConfigType
     uint32 dummy; /*!< dummy element for the moment */
 } Det_ConfigType;
 
+/**
+ * @defgroup DET_Ids Dt Id number for module and each API
+ *
+ * @{ */
+#define DET_ID_INIT                   0x00u /*!< Det_Init() api service id */
+#define DET_ID_REPORT_ERROR           0x01u /*!< Det_ReportError() api service id */
+#define DET_ID_DE_START               0x02u /*!< Det_Start() api service id */
+#define DET_ID_GET_VERSION_INFO       0x03u /*!< Det_GetVersionInfo() api service id */
+#define DET_ID_REPORT_RUNTIME_ERROR   0x04u /*!< Det_ReportRuntimeError() api service id */
+#define DET_ID_REPORT_TRANSIENT_FAULT 0x05u /*!< Det_ReportTransientFault() api service id */
+/**
+ * @} */
+
+
+/**
+ * @defgroup DET_Error_Type Det Developtment Error Types
+ *
+ * @{ */
+#define DET_E_PARAM_POINTER           0x01u /*!< Det_GetVersionInfo called with null parameter pointer */
+/**
+ * @} */
+
 void Det_Init( const Det_ConfigType *ConfigPtr );
 void Det_Start( void );
 Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, uint8 ErrorId );
