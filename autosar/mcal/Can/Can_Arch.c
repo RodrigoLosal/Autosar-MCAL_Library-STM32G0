@@ -1800,8 +1800,24 @@ static void Can_Isr_BusOffStatus( Can_HwUnit *HwUnit, uint8 Controller )
     /* make sure the transition when to Bus_Off and not the other way around */
     if( Bfx_GetBit_u32u8_u8( Can->PSR, PSR_BO_BIT ) == STD_ON )
     {
-        /* set controller mode to stopped **/
-        Can_Arch_SetControllerMode( HwUnit, Controller, CAN_CS_STOPPED );
+        /* Add cancellation request for all buffers */
+        /*we don't know if this gonna take time */
+        Can->TXBCR = 0x03u;
+
+        /* Wait until the INIT bit into CCCR register is set, this bit was set
+        automatically by the Bus_Off event */
+        while( Bfx_GetBit_u32u8_u8( Can->CCCR, CCCR_INIT_BIT ) == FALSE )
+        {
+            /*Wee need to stablish a timeout counter to avois a potential endless loop,
+            according to AUTOSAR a Os tick shall be used, but for the moment it will
+            remain empty*/
+        }
+
+        /* Enable configuration change */
+        Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_CCE_BIT );
+
+        /* Change CAN peripheral state */
+        HwUnit->ControllerState[ Controller ] = CAN_CS_STOPPED;
         /* Notify Bus off */
         CanIf_ControllerBusOff( ControllerConfig->ControllerId );
     }
