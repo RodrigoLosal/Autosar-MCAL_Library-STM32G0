@@ -4,10 +4,24 @@
  * @author  Oscar Gonzalez
  *
  * The driver Default Error Tracer serve as a mechanisim for reporting and tracing
- * development and runtime errors within the Basic Software. 
+ * development and runtime errors within the Basic Software.
  */
 #ifndef DET_H__
 #define DET_H__
+
+#include "Det_Cfg.h"
+
+/**
+ * @brief **Det Config type**
+ *
+ * 	Configuration data structure of the Det module
+ *
+ * @reqs SWS_Det_00210
+ */
+typedef struct _Det_ConfigType
+{
+    uint32 dummy; /*!< dummy element for the moment */
+} Det_ConfigType;
 
 void Det_Init( const Det_ConfigType *ConfigPtr );
 void Det_Start( void );
