@@ -52,6 +52,8 @@
     - autosar/mcal/Pwm/Pwm_Arch.c
     - autosar/mcal/Spi/Spi.c
     - autosar/mcal/Det/Det.c
+
+    - autosar/mcal/Fls/Fls.c
   :utilities:
     - gcovr
   :reports:
