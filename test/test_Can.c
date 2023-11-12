@@ -213,7 +213,7 @@ void test__Can_SetBaudrate__when_not_ready_value_in_HwUnitState( void )
 
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_SetBaudrate( CAN_CONTROLLER_0, CAN_BAUDRATE_100k );
+    Std_ReturnType Return = Can_SetBaudrate( CAN_CONTROLLER_0, CAN_BAUDRATE_CTRL0_100K );
 
     TEST_ASSERT_EQUAL_MESSAGE( E_NOT_OK, Return, "Return value should be E_NOT_OK" );
 }
@@ -243,7 +243,7 @@ void test__Can_SetBaudrate__when_Controller_is_unkown( void )
 {
     Det_ReportError_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_SetBaudrate( CAN_CONTROLLER_2, 0 );
+    Std_ReturnType Return = Can_SetBaudrate( CAN_CONTROLLER_2, CAN_BAUDRATE_CTRL0_100K );
 
     TEST_ASSERT_EQUAL_MESSAGE( E_NOT_OK, Return, "Return value should be E_NOT_OK" );
 }
@@ -257,7 +257,7 @@ void test__Can_SetBaudrate__when_all_values_are_correct( void )
 {
     Can_Arch_SetBaudrate_IgnoreAndReturn( E_OK );
 
-    Std_ReturnType Return = Can_SetBaudrate( CAN_CONTROLLER_0, 0 );
+    Std_ReturnType Return = Can_SetBaudrate( CAN_CONTROLLER_0, CAN_BAUDRATE_CTRL0_100K );
 
     TEST_ASSERT_EQUAL_MESSAGE( E_OK, Return, "Return value should be E_OK" );
 }

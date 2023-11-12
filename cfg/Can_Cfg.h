@@ -37,7 +37,18 @@
  * @brief Specifies the number of controller to mange by the driver.
  * @typedef EcucIntegerParamDef
  */
-#define CAN_NUMBER_OF_CONTROLLERS 1
+#define CAN_NUMBER_OF_CONTROLLERS 2
+
+/**
+ * @defgroup Controller_IDs Can controllers
+ *
+ * Specifies the controller IDs starting from zero and up to CAN_NUMBER_OF_CONTROLLERS - 1
+ *
+ * @typedef EcucIntegerParamDef
+ *
+ * @{ */
+#define CAN_CONTROLLER_0          0 /*!< Controller zero */
+#define CAN_CONTROLLER_1          1 /*!< Controller one  */
 
 /**
  * @brief Specifies the number of buadrate configuration for controller 0

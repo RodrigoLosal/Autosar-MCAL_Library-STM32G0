@@ -28,7 +28,7 @@
 # Global defines applicable only when you run the code using ceedling
 :defines:
   :test:
-    - TEST           # define the macro UTEST to remove the static qualifier
+    - UTEST           # define the macro UTEST to remove the static qualifier
   
 
 # Plugins to add extra functionality to ceedling, like code coverage and pretty reports

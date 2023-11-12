@@ -27,6 +27,15 @@
 #include "Det.h"
 #endif
 
+/* cppcheck-suppress misra-c2012-8.4 ; qualifier is declared at Can.h */
+/* cppcheck-suppress misra-config ; this is declared at Can_Cfg.h */
+/* clang-format off */
+CAN_STATIC Can_ControllerStateType CtrlState[ CAN_NUMBER_OF_CONTROLLERS ] =
+{
+    CAN_CS_UNINIT,
+    CAN_CS_UNINIT 
+};
+/* clang-format on */
 
 /**
  * @brief  Variable for the initial value of the port configuration array.
@@ -37,7 +46,7 @@ CAN_STATIC Can_HwUnit HwUnit =
 {
     .HwUnitState     = CAN_CS_UNINIT,
     .Config          = NULL_PTR,
-    .ControllerState = { CAN_CS_UNINIT, CAN_CS_UNINIT } 
+    .ControllerState = CtrlState
 };
 /* clang-format on */
 
@@ -53,7 +62,7 @@ CAN_STATIC Can_HwUnit HwUnit =
  */
 void Can_Init( const Can_ConfigType *Config )
 {
-    if( ( HwUnit.HwUnitState != CAN_CS_UNINIT ) || ( HwUnit.ControllerState[ 0u ] != CAN_CS_UNINIT ) || ( HwUnit.ControllerState[ 1u ] != CAN_CS_UNINIT ) )
+    if( ( HwUnit.HwUnitState != CAN_CS_UNINIT ) || ( HwUnit.ControllerState[ CAN_CONTROLLER_0 ] != CAN_CS_UNINIT ) || ( HwUnit.ControllerState[ CAN_CONTROLLER_1 ] != CAN_CS_UNINIT ) )
     {
         /* If development error detection for the Can module is enabled:
         The function Can_Init shall raise the error CAN_E_TRANSITION if the driver is not in state
@@ -86,7 +95,7 @@ void Can_Init( const Can_ConfigType *Config )
  */
 void Can_DeInit( void )
 {
-    if( ( HwUnit.HwUnitState != CAN_CS_READY ) || ( HwUnit.ControllerState[ 0u ] != CAN_CS_STOPPED ) || ( HwUnit.ControllerState[ 1u ] != CAN_CS_STOPPED ) )
+    if( ( HwUnit.HwUnitState != CAN_CS_READY ) || ( HwUnit.ControllerState[ CAN_CONTROLLER_0 ] != CAN_CS_STOPPED ) || ( HwUnit.ControllerState[ CAN_CONTROLLER_1 ] != CAN_CS_STOPPED ) )
     {
         /* If development error detection for the Can module is enabled:
         The function Can_DeInit shall raise the error CAN_E_TRANSITION if the driver is not in state
@@ -134,7 +143,7 @@ Std_ReturnType Can_SetBaudrate( uint8 Controller, uint16 BaudRateConfigID )
         initialized.⌋*/
         Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_SET_BAUDRATE, CAN_E_UNINIT );
     }
-    else if( BaudRateConfigID >= CAN_NUMBER_OF_BAUDRATES )
+    else if( BaudRateConfigID >= HwUnit.Config->Controllers[ Controller ].BaudrateConfigsCount )
     {
         /* If development error detection for the Can module is enabled:
         The function Can_SetBaudrate shall raise the error CAN_E_PARAM_BAUDRATE if the parameter
