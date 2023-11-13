@@ -24,6 +24,7 @@
 #define PWM_ID_GET_OUTPUT_STATE         0x05u /*!< Pwm_GetOutputState() api service id */
 #define PWM_ID_DISABLE_NOTIFICATION     0x06u /*!< Pwm_DisableNotification() api service id */
 #define PWM_ID_ENABLE_NOTIFICATION      0x07u /*!< Pwm_EnableNotification() api service id */
+#define PWM_ID_SET_POWER_STATE          0x09u /*!< Pwm_SetPowerState() api service id */
 #define PWM_ID_GET_CURRENT_POWER_STATE  0x0au /*!< Pwm_GetCurrentPowerState() api service id */
 #define PWM_ID_GET_TARGET_POWER_STATE   0x0bu /*!< Pwm_GetTargetPowerState() api service id */
 #define PWM_ID_PREPARE_POWER_STATE      0x0cu /*!< Pwm_PreparePowerState() api service id */
