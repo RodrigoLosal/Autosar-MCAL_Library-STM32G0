@@ -27,6 +27,18 @@ typedef struct _Spi_ConfigType
 } Spi_ConfigType;
 
 /**
+ * @brief **Hardware control unit structure**
+ *
+ * This structure contains the hardware unit configuration and the state of the hardware
+ * unit pointers to controller structures.
+ */
+typedef struct _Spi_HwUnit
+{
+    const Spi_ConfigType *Config; /*!< Pointer to the configuration structure */
+} Spi_HwUnit;
+
+
+/**
  * @brief States of the controller SPI
  *
  * This type defines a range of specific status for SPI Handler/Driver.
