@@ -3,7 +3,9 @@
  * @brief   **Mcu Driver Types**
  * @author  Angel Lozano
  *
- * This header file contains type definitions used by Mcu module
+ * This header file contains type definitions used by Mcu module. The file is implemnted
+ * as a means of abstraction from the hardware, this way we can avoid to include Arch headers in
+ * the actual driver header, making the low level interfaces available for upper layers.
  */
 #ifndef MCU_TYPES_H__
 #define MCU_TYPES_H__
