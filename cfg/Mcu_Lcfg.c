@@ -1,5 +1,5 @@
 /**
- * @file    Mcu_Cfg.c
+ * @file    Mcu_Lcfg.c
  * @brief   **Mcu Driver config structs**
  * @author  Angel Lozano
  *
