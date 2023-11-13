@@ -18,37 +18,37 @@
  * @brief Enable / disable the Fls_Cancel() function.
  * @typedef EcucBooleanParamDef
  */
-#define FLS_CANCEL_API         TRUE
+#define FLS_CANCEL_API         STD_ON
 
 /**
  * @brief Enable / disable the Fls_GetStatus() function.
  * @typedef EcucBooleanParamDef
  */
-#define FLS_GET_STATUS_API     TRUE
+#define FLS_GET_STATUS_API     STD_ON
 
 /**
  * @brief Enable / disable the Fls_GetJobResult() function.
  * @typedef EcucBooleanParamDef
  */
-#define FLS_GET_JOB_RESULT_API TRUE
+#define FLS_GET_JOB_RESULT_API STD_ON
 
 /**
  * @brief Enable / disable the Fls_Compare() function.
  * @typedef EcucBooleanParamDef
  */
-#define FLS_COMPARE_API        TRUE
+#define FLS_COMPARE_API        STD_ON
 
 /**
  * @brief Enable / disable the Fls_SetMode() function.
  * @typedef EcucBooleanParamDef
  */
-#define FLS_SET_MODE_API       TRUE
+#define FLS_SET_MODE_API       STD_ON
 
 /**
  * @brief Enable / disable the Fls_BlankCheck() function.
  * @typedef EcucBooleanParamDef
  */
-#define FLS_BLANK_CHECK_API    TRUE
+#define FLS_BLANK_CHECK_API    STD_ON
 
 extern const Flash_ConfigType FlashConfig;
 
