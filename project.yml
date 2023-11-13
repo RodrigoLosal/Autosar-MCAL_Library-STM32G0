@@ -16,6 +16,7 @@
   :source:
     - autosar/**      # directory where the functions to test are
     - autosar/libs/**
+    - autosar/Sys/**
     - -:autosar/mcal/regs/** # exclude the registers from the source
     - -:cfg/** 
 
