@@ -29,6 +29,8 @@ typedef struct _Can_Controller
 {
     uint32 FrameFormat; /*!< Specifies the CAN frame format FD or Classic.
                             This parameter can be a value of @ref CAN_frame_format     */
+
+    uint8 BaudrateConfigsCount; /*!< Number of baudrate configurations for the controller */
 } Can_Controller;
 
 
@@ -41,8 +43,10 @@ typedef struct _Can_Controller
  */
 typedef struct _Can_HardwareObject
 {
-    uint8 ObjectType; /*!< Select the type of HOH object, for Tx or Rx
-                          This paramter can be a set of  @ref CAN_Hardware_Object_Type */
+    uint8 ObjectType;                    /*!< Select the type of HOH object, for Tx or Rx
+                                             This paramter can be a set of  @ref CAN_Hardware_Object_Type */
+    const Can_Controller *ControllerRef; /*!< Reference to CAN Controller to which the HOH is associated to
+                                         this paramter must be a address of a valid controller structure  */
 } Can_HardwareObject;
 
 
@@ -68,9 +72,9 @@ typedef struct _Can_ConfigType
  */
 typedef struct _Can_HwUnit
 {
-    const Can_ConfigType *Config;                  /*!< Pointer to the configuration structure */
-    uint8 HwUnitState;                             /*!< CAN hardware unit state */
-    Can_ControllerStateType ControllerState[ 2u ]; /*!< CAN controller states */
+    const Can_ConfigType *Config;             /*!< Pointer to the configuration structure */
+    uint8 HwUnitState;                        /*!< CAN hardware unit state */
+    Can_ControllerStateType *ControllerState; /*!< CAN controller states */
 } Can_HwUnit;
 
 #endif /* CAN_TYPES_H__ */

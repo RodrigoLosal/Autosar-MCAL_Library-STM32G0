@@ -7,7 +7,6 @@
  * development and runtime errors within the Basic Software.
  */
 #include "Det.h"
-#include "Det_Types.h"
 
 /**
  * @brief    **Det Initialization**

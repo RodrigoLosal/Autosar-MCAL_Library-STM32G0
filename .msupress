@@ -9,3 +9,6 @@ misra-c2012-2.5:autosar/mcal/Can/Can.h
 misra-c2012-2.5:autosar/mcal/Can/Can_Arch.h
 misra-c2012-2.5:autosar/mcal/Pwm/Pwm.h
 misra-c2012-2.5:autosar/mcal/Fls/Fls.h
+misra-c2012-2.5:autosar/mcal/Spi/Spi.h
+misra-c2012-2.5:autosar/Sys/Det.h
+misra-c2012-2.5:autosar/mcal/Mcu/Mcu.h

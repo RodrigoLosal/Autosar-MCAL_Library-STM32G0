@@ -16,14 +16,20 @@
   :source:
     - autosar/**      # directory where the functions to test are
     - autosar/libs/**
+    - autosar/Sys/**
     - -:autosar/mcal/regs/** # exclude the registers from the source
     - -:cfg/** 
 
+# Since there isn't a equivalent source for Cfh.h files, it is necesary to add manually the 
+# corresponding source Lcfc.c files in this way
+:files:
+  :support:
+    - test/support/Can_Lcfg.c
 
 # Global defines applicable only when you run the code using ceedling
 :defines:
   :test:
-    - TEST           # define the macro UTEST to remove the static qualifier
+    - UTEST           # define the macro UTEST to remove the static qualifier
   
 
 # Plugins to add extra functionality to ceedling, like code coverage and pretty reports
@@ -46,14 +52,14 @@
     - autosar/mcal/Port/Port.c
     - autosar/mcal/Dio/Dio.c
     - autosar/mcal/Gpt/Gpt.c
-    - autosar/mcal/Can/Can.c
     - autosar/mcal/Can/Can_Arch.c
     - autosar/mcal/Pwm/Pwm.c
     - autosar/mcal/Pwm/Pwm_Arch.c
     - autosar/mcal/Spi/Spi.c
     - autosar/mcal/Det/Det.c
-
     - autosar/mcal/Fls/Fls.c
+    - autosar/Sys/Det.c
+    - autosar/mcal/Mcu/Mcu.c
   :utilities:
     - gcovr
   :reports:
@@ -68,6 +74,8 @@
   :treat_externs: :include
   :when_no_prototypes: :warn
   :enforce_strict_ordering: TRUE
+  :includes:
+    - Std_Types.h             # Include by default this header on each mock file
   :plugins:
     - :ignore                 # Generate <function>_Ignore and <function>_IgnoreAndReturn
     - :ignore_arg             # Generate <function>_IgnoreArg_<param_name>

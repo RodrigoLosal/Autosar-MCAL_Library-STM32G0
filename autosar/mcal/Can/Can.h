@@ -15,6 +15,18 @@
 #include "Can_Cfg.h"
 
 /**
+ * @defgroup CAN_STATIC CAN static define for testing purposes
+ *
+ * @{ */
+#ifndef UTEST
+#define CAN_STATIC static /*!< Add static when no testing */
+#else
+#define CAN_STATIC /*!< remove static for testing purposes */
+#endif
+/**
+ * @} */
+
+/**
  * @defgroup CAN_Ids Can Id number for module and each API
  *
  * @{ */

@@ -27,16 +27,26 @@
 #include "Det.h"
 #endif
 
+/* cppcheck-suppress misra-c2012-8.4 ; qualifier is declared at Can.h */
+/* cppcheck-suppress misra-config ; this is declared at Can_Cfg.h */
+/* clang-format off */
+CAN_STATIC Can_ControllerStateType CtrlState[ CAN_NUMBER_OF_CONTROLLERS ] =
+{
+    CAN_CS_UNINIT,
+    CAN_CS_UNINIT 
+};
+/* clang-format on */
 
 /**
  * @brief  Variable for the initial value of the port configuration array.
  */
 /* clang-format off */
-static Can_HwUnit HwUnit =
+/* cppcheck-suppress misra-c2012-8.4 ; qualifier is declared at Can.h */
+CAN_STATIC Can_HwUnit HwUnit =
 {
     .HwUnitState     = CAN_CS_UNINIT,
     .Config          = NULL_PTR,
-    .ControllerState = { CAN_CS_UNINIT, CAN_CS_UNINIT } 
+    .ControllerState = CtrlState
 };
 /* clang-format on */
 
@@ -52,12 +62,12 @@ static Can_HwUnit HwUnit =
  */
 void Can_Init( const Can_ConfigType *Config )
 {
-    if( ( HwUnit.HwUnitState != CAN_CS_UNINIT ) || ( HwUnit.ControllerState[ 0u ] != CAN_CS_UNINIT ) || ( HwUnit.ControllerState[ 1u ] != CAN_CS_UNINIT ) )
+    if( ( HwUnit.HwUnitState != CAN_CS_UNINIT ) || ( HwUnit.ControllerState[ CAN_CONTROLLER_0 ] != CAN_CS_UNINIT ) || ( HwUnit.ControllerState[ CAN_CONTROLLER_1 ] != CAN_CS_UNINIT ) )
     {
         /* If development error detection for the Can module is enabled:
         The function Can_Init shall raise the error CAN_E_TRANSITION if the driver is not in state
         CAN_UNINIT or the CAN controllers are not in state UNINIT */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_INIT, CAN_E_TRANSITION );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_INIT, CAN_E_TRANSITION );
     }
     else
     {
@@ -85,12 +95,12 @@ void Can_Init( const Can_ConfigType *Config )
  */
 void Can_DeInit( void )
 {
-    if( ( HwUnit.HwUnitState != CAN_CS_READY ) || ( HwUnit.ControllerState[ 0u ] != CAN_CS_STARTED ) || ( HwUnit.ControllerState[ 1u ] != CAN_CS_UNINIT ) )
+    if( ( HwUnit.HwUnitState != CAN_CS_READY ) || ( HwUnit.ControllerState[ CAN_CONTROLLER_0 ] != CAN_CS_STOPPED ) || ( HwUnit.ControllerState[ CAN_CONTROLLER_1 ] != CAN_CS_STOPPED ) )
     {
         /* If development error detection for the Can module is enabled:
         The function Can_DeInit shall raise the error CAN_E_TRANSITION if the driver is not in state
         CAN_READY or any of the CAN controllers is in state STARTED */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_DE_INIT, CAN_E_TRANSITION );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_DE_INIT, CAN_E_TRANSITION );
     }
     else
     {
@@ -131,21 +141,21 @@ Std_ReturnType Can_SetBaudrate( uint8 Controller, uint16 BaudRateConfigID )
         /* If development error detection for the Can module is enabled:
         The function Can_SetBaudrate shall raise the error CAN_E_UNINIT if the driver is not yet
         initialized.⌋*/
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_SET_BAUDRATE, CAN_E_UNINIT );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_SET_BAUDRATE, CAN_E_UNINIT );
     }
-    else if( BaudRateConfigID > CAN_NUMBER_OF_BAUDRATES )
+    else if( BaudRateConfigID >= HwUnit.Config->Controllers[ Controller ].BaudrateConfigsCount )
     {
         /* If development error detection for the Can module is enabled:
         The function Can_SetBaudrate shall raise the error CAN_E_PARAM_BAUDRATE if the parameter
         BaudRateConfigID has an invalid value.⌋ */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_SET_BAUDRATE, CAN_E_PARAM_BAUDRATE );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_SET_BAUDRATE, CAN_E_PARAM_BAUDRATE );
     }
-    else if( Controller > CAN_NUMBER_OF_CONTROLLERS )
+    else if( Controller >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If development error detection for the Can module is enabled:
         the function Can_SetBaudrate shall raise the error CAN_E_PARAM_CONTROLLER if the parameter
         Controller is out of range.⌋*/
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_SET_BAUDRATE, CAN_E_PARAM_CONTROLLER );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_SET_BAUDRATE, CAN_E_PARAM_CONTROLLER );
     }
     else
     {
@@ -179,21 +189,21 @@ Std_ReturnType Can_SetControllerMode( uint8 Controller, Can_ControllerStateType 
         /* If development error detection for the Can module is enabled:
         if the module is not yet initialized, the function Can_SetControllerMode shall raise development
         error CAN_E_UNINIT */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_SET_CTRL_MODE, CAN_E_UNINIT );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_SET_CTRL_MODE, CAN_E_UNINIT );
     }
-    else if( Controller > CAN_NUMBER_OF_CONTROLLERS )
+    else if( Controller >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If development error detection for the Can module is enabled:
         if the parameter Controller is out of range, the function Can_SetControllerMode shall raise
         development error CAN_E_PARAM_CONTROLLER */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_SET_CTRL_MODE, CAN_E_PARAM_CONTROLLER );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_SET_CTRL_MODE, CAN_E_PARAM_CONTROLLER );
     }
-    else if( ( Transition >= CAN_CS_STARTED ) && ( Transition <= CAN_CS_SLEEP ) )
+    else if( ( Transition < CAN_CS_STARTED ) || ( Transition > CAN_CS_SLEEP ) )
     {
         /* If development error detection for the Can module is enabled:
         if an invalid transition has been requested, the function Can_SetControllerMode shall raise
         the error CAN_E_TRANSITION */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_SET_CTRL_MODE, CAN_E_TRANSITION );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_SET_CTRL_MODE, CAN_E_TRANSITION );
     }
     else
     {
@@ -220,14 +230,14 @@ void Can_EnableControllerInterrupts( uint8 Controller )
         /* If development error detection for the Can module is enabled:
         The function Can_EnableControllerInterrupts shall raise the error CAN_E_UNINIT if the
         driver not yet initialized */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_ENABLE_CTRL_INT, CAN_E_UNINIT );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_ENABLE_CTRL_INT, CAN_E_UNINIT );
     }
-    else if( Controller > CAN_NUMBER_OF_CONTROLLERS )
+    else if( Controller >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If development error detection for the Can module is enabled:
         The function Can_EnableControllerInterrupts shall raise the error CAN_E_PARAM_CONTROLLER if
         the parameter Controller is out of range */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_ENABLE_CTRL_INT, CAN_E_PARAM_CONTROLLER );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_ENABLE_CTRL_INT, CAN_E_PARAM_CONTROLLER );
     }
     else
     {
@@ -252,14 +262,14 @@ void Can_DisableControllerInterrupts( uint8 Controller )
         /* If development error detection for the Can module is enabled:
         The function Can_DisableControllerInterrupts shall raise the error CAN_E_UNINIT if the
         driver not yet initialized */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_DISABLE_CTRL_INT, CAN_E_UNINIT );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_DISABLE_CTRL_INT, CAN_E_UNINIT );
     }
-    else if( Controller > CAN_NUMBER_OF_CONTROLLERS )
+    else if( Controller >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If development error detection for the Can module is enabled:
         The function Can_DisableControllerInterrupts shall raise the error CAN_E_PARAM_CONTROLLER if
         the parameter Controller is out of range */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_DISABLE_CTRL_INT, CAN_E_PARAM_CONTROLLER );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_DISABLE_CTRL_INT, CAN_E_PARAM_CONTROLLER );
     }
     else
     {
@@ -289,14 +299,14 @@ Std_ReturnType Can_CheckWakeup( uint8 Controller )
         /* If development error detection for the Can module is enabled:
         The function Can_CheckWakeup shall raise the error CAN_E_UNINIT if the driver is not yet
         initialized */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_CHECK_WAKEUP, CAN_E_UNINIT );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_CHECK_WAKEUP, CAN_E_UNINIT );
     }
-    else if( Controller > CAN_NUMBER_OF_CONTROLLERS )
+    else if( Controller >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If development error detection for the Can module is enabled:
         The function Can_CheckWakeup shall raise the error CAN_E_PARAM_CONTROLLER if the parameter
         Controller is out of range */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_CHECK_WAKEUP, CAN_E_PARAM_CONTROLLER );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_CHECK_WAKEUP, CAN_E_PARAM_CONTROLLER );
     }
     else
     {
@@ -331,21 +341,21 @@ Std_ReturnType Can_GetControllerErrorState( uint8 ControllerId, Can_ErrorStateTy
         /* If development error detection for the Can module is enabled:
         if the module is not yet initialized, the function Can_GetControllerErrorState shall raise
         development error CAN_E_UNINIT */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CTRL_ERR_STATE, CAN_E_UNINIT );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_CTRL_ERR_STATE, CAN_E_UNINIT );
     }
-    else if( ControllerId > CAN_NUMBER_OF_CONTROLLERS )
+    else if( ControllerId >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If development error detection for the Can module is enabled:
         if the parameter ControllerId is out of range, the function Can_GetControllerErrorState shall
         raise development error CAN_E_PARAM_CONTROLLER */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CTRL_ERR_STATE, CAN_E_PARAM_CONTROLLER );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_CTRL_ERR_STATE, CAN_E_PARAM_CONTROLLER );
     }
     else if( ErrorStatePtr == NULL_PTR )
     {
         /* If development error detection for the Can module is enabled:
         if the parameter ErrorStatePtr is a null pointer, the function Can_GetControllerErrorState
         shall raise development error CAN_E_PARAM_POINTER */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CTRL_ERR_STATE, CAN_E_PARAM_POINTER );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_CTRL_ERR_STATE, CAN_E_PARAM_POINTER );
     }
     else
     {
@@ -378,20 +388,20 @@ Std_ReturnType Can_GetControllerMode( uint8 Controller, Can_ControllerStateType 
         /* If development error detection for the Can module is enabled:
         The function Can_GetControllerMode shall raise the error CAN_E_UNINIT and if the driver is
         not yet initialized.⌋ */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CTRL_MODE, CAN_E_UNINIT );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_CTRL_MODE, CAN_E_UNINIT );
     }
-    else if( Controller > CAN_NUMBER_OF_CONTROLLERS )
+    else if( Controller >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If parameter Controller of Can_GetControllerMode() has an invalid value, the CanDrv shall
         report development error code CAN_E_PARAM_CONTROLLER to the Det_ReportError service of the DET. */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CTRL_MODE, CAN_E_PARAM_CONTROLLER );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_CTRL_MODE, CAN_E_PARAM_CONTROLLER );
     }
     else if( ControllerModePtr == NULL_PTR )
     {
         /* If parameter ControllerModePtr of Can_GetControllerMode() has an null pointer, the CanDrv
         shall report development error code CAN_E_PARAM_POINTER to the Det_ReportError service of
         the DET. */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CTRL_MODE, CAN_E_PARAM_POINTER );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_CTRL_MODE, CAN_E_PARAM_POINTER );
     }
     else
     {
@@ -429,21 +439,21 @@ Std_ReturnType Can_GetControllerRxErrorCounter( uint8 ControllerId, uint8 *RxErr
         /* If development error detection for the Can module is enabled:
         if the module is not yet initialized, the function Can_GetControllerRxErrorCounter shall
         raise development error CAN_E_UNINIT and return E_NOT_OK. */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CTRL_RX_ERR_CNT, CAN_E_UNINIT );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_CTRL_RX_ERR_CNT, CAN_E_UNINIT );
     }
-    else if( ControllerId > CAN_NUMBER_OF_CONTROLLERS )
+    else if( ControllerId >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If development error detection for the Can module is enabled:
         if the parameter ControllerId is out of range, the function Can_GetControllerRxErrorCounter
         shall raise development error CAN_E_PARAM_CONTROLLER */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CTRL_RX_ERR_CNT, CAN_E_PARAM_CONTROLLER );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_CTRL_RX_ERR_CNT, CAN_E_PARAM_CONTROLLER );
     }
     else if( RxErrorCounterPtr == NULL_PTR )
     {
         /* If development error detection for the Can module is enabled:
         if the parameter RxErrorCounterPtr is a null pointer, the function
         Can_GetControllerRxErrorCounter shall raise development error CAN_E_PARAM_POINTER */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CTRL_RX_ERR_CNT, CAN_E_PARAM_POINTER );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_CTRL_RX_ERR_CNT, CAN_E_PARAM_POINTER );
     }
     else
     {
@@ -480,21 +490,21 @@ Std_ReturnType Can_GetControllerTxErrorCounter( uint8 ControllerId, uint8 *TxErr
         /* If development error detection for the Can module is enabled:
         if the module is not yet initialized, the function Can_GetControllerTxErrorCounter shall
         raise development error CAN_E_UNINIT */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CTRL_TX_ERR_CNT, CAN_E_UNINIT );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_CTRL_TX_ERR_CNT, CAN_E_UNINIT );
     }
-    else if( ControllerId > CAN_NUMBER_OF_CONTROLLERS )
+    else if( ControllerId >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If development error detection for the Can module is enabled:
         if the parameter ControllerId is out of range, the function Can_GetControllerTxErrorCounter
         shall raise development error CAN_E_PARAM_CONTROLLER */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CTRL_TX_ERR_CNT, CAN_E_PARAM_CONTROLLER );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_CTRL_TX_ERR_CNT, CAN_E_PARAM_CONTROLLER );
     }
     else if( TxErrorCounterPtr == NULL_PTR )
     {
         /* If development error detection for the Can module is enabled:
         if the parameter TxErrorCounterPtr is a null pointer, the function
         Can_GetControllerTxErrorCounter shall raise development error CAN_E_PARAM_POINTER */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CTRL_TX_ERR_CNT, CAN_E_PARAM_POINTER );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_CTRL_TX_ERR_CNT, CAN_E_PARAM_POINTER );
     }
     else
     {
@@ -528,21 +538,21 @@ Std_ReturnType Can_GetCurrentTime( uint8 ControllerId, Can_TimeStampType *timeSt
         /* If development error detection is enabled:
         the function shall check that the service Can_Init was previously called. If the check
         fails, the function shall raise the development error CAN_E_UNINIT. */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CURRENT_TIME, CAN_E_UNINIT );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_CURRENT_TIME, CAN_E_UNINIT );
     }
-    else if( ControllerId > CAN_NUMBER_OF_CONTROLLERS )
+    else if( ControllerId >= CAN_NUMBER_OF_CONTROLLERS )
     {
         /* If development error detection is enabled:
         the function shall check the parameter ControllerId for being valid. If the check fails,
         the function shall raise the development error CAN_E_PARAM_CONTROLLER. */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CURRENT_TIME, CAN_E_PARAM_CONTROLLER );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_CURRENT_TIME, CAN_E_PARAM_CONTROLLER );
     }
     else if( timeStampPtr == NULL_PTR )
     {
         /* If development error detection is enabled:
         the function shall check the parameter timeStampPtr for being valid. If the check fails,
         the function shall raise the development error CAN_E_PARAM_POINTER.⌋()*/
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_CURRENT_TIME, CAN_E_PARAM_POINTER );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_CURRENT_TIME, CAN_E_PARAM_POINTER );
     }
     else
     {
@@ -574,14 +584,14 @@ void Can_EnableEgressTimeStamp( Can_HwHandleType Hth )
         /* If development error detection is enabled:
         the function shall check that the service Can_Init was previously called. If the check fails,
         the function shall raise the development error CAN_E_UNINIT. */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_ENABLE_EGRESS_TS, CAN_E_UNINIT );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_ENABLE_EGRESS_TS, CAN_E_UNINIT );
     }
     else if( HwUnit.Config->Hohs[ Hth ].ObjectType != CAN_HOH_TYPE_TRANSMIT )
     {
         /* If development error detection for the Can module is enabled:
         The function Can_Write shall raise the error CAN_E_PARAM_HANDLE if the parameter Hth is not
         a configured Hardware Transmit Handle */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_ENABLE_EGRESS_TS, CAN_E_PARAM_HANDLE );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_ENABLE_EGRESS_TS, CAN_E_PARAM_HANDLE );
     }
     else
     {
@@ -604,6 +614,8 @@ void Can_EnableEgressTimeStamp( Can_HwHandleType Hth )
  *          E_NOT_OK: failed to read time stamp.
  *
  * @reqs    SWS_CAN_91027, SWS_CAN_00529, SWS_CAN_00530, SWS_CAN_00531, SWS_CAN_00532
+ *
+ * @todo    need to define what is a invalid TxPduId
  */
 Std_ReturnType Can_GetEgressTimeStamp( PduIdType TxPduId, Can_HwHandleType Hth, Can_TimeStampType *timeStampPtr )
 {
@@ -614,28 +626,28 @@ Std_ReturnType Can_GetEgressTimeStamp( PduIdType TxPduId, Can_HwHandleType Hth, 
         /* If development error detection is enabled:
         the function shall check that the service Can_Init was previously called. If the check fails,
         the function shall raise the development error CAN_E_UNINIT. */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_EGRESS_TS, CAN_E_UNINIT );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_EGRESS_TS, CAN_E_UNINIT );
     }
-    else if( TxPduId != 0 )
+    else if( TxPduId == 0 )
     {
         /* If development error detection is enabled:
         the function shall check the parameter TxPduId for being valid. If the check fails, the
         function shall raise the development error CAN_E_PARAM_LPDU */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_EGRESS_TS, CAN_E_PARAM_LPDU );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_EGRESS_TS, CAN_E_PARAM_LPDU );
     }
     else if( HwUnit.Config->Hohs[ Hth ].ObjectType != CAN_HOH_TYPE_TRANSMIT )
     {
         /* If development error detection for the Can module is enabled:
         The function Can_GetEgressTimeStamp shall raise the error CAN_E_PARAM_HANDLE if the parameter
         Hth is not a configured Hardware Transmit Handle */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_EGRESS_TS, CAN_E_PARAM_HANDLE );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_EGRESS_TS, CAN_E_PARAM_HANDLE );
     }
     else if( timeStampPtr == NULL_PTR )
     {
         /* If development error detection is enabled:
         the function shall check the parameter timeStampPtr for being valid. If the check fails, the
         function shall raise the development error CAN_E_PARAM_POINTER. */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_EGRESS_TS, CAN_E_PARAM_POINTER );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_EGRESS_TS, CAN_E_PARAM_POINTER );
     }
     else
     {
@@ -669,21 +681,21 @@ Std_ReturnType Can_GetIngressTimeStamp( Can_HwHandleType Hrh, Can_TimeStampType 
         /* If development error detection is enabled:
         the function shall check that the service Can_Init was previously called. If the check fails,
         the function shall raise the development error CAN_E_UNINIT.⌋() */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_INGRESS_TS, CAN_E_UNINIT );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_INGRESS_TS, CAN_E_UNINIT );
     }
     else if( HwUnit.Config->Hohs[ Hrh ].ObjectType != CAN_HOH_TYPE_RECEIVE )
     {
         /* If development error detection for the Can module is enabled:
         The function Can_GetIngressTimeStamp shall raise the error CAN_E_PARAM_HANDLE if the parameter
         Hrh is not a configured Hardware Receive Handle */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_INGRESS_TS, CAN_E_PARAM_HANDLE );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_INGRESS_TS, CAN_E_PARAM_HANDLE );
     }
     else if( timeStampPtr == NULL_PTR )
     {
         /* If development error detection is enabled:
         the function shall check the parameter timeStampPtr for being valid. If the check fails, the
         function shall raise the development error CAN_E_PARAM_POINTER */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_INGRESS_TS, CAN_E_PARAM_POINTER );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_INGRESS_TS, CAN_E_PARAM_POINTER );
     }
     else
     {
@@ -718,8 +730,6 @@ Std_ReturnType Can_GetIngressTimeStamp( Can_HwHandleType Hrh, Can_TimeStampType 
 Std_ReturnType Can_Write( Can_HwHandleType Hth, const Can_PduType *PduInfo )
 {
     Std_ReturnType ReturnValue = E_NOT_OK;
-    uint8 FdFlag               = Bfx_GetBit_u32u8_u8( PduInfo->id, 30u );
-    uint8 FdMode               = HwUnit.Config->Controllers[ Hth ].FrameFormat;
 
     /*Validate DET error according to SWS_Can_00216, SWS_Can_00217, SWS_Can_00219 */
     if( HwUnit.HwUnitState == CAN_CS_UNINIT )
@@ -727,38 +737,44 @@ Std_ReturnType Can_Write( Can_HwHandleType Hth, const Can_PduType *PduInfo )
         /* If development error detection for the Can module is enabled:
         The function Can_Write shall raise the error CAN_E_UNINIT if the driver is not yet
         initialized */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_WRITE, CAN_E_UNINIT );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_WRITE, CAN_E_UNINIT );
     }
     else if( HwUnit.Config->Hohs[ Hth ].ObjectType != CAN_HOH_TYPE_TRANSMIT )
     {
         /* If development error detection for the Can module is enabled:
         The function Can_Write shall raise the error CAN_E_PARAM_HANDLE if the parameter Hth is not
         a configured Hardware Transmit Handle */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_WRITE, CAN_E_PARAM_HANDLE );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_WRITE, CAN_E_PARAM_HANDLE );
     }
     else if( PduInfo == NULL_PTR )
     {
         /* If development error detection for CanDrv is enabled:
         Can_Write() shall raise CAN_E_PARAM_POINTER if the parameter PduInfo is a null pointer */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_WRITE, CAN_E_PARAM_POINTER );
-    }
-    else if( ( PduInfo->length > 64u ) || ( ( PduInfo->length > 8u ) && ( FdMode == CAN_FRAME_CLASSIC ) ) ||
-             ( ( PduInfo->length > 8u ) && ( FdMode != CAN_FRAME_CLASSIC ) && ( FdFlag == STD_OFF ) ) )
-    {
-        /* The function Can_Write if development error detection for the CAN module is enabled shall
-        raise the error CAN_E_PARAM_DATA_LENGTH:
-         - If the length is more than 64 byte.
-         - If the length is more than 8 byte and the CAN controller is not in CAN FD mode (no
-           CanControllerFdBaudrateConfig).
-         - If the length is more than 8 byte and the CAN controller is in CAN FD mode (valid
-           CanControllerFdBaudrateConfig), but the CAN FD flag in Can_PduType->id is not set (refer
-           CAN_MODULE_ID Type) */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_WRITE, CAN_E_PARAM_DATA_LENGTH );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_WRITE, CAN_E_PARAM_POINTER );
     }
     else
     {
-        /* Enable the slected interrupts to their corresponding interrupt lines */
-        ReturnValue = Can_Arch_Write( &HwUnit, Hth, PduInfo );
+        uint8 FdFlag  = Bfx_GetBit_u32u8_u8( PduInfo->id, 30u );
+        uint32 FdMode = HwUnit.Config->Hohs[ Hth ].ControllerRef->FrameFormat;
+
+        if( ( PduInfo->length > 64u ) || ( ( PduInfo->length > 8u ) && ( FdMode == CAN_FRAME_CLASSIC ) ) ||
+            ( ( PduInfo->length > 8u ) && ( FdMode != CAN_FRAME_CLASSIC ) && ( FdFlag == STD_OFF ) ) )
+        {
+            /* The function Can_Write if development error detection for the CAN module is enabled shall
+            raise the error CAN_E_PARAM_DATA_LENGTH:
+             - If the length is more than 64 byte.
+             - If the length is more than 8 byte and the CAN controller is not in CAN FD mode (no
+               CanControllerFdBaudrateConfig).
+             - If the length is more than 8 byte and the CAN controller is in CAN FD mode (valid
+               CanControllerFdBaudrateConfig), but the CAN FD flag in Can_PduType->id is not set (refer
+               CAN_MODULE_ID Type) */
+            Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_WRITE, CAN_E_PARAM_DATA_LENGTH );
+        }
+        else
+        {
+            /* Enable the slected interrupts to their corresponding interrupt lines */
+            ReturnValue = Can_Arch_Write( &HwUnit, Hth, PduInfo );
+        }
     }
 
     return ReturnValue;
@@ -781,7 +797,7 @@ void Can_GetVersionInfo( Std_VersionInfoType *versioninfo )
         /* If development error detection for the Can module is enabled:
         The function Can_GetVersionInfo shall raise the error CAN_E_PARAM_POINTER if the parameter
         versionInfo is a null pointer */
-        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_MODULE_ID_GET_VERSION_INFO, CAN_E_PARAM_POINTER );
+        Det_ReportError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_GET_VERSION_INFO, CAN_E_PARAM_POINTER );
     }
     else
     {
