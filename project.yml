@@ -57,7 +57,7 @@
     - autosar/mcal/Pwm/Pwm_Arch.c
     - autosar/mcal/Spi/Spi.c
     - autosar/mcal/Spi/Spi_Arch.c
-    - autosar/mcal/Det/Det.c
+    - autosar/Sys/Det.c
     - autosar/mcal/Mcu/Mcu.c
     - autosar/mcal/Mcu/Mcu_Arch.c
   :utilities:
