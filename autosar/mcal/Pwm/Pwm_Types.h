@@ -100,6 +100,19 @@ typedef struct _Pwm_ConfigType
 } Pwm_ConfigType;
 
 /**
+ * @brief **Hardware unit configuration structure**
+ *
+ * This is the type of data structure containing the module state for the PWM driver.
+ *
+ */
+typedef enum
+{
+    PWM_STATE_UNINITIALIZED,
+    PWM_STATE_INITIALIZED
+} Pwm_ModuleStateType;
+
+
+/**
  * @brief **Hardware control unit structure**
  *
  * This structure contains the hardware unit configuration and the state of the hardware
@@ -107,7 +120,11 @@ typedef struct _Pwm_ConfigType
  */
 typedef struct _Pwm_HwUnit
 {
-    const Pwm_ConfigType *Config; /*!< Pointer to the configuration structure */
+    const Pwm_ConfigType *Config;          /*!< Pointer to the configuration structure */
+    uint8 HwUnitState;                     /*!< Pwm hardware unit state */
+    Pwm_ModuleStateType Pwm_ModuleState;   /*!< Pwm module states */
+    Pwm_ChannelClassType Pwm_ChannelClass; /*!< Pwm channel class*/
+    uint8 Pwm_channelNumber;               /*!< Pwm channel number */
 } Pwm_HwUnit;
 
 #endif /* PWM_TYPES_H__ */
