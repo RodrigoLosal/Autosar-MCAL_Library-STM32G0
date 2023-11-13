@@ -193,7 +193,6 @@ void Spi_Arch_GetVersionInfo( Spi_HwUnit *HwUnit, Std_VersionInfoType *versionin
     (void)versioninfo;
 }
 
-
 /**
  * @brief    **Spi synchronous transmit**
  *
@@ -229,7 +228,6 @@ Spi_StatusType Spi_Arch_GetHWUnitStatus( Spi_HwUnit *HwUnit, Spi_HWUnitType HWUn
     (void)HWUnit;
     return SPI_UNINIT;
 }
-
 /**
  * @brief    **Spi cancel**
  *
