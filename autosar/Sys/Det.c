@@ -6,6 +6,7 @@
  * The driver Default Error Tracer serve as a mechanisim for reporting and tracing
  * development and runtime errors within the Basic Software.
  */
+#include "Std_Types.h"
 #include "Det.h"
 
 /**
