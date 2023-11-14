@@ -195,11 +195,24 @@
  * @} */
 
 /**
- * @defgroup PSRs_bits PASR register bits
+ * @defgroup PSRs_bits PSR register bits
  *
  * @{ */
 #define PSR_BO_BIT           7u /*!< Bus_Off bit */
 #define PSR_EP_BIT           5u /*!< Protocol_Error bit */
+/* cppcheck-suppress misra-c2012-20.5 ; the use of this define is precompile conditioned */
+#define PSR_LEC_BIT          0u /*!< Last_Error_Code bit */
+#define PSR_DLEC_BIT         8u /*!< Data_Last_Error_Code bit */
+/**
+ * @} */
+
+/**
+ * @defgroup PSRs_sizes PSR register bits
+ *
+ * @{ */
+/* cppcheck-suppress misra-c2012-20.5 ; the use of this define is precompile conditioned */
+#define PSR_LEC_SIZE         3u /*!< Last_Error_Code bitfield size */
+#define PSR_DLEC_SIZE        3u /*!< Data_Last_Error_Code bitfield size */
 /**
  * @} */
 
@@ -318,6 +331,18 @@ typedef struct _HwExtFilter
     uint32 ExtFilterHeader2; /*!< Extended Filter Standard Address Header 2 */
 } HwExtFilter;
 
+/* clang-format off */
+static const uint8 AutosarError[] = { 
+    0,
+    CAN_ERROR_CHECK_STUFFING_FAILED,
+    CAN_ERROR_CHECK_FORM_FAILED,
+    CAN_ERROR_CHECK_ACK_FAILED,
+    CAN_ERROR_BIT_MONITORING1,
+    CAN_ERROR_BIT_MONITORING0,
+    CAN_ERROR_CHECK_CRC_FAILED,
+};
+/* clang-format on */
+
 static void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can_RegisterType *Can );
 static void Can_SetupConfiguredFilters( const Can_Controller *Controller, const Can_HardwareObject *HwObjects, Can_RegisterType *Can );
 static void Can_SetupBaudrateConfig( const Can_ControllerBaudrateConfig *Baudrate, Can_RegisterType *Can );
@@ -345,6 +370,9 @@ static void Can_Isr_ErrorLoggingOverflow( Can_HwUnit *HwUnit, uint8 Controller )
 static void Can_Isr_ErrorPassive( Can_HwUnit *HwUnit, uint8 Controller );
 static void Can_Isr_WarningStatus( Can_HwUnit *HwUnit, uint8 Controller );
 static void Can_Isr_BusOffStatus( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_WatchdogInterrupt( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_ProtocolErrorInArbitrationPhase( Can_HwUnit *HwUnit, uint8 Controller );
+static void Can_Isr_ProtocolErrorInDataPhase( Can_HwUnit *HwUnit, uint8 Controller );
 
 /**
  * @brief    **Can low level Initialization**
@@ -1096,7 +1124,10 @@ void Can_Arch_IsrMainHandler( Can_HwUnit *HwUnit, uint8 Controller )
         Can_Isr_ErrorLoggingOverflow,
         Can_Isr_ErrorPassive,
         Can_Isr_WarningStatus,
-        Can_Isr_BusOffStatus
+        Can_Isr_BusOffStatus,
+        Can_Isr_WatchdogInterrupt,
+        Can_Isr_ProtocolErrorInArbitrationPhase,
+        Can_Isr_ProtocolErrorInDataPhase
     };
     /* clang-format on */
 
@@ -1502,8 +1533,16 @@ static void Can_Isr_RxFifo0Full( Can_HwUnit *HwUnit, uint8 Controller )
  */
 static void Can_Isr_RxFifo0MessageLost( Can_HwUnit *HwUnit, uint8 Controller )
 {
+    /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if CAN_ENABLE_SECURITY_EVENT_REPORTING == STD_OFF
     (void)HwUnit;
     (void)Controller;
+#else
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
+    CanIf_ErrorNotification( ControllerConfig->ControllerId, CAN_ERROR_OVERLOAD );
+#endif
 
     Det_ReportRuntimeError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_ISR_RECEPTION, CAN_E_DATALOST );
 }
@@ -1588,8 +1627,16 @@ static void Can_Isr_RxFifo1Full( Can_HwUnit *HwUnit, uint8 Controller )
  */
 static void Can_Isr_RxFifo1MessageLost( Can_HwUnit *HwUnit, uint8 Controller )
 {
+    /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if CAN_ENABLE_SECURITY_EVENT_REPORTING == STD_OFF
     (void)HwUnit;
     (void)Controller;
+#else
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
+    CanIf_ErrorNotification( ControllerConfig->ControllerId, CAN_ERROR_OVERLOAD );
+#endif
 
     Det_ReportRuntimeError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_ISR_RECEPTION, CAN_E_DATALOST );
 }
@@ -1655,14 +1702,20 @@ static void Can_Isr_TransmissionCancellationFinished( Can_HwUnit *HwUnit, uint8 
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
  *
- * @reqs    SWS_Can_00395
+ * @reqs    SWS_Can_91022
  */
 static void Can_Isr_TxEventFifoElementLost( Can_HwUnit *HwUnit, uint8 Controller )
 {
+    /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if CAN_ENABLE_SECURITY_EVENT_REPORTING == STD_OFF
     (void)HwUnit;
     (void)Controller;
-
-    Det_ReportRuntimeError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_ISR_TRANSMITION, CAN_E_DATALOST );
+#else
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
+    CanIf_ErrorNotification( ControllerConfig->ControllerId, CAN_ERROR_OVERLOAD );
+#endif
 }
 
 /**
@@ -1755,36 +1808,93 @@ static void Can_Isr_TxFifoEmpty( Can_HwUnit *HwUnit, uint8 Controller )
     } while( Msgs > 0u );
 }
 
+/**
+ * @brief    **Timestamp wraparound**
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ */
 static void Can_Isr_TimestampWraparound( Can_HwUnit *HwUnit, uint8 Controller )
 {
     (void)HwUnit;
     (void)Controller;
 }
 
+/**
+ * @brief    **Message RAM access failure**
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ */
 static void Can_Isr_MessageRamAccessFailure( Can_HwUnit *HwUnit, uint8 Controller )
 {
     (void)HwUnit;
     (void)Controller;
 }
 
+/**
+ * @brief    **Timeout occurred**
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ */
 static void Can_Isr_TimeoutOccurred( Can_HwUnit *HwUnit, uint8 Controller )
 {
     (void)HwUnit;
     (void)Controller;
 }
 
+/**
+ * @brief    **Error logging overflow**
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ */
 static void Can_Isr_ErrorLoggingOverflow( Can_HwUnit *HwUnit, uint8 Controller )
 {
     (void)HwUnit;
     (void)Controller;
 }
 
+/**
+ * @brief    **Error passive**
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ *
+ * @reqs    SWS_Can_91023
+ */
 static void Can_Isr_ErrorPassive( Can_HwUnit *HwUnit, uint8 Controller )
 {
+    /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if CAN_ENABLE_SECURITY_EVENT_REPORTING == STD_OFF
     (void)HwUnit;
     (void)Controller;
+#else
+    uint8 RxErrorCounter;
+    uint8 TxErrorCounter;
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the Can controller register structure*/
+    Can_RegisterType *Can = ControllerConfig->BaseAddress;
+
+    if( Bfx_GetBit_u32u8_u8( Can->PSR, PSR_EP_BIT ) == STD_ON )
+    {
+        /* Get the Rx and Tx error counters */
+        Can_Arch_GetControllerRxErrorCounter( HwUnit, ControllerConfig->ControllerId, &RxErrorCounter );
+        Can_Arch_GetControllerTxErrorCounter( HwUnit, ControllerConfig->ControllerId, &TxErrorCounter );
+        /* Notify error passive */
+        CanIf_ControllerErrorStatePassive( ControllerConfig->ControllerId, RxErrorCounter, TxErrorCounter );
+    }
+#endif
 }
 
+/**
+ * @brief    **Warning status**
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ */
 static void Can_Isr_WarningStatus( Can_HwUnit *HwUnit, uint8 Controller )
 {
     (void)HwUnit;
@@ -1833,4 +1943,68 @@ static void Can_Isr_BusOffStatus( Can_HwUnit *HwUnit, uint8 Controller )
         /* Notify Bus off */
         CanIf_ControllerBusOff( ControllerConfig->ControllerId );
     }
+}
+
+static void Can_Isr_WatchdogInterrupt( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    (void)HwUnit;
+    (void)Controller;
+}
+
+/**
+ * @brief    **Protocol error in arbitration phase (nominal bit time is used)**
+ *
+ * The function report the Error code to upper layer CanIf in error happens in arbitration phase, errors
+ * reported are only tose the Mcu supports, if the Mcu doesn't support the error it will be ignored
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ *
+ * @reqs    SWS_Can_91021, SWS_Can_91022, SWS_Can_91024
+ */
+static void Can_Isr_ProtocolErrorInArbitrationPhase( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if CAN_ENABLE_SECURITY_EVENT_REPORTING == STD_OFF
+    (void)HwUnit;
+    (void)Controller;
+#else
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the Can controller register structure*/
+    const Can_RegisterType *Can = ControllerConfig->BaseAddress;
+    /*Get the erro code */
+    uint8 ErrorCode = Bfx_GetBits_u32u8u8_u32( Can->PSR, PSR_LEC_BIT, PSR_LEC_SIZE );
+    /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
+    CanIf_ErrorNotification( ControllerConfig->ControllerId, AutosarError[ ErrorCode ] );
+#endif
+}
+
+/**
+ * @brief    **Protocol error in data phase (data bit time is used)**
+ *
+ * The function report the Error code to upper layer CanIf in error happens in data phase, errors
+ * reported are only tose the Mcu supports, if the Mcu doesn't support the error it will be ignored
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ *
+ * @reqs    SWS_Can_91021, SWS_Can_91022, SWS_Can_91024
+ */
+static void Can_Isr_ProtocolErrorInDataPhase( Can_HwUnit *HwUnit, uint8 Controller )
+{
+    /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if CAN_ENABLE_SECURITY_EVENT_REPORTING == STD_OFF
+    (void)HwUnit;
+    (void)Controller;
+#else
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the Can controller register structure*/
+    const Can_RegisterType *Can = ControllerConfig->BaseAddress;
+    /*Get the erro code */
+    uint8 ErrorCode = Bfx_GetBits_u32u8u8_u32( Can->PSR, PSR_DLEC_BIT, PSR_DLEC_SIZE );
+    /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
+    CanIf_ErrorNotification( ControllerConfig->ControllerId, AutosarError[ ErrorCode ] );
+#endif
 }
