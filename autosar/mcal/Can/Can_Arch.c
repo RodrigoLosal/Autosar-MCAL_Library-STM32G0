@@ -14,6 +14,19 @@
 #include "Bfx.h"
 #include "CanIf.h"
 
+/* cppcheck-suppress misra-c2012-20.9 ; this is declared at Can_Cfg.h */
+#if CAN_DEV_ERROR_DETECT == STD_OFF
+/**
+ * @param   ModuleId    module id number
+ * @param   InstanceId  Instance Id
+ * @param   ApiId       Pai id
+ * @param   ErrorId     Error code
+ */
+#define Det_ReportRuntimeError( ModuleId, InstanceId, ApiId, ErrorId ) (void)0
+#else
+#include "Det.h"
+#endif
+
 /**
  * @defgroup CCR_bits CCCR register bits
  *
@@ -1492,7 +1505,7 @@ static void Can_Isr_RxFifo0MessageLost( Can_HwUnit *HwUnit, uint8 Controller )
     (void)HwUnit;
     (void)Controller;
 
-    // Det_ReportRuntimeError(CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_SET_BAUDRATE, CAN_E_DATALOST );
+    Det_ReportRuntimeError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_ISR_RECEPTION, CAN_E_DATALOST );
 }
 
 /**
@@ -1578,7 +1591,7 @@ static void Can_Isr_RxFifo1MessageLost( Can_HwUnit *HwUnit, uint8 Controller )
     (void)HwUnit;
     (void)Controller;
 
-    // Det_ReportRuntimeError(CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_SET_BAUDRATE, CAN_E_DATALOST );
+    Det_ReportRuntimeError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_ISR_RECEPTION, CAN_E_DATALOST );
 }
 
 /**
@@ -1649,7 +1662,7 @@ static void Can_Isr_TxEventFifoElementLost( Can_HwUnit *HwUnit, uint8 Controller
     (void)HwUnit;
     (void)Controller;
 
-    // Det_ReportRuntimeError(CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_SET_BAUDRATE, CAN_E_DATALOST );
+    Det_ReportRuntimeError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_ISR_TRANSMITION, CAN_E_DATALOST );
 }
 
 /**
@@ -1777,7 +1790,6 @@ static void Can_Isr_WarningStatus( Can_HwUnit *HwUnit, uint8 Controller )
     (void)HwUnit;
     (void)Controller;
 }
-
 
 /**
  * @brief    **Can Bus Off Callback**

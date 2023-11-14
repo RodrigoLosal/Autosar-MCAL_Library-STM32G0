@@ -37,7 +37,7 @@
  * @brief Specifies the number of controller to mange by the driver.
  * @typedef EcucIntegerParamDef
  */
-#define CAN_NUMBER_OF_CONTROLLERS 2
+#define CAN_NUMBER_OF_CONTROLLERS     2
 
 /**
  * @defgroup Controller_IDs Can controllers
@@ -47,8 +47,8 @@
  * @typedef EcucIntegerParamDef
  *
  * @{ */
-#define CAN_CONTROLLER_0          0 /*!< Controller zero */
-#define CAN_CONTROLLER_1          1 /*!< Controller one  */
+#define CAN_CONTROLLER_0              0 /*!< Controller zero */
+#define CAN_CONTROLLER_1              1 /*!< Controller one  */
 
 /**
  * @brief Specifies the number of buadrate configuration for controller 0
@@ -93,7 +93,7 @@
  * @brief Switches the development error detection and notification on or off.
  * @typedef EcucBooleanParamDef
  */
-#define CAN_DEV_ERROR_DETECT          STD_OFF
+#define CAN_DEV_ERROR_DETECT          STD_ON
 
 /**
  * @brief Enables/Disables the Global Time APIs used when hardware timestamping is supported.
