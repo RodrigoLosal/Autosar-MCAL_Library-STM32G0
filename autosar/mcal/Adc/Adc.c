@@ -1,6 +1,6 @@
 /**
  * @file    Adc.c
- * @brief   **Can Driver**
+ * @brief   **Adc Driver**
  * @author  Naim Leon
  *
  * The ADC module provides the functionality API and the configuration of the AUTOSAR Basic
