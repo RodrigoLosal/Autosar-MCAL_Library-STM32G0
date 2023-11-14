@@ -3,12 +3,13 @@
  * @brief   **Flash Driver**
  * @author  Christopher Bogarin
  *
- * The flash driver provides services for reading, writing and erasing flash memory and a
- * configuration interface for setting / resetting the write / erase protection
- * if supported by the underlying hardware.
- * In application mode of the ECU, the flash driver is only to be used by the Flash EEPROM
- * emulation module for writing data. It is not intended to write program code to flash memory
- * in application mode.
+ * The flash driver provides services for reading,
+ * writing and erasing flash memory and a configuration interface
+ * for setting / resetting the write / erase protection
+ * if supported by the underlying hardware. In application mode of the ECU,
+ * the flash driver is only to be used by the Flash EEPROM
+ * emulation module for writing data.
+ * It is not intended to write program code to flash memory in application mode.
  *
  */
 
@@ -111,7 +112,8 @@ MemIf_JobResultType Fls_GetJobResult( void )
  *
  * Reads from flash memory.
  *
- * @param   SourceAddress Source address in flash memory. This address offset will be added to the flash memory base address. Min.: 0 Max.: FLS_ SIZE - 1.
+ * @param   SourceAddress Source address in flash memory. This address offset will be added to the flash memory base address.
+ *                        Min.: 0 Max.: FLS_ SIZE - 1.
  * @param   Length Number of bytes to read Min.: 1 Max.: FLS_SIZE - Source Address.
  * @param   TargetAddressPtr Pointer to target data buffer.
  *
@@ -132,7 +134,8 @@ Std_ReturnType Fls_Read( Fls_AddressType SourceAddress, uint8 *TargetAddressPtr,
  *
  * Compares the contents of an area of flash memory with that of an application data buffer.
  *
- * @param   SourceAddress Source address in flash memory. This address offset will be added to the flash memory base address. Min.: 0 Max.: FLS_ SIZE - 1.
+ * @param   SourceAddress Source address in flash memory.
+ *                        This address offset will be added to the flash memory base address. Min.: 0 Max.: FLS_ SIZE - 1.
  * @param   TargetAddressPtr  Pointer to target data buffer.
  * @param   Length Number of bytes to compare Min.: 1 Max.: FLS_SIZE - Source Address.
  *
@@ -153,7 +156,8 @@ Std_ReturnType Fls_Compare( Fls_AddressType SourceAddress, const uint8 *TargetAd
  *
  * Sets the flash driver’s operation mode.
  *
- * @param   Mode  MEMIF_MODE_SLOW: Slow read access / normal SPI access. MEMIF_MODE_FAST: Fast read access / SPI burst access.
+ * @param   Mode  MEMIF_MODE_SLOW: Slow read access / normal SPI access.
+ *                MEMIF_MODE_FAST: Fast read access / SPI burst access.
  *
  * @reqs    SWS_Fls_00258
  */
@@ -180,13 +184,14 @@ void Fls_GetVersionInfo( Std_VersionInfoType *VersioninfoPtr )
  * @brief   **Fls_BlankCheck**
  *
  * The function Fls_BlankCheck shall verify, whether a given memory area has been erased but not (yet) programmed.
- * The function shall limit the maximum number of checked flash cells per main function cycle to the configured value
- * FlsMaxReadNormalMode or FlsMaxReadFastMode respectively.
+ * The function shall limit the maximum number of checked flash cells per main function
+ * cycle to the configured value FlsMaxReadNormalMode or FlsMaxReadFastMode respectively.
  *
  * @param   TargetAddress   Address in flash memory from which the blank check should be started. Min.: 0 Max.: FLS_SIZE - 1.
  * @param   Length   Number of bytes to be checked for erase pattern. Min.: 1 Max.: FLS_SIZE - TargetAddress.
  *
- * @retval  Std_ReturnType E_OK: request for blank checking has been accepted by the module E_NOT_OK: request for blank checking has not been accepted by the module..
+ * @retval  Std_ReturnType E_OK: request for blank checking has been accepted by the module
+ *                         E_NOT_OK: request for blank checking has not been accepted by the module.
  *
  * @reqs    SWS_Fls_00371
  */

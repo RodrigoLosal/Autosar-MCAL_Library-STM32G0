@@ -3,12 +3,13 @@
  * @brief   **Flash Driver header**
  * @author  Christopher Bogarin
  *
- * The flash driver provides services for reading, writing and erasing flash memory and a
- * configuration interface for setting / resetting the write / erase protection
- * if supported by the underlying hardware.
- * In application mode of the ECU, the flash driver is only to be used by the Flash EEPROM
- * emulation module for writing data. It is not intended to write program code to flash memory
- * in application mode.
+ * The flash driver provides services for reading,
+ * writing and erasing flash memory and a configuration interface
+ * for setting / resetting the write / erase protection
+ * if supported by the underlying hardware. In application mode of the ECU,
+ * the flash driver is only to be used by the Flash EEPROM
+ * emulation module for writing data.
+ * It is not intended to write program code to flash memory in application mode.
  *
  */
 #ifndef FLASH_H__
