@@ -94,4 +94,15 @@ typedef enum _Mcu_RamStateType
     MCU_RAMSTATE_VALID,          /*!< Ram content is valid                */
 } Mcu_RamStateType;
 
+/**
+ * @brief **Hardware control unit structure**
+ *
+ * This structure contains the hardware unit configuration and the state of the hardware
+ * unit pointers to controller structures.
+ */
+typedef struct _Mcu_HwUnit
+{
+    const Mcu_ConfigType *Config; /*!< Pointer to the configuration structure */
+} Mcu_HwUnit;
+
 #endif
