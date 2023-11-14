@@ -20,8 +20,6 @@
  *
  * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Config Pointer to configuration set
- *
- * @reqs    SWS_Spi_00175
  */
 void Spi_Arch_Init( Spi_HwUnit *HwUnit, const Spi_ConfigType *Config )
 {
@@ -38,7 +36,6 @@ void Spi_Arch_Init( Spi_HwUnit *HwUnit, const Spi_ConfigType *Config )
  *
  * @retval  E_OK: de-initialisation command has been accepted
  *          E_NOT_OK: de-initialisation command has not been accepted
- *
  */
 Std_ReturnType Spi_Arch_DeInit( Spi_HwUnit *HwUnit )
 {
@@ -54,13 +51,11 @@ Std_ReturnType Spi_Arch_DeInit( Spi_HwUnit *HwUnit )
  *
  * @param   HwUnit Pointer to the hardware unit configuration
  * @param    Channel Channel ID
- * @param    DataBufferPtr  Pointer to source data buffer. If this pointer is null, it is assumed that
- *                          the data to be transmitted is not relevant and the default transmit
- *                          value of this channel will be used instead.
+ * @param    DataBufferPtr  Pointer to source data buffer. If this pointer is null, it is assumed that the data to be transmitted
+ *                          is not relevant and the default transmit value of this channel will be used instead.
  *
  * @retval  E_OK: write command has been accepted
  *          E_NOT_OK: write command has not been accepted
- *
  */
 Std_ReturnType Spi_Arch_WriteIB( Spi_HwUnit *HwUnit, Spi_ChannelType Channel, const Spi_DataBufferType *DataBufferPtr )
 {
@@ -70,7 +65,6 @@ Std_ReturnType Spi_Arch_WriteIB( Spi_HwUnit *HwUnit, Spi_ChannelType Channel, co
     return E_NOT_OK;
 }
 
-#if SPI_SUPPORT_CONCURRENT_SYNC_TRANSMIT == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief    **Spi Asynchronous Transmit**
  *
@@ -81,7 +75,6 @@ Std_ReturnType Spi_Arch_WriteIB( Spi_HwUnit *HwUnit, Spi_ChannelType Channel, co
  *
  * @retval  E_OK: Transmission command has been accepted
  *          E_NOT_OK: Transmission command has not been accepted
- *
  */
 Std_ReturnType Spi_Arch_AsyncTransmit( Spi_HwUnit *HwUnit, Spi_SequenceType Sequence )
 {
@@ -89,7 +82,6 @@ Std_ReturnType Spi_Arch_AsyncTransmit( Spi_HwUnit *HwUnit, Spi_SequenceType Sequ
     (void)Sequence;
     return E_NOT_OK;
 }
-#endif
 
 /**
  * @brief    **Spi Read in the Internal Buffer**
@@ -103,7 +95,6 @@ Std_ReturnType Spi_Arch_AsyncTransmit( Spi_HwUnit *HwUnit, Spi_SequenceType Sequ
  *
  * @retval  E_OK: read command has been accepted
  *          E_NOT_OK: read command has not been accepted
- *
  */
 Std_ReturnType Spi_Arch_ReadIB( Spi_HwUnit *HwUnit, Spi_ChannelType Channel, const Spi_DataBufferType *DataBufferPtr )
 {
@@ -122,14 +113,12 @@ Std_ReturnType Spi_Arch_ReadIB( Spi_HwUnit *HwUnit, Spi_ChannelType Channel, con
  * @param   HwUnit Pointer to the hardware unit configuration
  * @param   Channel Channel ID
  * @param   SrcDataBufferPtr Pointer to source data buffer
- * @param   Length Length (number of data elements) of the data to be transmitted from
- *                 SrcDataBufferPtr and/or received from DesDataBufferPtr Min.: 1 Max.:
- *                 Max of data specified at configuration for this channel
+ * @param   Length Length (number of data elements) of the data to be transmitted from SrcDataBufferPtr and/or received from
+ *                 DesDataBufferPtr Min.: 1 Max.: Max of data specified at configuration for this channel.
  * @param   DesDataBufferPtr Pointer to destination data buffer in RAM
  *
  * @retval  E_OK: Setup command  has been accepted
  *          E_NOT_OK: Setup command  has not been accepted
- *
  */
 Std_ReturnType Spi_Arch_SetupEB( Spi_HwUnit *HwUnit, Spi_ChannelType Channel, const Spi_DataBufferType *SrcDataBufferPtr, Spi_DataBufferType *DesDataBufferPtr, Spi_NumberOfDataType Length )
 {
@@ -149,7 +138,6 @@ Std_ReturnType Spi_Arch_SetupEB( Spi_HwUnit *HwUnit, Spi_ChannelType Channel, co
  * @param   HwUnit Pointer to the hardware unit configuration
  *
  * @retval  Spi_StatusType: Spi_StatusType
- *
  */
 Spi_StatusType Spi_Arch_GetStatus( Spi_HwUnit *HwUnit )
 {
@@ -166,7 +154,6 @@ Spi_StatusType Spi_Arch_GetStatus( Spi_HwUnit *HwUnit )
  * @param   Job Job ID. An invalid job ID will return an undefined result
  *
  * @retval  Spi_JobResultType: Spi_JobResultType
- *
  */
 Spi_JobResultType Spi_Arch_GetJobResult( Spi_HwUnit *HwUnit, Spi_JobType Job )
 {
@@ -184,7 +171,6 @@ Spi_JobResultType Spi_Arch_GetJobResult( Spi_HwUnit *HwUnit, Spi_JobType Job )
  * @param   Sequence Sequence ID. An invalid sequence ID will return an undefined result
  *
  * @retval  Spi_SeqResultType: Spi_SeqResultType
- *
  */
 Spi_SeqResultType Spi_Arch_GetSequenceResult( Spi_HwUnit *HwUnit, Spi_SequenceType Sequence )
 {
@@ -193,7 +179,6 @@ Spi_SeqResultType Spi_Arch_GetSequenceResult( Spi_HwUnit *HwUnit, Spi_SequenceTy
     return SPI_SEQ_FAILED;
 }
 
-#if SPI_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief    **Spi get version information**
  *
@@ -201,14 +186,13 @@ Spi_SeqResultType Spi_Arch_GetSequenceResult( Spi_HwUnit *HwUnit, Spi_SequenceTy
  *
  * @param   HwUnit Pointer to the hardware unit configuration
  * @param   versioninfo Pointer to where to store the version information of this module
- *
  */
 void Spi_Arch_GetVersionInfo( Spi_HwUnit *HwUnit, Std_VersionInfoType *versioninfo )
 {
     (void)HwUnit;
     (void)versioninfo;
 }
-#endif
+
 
 /**
  * @brief    **Spi synchronous transmit**
@@ -220,7 +204,6 @@ void Spi_Arch_GetVersionInfo( Spi_HwUnit *HwUnit, Std_VersionInfoType *versionin
  *
  * @retval  E_OK: Transmission has been successful
  *          E_NOT_OK: Transmission failed
- *
  */
 Std_ReturnType Spi_Arch_SyncTransmit( Spi_HwUnit *HwUnit, Spi_SequenceType Sequence )
 {
@@ -229,7 +212,6 @@ Std_ReturnType Spi_Arch_SyncTransmit( Spi_HwUnit *HwUnit, Spi_SequenceType Seque
     return E_NOT_OK;
 }
 
-#if SPI_HW_STATUS_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief    **Spi get Hardware microcontroller peripheral Unit Status**
  *
@@ -240,7 +222,6 @@ Std_ReturnType Spi_Arch_SyncTransmit( Spi_HwUnit *HwUnit, Spi_SequenceType Seque
  * @param   HWUnit SPI Hardware microcontroller peripheral (unit) ID.
  *
  * @retval  Spi_StatusType: Spi_StatusType
- *
  */
 Spi_StatusType Spi_Arch_GetHWUnitStatus( Spi_HwUnit *HwUnit, Spi_HWUnitType HWUnit )
 {
@@ -248,9 +229,7 @@ Spi_StatusType Spi_Arch_GetHWUnitStatus( Spi_HwUnit *HwUnit, Spi_HWUnitType HWUn
     (void)HWUnit;
     return SPI_UNINIT;
 }
-#endif
 
-#if SPI_CANCEL_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief    **Spi cancel**
  *
@@ -258,14 +237,12 @@ Spi_StatusType Spi_Arch_GetHWUnitStatus( Spi_HwUnit *HwUnit, Spi_HWUnitType HWUn
  *
  * @param   HwUnit Pointer to the hardware unit configuration
  * @param   Sequence Sequence ID
- *
  */
 void Spi_Arch_Cancel( Spi_HwUnit *HwUnit, Spi_SequenceType Sequence )
 {
     (void)HwUnit;
     (void)Sequence;
 }
-#endif
 
 /**
  * @brief    **Spi set asynchronous mode**
@@ -277,7 +254,6 @@ void Spi_Arch_Cancel( Spi_HwUnit *HwUnit, Spi_SequenceType Sequence )
  *
  * @retval  E_OK: Setting command has been done
  *          E_NOT_OK: setting command has not been accepted
- *
  */
 Std_ReturnType Spi_Arch_SetAsyncMode( Spi_HwUnit *HwUnit, Spi_AsyncModeType Mode )
 {
