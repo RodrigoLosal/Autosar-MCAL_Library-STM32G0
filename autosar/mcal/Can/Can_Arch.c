@@ -1618,8 +1618,7 @@ CAN_STATIC void Can_Isr_RxFifo0MessageLost( Can_HwUnit *HwUnit, uint8 Controller
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    Can_ErrorType Error = CAN_ERROR_OVERLOAD;
-    CanIf_ErrorNotification( ControllerConfig->ControllerId, Error );
+    CanIf_ErrorNotification( ControllerConfig->ControllerId, CAN_ERROR_OVERLOAD );
 #endif
 
     Det_ReportRuntimeError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_ISR_RECEPTION, CAN_E_DATALOST );
@@ -1726,8 +1725,7 @@ CAN_STATIC void Can_Isr_RxFifo1MessageLost( Can_HwUnit *HwUnit, uint8 Controller
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    Can_ErrorType Error = CAN_ERROR_OVERLOAD;
-    CanIf_ErrorNotification( ControllerConfig->ControllerId, Error );
+    CanIf_ErrorNotification( ControllerConfig->ControllerId, CAN_ERROR_OVERLOAD );
 #endif
 
     Det_ReportRuntimeError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_ISR_RECEPTION, CAN_E_DATALOST );
@@ -1806,8 +1804,7 @@ CAN_STATIC void Can_Isr_TxEventFifoElementLost( Can_HwUnit *HwUnit, uint8 Contro
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    Can_ErrorType Error = CAN_ERROR_OVERLOAD;
-    CanIf_ErrorNotification( ControllerConfig->ControllerId, Error );
+    CanIf_ErrorNotification( ControllerConfig->ControllerId, CAN_ERROR_OVERLOAD );
 #endif
 }
 
