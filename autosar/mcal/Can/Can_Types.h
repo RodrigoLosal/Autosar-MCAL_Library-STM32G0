@@ -164,10 +164,7 @@ typedef struct _Can_Controller
     uint8 TxFifoQueueMode; /*!< Tx FIFO/Queue Mode selection. Queue mode is basically multiplexed tx
                                 This parameter can be a value of @ref CAN_txFifoQueue_Mode */
 
-    uint32 Line0ActiveITs; /*!< Specifies the interrupts to be enabled on Line0.
-                               This parameter can be a value of CAN_IT_<interrupt> */
-
-    uint32 Line1ActiveITs; /*!< Specifies the interrupts to be enabled on Line1.
+    uint32 ActiveITs; /*!< Specifies the interrupts to be enabled on Line0.
                                This parameter can be a value of CAN_IT_<interrupt> */
 
     Can_RegisterType *BaseAddress; /*!< Base address of the Mcu CAN controller

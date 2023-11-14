@@ -331,6 +331,9 @@ typedef struct _HwExtFilter
     uint32 ExtFilterHeader2; /*!< Extended Filter Standard Address Header 2 */
 } HwExtFilter;
 
+/**
+ * @brief  Autosar errors to report
+ */
 /* clang-format off */
 static const uint8 AutosarError[] = { 
     0,
@@ -1258,41 +1261,42 @@ static void Can_SetupBaudrateConfig( const Can_ControllerBaudrateConfig *Baudrat
  */
 static void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can_RegisterType *Can )
 {
-    /* Enable the slected interrupts to their corresponding interrupt lines */
-    Bfx_SetBitMask_u32u32( (uint32 *)&Can->IE, Controller->Line0ActiveITs | Controller->Line1ActiveITs );
+    uint32 Line1ITs = 0u;
+    uint32 Line0ITs = 0u;
 
-    /* Assign group of interrupts Rx Fifo 0 to line 0 or line 1*/
-    Bfx_PutBit_u32u8u8( (uint32 *)&Can->ILS, CAN_IT_GROUP_RX_FIFO0, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_RX_FIFO0 ) != 0 ) );
+    /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if CAN_ENABLE_SECURITY_EVENT_REPORTING == STD_ON
+    Line0ITs = CAN_IT_RX_FIFO1_MESSAGE_LOST | CAN_IT_RX_FIFO1_MESSAGE_LOST | CAN_IT_TX_EVT_FIFO_ELT_LOST;
+    Line1ITs = CAN_IT_ERROR_PASSIVE | CAN_IT_ARB_PROTOCOL_ERROR | CAN_IT_DATA_PROTOCOL_ERROR;
+#endif
 
-    /* Assign group of interrupts Rx Fifo 1 to line 0 or line 1*/
-    Bfx_PutBit_u32u8u8( (uint32 *)&Can->ILS, CAN_IT_GROUP_RX_FIFO1, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_RX_FIFO1 ) != 0 ) );
+    /* Disable all interrupts interrupts a set all of them to Line0 by default*/
+    Can->IE  = 0x0000u;
+    Can->ILS = 0x00u;
 
-    /* Assign group of interrupts SMSG to line 0 or line 1*/
-    Bfx_PutBit_u32u8u8( (uint32 *)&Can->ILS, CAN_IT_GROUP_SMSG, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_SMSG ) != 0 ) );
+    /*Enable interrupts*/
+    Bfx_SetBitMask_u32u32( (uint32 *)&Can->IE, Controller->ActiveITs | Line0ITs | Line1ITs );
 
-    /* Assign group of interrupts Tx Fifo/Queue Error to line 0 or line 1*/
-    Bfx_PutBit_u32u8u8( (uint32 *)&Can->ILS, CAN_IT_GROUP_TX_FIFO_ERROR, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_TX_FIFO_ERROR ) != 0 ) );
+    /* Assign group of interrupts Tx Event Fifo to line 1*/
+    Bfx_PutBit_u32u8u8( (uint32 *)&Can->ILS, CAN_IT_GROUP_MISC, (uint8)( ( Line1ITs & CAN_IT_LIST_MISC ) != 0 ) );
 
-    /* Assign group of interrupts Tx Event Fifo to line 0 or line 1*/
-    Bfx_PutBit_u32u8u8( (uint32 *)&Can->ILS, CAN_IT_GROUP_MISC, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_MISC ) != 0 ) );
+    /* Assign group of interrupts Bit line errors to line 1*/
+    Bfx_PutBit_u32u8u8( (uint32 *)&Can->ILS, CAN_IT_GROUP_BIT_LINE_ERROR, (uint8)( ( Line1ITs & CAN_IT_LIST_BIT_LINE_ERROR ) != 0 ) );
 
-    /* Assign group of interrupts Bit line errors to line 0 or line 1*/
-    Bfx_PutBit_u32u8u8( (uint32 *)&Can->ILS, CAN_IT_GROUP_BIT_LINE_ERROR, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_BIT_LINE_ERROR ) != 0 ) );
-
-    /* Assign group of interrupts Protocol errors to line 0 or line 1*/
-    Bfx_PutBit_u32u8u8( (uint32 *)&Can->ILS, CAN_IT_GROUP_PROTOCOL_ERROR, (uint8)( ( Controller->Line1ActiveITs & CAN_IT_LIST_PROTOCOL_ERROR ) != 0 ) );
+    /* Assign group of interrupts Protocol errors to line 1*/
+    Bfx_PutBit_u32u8u8( (uint32 *)&Can->ILS, CAN_IT_GROUP_PROTOCOL_ERROR, (uint8)( ( Line1ITs & CAN_IT_LIST_PROTOCOL_ERROR ) != 0 ) );
 
 
     /* Enable Tx Buffer Transmission Interrupt to set TC flag in IR register,
          but interrupt will only occur if TC is enabled in IE register */
-    if( ( ( Controller->Line1ActiveITs & CAN_IT_TX_COMPLETE ) != 0u ) || ( ( Controller->Line0ActiveITs & CAN_IT_TX_COMPLETE ) != 0u ) )
+    if( ( Controller->ActiveITs & CAN_IT_TX_COMPLETE ) != 0u )
     {
         Can->TXBTIE = CAN_TX_BUFFER0 | CAN_TX_BUFFER1 | CAN_TX_BUFFER2;
     }
 
     /* Enable Tx Buffer Cancellation Finished Interrupt to set TCF flag in IR register,
          but interrupt will only occur if TCF is enabled in IE register */
-    if( ( ( Controller->Line1ActiveITs & CAN_IT_TX_ABORT_COMPLETE ) != 0u ) || ( ( Controller->Line0ActiveITs & CAN_IT_TX_ABORT_COMPLETE ) != 0u ) )
+    if( ( Controller->ActiveITs & CAN_IT_TX_ABORT_COMPLETE ) != 0u )
     {
         Can->TXBCIE = CAN_TX_BUFFER0 | CAN_TX_BUFFER1 | CAN_TX_BUFFER2;
     }
@@ -1945,6 +1949,12 @@ static void Can_Isr_BusOffStatus( Can_HwUnit *HwUnit, uint8 Controller )
     }
 }
 
+/**
+ * @brief    **Watchdog error**
+ *
+ * @param    HwUnit: Pointer to the hardware unit configuration
+ * @param    Controller: CAN controller for which the status shall be changed.
+ */
 static void Can_Isr_WatchdogInterrupt( Can_HwUnit *HwUnit, uint8 Controller )
 {
     (void)HwUnit;
