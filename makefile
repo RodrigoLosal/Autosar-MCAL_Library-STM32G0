@@ -3,7 +3,7 @@ TARGET = mcal
 
 #---Files to compile
 SRCS = main.c startup.c Nvic.c Port.c Port_Cfg.c Crc.c Dio.c Gpt.c Gpt_Cfg.c
-SRCS += Can.c Can_Lcfg.c Can_Arch.c  Pwm.c Pwm_Lcfg.c Pwm_Arch.c
+SRCS += Can.c Can_Lcfg.c Can_Arch.c  Pwm.c Pwm_Lcfg.c Pwm_Arch.c Det.c Det_Lcfg.c
 
 #---Linker script
 LINKER = linker.ld
@@ -16,6 +16,7 @@ SRC_PATHS  = .
 SRC_PATHS += $(addprefix autosar/mcal/,$(MCAL_MODULES))
 SRC_PATHS += autosar/libs
 SRC_PATHS += cfg
+SRC_PATHS += autosar/Sys
 #direcotrios con archivos .h
 INC_PATHS  = .
 INC_PATHS += autosar
@@ -24,6 +25,7 @@ INC_PATHS += autosar/mcal
 INC_PATHS += $(addprefix autosar/mcal/,$(MCAL_MODULES))
 INC_PATHS += autosar/mcal/regs
 INC_PATHS += cfg
+INC_PATHS += autosar/Sys
 
 #---Set toolchain
 TOOLCHAIN = arm-none-eabi
