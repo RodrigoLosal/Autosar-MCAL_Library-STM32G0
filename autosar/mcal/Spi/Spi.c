@@ -12,6 +12,17 @@
 
 #include "Std_Types.h"
 #include "Spi.h"
+#include "Spi_Arch.h"
+
+/**
+ * @brief  Variable for the initial value of the port configuration array.
+ */
+/* clang-format off */
+static Spi_HwUnit HwUnit_Spi =
+{
+.Config = NULL_PTR,
+};
+/* clang-format on */
 
 /**
  * @brief    **Spi Initialization**
@@ -24,7 +35,8 @@
  */
 void Spi_Init( const Spi_ConfigType *ConfigPtr )
 {
-    (void)ConfigPtr;
+    Spi_Arch_Init( &HwUnit_Spi, ConfigPtr );
+    HwUnit_Spi.Config = ConfigPtr;
 }
 
 /**
@@ -39,7 +51,7 @@ void Spi_Init( const Spi_ConfigType *ConfigPtr )
  */
 Std_ReturnType Spi_DeInit( void )
 {
-    return E_NOT_OK;
+    return Spi_Arch_DeInit( &HwUnit_Spi );
 }
 
 /**
@@ -60,9 +72,7 @@ Std_ReturnType Spi_DeInit( void )
  */
 Std_ReturnType Spi_WriteIB( Spi_ChannelType Channel, const Spi_DataBufferType *DataBufferPtr )
 {
-    (void)Channel;
-    (void)DataBufferPtr;
-    return E_NOT_OK;
+    return Spi_Arch_WriteIB( &HwUnit_Spi, Channel, DataBufferPtr );
 }
 
 #if SPI_SUPPORT_CONCURRENT_SYNC_TRANSMIT == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
@@ -80,8 +90,7 @@ Std_ReturnType Spi_WriteIB( Spi_ChannelType Channel, const Spi_DataBufferType *D
  */
 Std_ReturnType Spi_AsyncTransmit( Spi_SequenceType Sequence )
 {
-    (void)Sequence;
-    return E_NOT_OK;
+    return Spi_Arch_AsyncTransmit( &HwUnit_Spi, Sequence );
 }
 #endif
 
@@ -101,9 +110,7 @@ Std_ReturnType Spi_AsyncTransmit( Spi_SequenceType Sequence )
  */
 Std_ReturnType Spi_ReadIB( Spi_ChannelType Channel, const Spi_DataBufferType *DataBufferPtr )
 {
-    (void)Channel;
-    (void)DataBufferPtr;
-    return E_NOT_OK;
+    return Spi_Arch_ReadIB( &HwUnit_Spi, Channel, DataBufferPtr );
 }
 
 /**
@@ -126,11 +133,7 @@ Std_ReturnType Spi_ReadIB( Spi_ChannelType Channel, const Spi_DataBufferType *Da
  */
 Std_ReturnType Spi_SetupEB( Spi_ChannelType Channel, const Spi_DataBufferType *SrcDataBufferPtr, Spi_DataBufferType *DesDataBufferPtr, Spi_NumberOfDataType Length )
 {
-    (void)Channel;
-    (void)SrcDataBufferPtr;
-    (void)DesDataBufferPtr;
-    (void)Length;
-    return E_NOT_OK;
+    return Spi_Arch_SetupEB( &HwUnit_Spi, Channel, SrcDataBufferPtr, DesDataBufferPtr, Length );
 }
 
 /**
@@ -144,7 +147,7 @@ Std_ReturnType Spi_SetupEB( Spi_ChannelType Channel, const Spi_DataBufferType *S
  */
 Spi_StatusType Spi_GetStatus( void )
 {
-    return SPI_UNINIT;
+    return Spi_Arch_GetStatus( &HwUnit_Spi );
 }
 
 /**
@@ -160,8 +163,7 @@ Spi_StatusType Spi_GetStatus( void )
  */
 Spi_JobResultType Spi_GetJobResult( Spi_JobType Job )
 {
-    (void)Job;
-    return SPI_JOB_FAILED;
+    return Spi_Arch_GetJobResult( &HwUnit_Spi, Job );
 }
 
 /**
@@ -177,8 +179,7 @@ Spi_JobResultType Spi_GetJobResult( Spi_JobType Job )
  */
 Spi_SeqResultType Spi_GetSequenceResult( Spi_SequenceType Sequence )
 {
-    (void)Sequence;
-    return SPI_SEQ_FAILED;
+    return Spi_Arch_GetSequenceResult( &HwUnit_Spi, Sequence );
 }
 
 #if SPI_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
@@ -193,7 +194,7 @@ Spi_SeqResultType Spi_GetSequenceResult( Spi_SequenceType Sequence )
  */
 void Spi_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
-    (void)versioninfo;
+    Spi_Arch_GetVersionInfo( &HwUnit_Spi, versioninfo );
 }
 #endif
 
@@ -211,8 +212,7 @@ void Spi_GetVersionInfo( Std_VersionInfoType *versioninfo )
  */
 Std_ReturnType Spi_SyncTransmit( Spi_SequenceType Sequence )
 {
-    (void)Sequence;
-    return E_NOT_OK;
+    return Spi_Arch_SyncTransmit( &HwUnit_Spi, Sequence );
 }
 
 #if SPI_HW_STATUS_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
@@ -230,8 +230,7 @@ Std_ReturnType Spi_SyncTransmit( Spi_SequenceType Sequence )
  */
 Spi_StatusType Spi_GetHWUnitStatus( Spi_HWUnitType HWUnit )
 {
-    (void)HWUnit;
-    return SPI_UNINIT;
+    return Spi_Arch_GetHWUnitStatus( &HwUnit_Spi, HWUnit );
 }
 #endif
 
@@ -247,7 +246,7 @@ Spi_StatusType Spi_GetHWUnitStatus( Spi_HWUnitType HWUnit )
  */
 void Spi_Cancel( Spi_SequenceType Sequence )
 {
-    (void)Sequence;
+    Spi_Arch_Cancel( &HwUnit_Spi, Sequence );
 }
 #endif
 
@@ -265,6 +264,5 @@ void Spi_Cancel( Spi_SequenceType Sequence )
  */
 Std_ReturnType Spi_SetAsyncMode( Spi_AsyncModeType Mode )
 {
-    (void)Mode;
-    return E_NOT_OK;
+    return Spi_Arch_SetAsyncMode( &HwUnit_Spi, Mode );
 }
