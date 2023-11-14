@@ -13,7 +13,7 @@
 #include "Mcu_Arch.h"
 
 /**
- * @brief    **MCU Initialization**
+ * @brief    **MCU Low Level Initialization**
  *
  * Service to initialize the MCU driver
  *
@@ -27,7 +27,7 @@ void Mcu_Arch_Init( Mcu_HwUnit *HwUnit, const Mcu_ConfigType *ConfigPtr )
 }
 
 /**
- * @brief    **MCU RAM Initialization**
+ * @brief    **MCU Low Level RAM Initialization**
  *
  * Service to initialize the RAM section wise
  *
@@ -45,7 +45,7 @@ Std_ReturnType Mcu_Arch_InitRamSection( Mcu_HwUnit *HwUnit, Mcu_RamSectionType R
 }
 
 /**
- * @brief    **MCU Clock Initialization**
+ * @brief    **MCU Low Level Clock Initialization**
  *
  * Service to initialize the PLL and other MCU specific clock options.
  *
@@ -63,7 +63,7 @@ Std_ReturnType Mcu_Arch_InitClock( Mcu_HwUnit *HwUnit, Mcu_ClockType ClockSettin
 }
 
 /**
- * @brief    **PLL to MCU Clock distribution**
+ * @brief    **Low Level PLL to MCU Clock distribution**
  *
  * Service to activate the PLL clock to the MCU clock distribution.
  *
@@ -79,7 +79,7 @@ Std_ReturnType Mcu_Arch_DistributePllClock( Mcu_HwUnit *HwUnit )
 }
 
 /**
- * @brief    **Get PLL lock status**
+ * @brief    **Get PLL Low Level  lock status**
  *
  * Service which provides the lock status of the PLL
  *
@@ -95,7 +95,7 @@ Mcu_PllStatusType Mcu_Arch_GetPllStatus( Mcu_HwUnit *HwUnit )
 }
 
 /**
- * @brief    **Get MCU reset type**
+ * @brief    **Get MCU Low Level reset type**
  *
  * Service which reads the reset type from the hardware, if supported
  *
@@ -111,7 +111,7 @@ Mcu_ResetType Mcu_Arch_GetResetReason( Mcu_HwUnit *HwUnit )
 }
 
 /**
- * @brief    **Get reset raw value**
+ * @brief    **Get reset raw value Low Level**
  *
  * Service which reads the reset type from the hardware register, if supported
  *
@@ -126,7 +126,7 @@ Mcu_RawResetType Mcu_Arch_GetResetRawValue( Mcu_HwUnit *HwUnit )
 }
 
 /**
- * @brief    **Reset the MCU**
+ * @brief    **Reset the MCU Low Level**
  *
  * Service to perform a microcontroller reset
  *
@@ -138,7 +138,7 @@ void Mcu_Arch_PerformReset( Mcu_HwUnit *HwUnit )
 }
 
 /**
- * @brief    **Set MCU power mode**
+ * @brief    **Set MCU Low Level power mode**
  *
  * Service to activate the MCU power modes
  *
@@ -152,7 +152,7 @@ void Mcu_Arch_SetMode( Mcu_HwUnit *HwUnit, Mcu_ModeType McuMode )
 }
 
 /**
- * @brief    **Get version information**
+ * @brief    **Get version information Low Level **
  *
  * Service to return the version information of this module
  *
@@ -166,7 +166,7 @@ void Mcu_Arch_GetVersionInfo( Mcu_HwUnit *HwUnit, Std_VersionInfoType *versionin
 }
 
 /**
- * @brief    **Get status of MCU RAM**
+ * @brief    **Get status of MCU RAM Low Level **
  *
  * Service which provides the actual status of the microcontroller RAM. (if supported)
  *
