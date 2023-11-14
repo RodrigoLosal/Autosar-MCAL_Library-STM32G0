@@ -53,6 +53,10 @@
     - autosar/mcal/Port/Port.c
     - autosar/mcal/Gpt/Gpt.c
     - autosar/mcal/Gpt/Gpt_Arch.c
+<<<<<<< HEAD
+=======
+    - autosar/mcal/Can/Can.c
+>>>>>>> 02dbc59 (Added a gcov exception for the file Gpt_Arch.c)
     - autosar/mcal/Can/Can_Arch.c
     - autosar/mcal/Pwm/Pwm.c
     - autosar/mcal/Pwm/Pwm_Arch.c
