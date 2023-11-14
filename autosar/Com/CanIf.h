@@ -18,19 +18,27 @@
  * @defgroup CANIF_Ids Can Id number for module and each API
  *
  * @{ */
-#define CANIF_ID_INIT                 0x01 /*!< CanIf_Init() */
-#define CANIF_ID_DE_INIT              0x02 /*!< CanIf_DeInit() */
-#define CANIF_ID_SET_CTRL_MODE        0x03 /*!< CanIf_SetControllerMode() */
-#define CANIF_ID_GET_CTRL_MODE        0x04 /*!< CanIf_GetControllerMode() */
-#define CANIF_ID_GET_CTRL_ERR_STATE   0x4b /*!< CanIf_GetControllerErrorState() */
-#define CANIF_ID_TRANSMIT             0x49 /*!< CanIf_Transmit() */
-#define CANIF_ID_READ_RX_PDU_DATA     0x06 /*!< CanIf_ReadRxPduData() */
-#define CANIF_ID_READ_TX_NOTIF_STATUS 0x07 /*!< CanIf_ReadTxNotifStatus() */
-#define CANIF_ID_READ_RX_NOTIF_STATUS 0x08 /*!< CanIf_ReadRxNotifStatus() */
-#define CANIF_ID_SET_PDU_MODE         0x09 /*!< CanIf_SetPduMode() */
-#define CANIF_ID_GET_PDU_MODE         0x0a /*!< CanIf_GetPduMode() */
-#define CANIF_ID_GET_VERSION_INFO     0x0b /*!< CanIf_GetVersionInfo() */
-#define CANIF_ID_SET_DYNAMIC_TX_ID    0x0c /*!< CanIf_SetDynamicTxId() */
+#define CANIF_ID_INIT                  0x01 /*!< CanIf_Init() */
+#define CANIF_ID_DE_INIT               0x02 /*!< CanIf_DeInit() */
+#define CANIF_ID_SET_CTRL_MODE         0x03 /*!< CanIf_SetControllerMode() */
+#define CANIF_ID_GET_CTRL_MODE         0x04 /*!< CanIf_GetControllerMode() */
+#define CANIF_ID_GET_CTRL_ERR_STATE    0x4b /*!< CanIf_GetControllerErrorState() */
+#define CANIF_ID_TRANSMIT              0x49 /*!< CanIf_Transmit() */
+#define CANIF_ID_READ_RX_PDU_DATA      0x06 /*!< CanIf_ReadRxPduData() */
+#define CANIF_ID_READ_TX_NOTIF_STATUS  0x07 /*!< CanIf_ReadTxNotifStatus() */
+#define CANIF_ID_READ_RX_NOTIF_STATUS  0x08 /*!< CanIf_ReadRxNotifStatus() */
+#define CANIF_ID_SET_PDU_MODE          0x09 /*!< CanIf_SetPduMode() */
+#define CANIF_ID_GET_PDU_MODE          0x0a /*!< CanIf_GetPduMode() */
+#define CANIF_ID_GET_VERSION_INFO      0x0b /*!< CanIf_GetVersionInfo() */
+#define CANIF_ID_SET_DYNAMIC_TX_ID     0x0c /*!< CanIf_SetDynamicTxId() */
+#define CANIF_ID_GET_TX_CONFIRM_STATE  0x19 /*!< CanIf_GetTxConfirmationState() */
+#define CANIF_ID_SET_BAUDRATE          0x27 /*!< CanIf_SetBaudrate() */
+#define CANIF_ID_GET_CTRL_RX_ERR_CNT   0x4d /*!< CanIf_GetControllerRxErrorCounter() */
+#define CANIF_ID_GET_ENABLE_BUS_MIRROR 0x4c /*!< CanIf_EnableBusMirroring() */
+#define CANIF_ID_GET_CURRENT_TIME      0x51 /*!< CanIf_GetCurrentTime() */
+#define CANIF_ID_ENABLE_EGRESS_TS      0x52 /*!< CanIf_EnableEgressTimeStamp() */
+#define CANIF_ID_GET_EGRESS_TS         0x53 /*!< CanIf_GetEgressTimeStamp() */
+#define CANIF_ID_GET_INGRESS_TS        0x54 /*!< CanIf_GetIngressTimeStamp() */
 /**
  * @} */
 
@@ -98,6 +106,13 @@ Std_ReturnType CanIf_SetPduMode( uint8 ControllerId, CanIf_PduModeType PduModeRe
 Std_ReturnType CanIf_GetPduMode( uint8 ControllerId, CanIf_PduModeType *PduModePtr );
 void CanIf_GetVersionInfo( Std_VersionInfoType *VersionInfo );
 void CanIf_SetDynamicTxId( PduIdType CanIfTxSduId, Can_IdType CanId );
-
+CanIf_NotifStatusType CanIf_GetTxConfirmationState( uint8 ControllerId );
+Std_ReturnType CanIf_SetBaudrate( uint8 ControllerId, uint16 BaudRateConfigID );
+Std_ReturnType CanIf_GetControllerRxErrorCounter( uint8 ControllerId, uint8 *RxErrorCounterPtr );
+Std_ReturnType CanIf_EnableBusMirroring( uint8 ControllerId, boolean MirroringActive );
+Std_ReturnType CanIf_GetCurrentTime( uint8 Controller, Can_TimeStampType *timeStampPtr );
+void CanIf_EnableEgressTimeStamp( PduIdType TxPduId );
+Std_ReturnType CanIf_GetEgressTimeStamp( PduIdType TxPduId, Can_TimeStampType *timeStampPtr );
+Std_ReturnType CanIf_GetIngressTimeStamp( PduIdType RxPduId, Can_TimeStampType *timeStampPtr );
 
 #endif // CANIF_H__

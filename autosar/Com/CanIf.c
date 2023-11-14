@@ -257,3 +257,164 @@ void CanIf_SetDynamicTxId( PduIdType CanIfTxSduId, Can_IdType CanId )
     (void)CanIfTxSduId;
     (void)CanId;
 }
+
+/**
+ * @brief Gets the CAN controller Tx confirmation state.
+ *
+ * This service reports, if any TX confirmation has been done for the whole CAN controller since the
+ * last CAN controller start.
+ *
+ * @param[in] ControllerId CAN controller for which the status shall be changed.
+ *
+ * @return  Combined TX confirmation status for all TX PDUs of the CAN controller
+ *
+ * @reqs    SWS_CANIF_00734
+ */
+CanIf_NotifStatusType CanIf_GetTxConfirmationState( uint8 ControllerId )
+{
+    (void)ControllerId;
+    return CANIF_NO_NOTIFICATION;
+}
+
+/**
+ * @brief Sets the CAN controller baudrate.
+ *
+ * This service shall set the baud rate configuration of the CAN controller. Depending on necessary
+ * baud rate modifications the controller might have to reset.
+ *
+ * @param[in] ControllerId CAN controller for which the status shall be changed.
+ * @param[in] BaudRateConfigID Baud rate configuration ID
+ *
+ * @return  E_OK: Controller mode request has been accepted
+ *          E_NOT_OK: Controller mode request has not been accepted
+ *
+ * @reqs    SWS_CANIF_00867
+ */
+Std_ReturnType CanIf_SetBaudrate( uint8 ControllerId, uint16 BaudRateConfigID )
+{
+    (void)ControllerId;
+    (void)BaudRateConfigID;
+    return E_NOT_OK;
+}
+
+/**
+ * @brief Gets the CAN controller Rx error counter.
+ *
+ * This service calls the corresponding CAN Driver service for obtaining the Rx error counter of
+ * the CAN controller.
+ *
+ * @param[in] ControllerId CAN controller for which the status shall be changed.
+ * @param[out] RxErrorCounterPtr Pointer to a memory location, where the current Rx error counter
+ *
+ * @return  E_OK: Rx error counter available.
+ *          E_NOT_OK: Wrong ControllerId, or Rx error counter not available.
+ *
+ * @reqs    SWS_CANIF_91003
+ */
+Std_ReturnType CanIf_GetControllerRxErrorCounter( uint8 ControllerId, uint8 *RxErrorCounterPtr )
+{
+    (void)ControllerId;
+    (void)RxErrorCounterPtr;
+    return E_NOT_OK;
+}
+
+/**
+ * @brief Enables/Disables the bus mirroring feature.
+ *
+ * Enables or disables mirroring for a CAN controller.
+ *
+ * @param[in] ControllerId CAN controller for which the status shall be changed.
+ * @param[in] MirroringActive TRUE: Mirror_ReportCanFrame will be called for each
+ *                          frame received or transmitted on the given controller.
+ *                          FALSE: Mirror_ReportCanFrame will not be called for the
+ *                          given controller.
+ *
+ * @return  E_OK: Mirroring mode was changed.
+ *          E_NOT_OK: Wrong ControllerId, or mirroring globally disabled
+ *
+ * @reqs    SWS_CANIF_91005
+ */
+Std_ReturnType CanIf_EnableBusMirroring( uint8 ControllerId, boolean MirroringActive )
+{
+    (void)ControllerId;
+    (void)MirroringActive;
+    return E_NOT_OK;
+}
+
+/**
+ * @brief Gets the current time.
+ *
+ * This service calls the corresponding CAN Driver service to retrieve the current time value out
+ * of the HW registers.
+ *
+ * @param[in] Controller CAN controller for which the status shall be changed.
+ * @param[out] timeStampPtr Pointer to a memory location, where the current time value will be stored.
+ *
+ * @return  E_OK: successful
+ *          E_NOT_OK: failed
+ *
+ * @reqs    SWS_CANIF_91014
+ */
+Std_ReturnType CanIf_GetCurrentTime( uint8 Controller, Can_TimeStampType *timeStampPtr )
+{
+    (void)Controller;
+    (void)timeStampPtr;
+    return E_NOT_OK;
+}
+
+/**
+ * @brief Enables the egress time stamp feature.
+ *
+ * This service calls the corresponding CAN Driver service to activate egress time stamping on a
+ * dedicated message object.
+ *
+ * @param[in] TxPduId L-PDU handle of CAN L-PDU for which the time stamping shall be enabled
+ *
+ * @reqs    SWS_CANIF_91011
+ */
+void CanIf_EnableEgressTimeStamp( PduIdType TxPduId )
+{
+    (void)TxPduId;
+}
+
+/**
+ * @brief Gets the egress time stamp.
+ *
+ * This service calls the corresponding CAN Driver service to read back the egress time stamp on a
+ * dedicated message object. It needs to be called within the TxConfirmation() function.
+ *
+ * @param[in] TxPduId L-PDU handle of CAN L-PDU for which the time stamp shall be returned.
+ * @param[out] timeStampPtr Pointer to a memory location, where the time stamp value will be stored.
+ *
+ * @return  E_OK: successful
+ *         E_NOT_OK: failed
+ *
+ * @reqs    SWS_CANIF_91012
+ */
+Std_ReturnType CanIf_GetEgressTimeStamp( PduIdType TxPduId, Can_TimeStampType *timeStampPtr )
+{
+    (void)TxPduId;
+    (void)timeStampPtr;
+    return E_NOT_OK;
+}
+
+/**
+ * @brief Gets the ingress time stamp.
+ *
+ * This service calls the corresponding CAN Driver service to reads back the ingress time stamp on
+ * a dedicated message object. It needs to be called within the RxIndication() function.
+ *
+ * @param[in] RxPduId ID of the received I-PDU for which the time stamp shall be returned.
+ * @param[out] timeStampPtr Pointer to a memory location, where the time stamp value will be stored.
+ *
+ * @return  E_OK: successful
+ *         E_NOT_OK: failed
+ *
+ * @reqs    SWS_CANIF_91012
+ */
+Std_ReturnType CanIf_GetIngressTimeStamp( PduIdType RxPduId, Can_TimeStampType *timeStampPtr )
+{
+    (void)RxPduId;
+    (void)timeStampPtr;
+    return E_NOT_OK;
+}
