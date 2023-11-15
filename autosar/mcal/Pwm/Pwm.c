@@ -311,7 +311,7 @@ void Pwm_EnableNotification( Pwm_ChannelType ChannelNumber, Pwm_EdgeNotification
  * @retval  E_OK: Power Mode changed
  *          E_NOT_OK: request rejected
  *
- * @reqs    SWS_Pwm_00166
+ * @reqs    SWS_Pwm_00166, SWS_Pwm_00117
  */
 Std_ReturnType Pwm_SetPowerState( Pwm_PowerStateRequestResultType *Result )
 {
@@ -342,7 +342,7 @@ Std_ReturnType Pwm_SetPowerState( Pwm_PowerStateRequestResultType *Result )
  * @retval  E_OK: Mode could be read
  *          E_NOT_OK: Service is rejected
  *
- * @reqs    SWS_Pwm_00177
+ * @reqs    SWS_Pwm_00177, SWS_Pwm_00117
  */
 Std_ReturnType Pwm_GetCurrentPowerState( Pwm_PowerStateType *CurrentPowerState, Pwm_PowerStateRequestResultType *Result )
 {
@@ -373,7 +373,7 @@ Std_ReturnType Pwm_GetCurrentPowerState( Pwm_PowerStateType *CurrentPowerState, 
  * @retval  E_OK: Mode could be read
  *          E_NOT_OK: Service is rejected
  *
- * @reqs    SWS_Pwm_00180
+ * @reqs    SWS_Pwm_00180, SWS_Pwm_00117
  */
 Std_ReturnType Pwm_GetTargetPowerState( Pwm_PowerStateType *TargetPowerState, Pwm_PowerStateRequestResultType *Result )
 {
@@ -409,7 +409,7 @@ Std_ReturnType Pwm_GetTargetPowerState( Pwm_PowerStateType *TargetPowerState, Pw
  * @retval  E_OK: Preparation process started
  *          E_NOT_OK: Service is rejected
  *
- * @reqs    SWS_Pwm_00183
+ * @reqs    SWS_Pwm_00183, SWS_Pwm_00117
  */
 Std_ReturnType Pwm_PreparePowerState( Pwm_PowerStateType PowerState, Pwm_PowerStateRequestResultType *Result )
 {
@@ -435,7 +435,7 @@ Std_ReturnType Pwm_PreparePowerState( Pwm_PowerStateType PowerState, Pwm_PowerSt
  *
  * @param    versioninfo Pointer to where to store the version information of this module.
  *
- * @reqs    SWS_Pwm_00103
+ * @reqs    SWS_Pwm_00103, SWS_Pwm_00117
  */
 void Pwm_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
