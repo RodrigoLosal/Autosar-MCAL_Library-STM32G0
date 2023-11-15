@@ -444,7 +444,7 @@ void Pwm_GetVersionInfo( Std_VersionInfoType *versioninfo )
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
         called function shall raise development error PWM_E_UNINIT.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_SET_POWER_STATE, PWM_E_UNINIT );
+        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_GET_VERSION_INFO, PWM_E_UNINIT );
     }
     else
     {
