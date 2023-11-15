@@ -39,6 +39,9 @@
 #define CANIF_ID_ENABLE_EGRESS_TS      0x52 /*!< CanIf_EnableEgressTimeStamp() */
 #define CANIF_ID_GET_EGRESS_TS         0x53 /*!< CanIf_GetEgressTimeStamp() */
 #define CANIF_ID_GET_INGRESS_TS        0x54 /*!< CanIf_GetIngressTimeStamp() */
+#define CANIF_ID_TX_CONFIRMATION       0x13 /*!< CanIf_TxConfirmation() */
+#define CANIF_ID_RX_INDICATION         0x14 /*!< CanIf_RxIndication() */
+#define CANIF_ID_CTRL_BUS_OFF          0x16 /*!< CanIf_ControllerBusOff() */
 /**
  * @} */
 

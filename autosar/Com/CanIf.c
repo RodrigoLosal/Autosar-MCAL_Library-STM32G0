@@ -418,3 +418,105 @@ Std_ReturnType CanIf_GetIngressTimeStamp( PduIdType RxPduId, Can_TimeStampType *
     (void)timeStampPtr;
     return E_NOT_OK;
 }
+
+/**
+ * @brief Handles the transmit confirmation.
+ * 
+ * This service confirms a previously successfully processed transmission of a CAN TxPDU.
+ * 
+ * @param[in] CanTxPduId ID of the successfully transmitted Tx L-PDU
+ * 
+ * @reqs    SWS_CANIF_00007
+*/
+void CanIf_TxConfirmation( PduIdType CanTxPduId )
+{
+    (void)CanTxPduId;
+}
+
+/**
+ * @brief Handles the received CAN frame.
+ * 
+ * This service indicates a successful reception of a received CAN Rx L-PDU to the CanIf after 
+ * passing all filters and validation checks.
+ * 
+ * @param[in] Mailbox Identifies the HRH and its corresponding CAN Controller
+ * @param[in] PduInfoPtr Pointer to the received L-PDU
+ * 
+ * @reqs    SWS_CANIF_00006
+*/
+void CanIf_RxIndication( const Can_HwType* Mailbox, const PduInfoType* PduInfoPtr )
+{
+    (void)Mailbox;
+    (void)PduInfoPtr;
+}
+
+/**
+ * @brief Handles the bus-off event.
+ * 
+ * This service indicates a Controller BusOff event referring to the corresponding CAN Controller 
+ * with the abstract CanIf ControllerId.
+ * 
+ * @param[in] ControllerId CAN controller for which the status shall be changed.
+ * 
+ * @reqs    SWS_CANIF_00218
+*/
+void CanIf_ControllerBusOff( uint8 ControllerId )
+{
+    (void)ControllerId;
+}
+
+/**
+ * @brief Controller mode indication.
+ * 
+ * This service indicates a controller state transition referring to the corresponding CAN controller
+ * with the abstract CanIf ControllerId.
+ * 
+ * @param[in] ControllerId CAN controller for which the status shall be changed.
+ * @param[in] ControllerMode New controller mode.
+ * 
+ * @reqs    SWS_CANIF_00699
+*/
+void CanIf_ControllerModeIndication( uint8 ControllerId, Can_ControllerStateType ControllerMode )
+{
+    (void)ControllerId;
+    (void)ControllerMode;
+}
+
+/**
+ * @brief Signal the error state of the CAN controller.
+ * 
+ * The function derives the ErrorCounterTreshold from RxErrorCounter/ TxErrorCounter values
+ * and reports it to the IdsM as security event CANIF_SEV_ERRORSTATE_PASSIVE to the IdsM.
+ * It also prepares the context data for the respective security event.
+ * 
+ * @param[in] ControllerId Abstracted CanIf ControllerId which is assigned to a CAN
+ *                          controller.
+ * @param[in] RxErrorCounter Value of the Rx error counter
+ * @param[in] TxErrorCounter Value of the Tx error counter
+ * 
+ * @reqs    SWS_CANIF_91008
+*/
+void CanIf_ControllerErrorStatePassive(  uint8 ControllerId, uint16 RxErrorCounter, uint16 TxErrorCounter )
+{
+    (void)ControllerId;
+    (void)RxErrorCounter;
+    (void)TxErrorCounter;
+}
+
+/**
+ * @brief Signal the error notification of the CAN controller.
+ * 
+ * The function shall derive the bus error source rx or tx from the parameter CanError and report
+ * the bus error as security event CANIF_SEV_TX_ERROR_DETECTED or CANIF_SEV_RX_
+ * ERROR_DETECTED. It also prepares the context data for the respective security event.
+ * 
+ * @param[in] ControllerId CAN controller for which the status shall be changed.
+ * @param[in] CanErrorType Reported CAN error
+ * 
+ * @reqs    SWS_CANIF_91009
+*/
+void CanIf_ErrorNotification( uint8 ControllerId, Can_ErrorType Can_ErrorType )
+{
+    (void)ControllerId;
+    (void)Can_ErrorType;
+}
