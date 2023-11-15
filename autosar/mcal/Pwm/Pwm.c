@@ -45,7 +45,7 @@ static Pwm_HwUnit HwUnit_Pwm =
  *
  * @param    ConfigPtr Pointer to driver configuration
  *
- * @reqs    SWS_Pwm_00095
+ * @reqs    SWS_Pwm_00095, SWS_Pwm_00018, SWS_Pwm_10051, SWS_Pwm_20051
  */
 void Pwm_Init( const Pwm_ConfigType *ConfigPtr )
 {
@@ -71,10 +71,21 @@ void Pwm_Init( const Pwm_ConfigType *ConfigPtr )
  *
  * This function de-initializes the Pwm module.
  *
- * @reqs    SWS_Pwm_00096
+ * @reqs    SWS_Pwm_00096, SWS_Pwm_00117, SWS_Pwm_10051, SWS_Pwm_20051
  */
 void Pwm_DeInit( void )
 {
+    if( HwUnit_Pwm.HwUnitState != PWM_STATE_INITIALIZED )
+    {
+        /*If development error detection for the Pwm module is enabled:
+        if any function (except Pwm_Init) is called before Pwm_Init has been called, the
+        called function shall raise development error PWM_E_UNINIT.*/
+        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_DE_INIT, PWM_E_UNINIT );
+    }
+    else
+    {
+        Pwm_Arch_DeInit( &HwUnit_Pwm );
+    }
 }
 /**
  * @brief    **Pwm Set Duty Cycle**
@@ -84,7 +95,7 @@ void Pwm_DeInit( void )
  * @param    ChannelNumber Numeric identifier of the PWM
  * @param     DutyCycle Min=0x0000 Max=0x8000
  *
- * @reqs    SWS_Pwm_91000
+ * @reqs    SWS_Pwm_91000, SWS_Pwm_00117, SWS_Pwm_00047, SWS_Pwm_10051, SWS_Pwm_20051
  */
 void Pwm_SetDutyCycle( Pwm_ChannelType ChannelNumber, uint16 DutyCycle )
 {
@@ -118,7 +129,7 @@ void Pwm_SetDutyCycle( Pwm_ChannelType ChannelNumber, uint16 DutyCycle )
  * @param    Period Period of the PWM signal
  * @param     DutyCycle Min=0x0000 Max=0x8000
  *
- * @reqs    SWS_Pwm_91001
+ * @reqs    SWS_Pwm_91001, SWS_Pwm_00117, SWS_Pwm_00045, SWS_Pwm_00047, SWS_Pwm_10051, SWS_Pwm_20051
  */
 void Pwm_SetPeriodAndDuty( Pwm_ChannelType ChannelNumber, Pwm_PeriodType Period, uint16 DutyCycle )
 {
@@ -158,7 +169,7 @@ void Pwm_SetPeriodAndDuty( Pwm_ChannelType ChannelNumber, Pwm_PeriodType Period,
  *
  * @param    ChannelNumber Numeric identifier of the PWM
  *
- * @reqs    SWS_Pwm_91002
+ * @reqs    SWS_Pwm_91002, SWS_Pwm_00117 SWS_Pwm_00047, SWS_Pwm_10051, SWS_Pwm_20051
  */
 void Pwm_SetOutputToIdle( Pwm_ChannelType ChannelNumber )
 {
@@ -175,7 +186,7 @@ void Pwm_SetOutputToIdle( Pwm_ChannelType ChannelNumber )
         the PWM functions shall check the parameter ChannelNumber and raise
         development error PWM_E_PARAM_CHANNEL if the parameter ChannelNumber is
         invalid.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_SET_PERIOD_AND_DUTY, PWM_E_PARAM_CHANNEL );
+        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_SET_OUTPUT_TO_IDLE, PWM_E_PARAM_CHANNEL );
     }
     else
     {
@@ -193,7 +204,7 @@ void Pwm_SetOutputToIdle( Pwm_ChannelType ChannelNumber )
  * @retval  PWM_HIGH: The PWM output state is high
  *          PWM_LOW: The PWM output state is low
  *
- * @reqs    SWS_Pwm_00100
+ * @reqs    SWS_Pwm_00100, SWS_Pwm_00117 SWS_Pwm_00047, SWS_Pwm_10051, SWS_Pwm_20051
  */
 Pwm_OutputStateType Pwm_GetOutputState( Pwm_ChannelType ChannelNumber )
 {
@@ -227,7 +238,7 @@ Pwm_OutputStateType Pwm_GetOutputState( Pwm_ChannelType ChannelNumber )
  *
  * @param    ChannelNumber Numeric identifier of the PWM
  *
- * @reqs    SWS_Pwm_91003
+ * @reqs    SWS_Pwm_91003, SWS_Pwm_00117 SWS_Pwm_00047, SWS_Pwm_10051, SWS_Pwm_20051
  */
 void Pwm_DisableNotification( Pwm_ChannelType ChannelNumber )
 {
@@ -260,7 +271,7 @@ void Pwm_DisableNotification( Pwm_ChannelType ChannelNumber )
  * @param    ChannelNumber Numeric identifier of the PWM
  * @param    Notification Type of notification PWM_RISING_EDGE or PWM_FALLING_EDGE or PWM_BOTH_EDGES.
  *
- * @reqs    SWS_Pwm_91004
+ * @reqs    SWS_Pwm_91004, SWS_Pwm_00117 SWS_Pwm_00047, SWS_Pwm_10051, SWS_Pwm_20051
  */
 void Pwm_EnableNotification( Pwm_ChannelType ChannelNumber, Pwm_EdgeNotificationType Notification )
 {
