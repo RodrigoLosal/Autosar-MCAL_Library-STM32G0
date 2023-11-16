@@ -11,8 +11,14 @@
 #include "Pwm.h"
 #include "Pwm_Arch.h"
 
+/**
+ * @defgroup These definitions set the minimum and maximum channel numbers for PWM operations.
+ *
+ * @{ */
 #define PWM_CHANNEL_MIN 1
 #define PWM_CHANNEL_MAX 2
+/**
+ * @} */
 
 /* cppcheck-suppress misra-c2012-20.9 ; this is declared at Pwm_Cfg.h */
 #if PWM_DEV_ERROR_DETECT == STD_OFF
