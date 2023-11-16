@@ -15,8 +15,8 @@
  * @defgroup These definitions set the minimum and maximum channel numbers for PWM operations.
  *
  * @{ */
-#define PWM_CHANNEL_MIN 1
-#define PWM_CHANNEL_MAX 2
+#define PWM_CHANNEL_MIN 1 /*!< Minimum valid PWM channel number.  */
+#define PWM_CHANNEL_MAX 2 /*!< Maximum valid PWM channel number.  */
 /**
  * @} */
 
