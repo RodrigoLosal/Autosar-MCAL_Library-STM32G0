@@ -42,6 +42,17 @@ typedef struct _Det_ConfigType
     uint32 dummy; /*!< dummy element for the moment */
 } Det_ConfigType;
 
+/**
+ * @brief **Structure for Reporting error**
+ */
+typedef struct
+{
+    const char *Module;   /**< Report Error for ModuleId*/
+    const char *Instance; /**< Report Error for InstanceId*/
+    const char *Api;      /**< Report Error for ApiId*/
+    const char *Error;    /**< Report Error for ErrorId*/
+} DetError;
+
 #include "Det_Cfg.h" /* cppcheck-suppress misra-c2012-20.1 ; Include should be add it after a ConfigType */
 
 void Det_Init( const Det_ConfigType *ConfigPtr );

@@ -8,6 +8,9 @@
  */
 #include "Std_Types.h"
 #include "Det.h"
+#include <stdio.h> /* cppcheck-suppress misra-c2012-21.6 ; Necessary for using semihosting  */
+
+extern void initialise_monitor_handles( void );
 
 /**
  * @brief    **Det Initialization**
@@ -45,10 +48,22 @@ void Det_Init( const Det_ConfigType *ConfigPtr )
  */
 Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, uint8 ErrorId )
 {
-    (void)ModuleId;
-    (void)InstanceId;
-    (void)ApiId;
-    (void)ErrorId;
+    initialise_monitor_handles( );
+
+    static const char *ModuleName[]   = { "PWM_MODULE_ID" };
+    static const char *InstanceName[] = { "Pwm_DisableNotification" };
+    static const char *ApiName[]      = { "PWM_E_UNINIT" };
+    static const char *ErrorName[]    = { "Pwm_E_Uinit" };
+
+    DetError ReportError;
+
+    ReportError.Module   = ModuleName[ ModuleId ];
+    ReportError.Instance = InstanceName[ InstanceId ];
+    ReportError.Api      = ApiName[ ApiId ];
+    ReportError.Error    = ErrorName[ ErrorId ];
+
+    (void)printf( "ERROR: In %s in function %s Driver not initialized detected in %s. Error code: %s\n\r", ReportError.Module,
+                   ReportError.Instance, ReportError.Api, ReportError.Error );
 
     return E_OK;
 }

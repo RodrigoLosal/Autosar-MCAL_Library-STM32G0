@@ -50,8 +50,8 @@ CFLAGS += -MMD -MP
 
 #---Linker options
 LFLAGS  = $(CPU)
-#LFLAGS += -Wl,--gc-sections
-LFLAGS += -nostdlib
+LFLAGS += -Wl,--gc-sections
+LFLAGS += --specs=rdimon.specs 			# link with semihosting 
 LFLAGS += -Wl,-Map=Build/$(TARGET).map	# Generate map file
 
 #Linter ccpcheck flags
