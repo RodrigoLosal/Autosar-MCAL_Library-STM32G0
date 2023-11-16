@@ -11,6 +11,9 @@
 #include "Pwm.h"
 #include "Pwm_Arch.h"
 
+#define PWM_CHANNEL_MIN 1
+#define PWM_CHANNEL_MAX 2
+
 /* cppcheck-suppress misra-c2012-20.9 ; this is declared at Pwm_Cfg.h */
 #if PWM_DEV_ERROR_DETECT == STD_OFF
 /**
@@ -34,7 +37,7 @@ static Pwm_HwUnit HwUnit_Pwm =
     .Config = NULL_PTR,
     .Pwm_ModuleState = PWM_STATE_UNINITIALIZED,
     .Pwm_ChannelClass =PWM_VARIABLE_PERIOD,
-    .Pwm_channelNumber =2
+    .Pwm_channelNumber = PWM_CHANNEL_MAX
 };
 /* clang-format on */
 
@@ -55,7 +58,7 @@ void Pwm_Init( const Pwm_ConfigType *ConfigPtr )
         calling the routine Pwm_Init while the PWM driver and hardware
         are already initialized will cause a development error PWM_E_ALREADY_INITIALIZED.
         The desired functionality shall be left without any action. */
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_INIT, PWM_E_ALREADY_INITIALIZED );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_INIT, PWM_E_ALREADY_INITIALIZED );
     }
     else
     {
@@ -80,7 +83,7 @@ void Pwm_DeInit( void )
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
         called function shall raise development error PWM_E_UNINIT.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_DE_INIT, PWM_E_UNINIT );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_DE_INIT, PWM_E_UNINIT );
     }
     else
     {
@@ -104,15 +107,15 @@ void Pwm_SetDutyCycle( Pwm_ChannelType ChannelNumber, uint16 DutyCycle )
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
         called function shall raise development error PWM_E_UNINIT.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_SET_DUTY_CYCLE, PWM_E_UNINIT );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_SET_DUTY_CYCLE, PWM_E_UNINIT );
     }
-    else if( ( ChannelNumber > HwUnit_Pwm.Pwm_channelNumber ) || ( ChannelNumber < 0 ) )
+    else if( ( ChannelNumber > HwUnit_Pwm.Pwm_channelNumber ) || ( ChannelNumber < PWM_CHANNEL_MIN ) )
     {
         /*If development error detection for the Pwm module is enabled:
         the PWM functions shall check the parameter ChannelNumber and raise
         development error PWM_E_PARAM_CHANNEL if the parameter ChannelNumber is
         invalid.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_SET_DUTY_CYCLE, PWM_E_PARAM_CHANNEL );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_SET_DUTY_CYCLE, PWM_E_PARAM_CHANNEL );
     }
     else
     {
@@ -138,7 +141,7 @@ void Pwm_SetPeriodAndDuty( Pwm_ChannelType ChannelNumber, Pwm_PeriodType Period,
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
         called function shall raise development error PWM_E_UNINIT.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_SET_PERIOD_AND_DUTY, PWM_E_UNINIT );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_SET_PERIOD_AND_DUTY, PWM_E_UNINIT );
     }
     else if( HwUnit_Pwm.Pwm_ChannelClass != PWM_VARIABLE_PERIOD )
     {
@@ -146,15 +149,15 @@ void Pwm_SetPeriodAndDuty( Pwm_ChannelType ChannelNumber, Pwm_PeriodType Period,
         enabled: The API Pwm_SetPeriodAndDuty() shall check if the given PWM
         channel is of the channel class type PWM_VARIABLE_PERIOD. If this is not the case
         the development error PWM_E_PERIOD_UNCHANGEABLE shall be called.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_SET_PERIOD_AND_DUTY, PWM_E_PERIOD_UNCHANGEABLE );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_SET_PERIOD_AND_DUTY, PWM_E_PERIOD_UNCHANGEABLE );
     }
-    else if( ( ChannelNumber > HwUnit_Pwm.Pwm_channelNumber ) || ( ChannelNumber < 0 ) )
+    else if( ( ChannelNumber > HwUnit_Pwm.Pwm_channelNumber ) || ( ChannelNumber < PWM_CHANNEL_MIN ) )
     {
         /*If development error detection for the Pwm module is enabled:
         the PWM functions shall check the parameter ChannelNumber and raise
         development error PWM_E_PARAM_CHANNEL if the parameter ChannelNumber is
         invalid.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_SET_PERIOD_AND_DUTY, PWM_E_PARAM_CHANNEL );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_SET_PERIOD_AND_DUTY, PWM_E_PARAM_CHANNEL );
     }
     else
     {
@@ -178,15 +181,15 @@ void Pwm_SetOutputToIdle( Pwm_ChannelType ChannelNumber )
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
         called function shall raise development error PWM_E_UNINIT.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_SET_OUTPUT_TO_IDLE, PWM_E_UNINIT );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_SET_OUTPUT_TO_IDLE, PWM_E_UNINIT );
     }
-    else if( ( ChannelNumber > HwUnit_Pwm.Pwm_channelNumber ) || ( ChannelNumber < 0 ) )
+    else if( ( ChannelNumber > HwUnit_Pwm.Pwm_channelNumber ) || ( ChannelNumber < PWM_CHANNEL_MIN ) )
     {
         /*If development error detection for the Pwm module is enabled:
         the PWM functions shall check the parameter ChannelNumber and raise
         development error PWM_E_PARAM_CHANNEL if the parameter ChannelNumber is
         invalid.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_SET_OUTPUT_TO_IDLE, PWM_E_PARAM_CHANNEL );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_SET_OUTPUT_TO_IDLE, PWM_E_PARAM_CHANNEL );
     }
     else
     {
@@ -214,15 +217,15 @@ Pwm_OutputStateType Pwm_GetOutputState( Pwm_ChannelType ChannelNumber )
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
         called function shall raise development error PWM_E_UNINIT.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_GET_OUTPUT_STATE, PWM_E_UNINIT );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_GET_OUTPUT_STATE, PWM_E_UNINIT );
     }
-    else if( ( ChannelNumber > HwUnit_Pwm.Pwm_channelNumber ) || ( ChannelNumber < 0 ) )
+    else if( ( ChannelNumber > HwUnit_Pwm.Pwm_channelNumber ) || ( ChannelNumber < PWM_CHANNEL_MIN ) )
     {
         /*If development error detection for the Pwm module is enabled:
         the PWM functions shall check the parameter ChannelNumber and raise
         development error PWM_E_PARAM_CHANNEL if the parameter ChannelNumber is
         invalid.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_GET_OUTPUT_STATE, PWM_E_PARAM_CHANNEL );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_GET_OUTPUT_STATE, PWM_E_PARAM_CHANNEL );
     }
     else
     {
@@ -247,15 +250,15 @@ void Pwm_DisableNotification( Pwm_ChannelType ChannelNumber )
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
         called function shall raise development error PWM_E_UNINIT.*/
-        Det_ReportError( PWM_MODULE_ID, 0, Pwm_DisableNotification, PWM_E_UNINIT );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, Pwm_DisableNotification, PWM_E_UNINIT );
     }
-    else if( ( ChannelNumber > HwUnit_Pwm.Pwm_channelNumber ) || ( ChannelNumber < 0 ) )
+    else if( ( ChannelNumber > HwUnit_Pwm.Pwm_channelNumber ) || ( ChannelNumber < PWM_CHANNEL_MIN ) )
     {
         /*If development error detection for the Pwm module is enabled:
         the PWM functions shall check the parameter ChannelNumber and raise
         development error PWM_E_PARAM_CHANNEL if the parameter ChannelNumber is
         invalid.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_DISABLE_NOTIFICATION, PWM_E_PARAM_CHANNEL );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_DISABLE_NOTIFICATION, PWM_E_PARAM_CHANNEL );
     }
     else
     {
@@ -280,15 +283,15 @@ void Pwm_EnableNotification( Pwm_ChannelType ChannelNumber, Pwm_EdgeNotification
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
         called function shall raise development error PWM_E_UNINIT.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_ENABLE_NOTIFICATION, PWM_E_UNINIT );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_ENABLE_NOTIFICATION, PWM_E_UNINIT );
     }
-    else if( ( ChannelNumber > HwUnit_Pwm.Pwm_channelNumber ) || ( ChannelNumber < 0 ) )
+    else if( ( ChannelNumber > HwUnit_Pwm.Pwm_channelNumber ) || ( ChannelNumber < PWM_CHANNEL_MIN ) )
     {
         /*If development error detection for the Pwm module is enabled:
         the PWM functions shall check the parameter ChannelNumber and raise
         development error PWM_E_PARAM_CHANNEL if the parameter ChannelNumber is
         invalid.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_ENABLE_NOTIFICATION, PWM_E_PARAM_CHANNEL );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_ENABLE_NOTIFICATION, PWM_E_PARAM_CHANNEL );
     }
     else
     {
@@ -321,7 +324,7 @@ Std_ReturnType Pwm_SetPowerState( Pwm_PowerStateRequestResultType *Result )
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
         called function shall raise development error PWM_E_UNINIT.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_SET_POWER_STATE, PWM_E_UNINIT );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_SET_POWER_STATE, PWM_E_UNINIT );
     }
     else
     {
@@ -352,7 +355,7 @@ Std_ReturnType Pwm_GetCurrentPowerState( Pwm_PowerStateType *CurrentPowerState, 
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
         called function shall raise development error PWM_E_UNINIT.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_GET_CURRENT_POWER_STATE, PWM_E_UNINIT );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_GET_CURRENT_POWER_STATE, PWM_E_UNINIT );
     }
     else
     {
@@ -383,7 +386,7 @@ Std_ReturnType Pwm_GetTargetPowerState( Pwm_PowerStateType *TargetPowerState, Pw
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
         called function shall raise development error PWM_E_UNINIT.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_GET_TARGET_POWER_STATE, PWM_E_UNINIT );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_GET_TARGET_POWER_STATE, PWM_E_UNINIT );
     }
     else
     {
@@ -419,7 +422,7 @@ Std_ReturnType Pwm_PreparePowerState( Pwm_PowerStateType PowerState, Pwm_PowerSt
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
         called function shall raise development error PWM_E_UNINIT.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_PREPARE_POWER_STATE, PWM_E_UNINIT );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_PREPARE_POWER_STATE, PWM_E_UNINIT );
     }
     else
     {
@@ -444,7 +447,7 @@ void Pwm_GetVersionInfo( Std_VersionInfoType *versioninfo )
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
         called function shall raise development error PWM_E_UNINIT.*/
-        Det_ReportError( PWM_MODULE_ID, 0, PWM_ID_GET_VERSION_INFO, PWM_E_UNINIT );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_GET_VERSION_INFO, PWM_E_UNINIT );
     }
     else
     {
