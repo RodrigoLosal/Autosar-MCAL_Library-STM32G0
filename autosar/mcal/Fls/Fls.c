@@ -35,7 +35,8 @@ void Fls_Init( const Fls_ConfigType *ConfigPtr )
  *
  * Erases flash sector(s).
  *
- * @param   TargetAddress Target address in flash memory. This address offset will be added to the flash memory base address. Min.: 0 Max.: FLS_SIZE - 1.
+ * @param   TargetAddress Target address in flash memory. This address offset will be added to the 
+ *                        flash memory base address. Min.: 0 Max.: FLS_SIZE - 1.
  * @param   Length Number of bytes to erase Min.: 1 Max.: FLS_SIZE - Target Address.
  *
  * @retval  Std_ReturnType E_OK: erase command has been accepted E_NOT_OK: erase command has not been accepted.
@@ -54,7 +55,8 @@ Std_ReturnType Fls_Erase( Fls_AddressType TargetAddress, Fls_LengthType Length )
  *
  * Writes one or more complete flash pages.
  *
- * @param   TargetAddress Target address in flash memory. This address offset will be added to the flash memory base address. Min.: 0 Max.: FLS_SIZE - 1.
+ * @param   TargetAddress Target address in flash memory. This address offset will be added to the 
+ *                        flash memory base address. Min.: 0 Max.: FLS_SIZE - 1.
  * @param   SourceAddressPtr Pointer to source data buffer.
  * @param   Length Number of bytes to write Min.: 1 Max.: FLS_SIZE - TargetAddress.
  *
