@@ -12,3 +12,4 @@ misra-c2012-2.5:autosar/mcal/Fls/Fls.h
 misra-c2012-2.5:autosar/mcal/Spi/Spi.h
 misra-c2012-2.5:autosar/Sys/Det.h
 misra-c2012-2.5:autosar/mcal/Mcu/Mcu.h
+misra-c2012-2.5:autosar/mcal/Fls/MemIf.h

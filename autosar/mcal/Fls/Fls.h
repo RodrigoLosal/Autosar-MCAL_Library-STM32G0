@@ -16,6 +16,7 @@
 #define FLASH_H__
 
 #include "Fls_Cfg.h"
+#include "MemIf.h"
 
 /**
   * @defgroup Fls_Ids Flash Id number for module and each API.

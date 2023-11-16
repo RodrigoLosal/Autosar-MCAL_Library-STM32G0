@@ -92,6 +92,7 @@ void Fls_Cancel( void )
  */
 MemIf_StatusType Fls_GetStatus( void )
 {
+    return 0x01; /*!< dummy element for the moment */
 }
 
 /**
@@ -105,6 +106,7 @@ MemIf_StatusType Fls_GetStatus( void )
  */
 MemIf_JobResultType Fls_GetJobResult( void )
 {
+    return 0x01; /*!< dummy element for the moment */
 }
 
 /**
