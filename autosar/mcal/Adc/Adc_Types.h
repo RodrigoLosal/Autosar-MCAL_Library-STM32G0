@@ -83,10 +83,14 @@ typedef uint8 Adc_ResolutionType;
  */
 typedef enum
 {
-    ADC_IDLE = 0,        /*!< The conversion of the specified group has not been started. No result is available.*/
-    ADC_BUSY,            /*!< The conversion of the specified group has been started and is still going on. So far no result is available.*/
-    ADC_COMPLETED,       /*!< A conversion round (which is not the final one) of the specified group has been finished. A result is available for all channels of the group.*/
-    ADC_STREAM_COMPLETED /*!< The result buffer is completely filled. For each channel of the selected group the number of samples to be acquired is available*/
+    ADC_IDLE = 0,        /*!< The conversion of the specified group has not been started. No result
+                            is available.*/
+    ADC_BUSY,            /*!< The conversion of the specified group has been started and is still
+                            going on. So far no result is available.*/
+    ADC_COMPLETED,       /*!< A conversion round (which is not the final one) of the specified 
+                            group has been finished. A result is available for all channels of the group.*/
+    ADC_STREAM_COMPLETED /*!< The result buffer is completely filled. For each channel of the
+                            selected group the number of samples to be acquired is available*/
 } Adc_StatusType;
 
 /**
@@ -107,8 +111,17 @@ typedef enum
  */
 typedef enum
 {
-    ADC_CONV_MODE_ONESHOT = 0, /*!< Exactly one conversion of each channel in an ADC channel group is performed after the configured trigger event. In case of ’group trigger source software’, a started One-Shot conversion can be stopped by a software API call. In case of ’group trigger source hardware’, a started One-Shot conversion can be stopped by disabling the trigger event (if supported by hardware).*/
-    ADC_CONV_MODE_CONTINUOUS   /*!< Repeated conversions of each ADC channel in an ADC channel group are performed. ’Continuous conversion mode’ is only available for ’group trigger source software’. A started ’Continuous conversion’ can be stopped by a software API call.*/
+    ADC_CONV_MODE_ONESHOT = 0, /*!< Exactly one conversion of each channel in an ADC channel group
+                                    is performed after the configured trigger event. In case of
+                                    ’group trigger source software’, a started One-Shot conversion
+                                    can be stopped by a software API call. In case of ’group 
+                                    trigger source hardware’, a started One-Shot conversion can be
+                                    stopped by disabling the trigger event (if supported by 
+                                    hardware).*/
+    ADC_CONV_MODE_CONTINUOUS   /*!< Repeated conversions of each ADC channel in an ADC channel
+                                    group are performed. ’Continuous conversion mode’ is only
+                                    available for ’group trigger source software’. A started
+                                    ’Continuous conversion’ can be stopped by a software API call.*/
 } Adc_GroupConvModeType;
 
 /**
@@ -140,8 +153,11 @@ typedef uint8 Adc_StreamNumSampleType;
  */
 typedef enum
 {
-    ADC_STREAM_BUFFER_LINEAR = 0, /*!< The ADC Driver stops the conversion as soon as the stream buffer is full (number of samples reached).*/
-    ADC_STREAM_BUFFER_CIRCULAR    /*!< The ADC Driver continues the conversion even if the stream buffer is full (number of samples reached) by wrapping around the stream buffer itself.*/
+    ADC_STREAM_BUFFER_LINEAR = 0, /*!< The ADC Driver stops the conversion as soon as the stream 
+                                    buffer is full (number of samples reached).*/
+    ADC_STREAM_BUFFER_CIRCULAR    /*!< The ADC Driver continues the conversion even if the stream
+                                    buffer is full (number of samples reached) by wrapping around
+                                    the stream buffer itself.*/
 } Adc_StreamBufferModeType;
 
 /**
@@ -163,9 +179,12 @@ typedef enum
  */
 typedef enum
 {
-    ADC_HW_TRIG_RISING_EDGE = 0, /*!< React on the rising edge of the hardware trigger signal (only if supported by the ADC hardware).*/
-    ADC_HW_TRIG_FALLING_EDGE,    /*!< React on the falling edge of the hardware trigger signal (only if supported by the ADC hardware).*/
-    ADC_HW_TRIG_BOTH_EDGES       /*!< React on both edges of the hardware trigger signal (only if supported by the ADC hardware).*/
+    ADC_HW_TRIG_RISING_EDGE = 0, /*!< React on the rising edge of the hardware trigger signal (only
+                                    if supported by the ADC hardware).*/
+    ADC_HW_TRIG_FALLING_EDGE,    /*!< React on the falling edge of the hardware trigger signal
+                                    (only if supported by the ADC hardware).*/
+    ADC_HW_TRIG_BOTH_EDGES       /*!< React on both edges of the hardware trigger signal (only if
+                                    supported by the ADC hardware).*/
 } Adc_HwTriggerSignalType;
 
 /**
@@ -196,8 +215,21 @@ typedef enum
  */
 typedef enum
 {
-    ADC_GROUP_REPL_ABORT_RESTART = 0, /*!< Abort/Restart mechanism is used on group level, if a group is interrupted by a higher priority group. The complete conversion round of the interrupted group (all group channels)is restarted after the higher priority group conversion is finished. If the group is configured in streaming access mode, only the results of the interrupted conversion round are discarded. Results of previous conversion rounds which are already written to the result buffer are not affected.*/
-    ADC_GROUP_REPL_SUSPEND_RESUME     /*!< Suspend/Resume mechanism is used on group level, if a group is interrupted by a higher priority group. The conversion round of the interrupted group is completed after the higher priority group conversion is finished. Results of previous conversion rounds which are already written to the result buffer are not affected.*/
+    ADC_GROUP_REPL_ABORT_RESTART = 0, /*!< Abort/Restart mechanism is used on group level, if a
+                                        group is interrupted by a higher priority group. The
+                                        complete conversion round of the interrupted group (all
+                                        group channels)is restarted after the higher priority group
+                                        conversion is finished. If the group is configured in 
+                                        streaming access mode, only the results of the interrupted
+                                        conversion round are discarded. Results of previous
+                                        conversion rounds which are already written to the result
+                                        buffer are not affected.*/
+    ADC_GROUP_REPL_SUSPEND_RESUME     /*!< Suspend/Resume mechanism is used on group level, if a
+                                        group is interrupted by a higher priority group. The 
+                                        conversion round of the interrupted group is completed
+                                        after the higher priority group conversion is finished. 
+                                        Results of previous conversion rounds which are already
+                                        written to the result buffer are not affected.*/
 } Adc_GroupReplacementType;
 
 /**
@@ -209,11 +241,13 @@ typedef enum
 typedef enum
 {
     ADC_RANGE_UNDER_LOW = 0, /*!< Range below low limit - low limit value included*/
-    ADC_RANGE_BETWEEN,       /*!< Range between low limit and high limit - high limit value included*/
+    ADC_RANGE_BETWEEN,       /*!< Range between low limit and high limit - high limit value
+                                included*/
     ADC_RANGE_OVER_HIGH,     /*!< Range above high limit*/
     ADC_RANGE_ALWAYS,        /*!< Complete range - independent from channel limit settings*/
     ADC_RANGE_NOT_UNDER_LOW, /*!< Range above low limit*/
-    ADC_RANGE_NOT_BETWEEN,   /*!< Range above high limit or below low limit - low limit value included*/
+    ADC_RANGE_NOT_BETWEEN,   /*!< Range above high limit or below low limit - low limit value
+                                included*/
     ADC_RANGE_NOT_OVER_HIGH  /*!< Range below high limit - high limit value included*/
 } Adc_ChannelRangeSelectType;
 
@@ -249,9 +283,12 @@ typedef enum
     ADC_SERVICE_ACCEPTED = 0, /*!< Power state change executed.*/
     ADC_NOT_INIT,             /*!< ADC Module not initialized.*/
     ADC_SEQUENCE_ERROR,       /*!< Wrong API call sequence.*/
-    ADC_HW_FAILURE,           /*!< The HW module has a failure which prevents it to enter the required power state.*/
+    ADC_HW_FAILURE,           /*!< The HW module has a failure which prevents it to enter the
+                                required power state.*/
     ADC_POWER_STATE_NOT_SUPP, /*!< ADC Module does not support the requested power state.*/
-    ADC_TRANS_NOT_POSSIBLE    /*!< ADC Module cannot transition directly from the current power state to the requested power state or the HW peripheral is still busy.*/
+    ADC_TRANS_NOT_POSSIBLE    /*!< ADC Module cannot transition directly from the current power
+                                state to the requested power state or the HW peripheral is still
+                                busy.*/
 } Adc_PowerStateRequestResultType;
 
 #endif /* ADC_TYPES_H__ */
