@@ -22,6 +22,7 @@
  */
 void Adc_Init( const Adc_ConfigType *ConfigPtr )
 {
+    (void)ConfigPtr;
 }
 
 /**
@@ -43,6 +44,8 @@ void Adc_Init( const Adc_ConfigType *ConfigPtr )
  */
 Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr )
 {
+    (void)Group;
+    (void)DataBufferPtr;
     return E_OK;
 }
 
@@ -68,6 +71,7 @@ void Adc_DeInit( void )
  */
 void Adc_StartGroupConversion( Adc_GroupType Group )
 {
+    (void)Group;
 }
 
 /**
@@ -81,6 +85,7 @@ void Adc_StartGroupConversion( Adc_GroupType Group )
  */
 void Adc_StopGroupConversion( Adc_GroupType Group )
 {
+    (void)Group;
 }
 
 /**
@@ -102,6 +107,8 @@ void Adc_StopGroupConversion( Adc_GroupType Group )
  */
 Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr )
 {
+    (void)Group;
+    (void)DataBufferPtr;
     return E_OK;
 }
 
@@ -116,6 +123,7 @@ Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBuffe
  */
 void Adc_EnableHardwareTrigger( Adc_GroupType Group )
 {
+    (void)Group;
 }
 
 /**
@@ -129,6 +137,7 @@ void Adc_EnableHardwareTrigger( Adc_GroupType Group )
  */
 void Adc_DisableHardwareTrigger( Adc_GroupType Group )
 {
+    (void)Group;
 }
 
 /**
@@ -142,6 +151,7 @@ void Adc_DisableHardwareTrigger( Adc_GroupType Group )
  */
 void Adc_EnableGroupNotification( Adc_GroupType Group )
 {
+    (void)Group;
 }
 
 /**
@@ -155,6 +165,7 @@ void Adc_EnableGroupNotification( Adc_GroupType Group )
  */
 void Adc_DisableGroupNotification( Adc_GroupType Group )
 {
+    (void)Group;
 }
 
 /**
@@ -170,6 +181,7 @@ void Adc_DisableGroupNotification( Adc_GroupType Group )
  */
 Adc_StatusType Adc_GetGroupStatus( Adc_GroupType Group )
 {
+    (void)Group;
     return ADC_IDLE;
 }
 
@@ -191,6 +203,8 @@ Adc_StatusType Adc_GetGroupStatus( Adc_GroupType Group )
  */
 Adc_StreamNumSampleType Adc_GetStreamLastPointer( Adc_GroupType Group, Adc_ValueGroupType **PtrToSamplePtr )
 {
+    (void)Group;
+    (void)PtrToSamplePtr;
     return 1u;
 }
 
@@ -205,6 +219,7 @@ Adc_StreamNumSampleType Adc_GetStreamLastPointer( Adc_GroupType Group, Adc_Value
  */
 void Adc_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
+    (void)versioninfo;
 }
 
 /**
@@ -225,6 +240,7 @@ void Adc_GetVersionInfo( Std_VersionInfoType *versioninfo )
  */
 Std_ReturnType Adc_SetPowerState( Adc_PowerStateRequestResultType *Result )
 {
+    (void)Result;
     return E_OK;
 }
 
@@ -245,6 +261,8 @@ Std_ReturnType Adc_SetPowerState( Adc_PowerStateRequestResultType *Result )
  */
 Std_ReturnType Adc_GetCurrentPowerState( Adc_PowerStateType *CurrentPowerState, Adc_PowerStateRequestResultType *Result )
 {
+    (void)CurrentPowerState;
+    (void)Result;
     return E_OK;
 }
 
@@ -265,6 +283,8 @@ Std_ReturnType Adc_GetCurrentPowerState( Adc_PowerStateType *CurrentPowerState, 
  */
 Std_ReturnType Adc_GetTargetPowerState( Adc_PowerStateType *TargetPowerState, Adc_PowerStateRequestResultType *Result )
 {
+    (void)TargetPowerState;
+    (void)Result;
     return E_OK;
 }
 
@@ -289,5 +309,7 @@ Std_ReturnType Adc_GetTargetPowerState( Adc_PowerStateType *TargetPowerState, Ad
  */
 Std_ReturnType Adc_PreparePowerState( Adc_PowerStateType PowerState, Adc_PowerStateRequestResultType *Result )
 {
+    (void)PowerState;
+    (void)Result;
     return E_OK;
 }

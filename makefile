@@ -4,13 +4,13 @@ TARGET = mcal
 #---Files to compile
 SRCS = main.c startup.c Nvic.c Port.c Port_Cfg.c Crc.c Dio.c Gpt.c Gpt_Cfg.c
 SRCS += Can.c Can_Lcfg.c Can_Arch.c Pwm.c Pwm_Lcfg.c Pwm_Arch.c Spi.c Spi_Lcfg.c Spi_Arch.c Det.c Det_Lcfg.c
-SRCS += Mcu.c Mcu_Lcfg.c Mcu_Arch.c Fls.c Fls_Lcfg.c 
+SRCS += Mcu.c Mcu_Lcfg.c Mcu_Arch.c Fls.c Fls_Lcfg.c Adc.c
 
 #---Linker script
 LINKER = linker.ld
 
 #List of subdirectories for MCAL modules
-MCAL_MODULES = Can Dio Fls Gpt Mcu Nvic Port Spi Pwm
+MCAL_MODULES = Can Dio Fls Gpt Mcu Nvic Port Spi Pwm Adc
 
 #directorios con archivos a compilar (.c y .s)
 SRC_PATHS  = .
