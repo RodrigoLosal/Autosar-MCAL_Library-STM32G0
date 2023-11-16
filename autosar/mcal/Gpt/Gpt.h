@@ -1,5 +1,5 @@
 /**
- * @file    Port.h
+ * @file    Gpt.h
  * @brief   **GPT driver configuration**
  * @author  Rodrigo Lopez
  *
