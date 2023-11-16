@@ -38,8 +38,8 @@ typedef struct _Gpt_ConfigType
  */
 typedef enum
 {
-    GPT_CHANNEL_0 = 0,
-    GPT_CHANNEL_1,
+    GPT_CHANNEL_0 = 0,  /*!< Gpt Channel 0 */
+    GPT_CHANNEL_1,      /*!< Gpt Channel 1 */
 } Gpt_ChannelType;
 
 /**
