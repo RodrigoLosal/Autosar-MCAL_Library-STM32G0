@@ -11,6 +11,17 @@
 
 #include "Std_Types.h"
 #include "Mcu.h"
+#include "Mcu_Arch.h"
+
+/**
+ * @brief  Variable for the initial value of the port configuration array.
+ */
+/* clang-format off */
+static Mcu_HwUnit HwUnit_Mcu =
+{
+    .Config = NULL_PTR,
+};
+/* clang-format on */
 
 /**
  * @brief    **MCU Initialization**
@@ -23,7 +34,8 @@
  */
 void Mcu_Init( const Mcu_ConfigType *ConfigPtr )
 {
-    (void)ConfigPtr;
+    Mcu_Arch_Init( &HwUnit_Mcu, ConfigPtr );
+    HwUnit_Mcu.Config = ConfigPtr;
 }
 
 /**
@@ -40,8 +52,7 @@ void Mcu_Init( const Mcu_ConfigType *ConfigPtr )
  */
 Std_ReturnType Mcu_InitRamSection( Mcu_RamSectionType RamSection )
 {
-    (void)RamSection;
-    return E_OK;
+    return Mcu_Arch_InitRamSection( &HwUnit_Mcu, RamSection );
 }
 
 /**
@@ -58,8 +69,7 @@ Std_ReturnType Mcu_InitRamSection( Mcu_RamSectionType RamSection )
  */
 Std_ReturnType Mcu_InitClock( Mcu_ClockType ClockSetting )
 {
-    (void)ClockSetting;
-    return E_OK;
+    return Mcu_Arch_InitClock( &HwUnit_Mcu, ClockSetting );
 }
 
 /**
@@ -74,7 +84,7 @@ Std_ReturnType Mcu_InitClock( Mcu_ClockType ClockSetting )
  */
 Std_ReturnType Mcu_DistributePllClock( void )
 {
-    return E_OK;
+    return Mcu_Arch_DistributePllClock( &HwUnit_Mcu );
 }
 
 /**
@@ -89,7 +99,7 @@ Std_ReturnType Mcu_DistributePllClock( void )
  */
 Mcu_PllStatusType Mcu_GetPllStatus( void )
 {
-    return E_OK;
+    return Mcu_Arch_GetPllStatus( &HwUnit_Mcu );
 }
 
 /**
@@ -104,7 +114,7 @@ Mcu_PllStatusType Mcu_GetPllStatus( void )
  */
 Mcu_ResetType Mcu_GetResetReason( void )
 {
-    return E_OK;
+    return Mcu_Arch_GetResetReason( &HwUnit_Mcu );
 }
 
 /**
@@ -118,7 +128,7 @@ Mcu_ResetType Mcu_GetResetReason( void )
  */
 Mcu_RawResetType Mcu_GetResetRawValue( void )
 {
-    return E_OK;
+    return Mcu_Arch_GetResetRawValue( &HwUnit_Mcu );
 }
 
 /**
@@ -130,6 +140,7 @@ Mcu_RawResetType Mcu_GetResetRawValue( void )
  */
 void Mcu_PerformReset( void )
 {
+    Mcu_Arch_PerformReset( &HwUnit_Mcu );
 }
 
 /**
@@ -143,7 +154,7 @@ void Mcu_PerformReset( void )
  */
 void Mcu_SetMode( Mcu_ModeType McuMode )
 {
-    (void)McuMode;
+    Mcu_Arch_SetMode( &HwUnit_Mcu, McuMode );
 }
 
 /**
@@ -157,7 +168,7 @@ void Mcu_SetMode( Mcu_ModeType McuMode )
  */
 void Mcu_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
-    (void)versioninfo;
+    Mcu_Arch_GetVersionInfo( &HwUnit_Mcu, versioninfo );
 }
 
 /**
@@ -171,5 +182,5 @@ void Mcu_GetVersionInfo( Std_VersionInfoType *versioninfo )
  */
 Mcu_RamStateType Mcu_GetRamState( void )
 {
-    return E_OK;
+    return Mcu_Arch_GetRamState( &HwUnit_Mcu );
 }
