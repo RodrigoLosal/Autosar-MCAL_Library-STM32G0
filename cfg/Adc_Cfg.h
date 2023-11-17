@@ -37,27 +37,27 @@
  * @brief Adds / removes the service Adc_DeInit() from the code.
  * @typedef EcucBooleanParamDef
  */
-#define ADC_DEINIT_API                  TRUE
+#define ADC_DE_INIT_API STD_ON
 
 /**
  * @brief Adds / removes the services Adc_StartGroupConversion() and Adc_StopGroupConversion() from
  *          the code.
  * @typedef EcucBooleanParamDef
  */
-#define ADC_ENABLE_START_STOP_GROUP_API TRUE
+#define ADC_ENABLE_START_STOP_GROUP_API STD_ON
 
 /**
  * @brief Adds / removes the service Adc_ReadGroup() and from the code.
  * @typedef EcucBooleanParamDef
  */
-#define ADC_READ_GROUP_API              TRUE
+#define ADC_READ_GROUP_API  STD_ON
 
 /**
  * @brief Adds / removes the services Adc_EnableHardwareTrigger() and Adc_DisableHardwareTrigger()
  *          from the code
  * @typedef EcucBooleanParamDef
  */
-#define ADC_HW_TRIGGER_API              TRUE
+#define ADC_HW_TRIGGER_API  STD_ON
 
 extern const Adc_ConfigType AdcConfig;
 
