@@ -54,7 +54,7 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
  *
  * This function Returns all ADC HW Units to a state comparable to their power on reset state.
  *
- * @reqs    SWS_Adc_00366
+ * @reqs    SWS_Adc_00366 SWS_Adc_00228
  */
 void Adc_DeInit( void )
 {
@@ -67,7 +67,7 @@ void Adc_DeInit( void )
  *
  * @param    Group Numeric ID of requested ADC Channel group.
  *
- * @reqs    SWS_Adc_00367
+ * @reqs    SWS_Adc_00367 SWS_Adc_00259
  */
 void Adc_StartGroupConversion( Adc_GroupType Group )
 {
@@ -81,7 +81,7 @@ void Adc_StartGroupConversion( Adc_GroupType Group )
  *
  * @param    Group Numeric ID of requested ADC Channel group.
  *
- * @reqs    SWS_Adc_00368
+ * @reqs    SWS_Adc_00368 SWS_Adc_00260
  */
 void Adc_StopGroupConversion( Adc_GroupType Group )
 {
@@ -103,7 +103,7 @@ void Adc_StopGroupConversion( Adc_GroupType Group )
  * @retval  E_OK: results are available and written to the data buffer
  *          E_NOT_OK: no results are available or development error occured
  *
- * @reqs    SWS_Adc_00369
+ * @reqs    SWS_Adc_00369 SWS_Adc_00359
  */
 Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr )
 {
@@ -119,7 +119,7 @@ Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBuffe
  *
  * @param    Group Numeric ID of requested ADC Channel group.
  *
- * @reqs    SWS_Adc_91001
+ * @reqs    SWS_Adc_91001 SWS_Adc_00265
  */
 void Adc_EnableHardwareTrigger( Adc_GroupType Group )
 {
@@ -133,7 +133,7 @@ void Adc_EnableHardwareTrigger( Adc_GroupType Group )
  *
  * @param    Group Numeric ID of requested ADC Channel group.
  *
- * @reqs    SWS_Adc_91002
+ * @reqs    SWS_Adc_91002 SWS_Adc_00266
  */
 void Adc_DisableHardwareTrigger( Adc_GroupType Group )
 {
@@ -147,7 +147,7 @@ void Adc_DisableHardwareTrigger( Adc_GroupType Group )
  *
  * @param    Group Numeric ID of requested ADC Channel group.
  *
- * @reqs    SWS_Adc_91003
+ * @reqs    SWS_Adc_91003 SWS_Adc_00100
  */
 void Adc_EnableGroupNotification( Adc_GroupType Group )
 {
@@ -161,7 +161,7 @@ void Adc_EnableGroupNotification( Adc_GroupType Group )
  *
  * @param    Group Numeric ID of requested ADC Channel group.
  *
- * @reqs    SWS_Adc_91004
+ * @reqs    SWS_Adc_91004 SWS_Adc_00101
  */
 void Adc_DisableGroupNotification( Adc_GroupType Group )
 {
