@@ -17,4 +17,6 @@ misra-c2012-2.5:autosar/mcal/Mcu/Mcu_Types.h
 misra-c2012-2.7:autosar/mcal/Adc/Adc.c
 misra-c2012-2.3:autosar/mcal/Adc/Adc_Types.h
 misra-c2012-2.4:autosar/mcal/Adc/Adc_Types.h
+misra-c2012-2.5:autosar/mcal/Adc/Adc_Types.h
 misra-c2012-2.5:autosar/mcal/Adc/Adc.h
+misra-c2012-20.9:autosar/mcal/Adc/Adc.h

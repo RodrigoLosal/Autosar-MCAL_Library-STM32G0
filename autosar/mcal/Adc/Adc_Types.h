@@ -34,7 +34,7 @@
 #define ADC_GET_CURRENT_POWER_STATE       0x11u /*!< Adc_GetCurrentPowerState() api service id */
 #define ADC_GET_TARGET_POWER_STATE        0x12u /*!< Adc_GetTargetPowerState() api service id */
 #define ADC_PREPARE_POWER_STATE           0x13u /*!< Adc_PreparePowerState() api service id */
-#define ADC_MAIN_POWER_TRANSITION_MANAGER 0x14u /*!< Adc_Main_PowerTransitionManager() api service
+#define ADC_MAIN_POWER_TRANSITION_MANAGER 0x14u /*!< Adc_Main_PowerTransitionManager() api service \
                                                 id */
 /**
  * @} */
@@ -47,23 +47,23 @@
 #define ADC_E_ALREADY_INITIALIZED         0x0Du /*!< API called while ADC is already initialized.*/
 #define ADC_E_PARAM_POINTER               0x14u /*!< API called with incorrect buffer pointer.*/
 #define ADC_E_PARAM_GROUP                 0x15u /*!< API called with non existing group.*/
-#define ADC_E_WRONG_CONV_MODE             0x16u /*!< API called for a group configured for
+#define ADC_E_WRONG_CONV_MODE             0x16u /*!< API called for a group configured for \
                                                 continuous conversion mode. */
-#define ADC_E_WRONG_TRIGG_SRC             0x17u /*!< API call not allowed according group
+#define ADC_E_WRONG_TRIGG_SRC             0x17u /*!< API call not allowed according group \
                                                 configuration. */
-#define ADC_E_NOTIF_CAPABILITY            0x18u /*!< API called and notification function pointer
+#define ADC_E_NOTIF_CAPABILITY            0x18u /*!< API called and notification function pointer \
                                                 is NULL. */
-#define ADE_E_BUFFER_UNINIT               0x19u /*!< API called while result buffer pointer is not
+#define ADE_E_BUFFER_UNINIT               0x19u /*!< API called while result buffer pointer is not \
                                                 initialized. */
 #define ADE_E_POWER_STATE_NOT_SUPPORTED   0x1Bu /*!< API call with unsupported power state request.*/
-#define ADC_E_PERIPHERAL_NOT_PREPARED     0x1Du /*!< ADC not prepared for requested target power
+#define ADC_E_PERIPHERAL_NOT_PREPARED     0x1Du /*!< ADC not prepared for requested target power \
                                                 state. */
-#define ADC_E_BUSY                        0x0Bu /*!< API is called while another conversion is
-                                                already running, a HW trigger is already enabled, a
+#define ADC_E_BUSY                        0x0Bu /*!< API is called while another conversion is      \
+                                                already running, a HW trigger is already enabled, a \
                                                 request is already stored in the queue. */
-#define ADC_E_IDLE                        0x0Cu /*!< API is called while group is in state ADC_IDLE
+#define ADC_E_IDLE                        0x0Cu /*!< API is called while group is in state ADC_IDLE \
                                                 or non enabled group. */
-#define ADC_E_NOT_DISENGAGED              0x1Au /*!< API called while one or more ADC groups are
+#define ADC_E_NOT_DISENGAGED              0x1Au /*!< API called while one or more ADC groups are \
                                                 not in IDLE state. */
 #define ADC_E_TRANSITION_NOT_POSSIBLE     0x1Cu /*!< Requested power state can not be reached.  */
 /**
@@ -145,7 +145,7 @@ typedef enum
                             is available.*/
     ADC_BUSY,            /*!< The conversion of the specified group has been started and is still
                             going on. So far no result is available.*/
-    ADC_COMPLETED,       /*!< A conversion round (which is not the final one) of the specified 
+    ADC_COMPLETED,       /*!< A conversion round (which is not the final one) of the specified
                             group has been finished. A result is available for all channels of the group.*/
     ADC_STREAM_COMPLETED /*!< The result buffer is completely filled. For each channel of the
                             selected group the number of samples to be acquired is available*/
@@ -172,9 +172,9 @@ typedef enum
     ADC_CONV_MODE_ONESHOT = 0, /*!< Exactly one conversion of each channel in an ADC channel group
                                     is performed after the configured trigger event. In case of
                                     ’group trigger source software’, a started One-Shot conversion
-                                    can be stopped by a software API call. In case of ’group 
+                                    can be stopped by a software API call. In case of ’group
                                     trigger source hardware’, a started One-Shot conversion can be
-                                    stopped by disabling the trigger event (if supported by 
+                                    stopped by disabling the trigger event (if supported by
                                     hardware).*/
     ADC_CONV_MODE_CONTINUOUS   /*!< Repeated conversions of each ADC channel in an ADC channel
                                     group are performed. ’Continuous conversion mode’ is only
@@ -211,7 +211,7 @@ typedef uint8 Adc_StreamNumSampleType;
  */
 typedef enum
 {
-    ADC_STREAM_BUFFER_LINEAR = 0, /*!< The ADC Driver stops the conversion as soon as the stream 
+    ADC_STREAM_BUFFER_LINEAR = 0, /*!< The ADC Driver stops the conversion as soon as the stream
                                     buffer is full (number of samples reached).*/
     ADC_STREAM_BUFFER_CIRCULAR    /*!< The ADC Driver continues the conversion even if the stream
                                     buffer is full (number of samples reached) by wrapping around
@@ -277,15 +277,15 @@ typedef enum
                                         group is interrupted by a higher priority group. The
                                         complete conversion round of the interrupted group (all
                                         group channels)is restarted after the higher priority group
-                                        conversion is finished. If the group is configured in 
+                                        conversion is finished. If the group is configured in
                                         streaming access mode, only the results of the interrupted
                                         conversion round are discarded. Results of previous
                                         conversion rounds which are already written to the result
                                         buffer are not affected.*/
     ADC_GROUP_REPL_SUSPEND_RESUME     /*!< Suspend/Resume mechanism is used on group level, if a
-                                        group is interrupted by a higher priority group. The 
+                                        group is interrupted by a higher priority group. The
                                         conversion round of the interrupted group is completed
-                                        after the higher priority group conversion is finished. 
+                                        after the higher priority group conversion is finished.
                                         Results of previous conversion rounds which are already
                                         written to the result buffer are not affected.*/
 } Adc_GroupReplacementType;

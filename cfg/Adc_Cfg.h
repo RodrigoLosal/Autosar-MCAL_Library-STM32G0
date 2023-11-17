@@ -17,9 +17,9 @@
  * @defgroup ADC_SWC_Ids ADC software Ids
  *
  * {@ */
-#define ADC_MODULE_ID        0u /*!< ADC Module ID */
-#define ADC_INSTANCE_ID      0u /*!< ADC Instance ID */
-#define ADC_VENDOR_ID        0u /*!< ADC Module Vendor ID */
+#define ADC_MODULE_ID                   0u /*!< ADC Module ID */
+#define ADC_INSTANCE_ID                 0u /*!< ADC Instance ID */
+#define ADC_VENDOR_ID                   0u /*!< ADC Module Vendor ID */
 /**
  * @} */
 
@@ -27,11 +27,37 @@
  * @defgroup ADC_SWC_Ids ADC software version
  *
  * {@ */
-#define ADC_SW_MAJOR_VERSION 0u /*!< ADC Module Major Version */
-#define ADC_SW_MINOR_VERSION 0u /*!< ADC Module Minor Version */
-#define ADC_SW_PATCH_VERSION 0u /*!< ADC Module Patch Version */
+#define ADC_SW_MAJOR_VERSION            0u /*!< ADC Module Major Version */
+#define ADC_SW_MINOR_VERSION            0u /*!< ADC Module Minor Version */
+#define ADC_SW_PATCH_VERSION            0u /*!< ADC Module Patch Version */
 /**
  * @} */
+
+/**
+ * @brief Adds / removes the service Adc_DeInit() from the code.
+ * @typedef EcucBooleanParamDef
+ */
+#define ADC_DEINIT_API                  TRUE
+
+/**
+ * @brief Adds / removes the services Adc_StartGroupConversion() and Adc_StopGroupConversion() from
+ *          the code.
+ * @typedef EcucBooleanParamDef
+ */
+#define ADC_ENABLE_START_STOP_GROUP_API TRUE
+
+/**
+ * @brief Adds / removes the service Adc_ReadGroup() and from the code.
+ * @typedef EcucBooleanParamDef
+ */
+#define ADC_READ_GROUP_API              TRUE
+
+/**
+ * @brief Adds / removes the services Adc_EnableHardwareTrigger() and Adc_DisableHardwareTrigger()
+ *          from the code
+ * @typedef EcucBooleanParamDef
+ */
+#define ADC_HW_TRIGGER_API              TRUE
 
 extern const Adc_ConfigType AdcConfig;
 
