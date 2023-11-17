@@ -56,9 +56,11 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
  *
  * @reqs    SWS_Adc_00366 SWS_Adc_00228
  */
+#if ADC_DEINIT_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DeInit( void )
 {
 }
+#endif
 
 /**
  * @brief    **ADC Start Group Conversion**
@@ -69,10 +71,12 @@ void Adc_DeInit( void )
  *
  * @reqs    SWS_Adc_00367 SWS_Adc_00259
  */
+#if ADC_ENABLE_START_STOP_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_StartGroupConversion( Adc_GroupType Group )
 {
     (void)Group;
 }
+#endif
 
 /**
  * @brief    **ADC Stop Group Conversion**
@@ -83,10 +87,12 @@ void Adc_StartGroupConversion( Adc_GroupType Group )
  *
  * @reqs    SWS_Adc_00368 SWS_Adc_00260
  */
+#if ADC_ENABLE_START_STOP_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_StopGroupConversion( Adc_GroupType Group )
 {
     (void)Group;
 }
+#endif
 
 /**
  * @brief    **ADC Read Group**
@@ -105,12 +111,14 @@ void Adc_StopGroupConversion( Adc_GroupType Group )
  *
  * @reqs    SWS_Adc_00369 SWS_Adc_00359
  */
+#if ADC_READ_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr )
 {
     (void)Group;
     (void)DataBufferPtr;
     return E_OK;
 }
+#endif
 
 /**
  * @brief    **ADC Enable Hardware Trigger**
@@ -121,10 +129,12 @@ Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBuffe
  *
  * @reqs    SWS_Adc_91001 SWS_Adc_00265
  */
+#if ADC_HW_TRIGGER_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_EnableHardwareTrigger( Adc_GroupType Group )
 {
     (void)Group;
 }
+#endif
 
 /**
  * @brief    **ADC Disable Hardware Trigger**
@@ -135,10 +145,12 @@ void Adc_EnableHardwareTrigger( Adc_GroupType Group )
  *
  * @reqs    SWS_Adc_91002 SWS_Adc_00266
  */
+#if ADC_HW_TRIGGER_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DisableHardwareTrigger( Adc_GroupType Group )
 {
     (void)Group;
 }
+#endif
 
 /**
  * @brief    **ADC Enable Group Notification**
@@ -149,10 +161,12 @@ void Adc_DisableHardwareTrigger( Adc_GroupType Group )
  *
  * @reqs    SWS_Adc_91003 SWS_Adc_00100
  */
+#if ADC_GRP_NOTIF_CAPABILITY == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_EnableGroupNotification( Adc_GroupType Group )
 {
     (void)Group;
 }
+#endif
 
 /**
  * @brief    **ADC Disable Group Notification**
@@ -163,10 +177,12 @@ void Adc_EnableGroupNotification( Adc_GroupType Group )
  *
  * @reqs    SWS_Adc_91004 SWS_Adc_00101
  */
+#if ADC_GRP_NOTIF_CAPABILITY == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DisableGroupNotification( Adc_GroupType Group )
 {
     (void)Group;
 }
+#endif
 
 /**
  * @brief    **ADC Get Group Status**

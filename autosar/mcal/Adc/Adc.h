@@ -42,7 +42,9 @@ void Adc_DisableGroupNotification( Adc_GroupType Group );
 #endif
 Adc_StatusType Adc_GetGroupStatus( Adc_GroupType Group );
 Adc_StreamNumSampleType Adc_GetStreamLastPointer( Adc_GroupType Group, Adc_ValueGroupType **PtrToSamplePtr );
+#if ADC_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_GetVersionInfo( Std_VersionInfoType *versioninfo );
+#endif
 Std_ReturnType Adc_SetPowerState( Adc_PowerStateRequestResultType *Result );
 Std_ReturnType Adc_GetCurrentPowerState( Adc_PowerStateType *CurrentPowerState, Adc_PowerStateRequestResultType *Result );
 Std_ReturnType Adc_GetTargetPowerState( Adc_PowerStateType *TargetPowerState, Adc_PowerStateRequestResultType *Result );
