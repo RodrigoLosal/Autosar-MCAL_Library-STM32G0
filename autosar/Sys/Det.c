@@ -50,7 +50,7 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
 {
     initialise_monitor_handles( );
 
-    static const char *ModuleName[]   = { "PWM_MODULE_ID" };
+    static const char *ModuleName[]   = { "PWM_MODULE_ID" }; //Tablas que traduzcan los defines a strings
     static const char *InstanceName[] = { "Pwm_DisableNotification" };
     static const char *ApiName[]      = { "PWM_E_UNINIT" };
     static const char *ErrorName[]    = { "Pwm_E_Uinit" };

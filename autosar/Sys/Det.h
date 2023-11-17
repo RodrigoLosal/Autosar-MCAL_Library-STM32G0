@@ -44,6 +44,8 @@ typedef struct _Det_ConfigType
 
 /**
  * @brief **Structure for Reporting error**
+ * 
+ * @reqs    SWS_Det_00009
  */
 typedef struct
 {
