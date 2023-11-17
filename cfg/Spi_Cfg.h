@@ -59,4 +59,16 @@
 
 extern const Spi_ConfigType SpiConfig;
 
+/**
+ * @brief Switches the development error detection and notification on or off.
+ * @typedef EcucBooleanParamDef
+ */
+#define SPI_DEV_ERROR_DETECT STD_OFF
+
+/**
+ * @brief This parameter contains the maximum size (number of data elements) of data buffers in case of EB Channels and only.
+ * @typedef EcucIntegerParamDef
+ */
+#define SpiEbMaxLength       8
+
 #endif /* SPI_CFG_H__ */

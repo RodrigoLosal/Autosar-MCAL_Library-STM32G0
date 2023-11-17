@@ -60,19 +60,12 @@
  */
 typedef struct _Spi_ConfigType
 {
-    uint32 dummy; /*!< dummy element for the moment */
+    uint8 ChannelCount;  /*!< Channel ID configurations for the SpiHandler/Driver */
+    uint8 SequenceCount; /*!< Sequence ID configurations for the SpiHandler/Driver */
+    uint8 JobCount;      /*!< Job ID configurations for the SpiHandler/Driver */
+    uint8 HWUnitCount;   /*!< Job ID configurations for the SpiHandler/Driver */
+    uint32 dummy;        /*!< dummy element for the moment */
 } Spi_ConfigType;
-
-/**
- * @brief **Hardware control unit structure**
- *
- * This structure contains the hardware unit configuration and the state of the hardware
- * unit pointers to controller structures.
- */
-typedef struct _Spi_HwUnit
-{
-    const Spi_ConfigType *Config; /*!< Pointer to the configuration structure */
-} Spi_HwUnit;
 
 
 /**
@@ -88,6 +81,19 @@ typedef enum _Spi_StatusType
     SPI_IDLE,   /*!< The SPI Handler/Driver is not currently transmitting any Job.*/
     SPI_BUSY,   /*!< The SPI Handler/Driver is performing a SPI Job (transmit).*/
 } Spi_StatusType;
+
+/**
+ * @brief **Hardware control unit structure**
+ *
+ * This structure contains the hardware unit configuration and the state of the hardware
+ * unit pointers to controller structures.
+ */
+typedef struct _Spi_HwUnit
+{
+    const Spi_ConfigType *Config; /*!< Pointer to the configuration structure */
+    uint8 HwUnitState;            /*!< SPI hardware unit state */
+    Spi_StatusType *SpiState;     /*!< SPI Handler/Driver states */
+} Spi_HwUnit;
 
 /**
  * @brief States of the Jobs for the SPI
