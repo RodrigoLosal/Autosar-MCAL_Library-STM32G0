@@ -6,7 +6,6 @@
  * The ADC module provides the functionality API and the configuration of the AUTOSAR Basic
  * Software module ADC Driver. The ADC driver is targeting Successive Approximation ADC Hardware.
  * Delta Sigma ADC conversion use cases are out of scope of this module.
- *
  */
 #include "Std_Types.h"
 #include "Adc.h"
