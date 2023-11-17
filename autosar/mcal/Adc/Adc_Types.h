@@ -87,7 +87,7 @@ typedef struct
  *
  * @reqs    SWS_Adc_00506
  */
-typedef uint8 Adc_ChannelType;
+typedef uint8 Adc_ChannelType; /* cppcheck-suppress misra-c2012-2.3 ; it is fot future use */
 
 /**
  * @brief   Numeric ID of an ADC channel group. (Size tbd)
@@ -109,7 +109,7 @@ typedef uint8 Adc_ValueGroupType;
  *
  * @reqs    SWS_Adc_00509
  */
-typedef uint8 Adc_PrescaleType;
+typedef uint8 Adc_PrescaleType; /* cppcheck-suppress misra-c2012-2.3 ; it is fot future use */
 
 /**
  * @brief   Type of conversion time, i.e. the time during which the sampled analogue value is
@@ -117,7 +117,7 @@ typedef uint8 Adc_PrescaleType;
  *
  * @reqs    SWS_Adc_00510
  */
-typedef uint8 Adc_ConversionTimeType;
+typedef uint8 Adc_ConversionTimeType; /* cppcheck-suppress misra-c2012-2.3 ; it is fot future use */
 
 /**
  * @brief   Type of sampling time, i.e. the time during which the value is sampled, (in
@@ -125,14 +125,14 @@ typedef uint8 Adc_ConversionTimeType;
  *
  * @reqs    SWS_Adc_00511
  */
-typedef uint8 Adc_SamplingTimeType;
+typedef uint8 Adc_SamplingTimeType; /* cppcheck-suppress misra-c2012-2.3 ; it is fot future use */
 
 /**
  * @brief   Type of channel resolution in number of bits.
  *
  * @reqs    SWS_Adc_00512
  */
-typedef uint8 Adc_ResolutionType;
+typedef uint8 Adc_ResolutionType; /* cppcheck-suppress misra-c2012-2.3 ; it is fot future use */
 
 /**
  * @brief Current status of the conversion of the requested ADC Channel group.
@@ -160,7 +160,7 @@ typedef enum
 {
     ADC_TRIGG_SRC_SW = 0, /*!< Group is triggered by a software API call.*/
     ADC_TRIGG_SRC_HW      /*!< Group is triggered by a hardware event.*/
-} Adc_TriggerSourceType;
+} Adc_TriggerSourceType;  /* cppcheck-suppress misra-c2012-2.3 ; it is fot future use */
 
 /**
  * @brief Type for configuring the conversion mode of an ADC Channel group.
@@ -180,21 +180,21 @@ typedef enum
                                     group are performed. ’Continuous conversion mode’ is only
                                     available for ’group trigger source software’. A started
                                     ’Continuous conversion’ can be stopped by a software API call.*/
-} Adc_GroupConvModeType;
+} Adc_GroupConvModeType;       /* cppcheck-suppress misra-c2012-2.3 ; it is fot future use */
 
 /**
  * @brief   Priority level of the channel. Lowest priority is 0.
  *
  * @reqs    SWS_Adc_00516
  */
-typedef uint8 Adc_GroupPriorityType;
+typedef uint8 Adc_GroupPriorityType; /* cppcheck-suppress misra-c2012-2.3 ; it is fot future use */
 
 /**
  * @brief   Type for assignment of channels to a channel group. (size tbd)
  *
  * @reqs    SWS_Adc_00517
  */
-typedef uint8 Adc_GroupDefType;
+typedef uint8 Adc_GroupDefType; /* cppcheck-suppress misra-c2012-2.3 ; it is fot future use */
 
 /**
  * @brief   Type for configuring the number of group conversions in streaming access mode (in
@@ -216,7 +216,7 @@ typedef enum
     ADC_STREAM_BUFFER_CIRCULAR    /*!< The ADC Driver continues the conversion even if the stream
                                     buffer is full (number of samples reached) by wrapping around
                                     the stream buffer itself.*/
-} Adc_StreamBufferModeType;
+} Adc_StreamBufferModeType;       /* cppcheck-suppress misra-c2012-2.3 ; it is fot future use */
 
 /**
  * @brief Type for configuring the access mode to group conversion results.
@@ -227,7 +227,7 @@ typedef enum
 {
     ADC_ACCESS_MODE_SINGLE = 0, /*!< Single value access mode.*/
     ADC_ACCESS_MODE_STREAMING   /*!< Streaming access mode.*/
-} Adc_GroupAccessModeType;
+} Adc_GroupAccessModeType;      /* cppcheck-suppress misra-c2012-2.3 ; it is fot future use */
 
 /**
  * @brief Type for configuring on which edge of the hardware trigger signal the driver should
@@ -243,7 +243,7 @@ typedef enum
                                     (only if supported by the ADC hardware).*/
     ADC_HW_TRIG_BOTH_EDGES       /*!< React on both edges of the hardware trigger signal (only if
                                     supported by the ADC hardware).*/
-} Adc_HwTriggerSignalType;
+} Adc_HwTriggerSignalType;       /* cppcheck-suppress misra-c2012-2.3 ; it is fot future use */
 
 /**
  * @brief   Type for the reload value of the ADC module embedded timer (only if supported by the
@@ -251,7 +251,7 @@ typedef enum
  *
  * @reqs    SWS_Adc_00521
  */
-typedef uint8 Adc_HwTriggerTimerType;
+typedef uint8 Adc_HwTriggerTimerType; /* cppcheck-suppress misra-c2012-2.3 ; it is fot future use */
 
 /**
  * @brief Type for configuring the prioritization mechanism.
@@ -260,10 +260,10 @@ typedef uint8 Adc_HwTriggerTimerType;
  */
 typedef enum
 {
-    ADC_PRIORITY_NONE = 0, /*!< Priority mechanism is not available*/
-    ADC_PRIORITY_HW,       /*!< Hardware priority mechanism is available only*/
-    ADC_PRIORITY_HW_SW     /*!< Hardware and software priority mechanism is available*/
-} Adc_PriorityImplementationType;
+    ADC_PRIORITY_NONE = 0,        /*!< Priority mechanism is not available*/
+    ADC_PRIORITY_HW,              /*!< Hardware priority mechanism is available only*/
+    ADC_PRIORITY_HW_SW            /*!< Hardware and software priority mechanism is available*/
+} Adc_PriorityImplementationType; /* cppcheck-suppress misra-c2012-2.3 ; it is fot future use */
 
 /**
  * @brief Replacement mechanism, which is used on ADC group level, if a group conversion is
@@ -288,7 +288,7 @@ typedef enum
                                         after the higher priority group conversion is finished.
                                         Results of previous conversion rounds which are already
                                         written to the result buffer are not affected.*/
-} Adc_GroupReplacementType;
+} Adc_GroupReplacementType;           /* cppcheck-suppress misra-c2012-2.3 ; it is fot future use */
 
 /**
  * @brief In case of active limit checking: defines which conversion values are taken into account
@@ -298,16 +298,16 @@ typedef enum
  */
 typedef enum
 {
-    ADC_RANGE_UNDER_LOW = 0, /*!< Range below low limit - low limit value included*/
-    ADC_RANGE_BETWEEN,       /*!< Range between low limit and high limit - high limit value
-                                included*/
-    ADC_RANGE_OVER_HIGH,     /*!< Range above high limit*/
-    ADC_RANGE_ALWAYS,        /*!< Complete range - independent from channel limit settings*/
-    ADC_RANGE_NOT_UNDER_LOW, /*!< Range above low limit*/
-    ADC_RANGE_NOT_BETWEEN,   /*!< Range above high limit or below low limit - low limit value
-                                included*/
-    ADC_RANGE_NOT_OVER_HIGH  /*!< Range below high limit - high limit value included*/
-} Adc_ChannelRangeSelectType;
+    ADC_RANGE_UNDER_LOW = 0,  /*!< Range below low limit - low limit value included*/
+    ADC_RANGE_BETWEEN,        /*!< Range between low limit and high limit - high limit value
+                                 included*/
+    ADC_RANGE_OVER_HIGH,      /*!< Range above high limit*/
+    ADC_RANGE_ALWAYS,         /*!< Complete range - independent from channel limit settings*/
+    ADC_RANGE_NOT_UNDER_LOW,  /*!< Range above low limit*/
+    ADC_RANGE_NOT_BETWEEN,    /*!< Range above high limit or below low limit - low limit value
+                                 included*/
+    ADC_RANGE_NOT_OVER_HIGH   /*!< Range below high limit - high limit value included*/
+} Adc_ChannelRangeSelectType; /* cppcheck-suppress misra-c2012-2.3 ; it is fot future use */
 
 /**
  * @brief Type for alignment of ADC raw results in ADC result buffer (left/right alignment).
@@ -316,9 +316,9 @@ typedef enum
  */
 typedef enum
 {
-    ADC_ALIGN_LEFT = 0, /*!< left alignment*/
-    ADC_ALIGN_RIGHT     /*!< right alignment*/
-} Adc_ResultAlignmentType;
+    ADC_ALIGN_LEFT = 0,    /*!< left alignment*/
+    ADC_ALIGN_RIGHT        /*!< right alignment*/
+} Adc_ResultAlignmentType; /* cppcheck-suppress misra-c2012-2.3 ; it is fot future use */
 
 /**
  * @brief Power state currently active or set as target power state.

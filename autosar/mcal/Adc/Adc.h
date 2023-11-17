@@ -16,28 +16,28 @@
 
 void Adc_Init( const Adc_ConfigType *ConfigPtr );
 Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr );
-#if ADC_DEINIT_API == STD_ON
+#if ADC_DEINIT_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DeInit( void );
 #endif
-#if ADC_ENABLE_START_STOP_GROUP_API == STD_ON
+#if ADC_ENABLE_START_STOP_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_StartGroupConversion( Adc_GroupType Group );
 #endif
-#if ADC_ENABLE_START_STOP_GROUP_API == STD_ON
+#if ADC_ENABLE_START_STOP_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_StopGroupConversion( Adc_GroupType Group );
 #endif
-#if ADC_READ_GROUP_API == STD_ON
+#if ADC_READ_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr );
 #endif
-#if ADC_HW_TRIGGER_API == STD_ON
+#if ADC_HW_TRIGGER_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_EnableHardwareTrigger( Adc_GroupType Group );
 #endif
-#if ADC_HW_TRIGGER_API == STD_ON
+#if ADC_HW_TRIGGER_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DisableHardwareTrigger( Adc_GroupType Group );
 #endif
-#if ADC_GRP_NOTIF_CAPABILITY == STD_ON
+#if ADC_GRP_NOTIF_CAPABILITY == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_EnableGroupNotification( Adc_GroupType Group );
 #endif
-#if ADC_GRP_NOTIF_CAPABILITY == STD_ON
+#if ADC_GRP_NOTIF_CAPABILITY == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DisableGroupNotification( Adc_GroupType Group );
 #endif
 Adc_StatusType Adc_GetGroupStatus( Adc_GroupType Group );
