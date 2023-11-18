@@ -55,7 +55,7 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
  *
  * @reqs    SWS_Adc_00366 SWS_Adc_00228
  */
-#if ADC_DEINIT_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
+#if ADC_DE_INIT_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DeInit( void )
 {
 }

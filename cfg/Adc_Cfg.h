@@ -59,6 +59,12 @@
  */
 #define ADC_HW_TRIGGER_API              STD_ON
 
+/**
+ * @brief Adds / removes the services Adc_GetVersionInfo() from the code
+ * @typedef EcucBooleanParamDef
+ */
+#define ADC_VERSION_INFO_API            STD_ON
+
 extern const Adc_ConfigType AdcConfig;
 
 #endif /* CAN_CFG_H__ */

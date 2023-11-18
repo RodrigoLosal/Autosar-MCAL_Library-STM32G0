@@ -34,8 +34,7 @@
 #define ADC_GET_CURRENT_POWER_STATE       0x11u /*!< Adc_GetCurrentPowerState() api service id */
 #define ADC_GET_TARGET_POWER_STATE        0x12u /*!< Adc_GetTargetPowerState() api service id */
 #define ADC_PREPARE_POWER_STATE           0x13u /*!< Adc_PreparePowerState() api service id */
-#define ADC_MAIN_POWER_TRANSITION_MANAGER 0x14u /*!< Adc_Main_PowerTransitionManager() api service \
-                                                id */
+#define ADC_MAIN_POWER_TRANSITION_MANAGER 0x14u /*!< Adc_Main_PowerTransitionManager api service id */
 /**
  * @} */
 
