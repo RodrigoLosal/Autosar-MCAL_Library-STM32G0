@@ -485,17 +485,7 @@ Spi_StatusType Spi_GetHWUnitStatus( Spi_HWUnitType HWUnit )
  */
 void Spi_Cancel( Spi_SequenceType Sequence )
 {
-    if( Sequence >= HwUnit_Spi.Config->SequenceCount )
-    {
-        /* If development error detection for the Spi module is enabled:
-        the function Spi_Cancel shall raise the error SPI_E_PARAM_SEQ if the parameter
-        Sequence ID is out of range.*/
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_PARAM_SEQ );
-    }
-    else
-    {
-        Spi_Arch_Cancel( &HwUnit_Spi, Sequence );
-    }
+    Spi_Arch_Cancel( &HwUnit_Spi, Sequence );
 }
 #endif
 
