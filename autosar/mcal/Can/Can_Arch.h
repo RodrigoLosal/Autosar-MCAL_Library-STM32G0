@@ -14,6 +14,24 @@
 #include "Can_Types.h"
 
 /**
+ * @defgroup CAN_Peripheral CAN Mcu Peirpherals
+ *
+ * @{ */
+#define CAN_FDCAN1                     0u /*!< FDCAN1 controller */
+#define CAN_FDCAN2                     1u /*!< FDCAN2 controller */
+/**
+ * @} */
+
+/**
+ * @defgroup CAN_SRAM CAN SRAM from the Mcu periphreals
+ *
+ * @{ */
+#define CAN_SRAMCAN1                   0u /*!< FDCAN1 SRAM base address */
+#define CAN_SRAMCAN2                   1u /*!< FDCAN2 SRAM base address */
+/**
+ * @} */
+
+/**
  * @defgroup CAN_clock_divider CAN Clock Divider
  *
  * @{ */

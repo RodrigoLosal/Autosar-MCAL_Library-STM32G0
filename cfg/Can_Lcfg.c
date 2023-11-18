@@ -114,7 +114,8 @@ const Can_Controller Controllers[ CAN_NUMBER_OF_CONTROLLERS ] =
         .ActiveITs = CAN_IT_RX_FIFO0_NEW_MESSAGE | CAN_IT_RX_FIFO1_NEW_MESSAGE | CAN_IT_TX_COMPLETE,
         .DefaultBaudrate = &BaudratesCtrl0[ CAN_BAUDRATE_CTRL0_100K ],
         .BaudrateConfigs = BaudratesCtrl0,
-        .BaudrateConfigsCount = CAN_NUMBER_OF_BAUDRATES_CTRL0
+        .BaudrateConfigsCount = CAN_NUMBER_OF_BAUDRATES_CTRL0,
+        .CanReference = CAN_FDCAN1
     },
     {
         .ControllerId = CAN_CONTROLLER_1,
@@ -128,7 +129,8 @@ const Can_Controller Controllers[ CAN_NUMBER_OF_CONTROLLERS ] =
         .ActiveITs = CAN_IT_RX_FIFO0_NEW_MESSAGE | CAN_IT_RX_FIFO1_NEW_MESSAGE | CAN_IT_TX_COMPLETE,
         .DefaultBaudrate = &BaudratesCtrl1[ CAN_BAUDRATE_CTRL1_500K ],
         .BaudrateConfigs = BaudratesCtrl1,
-        .BaudrateConfigsCount = CAN_NUMBER_OF_BAUDRATES_CTRL1
+        .BaudrateConfigsCount = CAN_NUMBER_OF_BAUDRATES_CTRL1,
+        .CanReference = CAN_FDCAN2
     }
 };
 /* clang-format on */

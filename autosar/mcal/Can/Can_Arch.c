@@ -9,6 +9,7 @@
  * driver header, making the low level interfaces available only for the inmediate upper layer.
  */
 #include "Std_Types.h"
+#include "Registers.h"
 #include "Can_Cfg.h"
 #include "Can_Arch.h"
 #include "Bfx.h"
@@ -346,6 +347,16 @@ static const uint8 AutosarError[] = {
 };
 /* clang-format on */
 
+/**
+ * @brief  Can controller register structure.
+ */
+static Can_RegisterType *CanPeripherals[] = { CAN1, CAN2 };
+
+/**
+ * @brief  Can controller SRAM register structure.
+ */
+static SramCan_RegisterType *SramCanPeripherals[] = { SRAMCAN1, SRAMCAN2 };
+
 static void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can_RegisterType *Can );
 static void Can_SetupConfiguredFilters( const Can_Controller *Controller, const Can_HardwareObject *HwObjects, Can_RegisterType *Can );
 static void Can_SetupBaudrateConfig( const Can_ControllerBaudrateConfig *Baudrate, Can_RegisterType *Can );
@@ -398,7 +409,7 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &Config->Controllers[ Controller ];
     /*Get the Can controller register structure*/
-    Can_RegisterType *Can = ControllerConfig->BaseAddress;
+    Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
 
     /* Configure Clock divider */
     Can->CKDIV = ControllerConfig->ClockDivider;
@@ -407,7 +418,7 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
     for( uint8 i = 0u; i < ( sizeof( SramCan_RegisterType ) / sizeof( uint32 ) ); i++ )
     {
         /* Flush the allocated Message RAM area */
-        ( (uint32 *)ControllerConfig->SramBA )[ i ] = 0x00000000u;
+        ( (uint32 *)SramCanPeripherals[ ControllerConfig->SramReference ] )[ i ] = 0x00000000u;
     }
 
     /* Exit from Sleep mode */
@@ -522,7 +533,7 @@ void Can_Arch_DeInit( Can_HwUnit *HwUnit, uint8 Controller )
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the Can controller register structure*/
-    Can_RegisterType *Can = ControllerConfig->BaseAddress;
+    Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
 
     /* Request initialisation */
     Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_INIT_BIT );
@@ -580,7 +591,7 @@ Std_ReturnType Can_Arch_SetBaudrate( Can_HwUnit *HwUnit, uint8 Controller, uint1
         /* get controller configuration */
         const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
         /*Get the Can controller register structure*/
-        Can_RegisterType *Can = ControllerConfig->BaseAddress;
+        Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
         /* get baudrate configuration */
         const Can_ControllerBaudrateConfig *Baudrate = &ControllerConfig->BaudrateConfigs[ BaudRateConfigID ];
 
@@ -616,7 +627,7 @@ Std_ReturnType Can_Arch_SetControllerMode( Can_HwUnit *HwUnit, uint8 Controller,
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the Can controller register structure*/
-    Can_RegisterType *Can = ControllerConfig->BaseAddress;
+    Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
 
     switch( Transition )
     {
@@ -718,7 +729,7 @@ void Can_Arch_EnableControllerInterrupts( Can_HwUnit *HwUnit, uint8 Controller )
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the Can controller register structure*/
-    Can_RegisterType *Can = ControllerConfig->BaseAddress;
+    Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
 
     /* Enable Interrupt line 0 */
     Bfx_SetBit_u32u8( (uint32 *)&Can->ILE, CAN_INTERRUPT_LINE0 );
@@ -744,7 +755,7 @@ void Can_Arch_DisableControllerInterrupts( Can_HwUnit *HwUnit, uint8 Controller 
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the Can controller register structure*/
-    Can_RegisterType *Can = ControllerConfig->BaseAddress;
+    Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
 
     /* Disable interrupt line 0 */
     Bfx_ClrBit_u32u8( (uint32 *)&Can->ILE, CAN_INTERRUPT_LINE0 );
@@ -793,7 +804,7 @@ Std_ReturnType Can_Arch_GetControllerErrorState( Can_HwUnit *HwUnit, uint8 Contr
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ ControllerId ];
     /*Get the Can controller register structure*/
-    Can_RegisterType *Can = ControllerConfig->BaseAddress;
+    Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
 
     /*Inquire is bus off status*/
     if( Bfx_GetBit_u32u8_u8( Can->PSR, PSR_BO_BIT ) == STD_ON )
@@ -855,7 +866,10 @@ Std_ReturnType Can_Arch_GetControllerMode( Can_HwUnit *HwUnit, uint8 Controller,
  */
 Std_ReturnType Can_Arch_GetControllerRxErrorCounter( Can_HwUnit *HwUnit, uint8 ControllerId, uint8 *RxErrorCounterPtr )
 {
-    const Can_RegisterType *Can = HwUnit->Config->Controllers[ ControllerId ].BaseAddress;
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ ControllerId ];
+    /*Get the Can controller register structure*/
+    Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
 
     /* Read the error counters register */
     *RxErrorCounterPtr = Bfx_GetBits_u32u8u8_u32( Can->ECR, ECR_REC_BIT, ECR_REC_SIZE );
@@ -880,7 +894,10 @@ Std_ReturnType Can_Arch_GetControllerRxErrorCounter( Can_HwUnit *HwUnit, uint8 C
  */
 Std_ReturnType Can_Arch_GetControllerTxErrorCounter( Can_HwUnit *HwUnit, uint8 ControllerId, uint8 *TxErrorCounterPtr )
 {
-    const Can_RegisterType *Can = HwUnit->Config->Controllers[ ControllerId ].BaseAddress;
+    /* get controller configuration */
+    const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ ControllerId ];
+    /*Get the Can controller register structure*/
+    Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
 
     /* Read the error counters register */
     *TxErrorCounterPtr = Bfx_GetBits_u32u8u8_u32( Can->ECR, ECR_TEC_BIT, ECR_TEC_SIZE );
@@ -1001,7 +1018,9 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
     uint32 RamBuffer[ 16u ];
 
     /* get controller configuration */
-    const Can_RegisterType *Can = HwUnit->Config->Hohs[ Hth ].ControllerRef->BaseAddress;
+    const Can_Controller *ControllerConfig = HwUnit->Config->Hohs[ Hth ].ControllerRef;
+    /*Get the Can controller register structure*/
+    Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
 
     /* Check that the Tx FIFO/Queue is not full*/
     if( ( Bfx_GetBit_u32u8_u8( Can->TXFQS, TXFQS_TFQF_BIT ) == FALSE ) )
@@ -1010,7 +1029,7 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
         uint32 PutIndex = Bfx_GetBits_u32u8u8_u32( Can->TXFQS, TXFQS_TFQPI_BIT, TXFQS_TFQPI_SIZE );
 
         /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-        HwObjectHandler *HthObject = (HwObjectHandler *)&HwUnit->Config->Hohs[ Hth ].ControllerRef->SramBA->TBSA;
+        HwObjectHandler *HthObject = (HwObjectHandler *)SramCanPeripherals[ ControllerConfig->SramReference ]->TBSA;
 
         /*get the message ID type*/
         uint8 IdType = Bfx_GetBit_u32u8_u8( PduInfo->id, MSG_ID_BIT );
@@ -1103,7 +1122,7 @@ void Can_Arch_IsrMainHandler( Can_HwUnit *HwUnit, uint8 Controller )
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the Can controller register structure*/
-    Can_RegisterType *Can = ControllerConfig->BaseAddress;
+    Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
 
     /* clang-format off */
     void (*IsrPointer[])(Can_HwUnit*, uint8) = 
@@ -1180,7 +1199,7 @@ static void Can_SetupConfiguredFilters( const Can_Controller *Controller, const 
                 /* Set the filter ID, standard (11 bits) or extended (29 bits) */
                 if( ( HwObject->IdType == CAN_ID_STANDARD ) || ( ( HwObject->IdType == CAN_ID_MIXED ) && ( HwObject->HwFilter->HwFilterIdType == CAN_ID_STANDARD ) ) )
                 {
-                    uint32 *StdFilter            = (uint32 *)&HwObject->ControllerRef->SramBA->FLSSA[ StdFilterIndex ];
+                    uint32 *StdFilter            = (uint32 *)SramCanPeripherals[ HwObject->ControllerRef->SramReference ]->FLSSA[ StdFilterIndex ];
                     const Can_HwFilter *HwFilter = &HwObject->HwFilter[ Filter ];
 
                     Bfx_PutBits_u32u8u8u32( StdFilter, FLSSA_SFID1_BIT, RX_BUFFER_ID_11_BITS, HwFilter->HwFilterCode );
@@ -1191,7 +1210,7 @@ static void Can_SetupConfiguredFilters( const Can_Controller *Controller, const 
                 }
                 else if( ( HwObject->IdType == CAN_ID_EXTENDED ) || ( ( HwObject->IdType == CAN_ID_MIXED ) && ( HwObject->HwFilter->HwFilterIdType == CAN_ID_EXTENDED ) ) )
                 {
-                    HwExtFilter *ExtFilter       = (HwExtFilter *)&HwObject->ControllerRef->SramBA->FLESA[ ExtFilterIndex ];
+                    HwExtFilter *ExtFilter       = (HwExtFilter *)SramCanPeripherals[ HwObject->ControllerRef->SramReference ]->FLESA[ ExtFilterIndex ];
                     const Can_HwFilter *HwFilter = &HwObject->HwFilter[ Filter ];
 
                     Bfx_PutBits_u32u8u8u32( &ExtFilter->ExtFilterHeader1, FLESA_EFID_BIT, RX_BUFFER_ID_29_BITS, HwFilter->HwFilterCode );
@@ -1385,13 +1404,15 @@ static uint8 Can_GetClosestDlcWithPadding( uint8 Dlc, uint32 *RamBuffer, uint8 P
 static uint8 Can_GetTxPduId( const Can_Controller *Controller, PduIdType *CanPduId )
 {
     /*Get the Can controller register structure*/
-    Can_RegisterType *Can = Controller->BaseAddress;
+    Can_RegisterType *Can = CanPeripherals[ Controller->CanReference ];
+    /*Get the Sram Can controller register structure*/
+    SramCan_RegisterType *SramCan = SramCanPeripherals[ Controller->SramReference ];
 
     /* Calculate Tx event FIFO element address */
     uint8 GetIndex = Bfx_GetBits_u32u8u8_u32( Can->TXEFS, TXEFS_EFGI_BIT, TXEFS_EFGI_SIZE );
 
     /* Get the CAN Pdu store in the message marker field */
-    *CanPduId = Bfx_GetBits_u32u8u8_u32( Controller->SramBA->EFSA[ GetIndex ], TX_BUFFER_MM_BIT, TX_BUFFER_MM_SIZE );
+    *CanPduId = Bfx_GetBits_u32u8u8_u32( SramCan->EFSA[ GetIndex ], TX_BUFFER_MM_BIT, TX_BUFFER_MM_SIZE );
 
     /* Acknowledge the Tx Event FIFO that the oldest element is read so that it increments the GetIndex */
     Can->TXEFA = GetIndex;
@@ -1417,7 +1438,7 @@ static uint8 Can_GetMessage( HwObjectHandler *Fifo, const Can_Controller *Contro
 {
     static const uint8 DlcToBytes[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 32, 48, 64 };
     /*Get the Can controller register structure*/
-    Can_RegisterType *Can = Controller->BaseAddress;
+    Can_RegisterType *Can = CanPeripherals[ Controller->CanReference ];
 
     /* Get Rx FIFO Get index */
     uint8 GetIndex = Bfx_GetBits_u32u8u8_u32( Can->RXF0S, RXF0S_F0GI_BIT, RXF0S_F0GI_SIZE );
@@ -1473,7 +1494,7 @@ static void Can_Isr_RxFifo0NewMessage( Can_HwUnit *HwUnit, uint8 Controller )
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    HwObjectHandler *HrhObject = (HwObjectHandler *)ControllerConfig->SramBA->F0SA;
+    HwObjectHandler *HrhObject = (HwObjectHandler *)SramCanPeripherals[ ControllerConfig->SramReference ]->F0SA;
 
     PduInfoType PduInfo;
     Can_HwType Mailbox;
@@ -1504,7 +1525,7 @@ static void Can_Isr_RxFifo0Full( Can_HwUnit *HwUnit, uint8 Controller )
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    HwObjectHandler *HrhObject = (HwObjectHandler *)ControllerConfig->SramBA->F0SA;
+    HwObjectHandler *HrhObject = (HwObjectHandler *)SramCanPeripherals[ ControllerConfig->SramReference ]->F0SA;
 
     PduInfoType PduInfo;
     Can_HwType Mailbox;
@@ -1567,7 +1588,7 @@ static void Can_Isr_RxFifo1NewMessage( Can_HwUnit *HwUnit, uint8 Controller )
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    HwObjectHandler *HrhObject = (HwObjectHandler *)ControllerConfig->SramBA->F1SA;
+    HwObjectHandler *HrhObject = (HwObjectHandler *)SramCanPeripherals[ ControllerConfig->SramReference ]->F1SA;
 
     PduInfoType PduInfo;
     Can_HwType Mailbox;
@@ -1598,7 +1619,7 @@ static void Can_Isr_RxFifo1Full( Can_HwUnit *HwUnit, uint8 Controller )
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    HwObjectHandler *HrhObject = (HwObjectHandler *)ControllerConfig->SramBA->F1SA;
+    HwObjectHandler *HrhObject = (HwObjectHandler *)SramCanPeripherals[ ControllerConfig->SramReference ]->F1SA;
 
     PduInfoType PduInfo;
     Can_HwType Mailbox;
@@ -1880,7 +1901,7 @@ static void Can_Isr_ErrorPassive( Can_HwUnit *HwUnit, uint8 Controller )
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the Can controller register structure*/
-    Can_RegisterType *Can = ControllerConfig->BaseAddress;
+    Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
 
     if( Bfx_GetBit_u32u8_u8( Can->PSR, PSR_EP_BIT ) == STD_ON )
     {
@@ -1921,7 +1942,7 @@ static void Can_Isr_BusOffStatus( Can_HwUnit *HwUnit, uint8 Controller )
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the Can controller register structure*/
-    Can_RegisterType *Can = ControllerConfig->BaseAddress;
+    Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
 
     /* make sure the transition when to Bus_Off and not the other way around */
     if( Bfx_GetBit_u32u8_u8( Can->PSR, PSR_BO_BIT ) == STD_ON )
@@ -1982,7 +2003,7 @@ static void Can_Isr_ProtocolErrorInArbitrationPhase( Can_HwUnit *HwUnit, uint8 C
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the Can controller register structure*/
-    const Can_RegisterType *Can = ControllerConfig->BaseAddress;
+    Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
     /*Get the erro code */
     uint8 ErrorCode = Bfx_GetBits_u32u8u8_u32( Can->PSR, PSR_LEC_BIT, PSR_LEC_SIZE );
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
@@ -2011,7 +2032,7 @@ static void Can_Isr_ProtocolErrorInDataPhase( Can_HwUnit *HwUnit, uint8 Controll
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the Can controller register structure*/
-    const Can_RegisterType *Can = ControllerConfig->BaseAddress;
+    Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
     /*Get the erro code */
     uint8 ErrorCode = Bfx_GetBits_u32u8u8_u32( Can->PSR, PSR_DLEC_BIT, PSR_DLEC_SIZE );
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/

@@ -167,11 +167,11 @@ typedef struct _Can_Controller
     uint32 ActiveITs; /*!< Specifies the interrupts to be enabled on Line0.
                                This parameter can be a value of CAN_IT_<interrupt> */
 
-    Can_RegisterType *BaseAddress; /*!< Base address of the Mcu CAN controller
-                                       this paramter must be CAN1 or CAN2 */
+    uint8 CanReference; /*!< Base address of the Mcu CAN controller
+                                  this paramter must be CAN_FDCAN1 or CAN_FDCAN2 */
 
-    SramCan_RegisterType *SramBA; /*!< Reference to the SRAM location where the HOH is mapped to
-                                       this paramter must be SRAMCAN1 or SRAMCAN2 */
+    uint8 SramReference; /*!< Reference to the SRAM location where the HOH is mapped to
+                                       this paramter must be CAN_SRAMCAN1 or CAN_SRAMCAN2 */
 
     const Can_ControllerBaudrateConfig *DefaultBaudrate; /*!< Reference to baudrate configuration container configured for the
                                                         Can Controller*/
