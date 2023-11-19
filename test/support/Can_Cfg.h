@@ -90,6 +90,58 @@
  * @} */
 
 /**
+ * @brief Specifies the number of controllers to mange by the driver when test Arch files.
+ * @typedef EcucIntegerParamDef
+ */
+#define CANARCH_NUMBER_OF_CONTROLLERS 5
+
+/**
+ * @defgroup Controller_IDs Can controllers
+ *
+ * Specifies the controller IDs starting from zero and up to CAN_NUMBER_OF_CONTROLLERS - 1
+ *
+ * @typedef EcucIntegerParamDef
+ *
+ * @{ */
+#define CANARCH_CONTROLLER_0          0 /*!< Controller zero */
+#define CANARCH_RESTRICTED_OPERATION  1 /*!< Controller one  */
+#define CANARCH_BUS_MONITORING        2 /*!< Controller one  */
+#define CANARCH_INTERNAL_LOOPBACK     3 /*!< Controller one  */
+#define CANARCH_EXTERNAL_LOOPBACK     4 /*!< Controller one  */
+/**
+ * @} */
+
+/**
+ * @brief Specifies the number of buadrate configuration for controller 0
+ * @typedef EcucIntegerParamDef
+ */
+#define CANARCH_NUMBER_OF_BAUDRATES   2
+#define CANARCH_BAUDRATE_100k_CLASSIC 0
+#define CANARCH_BAUDRATE_100k_FD      1
+
+/**
+ * @brief Specifies the number of hardware objects to mange by each controller.
+ * @typedef EcucIntegerParamDef
+ */
+#define CANARCH_NUMBER_OF_HOHS        3
+
+/**
+ * @defgroup HOHs_IDs Can hardware object
+ *
+ * Specifies the transmit hardware objects an its corresponding controller, where the most significant
+ * nibble represent the controller ID and the least significant nibble represent the HOH ID.
+ *
+ * @typedef EcucIntegerParamDef
+ *
+ * @{ */
+#define CANARCH_HTH_0_CTRL_0          0
+#define CANARCH_HRH_0_CTRL_0          1
+#define CANARCH_HRH_1_CTRL_0          2
+/**
+ * @} */
+
+
+/**
  * @brief Switches the development error detection and notification on or off.
  * @typedef EcucBooleanParamDef
  */
@@ -114,5 +166,6 @@
 #define CAN_VERSION_INFO_API          STD_ON
 
 extern const Can_ConfigType CanConfig;
+extern const Can_ConfigType ArchCanConfig;
 
 #endif /* CAN_CFG_H__ */

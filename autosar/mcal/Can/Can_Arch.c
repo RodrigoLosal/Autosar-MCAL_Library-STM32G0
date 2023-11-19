@@ -536,7 +536,7 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
     Bfx_SetBit_u32u8( (uint32 *)&Can->RXGFC, RXGFC_RRFE_BIT );
 
     /* Setup the interrupt to line 0 or 1*/
-    Can_SetupConfiguredInterrupts( &Config->Controllers[ Controller ], Can );
+    // Can_SetupConfiguredInterrupts( &Config->Controllers[ Controller ], Can );
 
     /*paramter not in use, placed to keep standard and for potential future use*/
     (void)HwUnit;
@@ -588,6 +588,10 @@ void Can_Arch_DeInit( Can_HwUnit *HwUnit, uint8 Controller )
     /* Disable interrupt lines */
     Bfx_ClrBit_u32u8( (uint32 *)&Can->ILE, CAN_INTERRUPT_LINE0 );
     Bfx_ClrBit_u32u8( (uint32 *)&Can->ILE, CAN_INTERRUPT_LINE1 );
+
+    /*remove after testing 100% of Init fucntion*/
+    Can_SetupConfiguredFilters( HwUnit->Config, Controller );
+    Can_SetupConfiguredInterrupts( ControllerConfig, Can );
 }
 
 /**
