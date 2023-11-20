@@ -107,8 +107,8 @@ typedef struct _Pwm_ConfigType
  */
 typedef enum
 {
-    PWM_STATE_UNINITIALIZED,
-    PWM_STATE_INITIALIZED
+    PWM_STATE_UNINITIALIZED, /*!< Pwm State Uninitialized */
+    PWM_STATE_INITIALIZED    /*!< Pwm State Initialized */
 } Pwm_ModuleStateType;
 
 
