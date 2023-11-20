@@ -62,6 +62,7 @@
     - autosar/Sys/Det.c
     - autosar/mcal/Mcu/Mcu.c
     - autosar/mcal/Mcu/Mcu_Arch.c
+    - autosar/mcal/Adc/Adc.c
   :utilities:
     - gcovr
   :reports:
