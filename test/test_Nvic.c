@@ -1,6 +1,7 @@
 #include "unity.h"
 #include "Registers.h"
 #include "Nvic.h"
+#include "mock_Det.h"
 
 /*mock microcontroller registers with its initial values*/
 /*                         ISER  RESERVED  ICER RESERVED ISPR RESERVED ICPR RESERVED RESERVED IP*/
@@ -49,6 +50,24 @@ void tearDown( void )
 }
 
 /**
+ * @brief   **Test invalid priority setting for a valid irq**
+ *
+ * This test validates if setting the priority 4 of a valid irq is not reflected
+ * in the IP register.
+ */
+void test__CDD_Nvic_SetPriority_InvalidPrioprity( void )
+{
+    Nvic_IrqType irq    = NVIC_MIN_IRQ;
+    uint32 priority     = 4;
+    uint32 expected_IPR = 0x0000000; /* 0000 0000 0000 0000 0000 0000 0000 0000 */
+
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    CDD_Nvic_SetPriority( irq, priority );
+    TEST_ASSERT_EQUAL_HEX32( expected_IPR, NVIC->IP[ IP_IDX( irq ) ] );
+}
+
+/**
  * @brief   **Test priority setting for an upper NVIC_MAX_IRQ irq**
  *
  * This test validates if setting the priority 2 of an upper NVIC_MAX_IRQ irq is not reflected in
@@ -59,6 +78,8 @@ void test__CDD_Nvic_SetPriority_UpperMaxIrq( void )
     Nvic_IrqType irq    = NVIC_MAX_IRQ + 1;
     uint32 priority     = 2;
     uint32 expected_IPR = 0x00000000;
+
+    Det_ReportError_IgnoreAndReturn( E_OK );
 
     CDD_Nvic_SetPriority( irq, priority );
     TEST_ASSERT_EQUAL_HEX32( expected_IPR, NVIC->IP[ IP_IDX( irq ) ] );
@@ -139,6 +160,8 @@ void test__CDD_Nvic_SetPriority_MiniorMinIrq( void )
     uint32 priority     = 2;
     uint32 expected_IPR = 0x0000000; /* 0000 0000 0000 0000 0000 0000 0000 0000 */
 
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
     CDD_Nvic_SetPriority( irq, priority );
     TEST_ASSERT_EQUAL_HEX32( expected_IPR, NVIC->IP[ IP_IDX( irq ) ] );
 }
@@ -153,6 +176,8 @@ void test__CDD_Nvic_GetPriority_UpperMaxIrq( void )
 {
     Nvic_IrqType irq        = NVIC_MAX_IRQ + 1;
     uint32 expectedPriority = INVALID_PRIORITY;
+
+    Det_ReportError_IgnoreAndReturn( E_OK );
 
     uint32 priority = CDD_Nvic_GetPriority( irq );
     TEST_ASSERT_EQUAL_HEX32( expectedPriority, priority );
@@ -181,7 +206,9 @@ void test__CDD_Nvic_GetPriority_ValidIrqPriotity( void )
  */
 void test__CDD_Nvic_GetPriority_MiniorMinIrq( void )
 {
-    Nvic_IrqType irq        = NVIC_MIN_IRQ - 1;
+    Nvic_IrqType irq = NVIC_MIN_IRQ - 1;
+
+    Det_ReportError_IgnoreAndReturn( E_OK );
     uint32 expectedPriority = CDD_Nvic_GetPriority( irq );
 
     TEST_ASSERT_EQUAL_HEX32( INVALID_PRIORITY, expectedPriority );
@@ -198,6 +225,8 @@ void test__CDD_Nvic_EnableIrq_MaxIrq( void )
     Nvic_IrqType irq     = NVIC_MAX_IRQ + 1;
     uint32 expected_ISER = 0x00000000; /* 0000 0000 0000 0000 0000 0000 0000 0000 */
 
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
     CDD_Nvic_EnableIrq( irq );
     TEST_ASSERT_EQUAL_HEX32( expected_ISER, NVIC->ISER[ FIRST_INDEX ] );
 }
@@ -212,6 +241,8 @@ void test__CDD_Nvic_EnableIrq_MiniorMinIrq( void )
 {
     Nvic_IrqType irq     = NVIC_MIN_IRQ - 1;
     uint32 expected_ISER = 0x00000000; /* 0000 0000 0000 0000 0000 0000 0000 0000 */
+
+    Det_ReportError_IgnoreAndReturn( E_OK );
 
     CDD_Nvic_EnableIrq( irq );
     TEST_ASSERT_EQUAL_HEX32( expected_ISER, NVIC->ISER[ FIRST_INDEX ] );
@@ -275,6 +306,8 @@ void test__CDD_Nvic_DisableIrq_MiniorMinIrq( void )
     Nvic_IrqType irq     = NVIC_MIN_IRQ - 1;
     uint32 expected_ICER = 0x00000000;
 
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
     CDD_Nvic_DisableIrq( irq );
     TEST_ASSERT_EQUAL_HEX32( expected_ICER, NVIC->ICER[ FIRST_INDEX ] );
 }
@@ -289,6 +322,8 @@ void test__CDD_Nvic_DisableIrq_UpperMaxIrq( void )
 {
     Nvic_IrqType irq     = NVIC_MAX_IRQ + 1;
     uint32 expected_ICER = 0x00000000;
+
+    Det_ReportError_IgnoreAndReturn( E_OK );
 
     CDD_Nvic_DisableIrq( irq );
     TEST_ASSERT_EQUAL_HEX32( expected_ICER, NVIC->ICER[ FIRST_INDEX ] );
@@ -305,6 +340,8 @@ void test_CDD_Nvic_SetPendingIrq_UpperMaxIrq( void )
     Nvic_IrqType irq     = NVIC_MAX_IRQ + 1;
     uint32 expected_ISPR = 0x00000000; /* 0000 0000 0000 0000 0000 0000 0000 0000 */
 
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
     CDD_Nvic_SetPendingIrq( irq );
     TEST_ASSERT_EQUAL_HEX32( expected_ISPR, NVIC->ISPR[ FIRST_INDEX ] );
 }
@@ -319,6 +356,8 @@ void test_CDD_Nvic_SetPendingIrq_MiniorMinIrq( void )
 {
     Nvic_IrqType irq     = NVIC_MIN_IRQ - 1;
     uint32 expected_ISPR = 0x00000000; /* 0000 0000 0000 0000 0000 0000 0000 0000 */
+
+    Det_ReportError_IgnoreAndReturn( E_OK );
 
     CDD_Nvic_SetPendingIrq( irq );
     TEST_ASSERT_EQUAL_HEX32( expected_ISPR, NVIC->ISPR[ FIRST_INDEX ] );
@@ -349,6 +388,8 @@ void test_CDD_Nvic_GetPendingIrq_MiniorMinIrq( void )
 {
     Nvic_IrqType irq = NVIC_MIN_IRQ - 1;
 
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
     uint32 expectedValue = CDD_Nvic_GetPendingIrq( irq );
     TEST_ASSERT_FALSE( expectedValue );
 }
@@ -362,6 +403,8 @@ void test_CDD_Nvic_GetPendingIrq_MiniorMinIrq( void )
 void test_CDD_Nvic_GetPendingIrq_UpperMaxIrq( void )
 {
     Nvic_IrqType irq = NVIC_MAX_IRQ + 1;
+
+    Det_ReportError_IgnoreAndReturn( E_OK );
 
     uint32 expectedValue = CDD_Nvic_GetPendingIrq( irq );
     TEST_ASSERT_FALSE( expectedValue );
@@ -406,6 +449,8 @@ void test_CDD_Nvic_GetPendingIrq_NotPendingInvalidIrq( void )
 {
     Nvic_IrqType irq = NVIC_MIN_IRQ - 1;
 
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
     uint32 result = CDD_Nvic_GetPendingIrq( irq );
     TEST_ASSERT_EQUAL_UINT32( IRQ_NOT_PENDING, result );
 }
@@ -437,6 +482,8 @@ void test__CDD_Nvic_ClearPendingIrq_MiniorMinIrq( void )
     NVIC->ICPR[ FIRST_INDEX ] = 0;
     uint32 expected_ICRP      = 0x00000000; /*0000 0000 0000 0000 0000 0000 0000 0000*/
 
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
     CDD_Nvic_ClearPendingIrq( irq );
     TEST_ASSERT_EQUAL_HEX32( expected_ICRP, NVIC->ICPR[ FIRST_INDEX ] );
 }
@@ -452,6 +499,8 @@ void test__CDD_Nvic_ClearPendingIrq_UpperrManIrq( void )
     Nvic_IrqType irq          = NVIC_MAX_IRQ + 1;
     NVIC->ICPR[ FIRST_INDEX ] = 0;
     uint32 expected_ICRP      = 0x00000000; /*0000 0000 0000 0000 0000 0000 0000 0000*/
+
+    Det_ReportError_IgnoreAndReturn( E_OK );
 
     CDD_Nvic_ClearPendingIrq( irq );
     TEST_ASSERT_EQUAL_HEX32( expected_ICRP, NVIC->ICPR[ FIRST_INDEX ] );
