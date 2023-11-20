@@ -17,10 +17,11 @@
 #if MCU_DEV_ERROR_DETECT == STD_OFF
 /**
  * @param   ModuleId    Module ID number
+ * @param   InstanceId  Instance Id
  * @param   ApiId       Api id
  * @param   ErrorId     Error code
  */
-#define Det_ReportError( ModuleId, 0, ApiId, ErrorId ) (void)0
+#define Det_ReportError( ModuleId, InstanceId, ApiId, ErrorId ) (void)0
 #else
 #include "Det.h"
 #endif
