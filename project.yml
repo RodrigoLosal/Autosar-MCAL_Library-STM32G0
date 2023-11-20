@@ -58,6 +58,7 @@
     - autosar/mcal/Spi/Spi.c
     - autosar/mcal/Det/Det.c
     - autosar/mcal/Fls/Fls.c
+    - autosar/mcal/Fls/Fls_Arch.c
     - autosar/mcal/Spi/Spi_Arch.c
     - autosar/Sys/Det.c
     - autosar/mcal/Mcu/Mcu.c
