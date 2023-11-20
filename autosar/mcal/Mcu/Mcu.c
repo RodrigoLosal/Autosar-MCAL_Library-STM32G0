@@ -16,8 +16,8 @@
 /* cppcheck-suppress misra-c2012-20.9 ; this is declared at Mcu_Cfg.h */
 #if MCU_DEV_ERROR_DETECT == STD_OFF
 /**
- * @param   ModuleId    module id number
- * @param   ApiId       Pai id
+ * @param   ModuleId    Module ID number
+ * @param   ApiId       Api id
  * @param   ErrorId     Error code
  */
 #define Det_ReportError( ModuleId, 0, ApiId, ErrorId ) (void)0
