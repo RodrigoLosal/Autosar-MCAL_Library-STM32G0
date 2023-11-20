@@ -218,7 +218,7 @@ void Pwm_SetOutputToIdle( Pwm_ChannelType ChannelNumber )
 Pwm_OutputStateType Pwm_GetOutputState( Pwm_ChannelType ChannelNumber )
 {
     Pwm_OutputStateType outputState = PWM_HIGH;
-    
+
     if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINITIALIZED )
     {
         /*If development error detection for the Pwm module is enabled:
@@ -257,7 +257,7 @@ void Pwm_DisableNotification( Pwm_ChannelType ChannelNumber )
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
         called function shall raise development error PWM_E_UNINIT.*/
-        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, Pwm_DisableNotification, PWM_E_UNINIT );
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_DISABLE_NOTIFICATION, PWM_E_UNINIT );
     }
     else if( ( ChannelNumber > HwUnit_Pwm.Pwm_channelNumber ) || ( ChannelNumber < PWM_CHANNEL_MIN ) )
     {
