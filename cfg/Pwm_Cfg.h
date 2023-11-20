@@ -37,7 +37,7 @@
  * @brief Switches the development error detection and notification on or off.
  * @typedef EcucBooleanParamDef
  */
-#define PWM_DEV_ERROR_DETECT       STD_OFF
+#define PWM_DEV_ERROR_DETECT       STD_ON
 
 /**
  * @brief Adds / removes the service Pwm_DeInit() from the code.
