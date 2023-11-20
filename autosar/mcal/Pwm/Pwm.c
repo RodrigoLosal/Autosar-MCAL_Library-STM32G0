@@ -458,5 +458,10 @@ void Pwm_GetVersionInfo( Std_VersionInfoType *versioninfo )
     }
     else
     {
+        versioninfo->moduleID         = PWM_MODULE_ID;
+        versioninfo->vendorID         = PWM_VENDOR_ID;
+        versioninfo->sw_major_version = PWM_SW_MAJOR_VERSION;
+        versioninfo->sw_minor_version = PWM_SW_MINOR_VERSION;
+        versioninfo->sw_patch_version = PWM_SW_PATCH_VERSION;
     }
 }
