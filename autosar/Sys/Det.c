@@ -50,10 +50,67 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
 {
     initialise_monitor_handles( );
 
-    static const char *ModuleName[]   = { "PWM_MODULE_ID" }; //Tablas que traduzcan los defines a strings
+    static const char *ModuleName[]   = { "PWM_MODULE_ID" }; // Tablas que traduzcan los defines a strings
     static const char *InstanceName[] = { "Pwm_DisableNotification" };
-    static const char *ApiName[]      = { "PWM_E_UNINIT" };
-    static const char *ErrorName[]    = { "Pwm_E_Uinit" };
+    static const char *ApiName[]      =
+    {
+        /*Pwm Api*/
+        "PWM_ID_INIT",
+        "PWM_ID_DE_INIT",
+        "PWM_ID_SET_DUTY_CYCLE",
+        "PWM_ID_SET_PERIOD_AND_DUTY",
+        "PWM_ID_SET_OUTPUT_TO_IDLE",
+        "PWM_ID_GET_OUTPUT_STATE",
+        "PWM_ID_DISABLE_NOTIFICATION",
+        "PWM_ID_ENABLE_NOTIFICATION",
+        "PWM_ID_GET_CURRENT_POWER_STATE",
+        "PWM_ID_GET_TARGET_POWER_STATE",
+        "PWM_ID_PREPARE_POWER_STATE",
+        "PWM_ID_GET_VERSION_INFO",
+        /*MCU Api*/
+        "MCU_ID_INIT",
+        "MCU_ID_INIT_RAM",
+        "MCU_ID_INIT_CLOCK",
+        "MCU_ID_DISTRIBUTE_PLL_CLOCK",
+        "MCU_ID_GET_PLL_STATUS",
+        "MCU_ID_GET_RESET_REASON",
+        "MCU_ID_GET_RESET_RAW_VALUE",
+        "MCU_ID_PERFORM_RESET",
+        "MCU_ID_SET_MODE",
+        "MCU_ID_GET_VERSION_INFO",
+        "MCU_ID_GET_RAM_STATE",
+    };
+    static const char *ErrorName[] =
+    {
+        /*Pwm Error*/
+        "PWM_E_INIT_FAILED",
+        "PWM_E_UNINIT",
+        "PWM_E_PARAM_CHANNEL",
+        "PWM_E_PERIOD_UNCHANGEABLE",
+        "PWM_E_ALREADY_INITIALIZED",
+        "PWM_E_PARAM_POINTER",
+        "PWM_E_POWER_STATE_NOT_SUPPORTED",
+        "PWM_E_TRANSITION_NOT_POSSIBLE",
+        "PWM_E_PERIPHERAL_NOT_PREPARED",
+        "PWM_E_NOT_DISENGAGED",
+        /*Port Error*/
+        "PORT_E_PARAM_PIN",
+        "PORT_E_DIRECTION_UNCHANGEABLE",
+        "PORT_E_INIT_FAILED",
+        "PORT_E_PARAM_INVALID_MODE",
+        "PORT_E_MODE_UNCHANGEABLE",
+        "PORT_E_UNINIT",
+        "PORT_E_PARAM_POINTER",
+        /*MCU Error*/
+        "MCU_E_PARAM_CONFIG",
+        "MCU_E_PARAM_CLOCK",
+        "MCU_E_PARAM_MODE",
+        "MCU_E_PARAM_RAMSECTION",
+        "MCU_E_PLL_NOT_LOCKED",
+        "MCU_E_UNINIT",
+        "MCU_E_PARAM_POINTER",
+        "MCU_E_INIT_FAILED",
+    };
 
     DetError ReportError;
 
@@ -63,7 +120,7 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     ReportError.Error    = ErrorName[ ErrorId ];
 
     (void)printf( "ERROR: In %s in function %s Driver not initialized detected in %s. Error code: %s\n\r", ReportError.Module,
-                   ReportError.Instance, ReportError.Api, ReportError.Error );
+                  ReportError.Instance, ReportError.Api, ReportError.Error );
 
     return E_OK;
 }
