@@ -14,6 +14,26 @@
 #include "Mcu_Types.h"
 
 /**
+ * @defgroup MCU_SWC_Ids MCU software version and Ids
+ *
+ * {@ */
+#define MCU_MODULE_ID         0u /*!< MCU Module ID */
+#define MCU_INSTANCE_ID       0u /*!< MCU Instance ID */
+#define MCU_VENDOR_ID         0u /*!< MCU Module Vendor ID */
+/**
+ * @} */
+
+/**
+ * @defgroup MCU_SWC_Ids MCU software version and Ids
+ *
+ * {@ */
+#define MCU_SW_MAJOR_VERSION  0u /*!< MCU Module Major Version */
+#define MCU_SW_MINOR_VERSION  0u /*!< MCU Module Minor Version */
+#define MCU_SW_PATCH_VERSION  0u /*!< MCU Module Patch Version */
+/**
+ * @} */
+
+/**
  * @brief Enable / disable the service Mcu_InitClock() from the code.
  * @typedef EcucBooleanParamDef
  */
@@ -38,5 +58,11 @@
 #define MCU_GET_RAM_STATE_API TRUE
 
 extern const Mcu_ConfigType McuConfig;
+
+/**
+ * @brief Switches the development error detection and notification on or off.
+ * @typedef EcucBooleanParamDef
+ */
+#define MCU_DEV_ERROR_DETECT STD_ON
 
 #endif
