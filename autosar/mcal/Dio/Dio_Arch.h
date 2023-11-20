@@ -19,12 +19,18 @@
  * Symbols to specify ports values.
  *
  * @{ */
-#define DIO_PORT_A 0u /*!< Port A value */ /* cppcheck-suppress misra-c2012-2.5 ; these defines have been use in Dio_Lcfg.c */
-#define DIO_PORT_B 1u /*!< Port B value */ /* cppcheck-suppress misra-c2012-2.5 ; these defines have been use in Dio_Lcfg.c */
-#define DIO_PORT_C 2u /*!< Port C value */ /* cppcheck-suppress misra-c2012-2.5 ; these defines have been use in Dio_Lcfg.c */
-#define DIO_PORT_D 3u /*!< Port D value */ /* cppcheck-suppress misra-c2012-2.5 ; these defines have been use in Dio_Lcfg.c */
-#define DIO_PORT_E 4u /*!< Port E value */ /* cppcheck-suppress misra-c2012-2.5 ; these defines have been use in Dio_Lcfg.c */
-#define DIO_PORT_F 5u /*!< Port F value */ /* cppcheck-suppress misra-c2012-2.5 ; these defines have been use in Dio_Lcfg.c */
+/* cppcheck-suppress misra-c2012-2.5 ; these defines have been use in Dio_Lcfg.c */
+#define DIO_PORT_A 0u /*!< Port A value */
+/* cppcheck-suppress misra-c2012-2.5 ; these defines have been use in Dio_Lcfg.c */
+#define DIO_PORT_B 1u /*!< Port B value */
+/* cppcheck-suppress misra-c2012-2.5 ; these defines have been use in Dio_Lcfg.c */
+#define DIO_PORT_C 2u /*!< Port C value */
+/* cppcheck-suppress misra-c2012-2.5 ; these defines have been use in Dio_Lcfg.c */
+#define DIO_PORT_D 3u /*!< Port D value */
+/* cppcheck-suppress misra-c2012-2.5 ; these defines have been use in Dio_Lcfg.c */
+#define DIO_PORT_E 4u /*!< Port E value */
+/* cppcheck-suppress misra-c2012-2.5 ; these defines have been use in Dio_Lcfg.c */
+#define DIO_PORT_F 5u /*!< Port F value */
 /**
  * @}*/
 

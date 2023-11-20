@@ -253,8 +253,6 @@ void Dio_WriteChannelGroup( const Dio_ChannelGroupType *ChannelGroupIdPtr, Dio_P
  * This function is used to define DIO driver version information.
  *
  * @param versioninfo Pointer to where to store the version information of this module.
- *
- * @retval Returns a variable for testing purposes .
  */
 void Dio_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {

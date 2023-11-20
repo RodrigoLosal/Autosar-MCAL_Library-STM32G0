@@ -75,7 +75,7 @@ Dio_LevelType Dio_Arch_FlipChannel( Dio_PortType Port, uint8 Pin )
  * The function will return the level of all pins of the port specified by the parameter Port.
  * The function will read the value from the register IDR.
  *
- * @param PortId ID of DIO Port.
+ * @param Port ID of DIO Port.
  *
  * @retval Returns the level of all channels on that port.
  */
@@ -93,9 +93,9 @@ Dio_PortLevelType Dio_Arch_ReadPort( Dio_PortType Port )
  * @param Port ID of DIO Port.
  * @param Level Value to be written.
  */
-void Dio_Arch_WritePort( Dio_PortType PortId, Dio_PortLevelType Level )
+void Dio_Arch_WritePort( Dio_PortType Port, Dio_PortLevelType Level )
 {
-    DiosPeripherals[ PortId ]->ODR = Level;
+    DiosPeripherals[ Port ]->ODR = Level;
 }
 
 /**
