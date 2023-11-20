@@ -485,7 +485,7 @@ Spi_StatusType Spi_GetHWUnitStatus( Spi_HWUnitType HWUnit )
  *
  * @param   Sequence Sequence ID
  *
- * @reqs    SWS_Spi_00187, SWS_Spi_00032
+ * @reqs    SWS_Spi_00187
  */
 void Spi_Cancel( Spi_SequenceType Sequence )
 {
