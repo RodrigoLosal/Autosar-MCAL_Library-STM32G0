@@ -54,7 +54,6 @@
     - autosar/mcal/Can/Can_Arch.c
     - autosar/mcal/Pwm/Pwm.c
     - autosar/mcal/Pwm/Pwm_Arch.c
-    - autosar/mcal/Spi/Spi.c
     - autosar/mcal/Det/Det.c
     - autosar/mcal/Fls/Fls.c
     - autosar/mcal/Spi/Spi_Arch.c

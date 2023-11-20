@@ -14,7 +14,7 @@
 #include "Spi.h"
 #include "Spi_Arch.h"
 
-/* cppcheck-suppress misra-c2012-20.9 ; this is declared at Can_Cfg.h */
+/* cppcheck-suppress misra-c2012-20.9 ; this is declared at Spi_Cfg.h */
 #if SPI_DEV_ERROR_DETECT == STD_OFF
 /**
  * @param   ModuleId    module id number
@@ -392,7 +392,11 @@ void Spi_GetVersionInfo( Std_VersionInfoType *versioninfo )
     }
     else
     {
-        Spi_Arch_GetVersionInfo( &HwUnit_Spi, versioninfo );
+        versioninfo->moduleID         = SPI_MODULE_ID;
+        versioninfo->vendorID         = SPI_VENDOR_ID;
+        versioninfo->sw_major_version = SPI_SW_MAJOR_VERSION;
+        versioninfo->sw_minor_version = SPI_SW_MINOR_VERSION;
+        versioninfo->sw_patch_version = SPI_SW_PATCH_VERSION;
     }
 }
 #endif
