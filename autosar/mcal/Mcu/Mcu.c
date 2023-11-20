@@ -320,9 +320,25 @@ void Mcu_GetVersionInfo( Std_VersionInfoType *versioninfo )
  * @retval  Mcu_RamStateType: Status of the RAM Content
  *
  * @reqs    SWS_Mcu_00207, SWS_Mcu_00017, SWS_Mcu_00125
+ * @reqs    SWS_Mcu_00207, SWS_Mcu_00017, SWS_Mcu_00125
  */
 Mcu_RamStateType Mcu_GetRamState( void )
 {
+    Std_ReturnType ReturnValue = E_NOT_OK;
+
+    if( HwUnit_Mcu.HwUnitState == MCU_STATE_UNINIT )
+    {
+        /* If the development error detection is enabled for the MCU module:
+        If any function except Mcu_GetVersionInfo of the MCU module is called before
+        Mcu_Init function, the error code MCU_E_UNINIT shall be reported to the DET. */
+        Det_ReportError( MCU_MODULE_ID, MCU_INSTANCE_ID, MCU_ID_GET_RAM_STATE, MCU_E_UNINIT );
+    }
+    else
+    {
+        ReturnValue = Mcu_Arch_GetRamState( &HwUnit_Mcu );
+    }
+
+    return ReturnValue;
     Std_ReturnType ReturnValue = E_NOT_OK;
 
     if( HwUnit_Mcu.HwUnitState == MCU_STATE_UNINIT )
