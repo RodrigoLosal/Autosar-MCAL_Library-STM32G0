@@ -42,6 +42,9 @@
 #define CANIF_ID_TX_CONFIRMATION       0x13 /*!< CanIf_TxConfirmation() */
 #define CANIF_ID_RX_INDICATION         0x14 /*!< CanIf_RxIndication() */
 #define CANIF_ID_CTRL_BUS_OFF          0x16 /*!< CanIf_ControllerBusOff() */
+#define CANIF_ID_CTRL_MODE_INDICATION  0x17 /*!< CanIf_ControllerModeIndication() */
+#define CANIF_ID_CTRL_ERR_ST_PASIVE    0x4f /*!< CanIf_ControllerErrorStatePassive() */
+#define CANIF_ID_ERR_NOTIF             0x50 /*!< CanIf_ErrorNotification() */
 /**
  * @} */
 
