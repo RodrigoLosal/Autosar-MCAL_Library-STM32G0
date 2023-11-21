@@ -85,10 +85,12 @@ Std_ReturnType Fls_Write( Fls_AddressType TargetAddress, const uint8 *SourceAddr
  *
  * @reqs    SWS_Fls_00252
  */
+#if FLS_CANCEL_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Fls_Cancel( void )
 {
     Fls_Arch_Cancel( &HwUnit_Fls );
 }
+#endif
 
 /**
  * @brief   **Fls_GetStatus**
@@ -99,10 +101,12 @@ void Fls_Cancel( void )
  *
  * @reqs    SWS_Fls_00253
  */
+#if FLS_GET_STATUS_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 MemIf_StatusType Fls_GetStatus( void )
 {
     return Fls_Arch_GetStatus( &HwUnit_Fls );
 }
+#endif
 
 /**
  * @brief   **Fls_GetJobResult**
@@ -113,10 +117,12 @@ MemIf_StatusType Fls_GetStatus( void )
  *
  * @reqs    SWS_Fls_00254
  */
+#if FLS_GET_JOB_RESULT_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 MemIf_JobResultType Fls_GetJobResult( void )
 {
     return Fls_Arch_GetJobResult( &HwUnit_Fls );
 }
+#endif
 
 /**
  * @brief   **Fls_Read**
@@ -151,10 +157,12 @@ Std_ReturnType Fls_Read( Fls_AddressType SourceAddress, uint8 *TargetAddressPtr,
  *
  * @reqs    SWS_Fls_00257
  */
+#if FLS_COMPARE_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Std_ReturnType Fls_Compare( Fls_AddressType SourceAddress, const uint8 *TargetAddressPtr, Fls_LengthType Length )
 {
     return Fls_Arch_Compare( &HwUnit_Fls, SourceAddress, TargetAddressPtr, Length );
 }
+#endif
 
 /**
  * @brief   **Fls_SetMode**
@@ -166,10 +174,12 @@ Std_ReturnType Fls_Compare( Fls_AddressType SourceAddress, const uint8 *TargetAd
  *
  * @reqs    SWS_Fls_00258
  */
+#if FLS_SET_MODE_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Fls_SetMode( MemIf_ModeType Mode )
 {
     Fls_Arch_SetMode( &HwUnit_Fls, Mode );
 }
+#endif
 
 /**
  * @brief   **Fls_GetVersionInfo**
@@ -200,7 +210,9 @@ void Fls_GetVersionInfo( Std_VersionInfoType *VersioninfoPtr )
  *
  * @reqs    SWS_Fls_00371
  */
+#if FLS_BLANK_CHECK_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Std_ReturnType Fls_BlankCheck( Fls_AddressType TargetAddress, Fls_LengthType Length )
 {
     return Fls_Arch_BlankCheck( &HwUnit_Fls, TargetAddress, Length );
 }
+#endif
