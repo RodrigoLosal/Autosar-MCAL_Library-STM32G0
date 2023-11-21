@@ -348,4 +348,15 @@ typedef enum
                                 busy.*/
 } Adc_PowerStateRequestResultType;
 
+/**
+ * @brief **Hardware control unit structure**
+ *
+ * This structure contains the hardware unit configuration and the state of the hardware
+ * unit pointers to controller structures.
+ */
+typedef struct _Adc_HwUnit
+{
+    const Adc_ConfigType *Config; /*!< Pointer to the configuration structure */
+} Adc_HwUnit;
+
 #endif /* ADC_TYPES_H__ */

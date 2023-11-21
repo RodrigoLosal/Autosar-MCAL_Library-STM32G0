@@ -9,6 +9,17 @@
  */
 #include "Std_Types.h"
 #include "Adc.h"
+#include "Adc_Arch.h"
+
+/**
+ * @brief  Variable for the initial value of the Adc configuration array.
+ */
+/* clang-format off */
+static Adc_HwUnit HwUnit_Adc =
+{
+.Config = NULL_PTR,
+};
+/* clang-format on */
 
 /**
  * @brief    **ADC Initialization**

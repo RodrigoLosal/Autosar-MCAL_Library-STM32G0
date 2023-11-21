@@ -118,7 +118,7 @@ void Adc_Arch_StopGroupConversion( Adc_HwUnit *HwUnit, Adc_GroupType Group )
  *
  * @reqs    SWS_Adc_00369 SWS_Adc_00359
  */
-Std_ReturnType Adc_ReadGroup( Adc_HwUnit *HwUnit, Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr )
+Std_ReturnType Adc_Arch_ReadGroup( Adc_HwUnit *HwUnit, Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr )
 {
     (void)HwUnit;
     (void)Group;
@@ -136,7 +136,7 @@ Std_ReturnType Adc_ReadGroup( Adc_HwUnit *HwUnit, Adc_GroupType Group, Adc_Value
  *
  * @reqs    SWS_Adc_91001 SWS_Adc_00265
  */
-void Adc_EnableHardwareTrigger( Adc_HwUnit *HwUnit, Adc_GroupType Group )
+void Adc_Arch_EnableHardwareTrigger( Adc_HwUnit *HwUnit, Adc_GroupType Group )
 {
     (void)HwUnit;
     (void)Group;
@@ -152,7 +152,7 @@ void Adc_EnableHardwareTrigger( Adc_HwUnit *HwUnit, Adc_GroupType Group )
  *
  * @reqs    SWS_Adc_91002 SWS_Adc_00266
  */
-void Adc_DisableHardwareTrigger( Adc_HwUnit *HwUnit, Adc_GroupType Group )
+void Adc_Arch_DisableHardwareTrigger( Adc_HwUnit *HwUnit, Adc_GroupType Group )
 {
     (void)HwUnit;
     (void)Group;
@@ -168,7 +168,7 @@ void Adc_DisableHardwareTrigger( Adc_HwUnit *HwUnit, Adc_GroupType Group )
  *
  * @reqs    SWS_Adc_91003 SWS_Adc_00100
  */
-void Adc_EnableGroupNotification( Adc_HwUnit *HwUnit, Adc_GroupType Group )
+void Adc_Arch_EnableGroupNotification( Adc_HwUnit *HwUnit, Adc_GroupType Group )
 {
     (void)HwUnit;
     (void)Group;
@@ -184,7 +184,7 @@ void Adc_EnableGroupNotification( Adc_HwUnit *HwUnit, Adc_GroupType Group )
  *
  * @reqs    SWS_Adc_91004 SWS_Adc_00101
  */
-void Adc_DisableGroupNotification( Adc_HwUnit *HwUnit, Adc_GroupType Group )
+void Adc_Arch_DisableGroupNotification( Adc_HwUnit *HwUnit, Adc_GroupType Group )
 {
     (void)HwUnit;
     (void)Group;
@@ -202,7 +202,7 @@ void Adc_DisableGroupNotification( Adc_HwUnit *HwUnit, Adc_GroupType Group )
  *
  * @reqs    SWS_Adc_00374
  */
-Adc_StatusType Adc_GetGroupStatus( Adc_HwUnit *HwUnit, Adc_GroupType Group )
+Adc_StatusType Adc_Arch_GetGroupStatus( Adc_HwUnit *HwUnit, Adc_GroupType Group )
 {
     (void)HwUnit;
     (void)Group;
@@ -226,7 +226,7 @@ Adc_StatusType Adc_GetGroupStatus( Adc_HwUnit *HwUnit, Adc_GroupType Group )
  *
  * @reqs    SWS_Adc_00375
  */
-Adc_StreamNumSampleType Adc_GetStreamLastPointer( Adc_HwUnit *HwUnit, Adc_GroupType Group, Adc_ValueGroupType **PtrToSamplePtr )
+Adc_StreamNumSampleType Adc_Arch_GetStreamLastPointer( Adc_HwUnit *HwUnit, Adc_GroupType Group, Adc_ValueGroupType **PtrToSamplePtr )
 {
     (void)HwUnit;
     (void)Group;
@@ -244,7 +244,7 @@ Adc_StreamNumSampleType Adc_GetStreamLastPointer( Adc_HwUnit *HwUnit, Adc_GroupT
  *
  * @reqs    SWS_Adc_00376
  */
-void Adc_GetVersionInfo( Adc_HwUnit *HwUnit, Std_VersionInfoType *versioninfo )
+void Adc_Arch_GetVersionInfo( Adc_HwUnit *HwUnit, Std_VersionInfoType *versioninfo )
 {
     (void)HwUnit;
     (void)versioninfo;
@@ -267,7 +267,7 @@ void Adc_GetVersionInfo( Adc_HwUnit *HwUnit, Std_VersionInfoType *versioninfo )
  *
  * @reqs    SWS_Adc_00475
  */
-Std_ReturnType Adc_SetPowerState( Adc_HwUnit *HwUnit, Adc_PowerStateRequestResultType *Result )
+Std_ReturnType Adc_Arch_SetPowerState( Adc_HwUnit *HwUnit, Adc_PowerStateRequestResultType *Result )
 {
     (void)HwUnit;
     (void)Result;
@@ -290,7 +290,7 @@ Std_ReturnType Adc_SetPowerState( Adc_HwUnit *HwUnit, Adc_PowerStateRequestResul
  *
  * @reqs    SWS_Adc_00476
  */
-Std_ReturnType Adc_GetCurrentPowerState( Adc_HwUnit *HwUnit, Adc_PowerStateType *CurrentPowerState, Adc_PowerStateRequestResultType *Result )
+Std_ReturnType Adc_Arch_GetCurrentPowerState( Adc_HwUnit *HwUnit, Adc_PowerStateType *CurrentPowerState, Adc_PowerStateRequestResultType *Result )
 {
     (void)HwUnit;
     (void)CurrentPowerState;
