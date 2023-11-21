@@ -6,7 +6,6 @@
  * This specification describes the functionality, API and configuration of the AUTOSAR
  * Basic Software Module “Memory Abstraction Interface” (MemIf). This module allows
  * the NVRAM manager to access several memory abstraction modules (FEE or EA modules).
- *
  */
 #ifndef MEMIF_H__
 #define MEMIF_H__

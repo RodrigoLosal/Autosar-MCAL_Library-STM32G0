@@ -7,7 +7,6 @@
  * The file is implemnted as a means of abstraction from the hardware,
  * this way we can avoid to include Arch headers in the actual driver header,
  * making the low level interfaces available for upper layers.
- *
  */
 #ifndef FLASH_TYPES_H__
 #define FLASH_TYPES_H__

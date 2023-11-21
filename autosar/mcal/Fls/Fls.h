@@ -10,7 +10,6 @@
  * the flash driver is only to be used by the Flash EEPROM
  * emulation module for writing data.
  * It is not intended to write program code to flash memory in application mode.
- *
  */
 #ifndef FLASH_H__
 #define FLASH_H__
