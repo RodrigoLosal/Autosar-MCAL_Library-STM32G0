@@ -295,11 +295,21 @@ void Mcu_SetMode( Mcu_ModeType McuMode )
  */
 void Mcu_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
-    versioninfo->moduleID         = MCU_MODULE_ID;
-    versioninfo->vendorID         = MCU_VENDOR_ID;
-    versioninfo->sw_major_version = MCU_SW_MAJOR_VERSION;
-    versioninfo->sw_minor_version = MCU_SW_MINOR_VERSION;
-    versioninfo->sw_patch_version = MCU_SW_PATCH_VERSION;
+    if( versioninfo == NULL_PTR )
+    {
+        /* If development error detection for the Mcu module is enabled:
+        The function Mcu_GetVersionInfo shall raise the error MCU_E_PARAM_POINTER if the parameter
+        versionInfo is a null pointer */
+        Det_ReportError( MCU_MODULE_ID, MCU_INSTANCE_ID, MCU_ID_GET_VERSION_INFO, MCU_E_PARAM_POINTER );
+    }
+    else
+    {
+        versioninfo->moduleID         = MCU_MODULE_ID;
+        versioninfo->vendorID         = MCU_VENDOR_ID;
+        versioninfo->sw_major_version = MCU_SW_MAJOR_VERSION;
+        versioninfo->sw_minor_version = MCU_SW_MINOR_VERSION;
+        versioninfo->sw_patch_version = MCU_SW_PATCH_VERSION;
+    }
 }
 
 /**
