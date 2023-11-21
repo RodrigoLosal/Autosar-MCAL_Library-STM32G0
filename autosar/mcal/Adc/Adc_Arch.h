@@ -25,7 +25,6 @@ void Adc_Arch_EnableGroupNotification( Adc_HwUnit *HwUnit, Adc_GroupType Group )
 void Adc_Arch_DisableGroupNotification( Adc_HwUnit *HwUnit, Adc_GroupType Group );
 Adc_StatusType Adc_Arch_GetGroupStatus( Adc_HwUnit *HwUnit, Adc_GroupType Group );
 Adc_StreamNumSampleType Adc_Arch_GetStreamLastPointer( Adc_HwUnit *HwUnit, Adc_GroupType Group, Adc_ValueGroupType **PtrToSamplePtr );
-void Adc_Arch_GetVersionInfo( Adc_HwUnit *HwUnit, Std_VersionInfoType *versioninfo );
 Std_ReturnType Adc_Arch_SetPowerState( Adc_HwUnit *HwUnit, Adc_PowerStateRequestResultType *Result );
 Std_ReturnType Adc_Arch_GetCurrentPowerState( Adc_HwUnit *HwUnit, Adc_PowerStateType *CurrentPowerState, Adc_PowerStateRequestResultType *Result );
 Std_ReturnType Adc_Arch_GetTargetPowerState( Adc_HwUnit *HwUnit, Adc_PowerStateType *TargetPowerState, Adc_PowerStateRequestResultType *Result );
