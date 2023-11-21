@@ -9,10 +9,8 @@
  * driver header, making the low level interfaces available only for the inmediate upper layer.
  */
 #include "Std_Types.h"
-#include "Registers.h"
 #include "Adc_Cfg.h"
 #include "Adc_Arch.h"
-#include "Bfx.h"
 
 /**
  * @brief    **Adc low level Initialization**
