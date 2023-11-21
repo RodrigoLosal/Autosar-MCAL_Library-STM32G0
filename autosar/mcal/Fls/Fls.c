@@ -190,10 +190,12 @@ void Fls_SetMode( MemIf_ModeType Mode )
  *
  * @reqs    SWS_Fls_00259
  */
+#if FLS_GET_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Fls_GetVersionInfo( Std_VersionInfoType *VersioninfoPtr )
 {
     (void)VersioninfoPtr;
 }
+#endif
 
 /**
  * @brief   **Fls_BlankCheck**
