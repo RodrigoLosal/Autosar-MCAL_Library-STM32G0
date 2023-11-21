@@ -97,5 +97,16 @@ typedef uint32 Fls_AddressType;
  */
 typedef uint32 Fls_LengthType;
 
+/**
+ * @brief **Hardware control unit structure**
+ *
+ * This structure contains the hardware unit configuration and the state of the hardware
+ * unit pointers to controller structures.
+ */
+typedef struct _Fls_HwUnit
+{
+    const Fls_ConfigType *Config; /*!< Pointer to the configuration structure */
+} Fls_HwUnit;
+
 
 #endif
