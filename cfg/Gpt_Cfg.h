@@ -29,8 +29,8 @@
  * @typedef EcucIntegerParamDef
  *
  * @{ */
-#define GPT_TIM6          0 /*!< TIM6 */
-#define GPT_TIM7          1 /*!< TIM7  */
+#define GPT_TIM6                            0 /*!< TIM6 */
+#define GPT_TIM7                            1 /*!< TIM7  */
 
 /**
  * @defgroup   Test values of the two different possible operation modes of the GPT channels
