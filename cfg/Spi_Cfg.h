@@ -13,6 +13,8 @@
 
 #include "Spi_Types.h"
 
+extern const Spi_ConfigType SpiConfig;
+
 /**
  * @defgroup Spi_SWC_Ids CAN software Ids
  *
@@ -56,8 +58,6 @@
  * @typedef EcucBooleanParamDef
  */
 #define SPI_VERSION_INFO_API                 STD_ON
-
-extern const Spi_ConfigType SpiConfig;
 
 /**
  * @brief Switches the development error detection and notification on or off.
