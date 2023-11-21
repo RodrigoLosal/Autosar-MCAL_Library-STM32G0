@@ -13,7 +13,6 @@
 
 #include "Adc_Types.h"
 
-
 void Adc_Arch_Init( Adc_HwUnit *HwUnit, const Adc_ConfigType *ConfigPtr );
 Std_ReturnType Adc_Arch_SetupResultBuffer( Adc_HwUnit *HwUnit, Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr );
 void Adc_Arch_DeInit( Adc_HwUnit *HwUnit );

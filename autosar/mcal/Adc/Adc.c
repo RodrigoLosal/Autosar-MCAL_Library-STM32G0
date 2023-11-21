@@ -32,7 +32,8 @@ static Adc_HwUnit HwUnit_Adc =
  */
 void Adc_Init( const Adc_ConfigType *ConfigPtr )
 {
-    (void)ConfigPtr;
+    Adc_Arch_Init( &HwUnit_Adc, ConfigPtr );
+    HwUnit_Adc.Config = ConfigPtr;
 }
 
 /**
@@ -54,9 +55,7 @@ void Adc_Init( const Adc_ConfigType *ConfigPtr )
  */
 Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr )
 {
-    (void)Group;
-    (void)DataBufferPtr;
-    return E_OK;
+    return Adc_Arch_SetupResultBuffer( &HwUnit_Adc, Group, DataBufferPtr );
 }
 
 /**
@@ -69,6 +68,7 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
 #if ADC_DE_INIT_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DeInit( void )
 {
+    Adc_Arch_DeInit( &HwUnit_Adc );
 }
 #endif
 
@@ -84,7 +84,7 @@ void Adc_DeInit( void )
 #if ADC_ENABLE_START_STOP_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_StartGroupConversion( Adc_GroupType Group )
 {
-    (void)Group;
+    Adc_Arch_StartGroupConversion( &HwUnit_Adc, Group );
 }
 #endif
 
@@ -100,7 +100,7 @@ void Adc_StartGroupConversion( Adc_GroupType Group )
 #if ADC_ENABLE_START_STOP_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_StopGroupConversion( Adc_GroupType Group )
 {
-    (void)Group;
+    Adc_Arch_StopGroupConversion( &HwUnit_Adc, Group );
 }
 #endif
 
@@ -124,9 +124,7 @@ void Adc_StopGroupConversion( Adc_GroupType Group )
 #if ADC_READ_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr )
 {
-    (void)Group;
-    (void)DataBufferPtr;
-    return E_OK;
+    return Adc_Arch_ReadGroup( &HwUnit_Adc, Group, DataBufferPtr );
 }
 #endif
 
@@ -142,7 +140,7 @@ Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBuffe
 #if ADC_HW_TRIGGER_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_EnableHardwareTrigger( Adc_GroupType Group )
 {
-    (void)Group;
+    Adc_Arch_EnableHardwareTrigger( &HwUnit_Adc, Group );
 }
 #endif
 
@@ -158,7 +156,7 @@ void Adc_EnableHardwareTrigger( Adc_GroupType Group )
 #if ADC_HW_TRIGGER_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DisableHardwareTrigger( Adc_GroupType Group )
 {
-    (void)Group;
+    Adc_Arch_DisableHardwareTrigger( &HwUnit_Adc, Group );
 }
 #endif
 
@@ -174,7 +172,7 @@ void Adc_DisableHardwareTrigger( Adc_GroupType Group )
 #if ADC_GRP_NOTIF_CAPABILITY == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_EnableGroupNotification( Adc_GroupType Group )
 {
-    (void)Group;
+    Adc_Arch_EnableGroupNotification( HwUnit_Adc, Group );
 }
 #endif
 
@@ -190,7 +188,7 @@ void Adc_EnableGroupNotification( Adc_GroupType Group )
 #if ADC_GRP_NOTIF_CAPABILITY == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DisableGroupNotification( Adc_GroupType Group )
 {
-    (void)Group;
+    Adc_Arch_DisableGroupNotification( &HwUnit_Adc, Group );
 }
 #endif
 
@@ -207,8 +205,7 @@ void Adc_DisableGroupNotification( Adc_GroupType Group )
  */
 Adc_StatusType Adc_GetGroupStatus( Adc_GroupType Group )
 {
-    (void)Group;
-    return ADC_IDLE;
+    return Adc_Arch_GetGroupStatus( &HwUnit_Adc, Group );
 }
 
 /**
@@ -229,9 +226,7 @@ Adc_StatusType Adc_GetGroupStatus( Adc_GroupType Group )
  */
 Adc_StreamNumSampleType Adc_GetStreamLastPointer( Adc_GroupType Group, Adc_ValueGroupType **PtrToSamplePtr )
 {
-    (void)Group;
-    (void)PtrToSamplePtr;
-    return 1u;
+    return Adc_Arch_GetStreamLastPointer( &HwUnit_Adc, Group, PtrToSamplePtr );
 }
 
 /**
@@ -245,7 +240,7 @@ Adc_StreamNumSampleType Adc_GetStreamLastPointer( Adc_GroupType Group, Adc_Value
  */
 void Adc_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
-    (void)versioninfo;
+    Adc_Arch_GetVersionInfo( *HwUnit_Adc, versioninfo );
 }
 
 /**
@@ -266,8 +261,7 @@ void Adc_GetVersionInfo( Std_VersionInfoType *versioninfo )
  */
 Std_ReturnType Adc_SetPowerState( Adc_PowerStateRequestResultType *Result )
 {
-    (void)Result;
-    return E_OK;
+    return Adc_Arch_SetPowerState( &HwUnit_Adc, Result );
 }
 
 /**
@@ -287,9 +281,7 @@ Std_ReturnType Adc_SetPowerState( Adc_PowerStateRequestResultType *Result )
  */
 Std_ReturnType Adc_GetCurrentPowerState( Adc_PowerStateType *CurrentPowerState, Adc_PowerStateRequestResultType *Result )
 {
-    (void)CurrentPowerState;
-    (void)Result;
-    return E_OK;
+    return Adc_Arch_GetCurrentPowerState( &HwUnit_Adc, CurrentPowerState, Result );
 }
 
 /**
@@ -309,9 +301,7 @@ Std_ReturnType Adc_GetCurrentPowerState( Adc_PowerStateType *CurrentPowerState, 
  */
 Std_ReturnType Adc_GetTargetPowerState( Adc_PowerStateType *TargetPowerState, Adc_PowerStateRequestResultType *Result )
 {
-    (void)TargetPowerState;
-    (void)Result;
-    return E_OK;
+    return Adc_Arch_GetTargetPowerState( &HwUnit_Adc, TargetPowerState, Result );
 }
 
 /**
@@ -335,7 +325,5 @@ Std_ReturnType Adc_GetTargetPowerState( Adc_PowerStateType *TargetPowerState, Ad
  */
 Std_ReturnType Adc_PreparePowerState( Adc_PowerStateType PowerState, Adc_PowerStateRequestResultType *Result )
 {
-    (void)PowerState;
-    (void)Result;
-    return E_OK;
+    return Adc_Arch_PreparePowerState( &HwUnit_Adc, PowerState, Result );
 }
