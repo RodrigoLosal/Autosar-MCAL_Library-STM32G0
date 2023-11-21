@@ -16,6 +16,16 @@
 #include "Gpt_Arch.h"
 
 /**
+ * @brief  Variable for the initial value of the GPT configuration array.
+ */
+/* clang-format off */
+static Gpt_HwUnit HwUnit_Gpt =
+{
+.Config = NULL_PTR,
+};
+/* clang-format on */
+
+/**
  * @brief Global GPT register array.
  */
 /* cppcheck-suppress misra-config ; The GPT_NUMBER_OF_CHANNELS define is already available through Gpt.h */
@@ -41,6 +51,7 @@ static const Gpt_ConfigType *LocalGptConfigPtr = { NULL_PTR };
  */
 void Gpt_Init( const Gpt_ConfigType *ConfigPtr )
 {
+    Gpt_Arch_Init( &HwUnit_Gpt, ConfigPtr );
     Gpt_RegisterType *channel;
 
     for( uint8 ChannelsToInit = 0; ChannelsToInit < GPT_NUMBER_OF_CHANNELS; ChannelsToInit++ )
@@ -52,6 +63,7 @@ void Gpt_Init( const Gpt_ConfigType *ConfigPtr )
         Bfx_ClrBit_u32u8( (uint32 *)&channel->SR, GPT_INTERRUPT_FLAG_BIT ); /*Clearing the Status Register Flag*/                        /*Clearing the update interrupt flag of TIMx_SR*/
     }
     LocalGptConfigPtr = ConfigPtr;
+    HwUnit_Gpt.Config = ConfigPtr;
 }
 
 /**
@@ -65,6 +77,7 @@ void Gpt_Init( const Gpt_ConfigType *ConfigPtr )
 #if GPT_DEINIT_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_DeInit( void )
 {
+    Gpt_Arch_DeInit( &HwUnit_Gpt );
     Gpt_RegisterType *channel;
 
     for( uint8 ChannelsToDeinit = 0; ChannelsToDeinit < GPT_NUMBER_OF_CHANNELS; ChannelsToDeinit++ )
@@ -93,6 +106,7 @@ void Gpt_DeInit( void )
 #if GPT_TIME_ELAPSED_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Gpt_ValueType Gpt_GetTimeElapsed( Gpt_ChannelType Channel )
 {
+    Gpt_Arch_GetTimeElapsed( &HwUnit_Gpt, Channel );
     Gpt_RegisterType *channel;
 
     channel = GptPeripherals[ LocalGptConfigPtr[ Channel ].GptReference ];
@@ -116,6 +130,7 @@ Gpt_ValueType Gpt_GetTimeElapsed( Gpt_ChannelType Channel )
 #if GPT_TIME_REMAINING_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Gpt_ValueType Gpt_GetTimeRemaining( Gpt_ChannelType Channel )
 {
+    Gpt_Arch_GetTimeRemaining( &HwUnit_Gpt, Channel );
     Gpt_RegisterType *channel;
 
     channel = GptPeripherals[ LocalGptConfigPtr[ Channel ].GptReference ];
@@ -137,6 +152,7 @@ Gpt_ValueType Gpt_GetTimeRemaining( Gpt_ChannelType Channel )
  */
 void Gpt_StartTimer( Gpt_ChannelType Channel, Gpt_ValueType Value )
 {
+    Gpt_Arch_StartTimer( &HwUnit_Gpt, Channel, Value );
     Gpt_RegisterType *channel;
     channel = GptPeripherals[ LocalGptConfigPtr[ Channel ].GptReference ];
     Bfx_SetBits_u32u8u8u8( (uint32 *)&channel->ARR, GPT_AUTO_RELOAD_LSB, GPT_AUTO_RELOAD_MSB, RESET ); /*Clearing the reset value of TIMx_ARR*/
@@ -155,6 +171,7 @@ void Gpt_StartTimer( Gpt_ChannelType Channel, Gpt_ValueType Value )
  */
 void Gpt_StopTimer( Gpt_ChannelType Channel )
 {
+    Gpt_Arch_StopTimer( &HwUnit_Gpt, Channel );
     Gpt_RegisterType *channel;
     channel = GptPeripherals[ LocalGptConfigPtr[ Channel ].GptReference ];
     Bfx_ClrBit_u32u8( (uint32 *)&channel->CR1, GPT_COUNTER_ENABLE_BIT ); /*Clearing the CEN: bit of TIMx_CR1*/
@@ -194,6 +211,7 @@ void Gpt_GetVersionInfo( Std_VersionInfoType *versioninfo )
 #if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_EnableNotification( Gpt_ChannelType Channel )
 {
+    Gpt_Arch_EnableNotification( &HwUnit_Gpt, Channel );
     Gpt_RegisterType *channel;
     channel = GptPeripherals[ LocalGptConfigPtr[ Channel ].GptReference ];
     Bfx_ClrBit_u32u8( (uint32 *)&channel->CR1, GPT_UPDATE_DISABLE_BIT ); /*Clearing the UDIS: bit of TIMx_CR1*/
@@ -213,6 +231,7 @@ void Gpt_EnableNotification( Gpt_ChannelType Channel )
 #if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_DisableNotification( Gpt_ChannelType Channel )
 {
+    Gpt_Arch_DisableNotification( &HwUnit_Gpt, Channel );
     Gpt_RegisterType *channel;
     channel = GptPeripherals[ LocalGptConfigPtr[ Channel ].GptReference ];
     Bfx_SetBit_u32u8( (uint32 *)&channel->CR1, GPT_UPDATE_DISABLE_BIT ); /*Setting the UDIS: bit of TIMx_CR1*/
@@ -232,6 +251,7 @@ void Gpt_DisableNotification( Gpt_ChannelType Channel )
 #if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_Notification_Channel0( void )
 {
+    Gpt_Arch_Notification_Channel0( &HwUnit_Gpt );
     Gpt_RegisterType *channel;
     channel = GptPeripherals[ LocalGptConfigPtr[ GPT_CHANNEL_0 ].GptReference ];
     if( Bfx_GetBit_u32u8_u8( channel->SR, GPT_INTERRUPT_FLAG_BIT ) == TRUE ) /*Checking if the update interrupt flag of TIMx_SR is set*/
@@ -258,6 +278,7 @@ void Gpt_Notification_Channel0( void )
 #if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_Notification_Channel1( void )
 {
+    Gpt_Arch_Notification_Channel1( &HwUnit_Gpt );
     Gpt_RegisterType *channel;
     channel = GptPeripherals[ LocalGptConfigPtr[ GPT_CHANNEL_1 ].GptReference ];
     if( Bfx_GetBit_u32u8_u8( channel->SR, GPT_INTERRUPT_FLAG_BIT ) == TRUE ) /*Checking if the update interrupt flag of TIMx_SR is set*/
