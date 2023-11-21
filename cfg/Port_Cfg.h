@@ -12,30 +12,30 @@
 #define PORT_CFG_H_
 
 /**
- * @brief   **Number of port settings to configure**
+ * @defgroup PORT_SWC_Ids PORT software version and Ids
  *
- * Number of ports to configure, this is the number of ports that will be configured by the driver
- * and shall be set by the user according to the number of elements defined in Port_Config array
- * shall be greater than zero
- */
-#define PORT_PIN_NUMBER_OF_PORTS   1
-
-/**
- * @defgroup    PORT_PINS  This are the names of each pin use by the application, it suggested to
- *              follow the notation **PORTS_<pin_name>_PORT_<n>_PIN_<n>** the MSB indicates the
- *              port index from the PortConfig array and the LSB indicates the pin number
- * @{ */
-#define PORT_TEST_ON_PORT_C_PIN_0  ( Port_PinType )( 0x0000 | PORTS_PIN_00_VAL ) /**< Port C pin 0 */
-#define PORT_TEST_ON_PORT_C_PIN_1  ( Port_PinType )( 0x0000 | PORTS_PIN_01_VAL ) /**< Port C pin 1 */
-#define PORT_TEST_ON_PORT_C_PIN_2  ( Port_PinType )( 0x0000 | PORTS_PIN_02_VAL ) /**< Port C pin 2 */
-#define PORT_TEST_ON_PORT_C_PIN_3  ( Port_PinType )( 0x0000 | PORTS_PIN_03_VAL ) /**< Port C pin 3 */
-#define PORT_TEST_ON_PORT_C_PIN_4  ( Port_PinType )( 0x0000 | PORTS_PIN_04_VAL ) /**< Port C pin 4 */
-#define PORT_TEST_ON_PORT_C_PIN_5  ( Port_PinType )( 0x0000 | PORTS_PIN_05_VAL ) /**< Port C pin 5 */
-#define PORT_TEST_ON_PORT_C_PIN_6  ( Port_PinType )( 0x0000 | PORTS_PIN_06_VAL ) /**< Port C pin 6 */
-#define PORT_TEST_ON_PORT_C_PIN_7  ( Port_PinType )( 0x0000 | PORTS_PIN_07_VAL ) /**< Port C pin 7 */
+ * {@ */
+#define PORT_MODULE_ID             0u /*!< Port Module ID */
+#define PORT_INSTANCE_ID           0u /*!< Port Instance ID */
+#define PORT_VENDOR_ID             0u /*!< Port Module Vendor ID */
 /**
  * @} */
 
+/**
+ * @defgroup PORT_SWC_Ids PORT software version and Ids
+ *
+ * {@ */
+#define PORT_SW_MAJOR_VERSION      0u /*!< Port Module Major Version */
+#define PORT_SW_MINOR_VERSION      0u /*!< Port Module Minor Version */
+#define PORT_SW_PATCH_VERSION      0u /*!< Port Module Patch Version */
+/**
+ * @} */
+
+/**
+ * @brief Switches the development error detection and notification on or off.
+ * @typedef EcucBooleanParamDef
+ */
+#define PORT_DEV_ERROR_DETECT      STD_OFF
 
 /**
  * @defgroup    PORTS_SETTINGS  This are option to enable or disable some driver interfaces
@@ -46,6 +46,15 @@
 #define PORT_VERSION_INFO_API      STD_ON /**< Enable or disable the version info API */
 /**
  * @} */
+
+/**
+ * @brief   **Number of port settings to configure**
+ *
+ * Number of ports to configure, this is the number of ports that will be configured by the driver
+ * and shall be set by the user according to the number of elements defined in Port_Config array
+ * shall be greater than zero
+ */
+#define PORT_PIN_NUMBER_OF_PORTS   1
 
 /*external reference to Port_Config array*/
 extern const Port_ConfigType PortConfig[ PORT_PIN_NUMBER_OF_PORTS ];
