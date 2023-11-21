@@ -15,21 +15,21 @@
 
 void Mcu_Init( const Mcu_ConfigType *ConfigPtr );
 Std_ReturnType Mcu_InitRamSection( Mcu_RamSectionType RamSection );
-#if MCU_INIT_CLOCK == TRUE /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if MCU_INIT_CLOCK == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Std_ReturnType Mcu_InitClock( Mcu_ClockType ClockSetting );
 #endif
-#if MCU_NO_PLL == TRUE /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if MCU_NO_PLL == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Std_ReturnType Mcu_DistributePllClock( void );
 #endif
 Mcu_PllStatusType Mcu_GetPllStatus( void );
 Mcu_ResetType Mcu_GetResetReason( void );
 Mcu_RawResetType Mcu_GetResetRawValue( void );
-#if MCU_PERFORM_RESET_API == TRUE /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if MCU_PERFORM_RESET_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Mcu_PerformReset( void );
 #endif
 void Mcu_SetMode( Mcu_ModeType McuMode );
 void Mcu_GetVersionInfo( Std_VersionInfoType *versioninfo );
-#if MCU_GET_RAM_STATE_API == TRUE /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if MCU_GET_RAM_STATE_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Mcu_RamStateType Mcu_GetRamState( void );
 #endif
 

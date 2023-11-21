@@ -47,18 +47,6 @@
  * @} */
 
 /**
- * @brief **Hardware dependent structure**
- *
- * A pointer to this type is provided to MCU initialization routines for configuration
- *
- * @reqs SWS_Mcu_00249
- */
-typedef struct _Mcu_ConfigType
-{
-    uint32 dummy; /*!< dummy element for the moment */
-} Mcu_ConfigType;
-
-/**
  * @brief   **Status value returned by the function Mcu_GetPllStatus of the MCU module**
  *
  * @reqs    SWS_Mcu_00250
@@ -128,6 +116,34 @@ typedef enum _Mcu_RamStateType
 } Mcu_RamStateType;
 
 /**
+ * @brief   **Hardware unit status datatype**
+ *
+ * Data type which describes the status of MCU Module (initialized or not-initialized)
+ *
+ */
+typedef enum _Mcu_StatusType
+{
+    MCU_STATE_UNINIT = 0x00, /*!< MCU Module not initialized         */
+    MCU_STATE_INIT,          /*!< MCU Module has been initialized    */
+} Mcu_StatusType;
+
+/**
+ * @brief **Hardware dependent structure**
+ *
+ * A pointer to this type is provided to MCU initialization routines for configuration
+ *
+ * @reqs SWS_Mcu_00249, SWS_Mcu_00017, SWS_Mcu_00019, SWS_Mcu_00020, SWS_Mcu_00021
+ */
+typedef struct _Mcu_ConfigType
+{
+    Mcu_ClockType ClockSetting;    /*!< Specifies the identification (ID) for a clock setting    */
+    Mcu_ModeType McuMode;          /*!< Specifies the identification (ID) for a MCU mode         */
+    Mcu_RamSectionType RamSection; /*!< Specifies the identification (ID) for a RAM section      */
+    Mcu_PllStatusType PllStatus;   /*!< Stores the status of PLL (locked, unlocked or undefined) */
+    uint32 dummy;                  /*!< dummy element for the moment */
+} Mcu_ConfigType;
+
+/**
  * @brief **Hardware control unit structure**
  *
  * This structure contains the hardware unit configuration and the state of the hardware
@@ -136,6 +152,7 @@ typedef enum _Mcu_RamStateType
 typedef struct _Mcu_HwUnit
 {
     const Mcu_ConfigType *Config; /*!< Pointer to the configuration structure */
+    uint8 HwUnitState;            /*!< MCU hardware unit state                */
 } Mcu_HwUnit;
 
 #endif

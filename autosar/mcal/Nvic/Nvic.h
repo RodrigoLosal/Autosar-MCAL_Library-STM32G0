@@ -5,8 +5,10 @@
  * This file provides the interface for controlling the NVIC functionality. It controls the activation
  * of interrupts in ARM microcontrollers via the NVIC peripheral
  */
-#ifndef NVIC_H
-#define NVIC_H
+#ifndef NVIC_H__
+#define NVIC_H__
+
+#include "Nvic_Cfg.h"
 
 void CDD_Nvic_SetPriority( Nvic_IrqType irq, uint32 priority );
 uint32 CDD_Nvic_GetPriority( Nvic_IrqType irq );
