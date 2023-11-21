@@ -46,7 +46,7 @@ static Spi_HwUnit HwUnit_Spi =
  *
  * @param    ConfigPtr Pointer to configuration set
  *
- * @reqs    SWS_Spi_00175, SWS_Spi_00233
+ * @reqs    SWS_Spi_00175, SWS_Spi_00233, SWS_Spi_00015
  */
 void Spi_Init( const Spi_ConfigType *ConfigPtr )
 {
@@ -61,7 +61,9 @@ void Spi_Init( const Spi_ConfigType *ConfigPtr )
     else
     {
         Spi_Arch_Init( &HwUnit_Spi, ConfigPtr );
-        HwUnit_Spi.Config = ConfigPtr;
+        HwUnit_Spi.Config      = ConfigPtr;
+        HwUnit_Spi.HwUnitState = SPI_IDLE;
+        HwUnit_Spi.SpiState    = SPI_IDLE;
     }
 }
 
@@ -79,12 +81,12 @@ Std_ReturnType Spi_DeInit( void )
 {
     Std_ReturnType value = E_NOT_OK;
 
-    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState != SPI_UNINIT ) )
+    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState == SPI_UNINIT ) )
     {
         /*If development error detection for the SPI module is enabled and the SPI Handler/Driver’s environment
         calls any API function before initialization, an error should be reported to the DET with the error value
         SPI_E_UNINIT according to the configuration */
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_UNINIT );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_DE_INIT, SPI_E_UNINIT );
     }
     else
     {
@@ -113,25 +115,25 @@ Std_ReturnType Spi_WriteIB( Spi_ChannelType Channel, const Spi_DataBufferType *D
 {
     Std_ReturnType value = E_NOT_OK;
 
-    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState != SPI_UNINIT ) )
+    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState == SPI_UNINIT ) )
     {
         /*If development error detection for the SPI module is enabled and the SPI Handler/Driver’s environment
         calls any API function before initialization, an error should be reported to the DET with the error value
         SPI_E_UNINIT according to the configuration */
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_UNINIT );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_WRITE_IB, SPI_E_UNINIT );
     }
     else if( Channel >= HwUnit_Spi.Config->ChannelCount )
     {
         /* If development error detection for the Spi module is enabled:
         the function Spi_WriteIB shall raise the error SPI_E_PARAM_CHANNEL if the parameter
         Channel ID is out of range.*/
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_PARAM_CHANNEL );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_WRITE_IB, SPI_E_PARAM_CHANNEL );
     }
     else if( DataBufferPtr == NULL_PTR )
     {
         /*If Det is enabled, the parameter versioninfo shall be checked for being NULL. The error SPI_E_PARAM_POINTER
         shall be reported in case the value is a NULL pointer*/
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_PARAM_POINTER );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_WRITE_IB, SPI_E_PARAM_POINTER );
     }
     else
     {
@@ -157,19 +159,19 @@ Std_ReturnType Spi_AsyncTransmit( Spi_SequenceType Sequence )
 {
     Std_ReturnType value = E_NOT_OK;
 
-    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState != SPI_UNINIT ) )
+    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState == SPI_UNINIT ) )
     {
         /*If development error detection for the SPI module is enabled and the SPI Handler/Driver’s environment
         calls any API function before initialization, an error should be reported to the DET with the error value
         SPI_E_UNINIT according to the configuration */
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_UNINIT );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_ASYNC_TRANSMIT, SPI_E_UNINIT );
     }
     else if( Sequence >= HwUnit_Spi.Config->SequenceCount )
     {
         /* If development error detection for the Spi module is enabled:
         the function Spi_AsyncTransmit shall raise the error SPI_E_PARAM_SEQ if the parameter
         Sequence ID is out of range.*/
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_PARAM_SEQ );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_ASYNC_TRANSMIT, SPI_E_PARAM_SEQ );
     }
     else
     {
@@ -197,25 +199,25 @@ Std_ReturnType Spi_ReadIB( Spi_ChannelType Channel, const Spi_DataBufferType *Da
 {
     Std_ReturnType value = E_NOT_OK;
 
-    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState != SPI_UNINIT ) )
+    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState == SPI_UNINIT ) )
     {
         /*If development error detection for the SPI module is enabled and the SPI Handler/Driver’s environment
         calls any API function before initialization, an error should be reported to the DET with the error value
         SPI_E_UNINIT according to the configuration */
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_UNINIT );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_READ_IB, SPI_E_UNINIT );
     }
     else if( Channel >= HwUnit_Spi.Config->ChannelCount )
     {
         /* If development error detection for the Spi module is enabled:
         the function Spi_ReadIB shall raise the error SPI_E_PARAM_CHANNEL if the parameter
         Channel ID is out of range.*/
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_PARAM_CHANNEL );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_READ_IB, SPI_E_PARAM_CHANNEL );
     }
     else if( DataBufferPtr == NULL_PTR )
     {
         /*If Det is enabled, the parameter versioninfo shall be checked for being NULL. The error SPI_E_PARAM_POINTER
         shall be reported in case the value is a NULL pointer*/
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_PARAM_POINTER );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_READ_IB, SPI_E_PARAM_POINTER );
     }
     else
     {
@@ -246,38 +248,38 @@ Std_ReturnType Spi_SetupEB( Spi_ChannelType Channel, const Spi_DataBufferType *S
 {
     Std_ReturnType value = E_NOT_OK;
 
-    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState != SPI_UNINIT ) )
+    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState == SPI_UNINIT ) )
     {
         /*If development error detection for the SPI module is enabled and the SPI Handler/Driver’s environment
         calls any API function before initialization, an error should be reported to the DET with the error value
         SPI_E_UNINIT according to the configuration */
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_UNINIT );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_SET_UP_EB, SPI_E_UNINIT );
     }
     else if( Channel >= HwUnit_Spi.Config->ChannelCount )
     {
         /* If development error detection for the Spi module is enabled:
         the function Spi_SetupEB shall raise the error SPI_E_PARAM_CHANNEL if the parameter
         Channel ID is out of range.*/
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_PARAM_CHANNEL );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_SET_UP_EB, SPI_E_PARAM_CHANNEL );
     }
     else if( SrcDataBufferPtr == NULL_PTR )
     {
         /*If Det is enabled, the parameter versioninfo shall be checked for being NULL. The error SPI_E_PARAM_POINTER
         shall be reported in case the value is a NULL pointer*/
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_PARAM_POINTER );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_SET_UP_EB, SPI_E_PARAM_POINTER );
     }
     else if( DesDataBufferPtr == NULL_PTR )
     {
         /*If Det is enabled, the parameter versioninfo shall be checked for being NULL. The error SPI_E_PARAM_POINTER
         shall be reported in case the value is a NULL pointer*/
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_PARAM_POINTER );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_SET_UP_EB, SPI_E_PARAM_POINTER );
     }
-    else if( ( Length > 0 ) && ( Length <= SpiEbMaxLength ) )
+    else if( ( Length > 0 ) && ( Length <= 10u ) )
     {
         /* If development error detection for the Spi module is enabled:
         the function Spi_SetupEB shall raise the error SPI_E_PARAM_LENGTH if the parameter
         Length data is out of range.*/
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_PARAM_LENGTH );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_SET_UP_EB, SPI_E_PARAM_LENGTH );
     }
     else
     {
@@ -315,19 +317,19 @@ Spi_JobResultType Spi_GetJobResult( Spi_JobType Job )
 {
     Std_ReturnType value = E_NOT_OK;
 
-    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState != SPI_UNINIT ) )
+    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState == SPI_UNINIT ) )
     {
         /*If development error detection for the SPI module is enabled and the SPI Handler/Driver’s environment
         calls any API function before initialization, an error should be reported to the DET with the error value
         SPI_E_UNINIT according to the configuration */
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_UNINIT );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_GET_JOB_RESULT, SPI_E_UNINIT );
     }
     else if( Job >= HwUnit_Spi.Config->JobCount )
     {
         /* If development error detection for the Spi module is enabled:
         the function Spi_GetJobResult shall raise the error SPI_E_PARAM_JOB if the parameter
         Job ID is out of range.*/
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_PARAM_JOB );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_GET_JOB_RESULT, SPI_E_PARAM_JOB );
     }
     else
     {
@@ -351,19 +353,19 @@ Spi_SeqResultType Spi_GetSequenceResult( Spi_SequenceType Sequence )
 {
     Std_ReturnType value = E_NOT_OK;
 
-    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState != SPI_UNINIT ) )
+    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState == SPI_UNINIT ) )
     {
         /*If development error detection for the SPI module is enabled and the SPI Handler/Driver’s environment
         calls any API function before initialization, an error should be reported to the DET with the error value
         SPI_E_UNINIT according to the configuration */
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_UNINIT );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_GET_SEQUENCE_RESULT, SPI_E_UNINIT );
     }
     else if( Sequence >= HwUnit_Spi.Config->SequenceCount )
     {
         /* If development error detection for the Spi module is enabled:
         the function Spi_GetSequenceResult shall raise the error SPI_E_PARAM_SEQ if the parameter
         Sequence ID is out of range.*/
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_PARAM_SEQ );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_GET_SEQUENCE_RESULT, SPI_E_PARAM_SEQ );
     }
     else
     {
@@ -388,7 +390,7 @@ void Spi_GetVersionInfo( Std_VersionInfoType *versioninfo )
     {
         /*If Det is enabled, the parameter versioninfo shall be checked for being NULL. The error SPI_E_PARAM_POINTER
         shall be reported in case the value is a NULL pointer*/
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_PARAM_POINTER );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_GET_VERSION_INFO, SPI_E_PARAM_POINTER );
     }
     else
     {
@@ -417,19 +419,19 @@ Std_ReturnType Spi_SyncTransmit( Spi_SequenceType Sequence )
 {
     Std_ReturnType value = E_NOT_OK;
 
-    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState != SPI_UNINIT ) )
+    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState == SPI_UNINIT ) )
     {
         /*If development error detection for the SPI module is enabled and the SPI Handler/Driver’s environment
         calls any API function before initialization, an error should be reported to the DET with the error value
         SPI_E_UNINIT according to the configuration */
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_UNINIT );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_SYNC_TRANSMIT, SPI_E_UNINIT );
     }
     else if( Sequence >= HwUnit_Spi.Config->SequenceCount )
     {
         /* If development error detection for the Spi module is enabled:
         the function Spi_SyncTransmit shall raise the error SPI_E_PARAM_SEQ if the parameter
         Sequence ID is out of range.*/
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_PARAM_SEQ );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_SYNC_TRANSMIT, SPI_E_PARAM_SEQ );
     }
     else
     {
@@ -455,19 +457,19 @@ Spi_StatusType Spi_GetHWUnitStatus( Spi_HWUnitType HWUnit )
 {
     Std_ReturnType value = E_NOT_OK;
 
-    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState != SPI_UNINIT ) )
+    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState == SPI_UNINIT ) )
     {
         /*If development error detection for the SPI module is enabled and the SPI Handler/Driver’s environment
         calls any API function before initialization, an error should be reported to the DET with the error value
         SPI_E_UNINIT according to the configuration */
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_UNINIT );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_GET_HWUNIT_STATUS, SPI_E_UNINIT );
     }
     else if( HWUnit >= HwUnit_Spi.Config->HWUnitCount )
     {
         /* If development error detection for the Spi module is enabled:
         the function Spi_GetHWUnitStatus shall raise the error SPI_E_PARAM_UNIT if the parameter
         HWUnit ID is out of range.*/
-        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_INIT, SPI_E_PARAM_UNIT );
+        Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_GET_HWUNIT_STATUS, SPI_E_PARAM_UNIT );
     }
     else
     {

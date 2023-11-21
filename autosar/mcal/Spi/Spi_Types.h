@@ -51,24 +51,6 @@
 
 
 /**
- * @brief **Hardware unit configuration structure**
- *
- * This type of the external data structure shall contain the initialization data for the SPI
- * Handler/Driver.
- *
- * @reqs    SWS_Spi_00372
- */
-typedef struct _Spi_ConfigType
-{
-    uint8 ChannelCount;  /*!< Channel ID configurations for the SpiHandler/Driver */
-    uint8 SequenceCount; /*!< Sequence ID configurations for the SpiHandler/Driver */
-    uint8 JobCount;      /*!< Job ID configurations for the SpiHandler/Driver */
-    uint8 HWUnitCount;   /*!< Job ID configurations for the SpiHandler/Driver */
-    uint32 dummy;        /*!< dummy element for the moment */
-} Spi_ConfigType;
-
-
-/**
  * @brief States of the controller SPI
  *
  * This type defines a range of specific status for SPI Handler/Driver.
@@ -81,19 +63,6 @@ typedef enum _Spi_StatusType
     SPI_IDLE,   /*!< The SPI Handler/Driver is not currently transmitting any Job.*/
     SPI_BUSY,   /*!< The SPI Handler/Driver is performing a SPI Job (transmit).*/
 } Spi_StatusType;
-
-/**
- * @brief **Hardware control unit structure**
- *
- * This structure contains the hardware unit configuration and the state of the hardware
- * unit pointers to controller structures.
- */
-typedef struct _Spi_HwUnit
-{
-    const Spi_ConfigType *Config; /*!< Pointer to the configuration structure */
-    uint8 HwUnitState;            /*!< SPI hardware unit state */
-    Spi_StatusType *SpiState;     /*!< SPI Handler/Driver states */
-} Spi_HwUnit;
 
 /**
  * @brief States of the Jobs for the SPI
@@ -124,24 +93,6 @@ typedef enum _Spi_SeqResultType
     SPI_SEQ_FAILED,   /*!< The last transmission of the Sequence has failed.*/
     SPI_SEQ_CANCELED, /*!< The last transmission of the Sequence has been canceled by user.*/
 } Spi_SeqResultType;
-
-/**
- * @brief  Spi Data Buffer Type
- *
- * Type of application data buffer elements.
- *
- * @reqs    SWS_Spi_00376
- */
-typedef uint8 Spi_DataBufferType;
-
-/**
- * @brief  Spi Number Of Data Type
- *
- * Type for defining the number of data elements to send and / or receive by Channel.
- *
- * @reqs    SWS_Spi_00377
- */
-typedef uint16 Spi_NumberOfDataType;
 
 /**
  * @brief  Spi Channel Type
@@ -178,6 +129,53 @@ typedef uint8 Spi_SequenceType;
  * @reqs    SWS_Spi_00381
  */
 typedef uint8 Spi_HWUnitType;
+/**
+ * @brief **Hardware unit configuration structure**
+ *
+ * This type of the external data structure shall contain the initialization data for the SPI
+ * Handler/Driver.
+ *
+ * @reqs    SWS_Spi_00372
+ */
+typedef struct _Spi_ConfigType
+{
+    Spi_ChannelType ChannelCount;   /*!< Channel ID configurations for the SpiHandler/Driver */
+    Spi_SequenceType SequenceCount; /*!< Sequence ID configurations for the SpiHandler/Driver */
+    Spi_JobType JobCount;           /*!< Job ID configurations for the SpiHandler/Driver */
+    Spi_HWUnitType HWUnitCount;     /*!< Job ID configurations for the SpiHandler/Driver */
+    uint32 dummy;                   /*!< dummy element for the moment */
+} Spi_ConfigType;
+
+/**
+ * @brief **Hardware control unit structure**
+ *
+ * This structure contains the hardware unit configuration and the state of the hardware
+ * unit pointers to controller structures.
+ */
+typedef struct _Spi_HwUnit
+{
+    const Spi_ConfigType *Config; /*!< Pointer to the configuration structure */
+    uint8 HwUnitState;            /*!< SPI hardware unit state */
+    Spi_StatusType SpiState;      /*!< SPI Handler/Driver states */
+} Spi_HwUnit;
+
+/**
+ * @brief  Spi Data Buffer Type
+ *
+ * Type of application data buffer elements.
+ *
+ * @reqs    SWS_Spi_00376
+ */
+typedef uint8 Spi_DataBufferType;
+
+/**
+ * @brief  Spi Number Of Data Type
+ *
+ * Type for defining the number of data elements to send and / or receive by Channel.
+ *
+ * @reqs    SWS_Spi_00377
+ */
+typedef uint16 Spi_NumberOfDataType;
 
 /**
  * @brief States of the Asynchronoe Mode for the SPI
