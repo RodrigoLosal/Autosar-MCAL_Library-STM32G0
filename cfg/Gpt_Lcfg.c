@@ -25,14 +25,14 @@ const Gpt_ConfigType GptConfig[ GPT_NUMBER_OF_CHANNELS ] =
 {
     {
         .GptChannelId                       = GPT_CHANNEL_0,
-        .BaseAddress                        = TIM6, 
+        .GptReference                       = GPT_TIM6, 
         .GptChannelMode                     = TEST_GPT_CH_MODE_CONTINUOUS,
         .GptChannelPrescaler                = 0x0000FFFF,
         .GptNotification                    = NULL_PTR
     },
     {
         .GptChannelId                       = GPT_CHANNEL_1,
-        .BaseAddress                        = TIM7,
+        .GptReference                       = GPT_TIM7,
         .GptChannelMode                     = TEST_GPT_CH_MODE_ONESHOT,
         .GptChannelPrescaler                = 0x000000001,
         .GptNotification                    = NULL_PTR

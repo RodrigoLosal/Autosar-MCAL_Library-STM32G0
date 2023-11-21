@@ -22,6 +22,17 @@
 #define GPT_NUMBER_OF_CHANNELS              2u
 
 /**
+ * @defgroup GPT TIM References
+ *
+ * Specifies the controller IDs of the MCU TIM's
+ *
+ * @typedef EcucIntegerParamDef
+ *
+ * @{ */
+#define GPT_TIM6          0 /*!< TIM6 */
+#define GPT_TIM7          1 /*!< TIM7  */
+
+/**
  * @defgroup   Test values of the two different possible operation modes of the GPT channels
  */
 #define TEST_GPT_CH_MODE_CONTINUOUS         0  /**< Channel on Continuous mode */
