@@ -182,7 +182,7 @@ void Fls_SetMode( MemIf_ModeType Mode )
  */
 void Fls_GetVersionInfo( Std_VersionInfoType *VersioninfoPtr )
 {
-    Fls_Arch_GetVersionInfo( &HwUnit_Fls, VersioninfoPtr );
+    (void)VersioninfoPtr;
 }
 
 /**

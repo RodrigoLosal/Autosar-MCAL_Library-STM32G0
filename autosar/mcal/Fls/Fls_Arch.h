@@ -3,7 +3,7 @@
  * @brief   **Flash Architecture Driver**
  * @author  Christopher Bogarin
  *
- * The flash driver provides services for reading, writing and erasing flash memory and a 
+ * The flash driver provides services for reading, writing and erasing flash memory and a
  * configuration interface for setting / resetting the write / erase protection
  * if supported by the underlying hardware. In application mode of the ECU,
  * the flash driver is only to be used by the Flash EEPROM emulation module for writing data.
