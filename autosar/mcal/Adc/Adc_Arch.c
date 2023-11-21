@@ -235,22 +235,6 @@ Adc_StreamNumSampleType Adc_Arch_GetStreamLastPointer( Adc_HwUnit *HwUnit, Adc_G
 }
 
 /**
- * @brief    **ADC low level Get Version Info**
- *
- * Returns the version information of this module.
- *
- * @param    HwUnit Pointer to the hardware unit configuration
- * @param    versioninfo Pointer to where to store the version information of this module.
- *
- * @reqs    SWS_Adc_00376
- */
-void Adc_Arch_GetVersionInfo( Adc_HwUnit *HwUnit, Std_VersionInfoType *versioninfo )
-{
-    (void)HwUnit;
-    (void)versioninfo;
-}
-
-/**
  * @brief    **ADC low level Set Power State**
  *
  * This API configures the Adc module so that it enters the already prepared power state, chosen
