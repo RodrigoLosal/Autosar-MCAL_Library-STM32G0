@@ -26,7 +26,7 @@
 typedef struct _Gpt_ConfigType
 {
     uint8 GptChannelId;                /*!< Gpt Channel to be configured */
-    uint8 GptReference;                /*!< Microcontroller specific Timer reference */
+    Gpt_RegisterType *BaseAddress;     /*!< Microcontroller specific Timer reference */
     uint8 GptChannelMode;              /*!< Continuous or One-Pulse mode*/
     uint16 GptChannelPrescaler;        /*!< Prescaler from 0x0 to 0xFFFF*/
     void ( *GptNotification )( void ); /*!< Array of Pointers to user-defined functions*/
