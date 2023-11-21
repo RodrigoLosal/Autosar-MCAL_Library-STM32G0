@@ -17,6 +17,6 @@
 /* clang-format off */
 const Mcu_ConfigType McuConfig =
 {
-    .dummy = 0x12345678u
+    .PllStatus = MCU_PLL_STATUS_UNDEFINED
 };
 /* clang-format on */
