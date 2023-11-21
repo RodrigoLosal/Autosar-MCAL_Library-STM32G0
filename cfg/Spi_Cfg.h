@@ -63,6 +63,6 @@ extern const Spi_ConfigType SpiConfig;
  * @brief Switches the development error detection and notification on or off.
  * @typedef EcucBooleanParamDef
  */
-#define SPI_DEV_ERROR_DETECT STD_ON
+#define SPI_DEV_ERROR_DETECT                 STD_ON
 
 #endif /* SPI_CFG_H__ */

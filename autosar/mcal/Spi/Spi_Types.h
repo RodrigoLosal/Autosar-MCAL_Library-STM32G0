@@ -143,7 +143,6 @@ typedef struct _Spi_ConfigType
     Spi_SequenceType SequenceCount; /*!< Sequence ID configurations for the SpiHandler/Driver */
     Spi_JobType JobCount;           /*!< Job ID configurations for the SpiHandler/Driver */
     Spi_HWUnitType HWUnitCount;     /*!< Job ID configurations for the SpiHandler/Driver */
-    uint32 dummy;                   /*!< dummy element for the moment */
 } Spi_ConfigType;
 
 /**
