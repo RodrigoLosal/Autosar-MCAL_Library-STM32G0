@@ -215,7 +215,7 @@ Dio_PortLevelType Dio_ReadChannelGroup( const Dio_ChannelGroupType *ChannelGroup
 {
     Dio_PortLevelType GroupLevel = 0;
 
-    if( ( ChannelGroupIdPtr != NULL_PTR ) || ( ChannelGroupIdPtr->port < DioConfig.NumberOfPorts ) )
+    if( ( ChannelGroupIdPtr != NULL_PTR ) && ( ChannelGroupIdPtr->port < DioConfig.NumberOfPorts ) )
     {
         GroupLevel = Dio_Arch_ReadChannelGroup( ChannelGroupIdPtr );
     }
@@ -247,7 +247,7 @@ Dio_PortLevelType Dio_ReadChannelGroup( const Dio_ChannelGroupType *ChannelGroup
  */
 void Dio_WriteChannelGroup( const Dio_ChannelGroupType *ChannelGroupIdPtr, Dio_PortLevelType Level )
 {
-    if( ( ChannelGroupIdPtr != NULL_PTR ) || ( ChannelGroupIdPtr->port < DioConfig.NumberOfPorts ) )
+    if( ( ChannelGroupIdPtr != NULL_PTR ) && ( ChannelGroupIdPtr->port < DioConfig.NumberOfPorts ) )
     {
         Dio_Arch_WriteChannelGroup( ChannelGroupIdPtr, Level );
     }

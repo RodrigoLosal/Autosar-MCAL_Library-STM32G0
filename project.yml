@@ -26,6 +26,7 @@
   :support:
     - test/support/Can_Lcfg.c
     - test/support/Mcu_Lcfg.c
+    - test/support/Dio_Lcfg.c
 
 # Global defines applicable only when you run the code using ceedling
 :defines:
@@ -50,8 +51,6 @@
     - main.c #
     - startup.c #
     - autosar/mcal/Port/Port.c
-    - autosar/mcal/Dio/Dio.c
-    - autosar/mcal/Dio/Dio_Arch.c
     - autosar/mcal/Gpt/Gpt.c
     - autosar/mcal/Can/Can_Arch.c
     - autosar/mcal/Pwm/Pwm.c
