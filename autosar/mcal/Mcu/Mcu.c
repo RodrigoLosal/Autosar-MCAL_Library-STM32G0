@@ -85,6 +85,7 @@ Std_ReturnType Mcu_InitRamSection( Mcu_RamSectionType RamSection )
     return ReturnValue;
 }
 
+#if MCU_INIT_CLOCK == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief    **MCU Clock Initialization**
  *
@@ -115,7 +116,9 @@ Std_ReturnType Mcu_InitClock( Mcu_ClockType ClockSetting )
 
     return ReturnValue;
 }
+#endif
 
+#if MCU_NO_PLL == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief    **PLL to MCU Clock distribution**
  *
@@ -151,6 +154,7 @@ Std_ReturnType Mcu_DistributePllClock( void )
 
     return ReturnValue;
 }
+#endif
 
 /**
  * @brief    **Get PLL lock status**
@@ -238,6 +242,7 @@ Mcu_RawResetType Mcu_GetResetRawValue( void )
     return ReturnValue;
 }
 
+#if MCU_PERFORM_RESET_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief    **Reset the MCU**
  *
@@ -259,6 +264,7 @@ void Mcu_PerformReset( void )
         Mcu_Arch_PerformReset( &HwUnit_Mcu );
     }
 }
+#endif
 
 /**
  * @brief    **Set MCU power mode**
@@ -284,6 +290,7 @@ void Mcu_SetMode( Mcu_ModeType McuMode )
     }
 }
 
+#if MCU_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief    **Get version information**
  *
@@ -311,7 +318,9 @@ void Mcu_GetVersionInfo( Std_VersionInfoType *versioninfo )
         versioninfo->sw_patch_version = MCU_SW_PATCH_VERSION;
     }
 }
+#endif
 
+#if MCU_GET_RAM_STATE_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief    **Get status of MCU RAM**
  *
@@ -340,3 +349,4 @@ Mcu_RamStateType Mcu_GetRamState( void )
 
     return ReturnValue;
 }
+#endif
