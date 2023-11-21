@@ -240,7 +240,7 @@ Adc_StreamNumSampleType Adc_GetStreamLastPointer( Adc_GroupType Group, Adc_Value
  */
 void Adc_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
-    Adc_Arch_GetVersionInfo( *HwUnit_Adc, versioninfo );
+    Adc_Arch_GetVersionInfo( &HwUnit_Adc, versioninfo );
 }
 
 /**

@@ -58,7 +58,7 @@ Std_ReturnType Adc_Arch_SetupResultBuffer( Adc_HwUnit *HwUnit, Adc_GroupType Gro
  * @brief    **ADC low level Deinitialization**
  *
  * This function Returns all ADC HW Units to a state comparable to their power on reset state.
- * 
+ *
  * @param    HwUnit Pointer to the hardware unit configuration
  *
  * @reqs    SWS_Adc_00366 SWS_Adc_00228
@@ -72,7 +72,7 @@ void Adc_Arch_DeInit( Adc_HwUnit *HwUnit )
  * @brief    **ADC low level Start Group Conversion**
  *
  * Starts the conversion of all channels of the requested ADC Channel group.
- * 
+ *
  * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Group Numeric ID of requested ADC Channel group.
  *
