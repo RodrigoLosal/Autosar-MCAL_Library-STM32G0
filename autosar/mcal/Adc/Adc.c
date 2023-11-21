@@ -239,7 +239,7 @@ Adc_StreamNumSampleType Adc_GetStreamLastPointer( Adc_GroupType Group, Adc_Value
  * @reqs    SWS_Adc_00376
  */
 #if ADC_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
-void Adc_GetVersionInfo( Std_VersionInfoType *versioninfo ) 
+void Adc_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
     (void)versioninfo;
 }
