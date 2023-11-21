@@ -169,7 +169,7 @@ Std_ReturnType Fls_Compare( Fls_AddressType SourceAddress, const uint8 *TargetAd
  */
 void Fls_SetMode( MemIf_ModeType Mode )
 {
-    Fls_Arch_SetMode( &HwUnit_Fls, Mode);
+    Fls_Arch_SetMode( &HwUnit_Fls, Mode );
 }
 
 /**
@@ -183,7 +183,7 @@ void Fls_SetMode( MemIf_ModeType Mode )
  */
 void Fls_GetVersionInfo( Std_VersionInfoType *VersioninfoPtr )
 {
-    Fls_Arch_GetVersionInfo(&HwUnit_Fls, VersioninfoPtr);
+    Fls_Arch_GetVersionInfo( &HwUnit_Fls, VersioninfoPtr );
 }
 
 /**
@@ -203,5 +203,5 @@ void Fls_GetVersionInfo( Std_VersionInfoType *VersioninfoPtr )
  */
 Std_ReturnType Fls_BlankCheck( Fls_AddressType TargetAddress, Fls_LengthType Length )
 {
-    return Fls_Arch_BlankCheck(&HwUnit_Fls, TargetAddress, Length);
+    return Fls_Arch_BlankCheck( &HwUnit_Fls, TargetAddress, Length );
 }

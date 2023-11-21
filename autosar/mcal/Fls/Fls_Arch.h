@@ -16,6 +16,7 @@
 #define FLS_ARCH_H__
 
 #include "Fls_Types.h"
+#include "MemIf.h"
 
 void Fls_Arch_Init( Fls_HwUnit *HwUnit, const Fls_ConfigType *ConfigPtr );
 Std_ReturnType Fls_Arch_Erase( Fls_HwUnit *HwUnit, Fls_AddressType TargetAddress, Fls_LengthType Length );
