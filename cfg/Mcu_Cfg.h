@@ -55,14 +55,20 @@
  * @brief Enable / disable the service Mcu_GetRamState() from the code.
  * @typedef EcucBooleanParamDef
  */
-#define MCU_GET_RAM_STATE_API STD_ON
+#define MCU_VERSION_INFO_API  STD_ON
 
-extern const Mcu_ConfigType McuConfig;
+/**
+ * @brief Enable / disable the service Mcu_GetRamState() from the code.
+ * @typedef EcucBooleanParamDef
+ */
+#define MCU_GET_RAM_STATE_API STD_ON
 
 /**
  * @brief Switches the development error detection and notification on or off.
  * @typedef EcucBooleanParamDef
  */
-#define MCU_DEV_ERROR_DETECT STD_ON
+#define MCU_DEV_ERROR_DETECT  STD_ON
+
+extern const Mcu_ConfigType McuConfig;
 
 #endif
