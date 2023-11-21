@@ -15,6 +15,17 @@
 
 #include "Std_Types.h"
 #include "Fls.h"
+#include "Fls_Arch.h"
+
+/**
+ * @brief  Variable for the initial value of the port configuration array.
+ */
+/* clang-format off */
+static Fls_HwUnit HwUnit_Fls =
+{
+    .Config = NULL_PTR,
+};
+/* clang-format on */
 
 /**
  * @brief   **Fls_Init**
@@ -27,7 +38,8 @@
  */
 void Fls_Init( const Fls_ConfigType *ConfigPtr )
 {
-    (void)ConfigPtr;
+    Fls_Arch_Init( &HwUnit_Fls, ConfigPtr );
+    HwUnit_Fls.Config = ConfigPtr;
 }
 
 /**
@@ -45,9 +57,7 @@ void Fls_Init( const Fls_ConfigType *ConfigPtr )
  */
 Std_ReturnType Fls_Erase( Fls_AddressType TargetAddress, Fls_LengthType Length )
 {
-    (void)TargetAddress;
-    (void)Length;
-    return E_OK;
+    return Fls_Arch_Erase( &HwUnit_Fls, TargetAddress, Length );
 }
 
 /**
@@ -66,10 +76,7 @@ Std_ReturnType Fls_Erase( Fls_AddressType TargetAddress, Fls_LengthType Length )
  */
 Std_ReturnType Fls_Write( Fls_AddressType TargetAddress, const uint8 *SourceAddressPtr, Fls_LengthType Length )
 {
-    (void)TargetAddress;
-    (void)SourceAddressPtr;
-    (void)Length;
-    return E_OK;
+    return Fls_Arch_Write( &HwUnit_Fls, TargetAddress, SourceAddressPtr, Length );
 }
 
 /**
@@ -81,6 +88,7 @@ Std_ReturnType Fls_Write( Fls_AddressType TargetAddress, const uint8 *SourceAddr
  */
 void Fls_Cancel( void )
 {
+    Fls_Arch_Cancel( &HwUnit_Fls );
 }
 
 /**
@@ -94,7 +102,7 @@ void Fls_Cancel( void )
  */
 MemIf_StatusType Fls_GetStatus( void )
 {
-    return 0x01; /*!< dummy element for the moment */
+    return Fls_Arch_GetStatus( &HwUnit_Fls );
 }
 
 /**
@@ -108,7 +116,7 @@ MemIf_StatusType Fls_GetStatus( void )
  */
 MemIf_JobResultType Fls_GetJobResult( void )
 {
-    return 0x01; /*!< dummy element for the moment */
+    return Fls_Arch_GetJobResult( &HwUnit_Fls );
 }
 
 /**
@@ -127,10 +135,7 @@ MemIf_JobResultType Fls_GetJobResult( void )
  */
 Std_ReturnType Fls_Read( Fls_AddressType SourceAddress, uint8 *TargetAddressPtr, Fls_LengthType Length )
 {
-    (void)SourceAddress;
-    (void)TargetAddressPtr;
-    (void)Length;
-    return E_OK;
+    return Fls_Arch_Read( &HwUnit_Fls, SourceAddress, TargetAddressPtr, Length );
 }
 
 /**
@@ -149,10 +154,7 @@ Std_ReturnType Fls_Read( Fls_AddressType SourceAddress, uint8 *TargetAddressPtr,
  */
 Std_ReturnType Fls_Compare( Fls_AddressType SourceAddress, const uint8 *TargetAddressPtr, Fls_LengthType Length )
 {
-    (void)SourceAddress;
-    (void)TargetAddressPtr;
-    (void)Length;
-    return E_OK;
+    return Fls_Arch_Compare( &HwUnit_Fls, SourceAddress, TargetAddressPtr, Length );
 }
 
 /**
@@ -167,7 +169,7 @@ Std_ReturnType Fls_Compare( Fls_AddressType SourceAddress, const uint8 *TargetAd
  */
 void Fls_SetMode( MemIf_ModeType Mode )
 {
-    (void)Mode;
+    Fls_Arch_SetMode( &HwUnit_Fls, Mode);
 }
 
 /**
@@ -181,7 +183,7 @@ void Fls_SetMode( MemIf_ModeType Mode )
  */
 void Fls_GetVersionInfo( Std_VersionInfoType *VersioninfoPtr )
 {
-    (void)VersioninfoPtr;
+    Fls_Arch_GetVersionInfo(&HwUnit_Fls, VersioninfoPtr);
 }
 
 /**
@@ -201,7 +203,5 @@ void Fls_GetVersionInfo( Std_VersionInfoType *VersioninfoPtr )
  */
 Std_ReturnType Fls_BlankCheck( Fls_AddressType TargetAddress, Fls_LengthType Length )
 {
-    (void)TargetAddress;
-    (void)Length;
-    return E_OK;
+    return Fls_Arch_BlankCheck(&HwUnit_Fls, TargetAddress, Length);
 }
