@@ -1,43 +1,33 @@
 /**
- * @file    Adc.c
- * @brief   **Adc Driver**
+ * @file    Adc_Arch.c
+ * @brief   **Adc Architecture Driver**
  * @author  Naim Leon
  *
- * The ADC module provides the functionality API and the configuration of the AUTOSAR Basic
- * Software module ADC Driver. The ADC driver is targeting Successive Approximation ADC Hardware.
- * Delta Sigma ADC conversion use cases are out of scope of this module.
+ * Adc driver implementation for the STM32G0xx family of microcontrollers. This file contains the
+ * hardware specific implementation of the Adc driver. The file is implemented as a means of
+ * abstraction from the hardware, this way we can avoid to include Arch headers in the actual
+ * driver header, making the low level interfaces available only for the inmediate upper layer.
  */
 #include "Std_Types.h"
-#include "Adc.h"
+#include "Adc_Cfg.h"
 #include "Adc_Arch.h"
 
 /**
- * @brief  Variable for the initial value of the Adc configuration array.
- */
-/* clang-format off */
-static Adc_HwUnit HwUnit_Adc =
-{
-.Config = NULL_PTR,
-};
-/* clang-format on */
-
-/**
- * @brief    **ADC Initialization**
+ * @brief    **Adc low level Initialization**
  *
  * This function Initializes the ADC hardware units and driver.
  *
- * @param    ConfigPtr Pointer to configuration set in Variant PB (Variant PC requires a NULL_PTR).
- *
- * @reqs    SWS_Adc_00365
+ * @param    HwUnit Pointer to the hardware unit configuration
+ * @param    Config Pointer to driver configuration
  */
-void Adc_Init( const Adc_ConfigType *ConfigPtr )
+void Adc_Arch_Init( Adc_HwUnit *HwUnit, const Adc_ConfigType *Config )
 {
-    Adc_Arch_Init( &HwUnit_Adc, ConfigPtr );
-    HwUnit_Adc.Config = ConfigPtr;
+    (void)HwUnit;
+    (void)Config;
 }
 
 /**
- * @brief    **ADC Result Buffer**
+ * @brief    **ADC low level Result Buffer**
  *
  * This function initializes ADC driver with the group specific result buffer start address where
  * the conversion results will be stored. The application has to ensure that the application
@@ -45,6 +35,7 @@ void Adc_Init( const Adc_ConfigType *ConfigPtr )
  * group. The initialization with Adc_SetupResultBuffer is required after reset, before a group
  * conversion can be started.
  *
+ * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Group Numeric ID of requested ADC channel group.
  * @param    DataBufferPtr Pointer to result data buffer.
  *
@@ -53,65 +44,69 @@ void Adc_Init( const Adc_ConfigType *ConfigPtr )
  *
  * @reqs    SWS_Adc_91000
  */
-Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr )
+Std_ReturnType Adc_Arch_SetupResultBuffer( Adc_HwUnit *HwUnit, Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr )
 {
-    return Adc_Arch_SetupResultBuffer( &HwUnit_Adc, Group, DataBufferPtr );
+    (void)HwUnit;
+    (void)Group;
+    (void)DataBufferPtr;
+    return E_OK;
 }
 
 /**
- * @brief    **ADC Deinitialization**
+ * @brief    **ADC low level Deinitialization**
  *
  * This function Returns all ADC HW Units to a state comparable to their power on reset state.
  *
+ * @param    HwUnit Pointer to the hardware unit configuration
+ *
  * @reqs    SWS_Adc_00366 SWS_Adc_00228
  */
-#if ADC_DE_INIT_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
-void Adc_DeInit( void )
+void Adc_Arch_DeInit( Adc_HwUnit *HwUnit )
 {
-    Adc_Arch_DeInit( &HwUnit_Adc );
+    (void)HwUnit;
 }
-#endif
 
 /**
- * @brief    **ADC Start Group Conversion**
+ * @brief    **ADC low level Start Group Conversion**
  *
  * Starts the conversion of all channels of the requested ADC Channel group.
  *
+ * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Group Numeric ID of requested ADC Channel group.
  *
  * @reqs    SWS_Adc_00367 SWS_Adc_00259
  */
-#if ADC_ENABLE_START_STOP_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
-void Adc_StartGroupConversion( Adc_GroupType Group )
+void Adc_Arch_StartGroupConversion( Adc_HwUnit *HwUnit, Adc_GroupType Group )
 {
-    Adc_Arch_StartGroupConversion( &HwUnit_Adc, Group );
+    (void)HwUnit;
+    (void)Group;
 }
-#endif
 
 /**
- * @brief    **ADC Stop Group Conversion**
+ * @brief    **ADC low level Stop Group Conversion**
  *
  * Stops the conversion of the requested ADC Channel group.
  *
+ * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Group Numeric ID of requested ADC Channel group.
  *
  * @reqs    SWS_Adc_00368 SWS_Adc_00260
  */
-#if ADC_ENABLE_START_STOP_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
-void Adc_StopGroupConversion( Adc_GroupType Group )
+void Adc_Arch_StopGroupConversion( Adc_HwUnit *HwUnit, Adc_GroupType Group )
 {
-    Adc_Arch_StopGroupConversion( &HwUnit_Adc, Group );
+    (void)HwUnit;
+    (void)Group;
 }
-#endif
 
 /**
- * @brief    **ADC Read Group**
+ * @brief    **ADC low level Read Group**
  *
  * Reads the group conversion result of the last completed conversion round of the requested group
  * and stores the channel values starting at the DataBufferPtr address. The group channel values
  * are stored in ascending channel number order (in contrast to the storage layout of the result
  * buffer if streaming access is configured).
  *
+ * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Group Numeric ID of requested ADC channel group.
  * @param    DataBufferPtr ADC results of all channels of the selected group are stored in the data
  *                          buffer addressed with the pointer.
@@ -121,95 +116,99 @@ void Adc_StopGroupConversion( Adc_GroupType Group )
  *
  * @reqs    SWS_Adc_00369 SWS_Adc_00359
  */
-#if ADC_READ_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
-Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr )
+Std_ReturnType Adc_Arch_ReadGroup( Adc_HwUnit *HwUnit, Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr )
 {
-    return Adc_Arch_ReadGroup( &HwUnit_Adc, Group, DataBufferPtr );
+    (void)HwUnit;
+    (void)Group;
+    (void)DataBufferPtr;
+    return E_OK;
 }
-#endif
 
 /**
- * @brief    **ADC Enable Hardware Trigger**
+ * @brief    **ADC low level Enable Hardware Trigger**
  *
  * Enables the hardware trigger for the requested ADC Channel group.
  *
+ * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Group Numeric ID of requested ADC Channel group.
  *
  * @reqs    SWS_Adc_91001 SWS_Adc_00265
  */
-#if ADC_HW_TRIGGER_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
-void Adc_EnableHardwareTrigger( Adc_GroupType Group )
+void Adc_Arch_EnableHardwareTrigger( Adc_HwUnit *HwUnit, Adc_GroupType Group )
 {
-    Adc_Arch_EnableHardwareTrigger( &HwUnit_Adc, Group );
+    (void)HwUnit;
+    (void)Group;
 }
-#endif
 
 /**
- * @brief    **ADC Disable Hardware Trigger**
+ * @brief    **ADC low level Disable Hardware Trigger**
  *
  * Disables the hardware trigger for the requested ADC Channel group.
  *
+ * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Group Numeric ID of requested ADC Channel group.
  *
  * @reqs    SWS_Adc_91002 SWS_Adc_00266
  */
-#if ADC_HW_TRIGGER_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
-void Adc_DisableHardwareTrigger( Adc_GroupType Group )
+void Adc_Arch_DisableHardwareTrigger( Adc_HwUnit *HwUnit, Adc_GroupType Group )
 {
-    Adc_Arch_DisableHardwareTrigger( &HwUnit_Adc, Group );
+    (void)HwUnit;
+    (void)Group;
 }
-#endif
 
 /**
- * @brief    **ADC Enable Group Notification**
+ * @brief    **ADC low level Enable Group Notification**
  *
  * Enables the notification mechanism for the requested ADC Channel group.
  *
+ * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Group Numeric ID of requested ADC Channel group.
  *
  * @reqs    SWS_Adc_91003 SWS_Adc_00100
  */
-#if ADC_GRP_NOTIF_CAPABILITY == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
-void Adc_EnableGroupNotification( Adc_GroupType Group )
+void Adc_Arch_EnableGroupNotification( Adc_HwUnit *HwUnit, Adc_GroupType Group )
 {
-    Adc_Arch_EnableGroupNotification( HwUnit_Adc, Group );
+    (void)HwUnit;
+    (void)Group;
 }
-#endif
 
 /**
- * @brief    **ADC Disable Group Notification**
+ * @brief    **ADC low level Disable Group Notification**
  *
  * Disables the notification mechanism for the requested ADC Channel group.
  *
+ * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Group Numeric ID of requested ADC Channel group.
  *
  * @reqs    SWS_Adc_91004 SWS_Adc_00101
  */
-#if ADC_GRP_NOTIF_CAPABILITY == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
-void Adc_DisableGroupNotification( Adc_GroupType Group )
+void Adc_Arch_DisableGroupNotification( Adc_HwUnit *HwUnit, Adc_GroupType Group )
 {
-    Adc_Arch_DisableGroupNotification( &HwUnit_Adc, Group );
+    (void)HwUnit;
+    (void)Group;
 }
-#endif
 
 /**
- * @brief    **ADC Get Group Status**
+ * @brief    **ADC low level Get Group Status**
  *
  * Returns the conversion status of the requested ADC Channel group.
  *
+ * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Group Numeric ID of requested ADC Channel group.
  *
  * @retval  Conversion status for the requested group.
  *
  * @reqs    SWS_Adc_00374
  */
-Adc_StatusType Adc_GetGroupStatus( Adc_GroupType Group )
+Adc_StatusType Adc_Arch_GetGroupStatus( Adc_HwUnit *HwUnit, Adc_GroupType Group )
 {
-    return Adc_Arch_GetGroupStatus( &HwUnit_Adc, Group );
+    (void)HwUnit;
+    (void)Group;
+    return ADC_IDLE;
 }
 
 /**
- * @brief    **ADC Get Stream Last Pointer**
+ * @brief    **ADC low level Get Stream Last Pointer**
  *
  * Returns the number of valid samples per channel, stored in the result buffer. Reads a pointer,
  * pointing to a position in the group result buffer. With the pointer position, the results of all
@@ -217,6 +216,7 @@ Adc_StatusType Adc_GetGroupStatus( Adc_GroupType Group )
  * return value, all valid group conversion results can be accessed (the user has to take the
  * layout of the result buffer into account).
  *
+ * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Group Numeric ID of requested ADC Channel group.
  * @param    PtrToSamplePtr Pointer to result buffer pointer.
  *
@@ -224,33 +224,21 @@ Adc_StatusType Adc_GetGroupStatus( Adc_GroupType Group )
  *
  * @reqs    SWS_Adc_00375
  */
-Adc_StreamNumSampleType Adc_GetStreamLastPointer( Adc_GroupType Group, Adc_ValueGroupType **PtrToSamplePtr )
+Adc_StreamNumSampleType Adc_Arch_GetStreamLastPointer( Adc_HwUnit *HwUnit, Adc_GroupType Group, Adc_ValueGroupType **PtrToSamplePtr )
 {
-    return Adc_Arch_GetStreamLastPointer( &HwUnit_Adc, Group, PtrToSamplePtr );
+    (void)HwUnit;
+    (void)Group;
+    (void)PtrToSamplePtr;
+    return 1u;
 }
 
 /**
- * @brief    **ADC Get Version Info**
- *
- * Returns the version information of this module.
- *
- * @param    versioninfo Pointer to where to store the version information of this module.
- *
- * @reqs    SWS_Adc_00376
- */
-#if ADC_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
-void Adc_GetVersionInfo( Std_VersionInfoType *versioninfo )
-{
-    (void)versioninfo;
-}
-#endif
-
-/**
- * @brief    **ADC Set Power State**
+ * @brief    **ADC low level Set Power State**
  *
  * This API configures the Adc module so that it enters the already prepared power state, chosen
  * between a predefined set of configured ones.
  *
+ * @param    HwUnit Pointer to the hardware unit configuration
  * @param    Result If the API returns E_OK: ADC_SERVICE_ACCEPTED: Power state change executed.
  *                  If the API returns E_NOT_OK: ADC_NOT_INIT: ADC Module not initialized.
  *                  ADC_SEQUENCE_ERROR: wrong API call sequence. ADC_HW_FAILURE: the HW module has
@@ -261,16 +249,19 @@ void Adc_GetVersionInfo( Std_VersionInfoType *versioninfo )
  *
  * @reqs    SWS_Adc_00475
  */
-Std_ReturnType Adc_SetPowerState( Adc_PowerStateRequestResultType *Result )
+Std_ReturnType Adc_Arch_SetPowerState( Adc_HwUnit *HwUnit, Adc_PowerStateRequestResultType *Result )
 {
-    return Adc_Arch_SetPowerState( &HwUnit_Adc, Result );
+    (void)HwUnit;
+    (void)Result;
+    return E_OK;
 }
 
 /**
- * @brief    **ADC Get Current Power State**
+ * @brief    **ADC low level Get Current Power State**
  *
  * This API returns the current power state of the ADC HW unit.
  *
+ * @param    HwUnit Pointer to the hardware unit configuration
  * @param    CurrentPowerState The current power mode of the ADC HW Unit is returned in this
  *                              parameter.
  * @param    Result If the API returns E_OK: ADC_SERVICE_ACCEPTED: Current power mode was returned.
@@ -281,16 +272,20 @@ Std_ReturnType Adc_SetPowerState( Adc_PowerStateRequestResultType *Result )
  *
  * @reqs    SWS_Adc_00476
  */
-Std_ReturnType Adc_GetCurrentPowerState( Adc_PowerStateType *CurrentPowerState, Adc_PowerStateRequestResultType *Result )
+Std_ReturnType Adc_Arch_GetCurrentPowerState( Adc_HwUnit *HwUnit, Adc_PowerStateType *CurrentPowerState, Adc_PowerStateRequestResultType *Result )
 {
-    return Adc_Arch_GetCurrentPowerState( &HwUnit_Adc, CurrentPowerState, Result );
+    (void)HwUnit;
+    (void)CurrentPowerState;
+    (void)Result;
+    return E_OK;
 }
 
 /**
- * @brief    **ADC Get Target Power State**
+ * @brief    **ADC low level Get Target Power State**
  *
  * This API returns the Target power state of the ADC HW unit.
  *
+ * @param    HwUnit Pointer to the hardware unit configuration
  * @param    TargetPowerState The Target power mode of the ADC HW Unit is returned in this
  *                              parameter.
  * @param    Result If the API returns E_OK: ADC_SERVICE_ACCEPTED:Target power mode was returned.
@@ -301,16 +296,20 @@ Std_ReturnType Adc_GetCurrentPowerState( Adc_PowerStateType *CurrentPowerState, 
  *
  * @reqs    SWS_Adc_00477
  */
-Std_ReturnType Adc_GetTargetPowerState( Adc_PowerStateType *TargetPowerState, Adc_PowerStateRequestResultType *Result )
+Std_ReturnType Adc_Arch_GetTargetPowerState( Adc_HwUnit *HwUnit, Adc_PowerStateType *TargetPowerState, Adc_PowerStateRequestResultType *Result )
 {
-    return Adc_Arch_GetTargetPowerState( &HwUnit_Adc, TargetPowerState, Result );
+    (void)HwUnit;
+    (void)TargetPowerState;
+    (void)Result;
+    return E_OK;
 }
 
 /**
- * @brief    **ADC Prepare Power State**
+ * @brief    **ADC low level Prepare Power State**
  *
  * This API starts the needed process to allow the ADC HW module to enter the requested power state
  *
+ * @param    HwUnit Pointer to the hardware unit configuration
  * @param    PowerState The target power state intended to be attained.
  * @param    Result If the API returns E_OK: ADC_SERVICE_ACCEPTED: ADC Module power state
  *                  preparation was started. If the API returns E_NOT_OK: ADC_NOT_INIT: ADC Module
@@ -325,7 +324,10 @@ Std_ReturnType Adc_GetTargetPowerState( Adc_PowerStateType *TargetPowerState, Ad
  *
  * @reqs    SWS_Adc_00478
  */
-Std_ReturnType Adc_PreparePowerState( Adc_PowerStateType PowerState, Adc_PowerStateRequestResultType *Result )
+Std_ReturnType Adc_Arch_PreparePowerState( Adc_HwUnit *HwUnit, Adc_PowerStateType PowerState, Adc_PowerStateRequestResultType *Result )
 {
-    return Adc_Arch_PreparePowerState( &HwUnit_Adc, PowerState, Result );
+    (void)HwUnit;
+    (void)PowerState;
+    (void)Result;
+    return E_OK;
 }
