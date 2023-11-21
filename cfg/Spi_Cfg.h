@@ -13,8 +13,6 @@
 
 #include "Spi_Types.h"
 
-extern const Spi_ConfigType SpiConfig;
-
 /**
  * @defgroup Spi_SWC_Ids CAN software Ids
  *
@@ -65,4 +63,5 @@ extern const Spi_ConfigType SpiConfig;
  */
 #define SPI_DEV_ERROR_DETECT                 STD_ON
 
+extern const Spi_ConfigType SpiConfig;
 #endif /* SPI_CFG_H__ */
