@@ -40,7 +40,7 @@
 
 /**
  * @defgroup DIO_Error_Typse Dio Developtmnet Error Types
- * 
+ *
  * @reqs  SWS_Dio_91001
  *
  * @{ */
