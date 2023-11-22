@@ -30,7 +30,8 @@
  * @brief  Variable for the initial value of the port configuration array.
  */
 /* clang-format off */
-static Mcu_HwUnit HwUnit_Mcu =
+/* cppcheck-suppress misra-c2012-8.4 ; qualifier is declared at Mcu.h */
+MCU_STATIC Mcu_HwUnit HwUnit_Mcu =
 {
     .HwUnitState = MCU_STATE_UNINIT,
     .Config      = NULL_PTR
