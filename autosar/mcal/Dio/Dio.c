@@ -53,7 +53,7 @@
  *
  * @retval Returns the value of the specified DIO channel.
  *
- * @reqs    SWS_Dio_00133, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00011, SWS_Dio_00012
+ * @reqs    SWS_Dio_00133, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00011, SWS_Dio_00012,SWS_Dio_00074
  */
 Dio_LevelType Dio_ReadChannel( Dio_ChannelType ChannelId )
 {
@@ -85,7 +85,7 @@ Dio_LevelType Dio_ReadChannel( Dio_ChannelType ChannelId )
  * @param ChannelId ID of DIO channel.
  * @param Level Value to be written.
  *
- * @reqs    SWS_Dio_00134, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00006, SWS_Dio_00119
+ * @reqs    SWS_Dio_00134, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00006, SWS_Dio_00119, SWS_Dio_00074
  */
 void Dio_WriteChannel( Dio_ChannelType ChannelId, Dio_LevelType Level )
 {
@@ -116,7 +116,7 @@ void Dio_WriteChannel( Dio_ChannelType ChannelId, Dio_LevelType Level )
  *
  * @retval Returns the level of a channel after flipping the level.
  *
- * @reqs    SWS_Dio_00190, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00083, SWS_Dio_00084
+ * @reqs    SWS_Dio_00190, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00083, SWS_Dio_00084, SWS_Dio_00074
  */
 Dio_LevelType Dio_FlipChannel( Dio_ChannelType ChannelId )
 {
@@ -149,7 +149,7 @@ Dio_LevelType Dio_FlipChannel( Dio_ChannelType ChannelId )
  *
  * @retval Returns the level of all channels on that port.
  *
- * @reqs    SWS_Dio_00135, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00013, SWS_Dio_00012
+ * @reqs    SWS_Dio_00135, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00013, SWS_Dio_00012, SWS_Dio_00075
  */
 Dio_PortLevelType Dio_ReadPort( Dio_PortType PortId )
 {
@@ -180,7 +180,7 @@ Dio_PortLevelType Dio_ReadPort( Dio_PortType PortId )
  * @param PortId ID of DIO Port.
  * @param Level Value to be written.
  *
- * @reqs    SWS_Dio_00136, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00004
+ * @reqs    SWS_Dio_00136, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00004, SWS_Dio_00075
  */
 void Dio_WritePort( Dio_PortType PortId, Dio_PortLevelType Level )
 {
@@ -209,7 +209,7 @@ void Dio_WritePort( Dio_PortType PortId, Dio_PortLevelType Level )
  *
  * @retval Returns the level of a subset of the adjacent bits of a port (channel group).
  *
- * @reqs    SWS_Dio_00137, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00014, SWS_Dio_00012
+ * @reqs    SWS_Dio_00137, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00014, SWS_Dio_00012, SWS_Dio_00114
  */
 Dio_PortLevelType Dio_ReadChannelGroup( const Dio_ChannelGroupType *ChannelGroupIdPtr )
 {
@@ -243,7 +243,7 @@ Dio_PortLevelType Dio_ReadChannelGroup( const Dio_ChannelGroupType *ChannelGroup
  * @param ChannelGroupIdPtr Pointer to ChannelGroup.
  * @param Level Value to be written.
  *
- * @reqs    SWS_Dio_00138, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00008
+ * @reqs    SWS_Dio_00138, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00008, SWS_Dio_00114
  */
 void Dio_WriteChannelGroup( const Dio_ChannelGroupType *ChannelGroupIdPtr, Dio_PortLevelType Level )
 {
@@ -303,7 +303,7 @@ void Dio_GetVersionInfo( Std_VersionInfoType *versioninfo )
  * @param Level Value to be written.
  * @param Mask Channels to be masked in the port.
  *
- * @reqs    SWS_Dio_00300, SWS_Dio_00051, SWS_Dio_00089
+ * @reqs    SWS_Dio_00300, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00075
  */
 void Dio_MaskedWritePort( Dio_PortType PortId, Dio_PortLevelType Level, Dio_PortLevelType Mask )
 {
