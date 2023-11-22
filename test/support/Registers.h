@@ -88,29 +88,42 @@ extern Port_RegisterType PORTF_BASE; /*!< GPIOF ADDRESS */
 /**
  * @} */
 
+/**
+ * @brief  Struct for DIO registers
+ */
 typedef struct
 {
-    volatile uint32 Reserved1[ 4 ];
-    volatile uint32 IDR;
-    volatile uint32 ODR;
-    volatile uint32 BSRR;
-    volatile uint32 Reserved2[ 3 ];
-    volatile uint32 BRR;
+    volatile uint32 Reserved1[ 4 ]; /*!< Reserved memory. */
+    volatile uint32 IDR;            /*!< GPIO port input data register*/
+    volatile uint32 ODR;            /*!< GPIO port output data register*/
+    volatile uint32 BSRR;           /*!< GPIO port bit set/reset register*/
+    volatile uint32 Reserved2[ 3 ]; /*!< Reserved memory. */
+    volatile uint32 BRR;            /*!< GPIO port bit reset register*/
 } Dio_RegisterType;
 
-extern Dio_RegisterType DIOA_BASE; /*!< GPIOA ADDRESS */
-extern Dio_RegisterType DIOB_BASE; /*!< GPIOB ADDRESS */
-extern Dio_RegisterType DIOC_BASE; /*!< GPIOC ADDRESS */
-extern Dio_RegisterType DIOD_BASE; /*!< GPIOD ADDRESS */
-extern Dio_RegisterType DIOE_BASE; /*!< GPIOE ADDRESS */
-extern Dio_RegisterType DIOF_BASE; /*!< GPIOF ADDRESS */
+/**
+ * @defgroup  Dio_references References for DIO registers
+ */
+extern Dio_RegisterType DIOA_BASE; /*!< GPIOA Reference */
+extern Dio_RegisterType DIOB_BASE; /*!< GPIOB Reference */
+extern Dio_RegisterType DIOC_BASE; /*!< GPIOC Reference */
+extern Dio_RegisterType DIOD_BASE; /*!< GPIOD Reference */
+extern Dio_RegisterType DIOE_BASE; /*!< GPIOE Reference */
+extern Dio_RegisterType DIOF_BASE; /*!< GPIOF Reference */
+/**
+ * @} */
 
+/**
+  * @defgroup  Dio_pointers_address DIO Base Address
+  @{ */
 #define DIOA ( (Dio_RegisterType *)&DIOA_BASE )
 #define DIOB ( (Dio_RegisterType *)&DIOB_BASE )
 #define DIOC ( (Dio_RegisterType *)&DIOC_BASE )
 #define DIOD ( (Dio_RegisterType *)&DIOD_BASE )
 #define DIOE ( (Dio_RegisterType *)&DIOE_BASE )
 #define DIOF ( (Dio_RegisterType *)&DIOF_BASE )
+/**
+ * @} */
 
 /**
  * @brief Nested Vectored Interrupt Controller (NVIC) structure.
