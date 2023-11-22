@@ -29,7 +29,7 @@ static Gpt_RegisterType *GptPeripherals[ GPT_NUMBER_OF_CHANNELS ] = { TIM6, TIM7
  *
  * @param    Config Pointer to driver configuration.
  *
- * @reqs   SWS_Gpt_00280
+ * @reqs   SWS_Gpt_00280, SWS_Gpt_00006, SWS_Gpt_00107, SWS_Gpt_00068, SWS_Gpt_00258
  */
 void Gpt_Arch_Init( const Gpt_ConfigType *Config )
 {
@@ -47,7 +47,7 @@ void Gpt_Arch_Init( const Gpt_ConfigType *Config )
  *
  * This function de-initializes the Gpt module.
  *
- * @reqs   SWS_Gpt_00281
+ * @reqs   SWS_Gpt_00281, SWS_Gpt_00008, SWS_Gpt_00105, SWS_Gpt_00162, SWS_Gpt_00194
  */
 void Gpt_Arch_DeInit( void )
 {
@@ -73,7 +73,7 @@ void Gpt_Arch_DeInit( void )
  *
  * @retval  Returns the current number of ticks already elapsed.
  *
- * @reqs   SWS_Gpt_00282
+ * @reqs   SWS_Gpt_00282, SWS_Gpt_00010, SWS_Gpt_00361, SWS_Gpt_00195
  */
 Gpt_ValueType Gpt_Arch_GetTimeElapsed( Gpt_ChannelType Channel )
 {
@@ -94,7 +94,7 @@ Gpt_ValueType Gpt_Arch_GetTimeElapsed( Gpt_ChannelType Channel )
  *
  * @retval  Returns the remaining number of ticks before the timer overflows.
  *
- * @reqs   SWS_Gpt_00283
+ * @reqs   SWS_Gpt_00283, SWS_Gpt_00083, SWS_Gpt_00196
  */
 Gpt_ValueType Gpt_Arch_GetTimeRemaining( Gpt_ChannelType Channel )
 {
@@ -114,7 +114,7 @@ Gpt_ValueType Gpt_Arch_GetTimeRemaining( Gpt_ChannelType Channel )
  * @param Channel       Numeric identifier of the GPT channel.
  * @param Value         Target time in number of ticks.
  *
- * @reqs   SWS_Gpt_00284
+ * @reqs   SWS_Gpt_00284, SWS_Gpt_00274, SWS_Gpt_00275
  */
 void Gpt_Arch_StartTimer( Gpt_ChannelType Channel, Gpt_ValueType Value )
 {
@@ -133,7 +133,7 @@ void Gpt_Arch_StartTimer( Gpt_ChannelType Channel, Gpt_ValueType Value )
  *
  * @param Channel       Numeric identifier of the GPT channel.
  *
- * @reqs   SWS_Gpt_00285
+ * @reqs   SWS_Gpt_00285, SWS_Gpt_00013
  */
 void Gpt_Arch_StopTimer( Gpt_ChannelType Channel )
 {
@@ -151,7 +151,7 @@ void Gpt_Arch_StopTimer( Gpt_ChannelType Channel )
  *
  * @param Channel       Numeric identifier of the GPT channel.
  *
- * @reqs   SWS_Gpt_00286
+ * @reqs   SWS_Gpt_00286, SWS_Gpt_00199
  */
 void Gpt_Arch_EnableNotification( Gpt_ChannelType Channel )
 {
@@ -169,7 +169,7 @@ void Gpt_Arch_EnableNotification( Gpt_ChannelType Channel )
  *
  * @param Channel       Numeric identifier of the GPT channel.
  *
- * @reqs   SWS_Gpt_00287
+ * @reqs   SWS_Gpt_00287, SWS_Gpt_00200
  */
 void Gpt_Arch_DisableNotification( Gpt_ChannelType Channel )
 {
@@ -187,7 +187,7 @@ void Gpt_Arch_DisableNotification( Gpt_ChannelType Channel )
  * and shall be implemented by the user. The callback notifications Gpt_Notification_<channel> shall
  * be configurable as pointers to user defined functions within the configuration structure.
  *
- * @reqs   SWS_Gpt_00292
+ * @reqs   SWS_Gpt_00292, SWS_Gpt_00086, SWS_Gpt_00209, SWS_Gpt_00093, SWS_Gpt_00233, SWS_Gpt_00206
  */
 void Gpt_Arch_Notification_Channel0( void )
 {
@@ -208,7 +208,7 @@ void Gpt_Arch_Notification_Channel0( void )
  * and shall be implemented by the user. The callback notifications Gpt_Notification_<channel> shall
  * be configurable as pointers to user defined functions within the configuration structure.
  *
- * @reqs   SWS_Gpt_00292
+ * @reqs   SWS_Gpt_00292, SWS_Gpt_00086, SWS_Gpt_00209, SWS_Gpt_00093, SWS_Gpt_00233, SWS_Gpt_00206
  */
 void Gpt_Arch_Notification_Channel1( void )
 {
