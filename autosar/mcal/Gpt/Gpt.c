@@ -9,11 +9,16 @@
  * The tick duration of a timer channel depends on channel specific settings (part of GPT driver)
  * as well as on system clock and settings of the clock tree controlled by the MCU module.
  */
-#include "Bfx.h"
 #include "Std_Types.h"
 #include "Registers.h"
 #include "Gpt.h"
 #include "Gpt_Arch.h"
+
+/**
+ * @brief  Variable for the initial value of the GPT configuration array.
+ */
+/* cppcheck-suppress misra-config ; The GPT_NUMBER_OF_CHANNELS define is already available through Gpt.h */
+static const Gpt_ConfigType *LocalGptConfigPtr = { NULL_PTR };
 
 /**
  * @brief Initialize the GPT registers to the configuration stored on ConfigPtr.
@@ -33,6 +38,7 @@ void Gpt_Init( const Gpt_ConfigType *ConfigPtr )
     {
         Gpt_Arch_Init( &ConfigPtr[ ChannelsToInit ] );
     }
+    LocalGptConfigPtr = ConfigPtr;
 }
 
 /**
@@ -65,7 +71,7 @@ void Gpt_DeInit( void )
 #if GPT_TIME_ELAPSED_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Gpt_ValueType Gpt_GetTimeElapsed( Gpt_ChannelType Channel )
 {
-    Gpt_Arch_GetTimeElapsed( Channel );
+    return Gpt_Arch_GetTimeElapsed( Channel );
 }
 #endif
 
@@ -84,7 +90,7 @@ Gpt_ValueType Gpt_GetTimeElapsed( Gpt_ChannelType Channel )
 #if GPT_TIME_REMAINING_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Gpt_ValueType Gpt_GetTimeRemaining( Gpt_ChannelType Channel )
 {
-    Gpt_Arch_GetTimeRemaining( Channel );
+    return Gpt_Arch_GetTimeRemaining( Channel );
 }
 #endif
 
@@ -187,6 +193,10 @@ void Gpt_DisableNotification( Gpt_ChannelType Channel )
 void Gpt_Notification_Channel0( void )
 {
     Gpt_Arch_Notification_Channel0( );
+    if( LocalGptConfigPtr[ GPT_CHANNEL_0 ].GptNotification != NULL_PTR )
+    {
+        LocalGptConfigPtr[ GPT_CHANNEL_0 ].GptNotification( );
+    }
 }
 #endif
 
@@ -204,5 +214,9 @@ void Gpt_Notification_Channel0( void )
 void Gpt_Notification_Channel1( void )
 {
     Gpt_Arch_Notification_Channel1( );
+    if( LocalGptConfigPtr[ GPT_CHANNEL_1 ].GptNotification != NULL_PTR )
+    {
+        LocalGptConfigPtr[ GPT_CHANNEL_1 ].GptNotification( );
+    }
 }
 #endif
