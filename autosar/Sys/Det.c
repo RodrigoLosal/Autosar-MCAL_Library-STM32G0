@@ -10,8 +10,6 @@
 #include "Det.h"
 #include <stdio.h> /* cppcheck-suppress misra-c2012-21.6 ; Necessary for using semihosting  */
 
-extern void initialise_monitor_handles( void );
-
 /**
  * @brief    **Det Initialization**
  *
@@ -48,10 +46,22 @@ void Det_Init( const Det_ConfigType *ConfigPtr )
  */
 Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, uint8 ErrorId )
 {
-    initialise_monitor_handles( );
-
-    static const char *ModuleName[]   = { "PWM_MODULE_ID" }; // Tablas que traduzcan los defines a strings
-    static const char *InstanceName[] = { "Pwm_DisableNotification" };
+    static const char *ModuleName[]   = 
+    { 
+        "SPI_MODULE_ID",
+        "GPT_VENDOR_ID",
+        "DIO_VENDOR_ID",
+        "DET_MODULE_ID",
+        "CAN_MODULE_ID",
+        "ADC_MODULE_ID",
+    };
+    static const char *InstanceName[] = 
+    { 
+        "SPI_INSTANCE_ID",
+        "DET_INSTANCE_ID",
+        "CAN_INSTANCE_ID", 
+        "ADC_INSTANCE_ID",   
+    };
     static const char *ApiName[]      =
     {
         /*Pwm Api*/
