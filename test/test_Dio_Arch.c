@@ -271,8 +271,8 @@ void test__Dio_Arch_MaskedWritePort_C( void )
  * This function will check that writting a value to a port will not affect the
  * values of the masked bits.
  */
-void test__Dio_Arch_MaskedWritePort_A( void )
+void test__Dio_Arch_MaskedWritePort_E( void )
 {
-    Dio_Arch_MaskedWritePort( DIO_PORT_A, 0x06, 0x04 );
-    TEST_ASSERT_EQUAL_MESSAGE( 4u, DIOA->ODR, "Dio result was not the supposed value" );
+    Dio_Arch_MaskedWritePort( DIO_PORT_E, 0x06, 0x04 );
+    TEST_ASSERT_EQUAL_MESSAGE( 4u, DIOE->ODR, "Dio result was not the supposed value" );
 }
