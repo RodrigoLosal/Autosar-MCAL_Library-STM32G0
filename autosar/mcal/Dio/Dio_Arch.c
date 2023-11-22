@@ -13,6 +13,8 @@
 #include "Bfx.h"
 #include "Dio_Arch.h"
 
+#define GPIOx_BSRR_OFFSET 8u
+
 /**
  * @brief  Pointer type variable to define the Ports.
  */
@@ -28,6 +30,8 @@ static Dio_RegisterType *DiosPeripherals[] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIO
  * @param Pin Pin ID.
  *
  * @retval Returns the value of the specified DIO channel.
+ * 
+ * @reqs  SWS_Dio_00027, SWS_Dio_00074
  */
 Dio_LevelType Dio_Arch_ReadChannel( Dio_PortType Port, uint8 Pin )
 {
@@ -43,6 +47,8 @@ Dio_LevelType Dio_Arch_ReadChannel( Dio_PortType Port, uint8 Pin )
  * @param Port Port ID.
  * @param Pin Pin ID.
  * @param Level Value to be written.
+ * 
+ * @reqs  SWS_Dio_00028, SWS_Dio_00029, SWS_Dio_00079
  */
 void Dio_Arch_WriteChannel( Dio_PortType Port, uint8 Pin, Dio_LevelType Level )
 {
@@ -61,12 +67,17 @@ void Dio_Arch_WriteChannel( Dio_PortType Port, uint8 Pin, Dio_LevelType Level )
  * @param Pin Pin ID.
  *
  * @retval Returns the level of a channel after flipping the level.
+ * 
+ * @reqs  SWS_Dio_00191, SWS_Dio_00192, SWS_Dio_00193
  */
 Dio_LevelType Dio_Arch_FlipChannel( Dio_PortType Port, uint8 Pin )
 {
-    Bfx_ToggleBitMask_u32u32( (uint32 *)&DiosPeripherals[ Port ]->ODR, ( 1u << Pin ) );
+    /*read the actual bit status*/
+    uint8 Bit = Bfx_GetBit_u32u8_u8( DiosPeripherals[ Port ]->IDR, Pin );
+    /*flip its value*/
+    Bfx_SetBit_u32u8( (uint32 *)&DiosPeripherals[ Port ]->BSRR, ( Pin + ( GPIOx_BSRR_OFFSET * Bit ) ) );
 
-    return Bfx_GetBit_u32u8_u8( DiosPeripherals[ Port ]->IDR, Pin );
+    return Bit;
 }
 
 /**
@@ -78,6 +89,8 @@ Dio_LevelType Dio_Arch_FlipChannel( Dio_PortType Port, uint8 Pin )
  * @param Port ID of DIO Port.
  *
  * @retval Returns the level of all channels on that port.
+ * 
+ * @reqs  SWS_Dio_00031, SWS_Dio_00104, SWS_Dio_00075
  */
 Dio_PortLevelType Dio_Arch_ReadPort( Dio_PortType Port )
 {
@@ -92,6 +105,8 @@ Dio_PortLevelType Dio_Arch_ReadPort( Dio_PortType Port )
  *
  * @param Port ID of DIO Port.
  * @param Level Value to be written.
+ * 
+ * @reqs  SWS_Dio_00034, SWS_Dio_00035, SWS_Dio_00105, SWS_Dio_00108
  */
 void Dio_Arch_WritePort( Dio_PortType Port, Dio_PortLevelType Level )
 {
@@ -107,6 +122,8 @@ void Dio_Arch_WritePort( Dio_PortType Port, Dio_PortLevelType Level )
  * @param ChannelGroupIdPtr Pointer to ChannelGroup.
  *
  * @retval Returns the level of a subset of the adjacent bits of a port (channel group).
+ * 
+ * @reqs  SWS_Dio_00037, SWS_Dio_00092, SWS_Dio_00093, SWS_Dio_00114 
  */
 Dio_PortLevelType Dio_Arch_ReadChannelGroup( const Dio_ChannelGroupType *ChannelGroupIdPtr )
 {
@@ -129,6 +146,8 @@ Dio_PortLevelType Dio_Arch_ReadChannelGroup( const Dio_ChannelGroupType *Channel
  *
  * @param ChannelGroupIdPtr Pointer to ChannelGroup.
  * @param Level Value to be written.
+ * 
+ * @reqs  SWS_Dio_00039, SWS_Dio_00040, SWS_Dio_00090, SWS_Dio_00091 
  */
 void Dio_Arch_WriteChannelGroup( const Dio_ChannelGroupType *ChannelGroupIdPtr, Dio_PortLevelType Level )
 {
@@ -146,6 +165,8 @@ void Dio_Arch_WriteChannelGroup( const Dio_ChannelGroupType *ChannelGroupIdPtr, 
  * @param Port ID of DIO Port.
  * @param Level Value to be written.
  * @param Mask Channels to be masked in the port.
+ * 
+ * @reqs  SWS_Dio_00202, SWS_Dio_00203, SWS_Dio_00204
  */
 void Dio_Arch_MaskedWritePort( Dio_PortType Port, Dio_PortLevelType Level, Dio_PortLevelType Mask )
 {

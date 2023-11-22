@@ -40,6 +40,8 @@
 
 /**
  * @defgroup DIO_Error_Typse Dio Developtmnet Error Types
+ * 
+ * @reqs  SWS_Dio_91001
  *
  * @{ */
 #define DIO_E_PARAM_INVALID_CHANNEL_ID 0x0Au /*!< *!< Invalid Channel ID */
