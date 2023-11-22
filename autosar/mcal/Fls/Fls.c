@@ -10,11 +10,21 @@
  * the flash driver is only to be used by the Flash EEPROM
  * emulation module for writing data.
  * It is not intended to write program code to flash memory in application mode.
- *
  */
 
 #include "Std_Types.h"
 #include "Fls.h"
+#include "Fls_Arch.h"
+
+/**
+ * @brief  Variable for the initial value of the port configuration array.
+ */
+/* clang-format off */
+static Fls_HwUnit HwUnit_Fls =
+{
+    .Config = NULL_PTR,
+};
+/* clang-format on */
 
 /**
  * @brief   **Fls_Init**
@@ -27,7 +37,8 @@
  */
 void Fls_Init( const Fls_ConfigType *ConfigPtr )
 {
-    (void)ConfigPtr;
+    Fls_Arch_Init( &HwUnit_Fls, ConfigPtr );
+    HwUnit_Fls.Config = ConfigPtr;
 }
 
 /**
@@ -45,9 +56,7 @@ void Fls_Init( const Fls_ConfigType *ConfigPtr )
  */
 Std_ReturnType Fls_Erase( Fls_AddressType TargetAddress, Fls_LengthType Length )
 {
-    (void)TargetAddress;
-    (void)Length;
-    return E_OK;
+    return Fls_Arch_Erase( &HwUnit_Fls, TargetAddress, Length );
 }
 
 /**
@@ -66,10 +75,7 @@ Std_ReturnType Fls_Erase( Fls_AddressType TargetAddress, Fls_LengthType Length )
  */
 Std_ReturnType Fls_Write( Fls_AddressType TargetAddress, const uint8 *SourceAddressPtr, Fls_LengthType Length )
 {
-    (void)TargetAddress;
-    (void)SourceAddressPtr;
-    (void)Length;
-    return E_OK;
+    return Fls_Arch_Write( &HwUnit_Fls, TargetAddress, SourceAddressPtr, Length );
 }
 
 /**
@@ -79,9 +85,12 @@ Std_ReturnType Fls_Write( Fls_AddressType TargetAddress, const uint8 *SourceAddr
  *
  * @reqs    SWS_Fls_00252
  */
+#if FLS_CANCEL_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Fls_Cancel( void )
 {
+    Fls_Arch_Cancel( &HwUnit_Fls );
 }
+#endif
 
 /**
  * @brief   **Fls_GetStatus**
@@ -92,10 +101,12 @@ void Fls_Cancel( void )
  *
  * @reqs    SWS_Fls_00253
  */
+#if FLS_GET_STATUS_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 MemIf_StatusType Fls_GetStatus( void )
 {
-    return 0x01; /*!< dummy element for the moment */
+    return Fls_Arch_GetStatus( &HwUnit_Fls );
 }
+#endif
 
 /**
  * @brief   **Fls_GetJobResult**
@@ -106,10 +117,12 @@ MemIf_StatusType Fls_GetStatus( void )
  *
  * @reqs    SWS_Fls_00254
  */
+#if FLS_GET_JOB_RESULT_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 MemIf_JobResultType Fls_GetJobResult( void )
 {
-    return 0x01; /*!< dummy element for the moment */
+    return Fls_Arch_GetJobResult( &HwUnit_Fls );
 }
+#endif
 
 /**
  * @brief   **Fls_Read**
@@ -127,10 +140,7 @@ MemIf_JobResultType Fls_GetJobResult( void )
  */
 Std_ReturnType Fls_Read( Fls_AddressType SourceAddress, uint8 *TargetAddressPtr, Fls_LengthType Length )
 {
-    (void)SourceAddress;
-    (void)TargetAddressPtr;
-    (void)Length;
-    return E_OK;
+    return Fls_Arch_Read( &HwUnit_Fls, SourceAddress, TargetAddressPtr, Length );
 }
 
 /**
@@ -147,13 +157,12 @@ Std_ReturnType Fls_Read( Fls_AddressType SourceAddress, uint8 *TargetAddressPtr,
  *
  * @reqs    SWS_Fls_00257
  */
+#if FLS_COMPARE_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Std_ReturnType Fls_Compare( Fls_AddressType SourceAddress, const uint8 *TargetAddressPtr, Fls_LengthType Length )
 {
-    (void)SourceAddress;
-    (void)TargetAddressPtr;
-    (void)Length;
-    return E_OK;
+    return Fls_Arch_Compare( &HwUnit_Fls, SourceAddress, TargetAddressPtr, Length );
 }
+#endif
 
 /**
  * @brief   **Fls_SetMode**
@@ -165,10 +174,12 @@ Std_ReturnType Fls_Compare( Fls_AddressType SourceAddress, const uint8 *TargetAd
  *
  * @reqs    SWS_Fls_00258
  */
+#if FLS_SET_MODE_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Fls_SetMode( MemIf_ModeType Mode )
 {
-    (void)Mode;
+    Fls_Arch_SetMode( &HwUnit_Fls, Mode );
 }
+#endif
 
 /**
  * @brief   **Fls_GetVersionInfo**
@@ -179,10 +190,12 @@ void Fls_SetMode( MemIf_ModeType Mode )
  *
  * @reqs    SWS_Fls_00259
  */
+#if FLS_GET_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Fls_GetVersionInfo( Std_VersionInfoType *VersioninfoPtr )
 {
     (void)VersioninfoPtr;
 }
+#endif
 
 /**
  * @brief   **Fls_BlankCheck**
@@ -199,9 +212,9 @@ void Fls_GetVersionInfo( Std_VersionInfoType *VersioninfoPtr )
  *
  * @reqs    SWS_Fls_00371
  */
+#if FLS_BLANK_CHECK_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Std_ReturnType Fls_BlankCheck( Fls_AddressType TargetAddress, Fls_LengthType Length )
 {
-    (void)TargetAddress;
-    (void)Length;
-    return E_OK;
+    return Fls_Arch_BlankCheck( &HwUnit_Fls, TargetAddress, Length );
 }
+#endif

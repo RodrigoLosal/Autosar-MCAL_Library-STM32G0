@@ -10,7 +10,6 @@
  * the flash driver is only to be used by the Flash EEPROM
  * emulation module for writing data.
  * It is not intended to write program code to flash memory in application mode.
- *
  */
 #ifndef FLASH_H__
 #define FLASH_H__
@@ -37,7 +36,9 @@ Std_ReturnType Fls_Compare( Fls_AddressType SourceAddress, const uint8 *TargetAd
 #if FLS_SET_MODE_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Fls_SetMode( MemIf_ModeType Mode );
 #endif
+#if FLS_GET_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Fls_GetVersionInfo( Std_VersionInfoType *VersioninfoPtr );
+#endif
 #if FLS_BLANK_CHECK_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Std_ReturnType Fls_BlankCheck( Fls_AddressType TargetAddress, Fls_LengthType Length );
 #endif

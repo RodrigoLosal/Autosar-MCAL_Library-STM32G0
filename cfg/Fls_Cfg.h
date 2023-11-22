@@ -46,6 +46,12 @@
 #define FLS_SET_MODE_API       STD_ON
 
 /**
+ * @brief Enable / disable the Fls_GetVersionInfo() function.
+ * @typedef EcucBooleanParamDef
+ */
+#define FLS_GET_VERSION_INFO_API STD_ON
+
+/**
  * @brief Enable / disable the Fls_BlankCheck() function.
  * @typedef EcucBooleanParamDef
  */

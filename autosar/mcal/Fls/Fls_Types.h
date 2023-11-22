@@ -7,7 +7,6 @@
  * The file is implemnted as a means of abstraction from the hardware,
  * this way we can avoid to include Arch headers in the actual driver header,
  * making the low level interfaces available for upper layers.
- *
  */
 #ifndef FLASH_TYPES_H__
 #define FLASH_TYPES_H__
@@ -96,6 +95,17 @@ typedef uint32 Fls_AddressType;
  * @reqs    SWS_Fls_00370
  */
 typedef uint32 Fls_LengthType;
+
+/**
+ * @brief **Hardware control unit structure**
+ *
+ * This structure contains the hardware unit configuration and the state of the hardware
+ * unit pointers to controller structures.
+ */
+typedef struct _Fls_HwUnit
+{
+    const Fls_ConfigType *Config; /*!< Pointer to the configuration structure */
+} Fls_HwUnit;
 
 
 #endif
