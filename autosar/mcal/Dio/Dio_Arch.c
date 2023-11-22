@@ -77,7 +77,7 @@ Dio_LevelType Dio_Arch_FlipChannel( Dio_PortType Port, uint8 Pin )
     /*flip its value*/
     Bfx_SetBit_u32u8( (uint32 *)&DiosPeripherals[ Port ]->BSRR, ( Pin + ( GPIOx_BSRR_OFFSET * Bit ) ) );
 
-    return Bit;
+    return Bfx_GetBit_u32u8_u8( DiosPeripherals[ Port ]->IDR, Pin );
 }
 
 /**
