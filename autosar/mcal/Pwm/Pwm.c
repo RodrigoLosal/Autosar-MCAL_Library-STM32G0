@@ -96,6 +96,7 @@ void Pwm_DeInit( void )
         Pwm_Arch_DeInit( &HwUnit_Pwm );
     }
 }
+
 /**
  * @brief    **Pwm Set Duty Cycle**
  *
