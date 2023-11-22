@@ -11,6 +11,7 @@
 #include "Registers.h"
 #include "Port_Types.h"
 #include "Port_Arch.h"
+#include "Port_Cfg.h"
 
 /**
  * @defgroup bits  defines to replace magic numbers
