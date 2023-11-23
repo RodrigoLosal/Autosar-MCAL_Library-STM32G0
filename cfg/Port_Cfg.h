@@ -32,12 +32,6 @@
  * @} */
 
 /**
- * @brief Switches the development error detection and notification on or off.
- * @typedef EcucBooleanParamDef
- */
-#define PORT_DEV_ERROR_DETECT      STD_OFF
-
-/**
  * @defgroup    PORTS_SETTINGS  This are option to enable or disable some driver interfaces
  *              user only needs to define as STD_ON or STD_OFF
  * @{ */
@@ -46,6 +40,12 @@
 #define PORT_VERSION_INFO_API      STD_ON /**< Enable or disable the version info API */
 /**
  * @} */
+
+/**
+ * @brief Switches the development error detection and notification on or off.
+ * @typedef EcucBooleanParamDef
+ */
+#define PORT_DEV_ERROR_DETECT      STD_OFF
 
 /**
  * @brief   **Number of port settings to configure**

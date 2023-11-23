@@ -3,12 +3,15 @@
  * @brief   **  **
  * @author  Enrique Ortega
  *
- * This PORT driver module control the overall configuration and initialization of the port structure
- * which is used in the DIO driver module. Therefore, the DIO driver works on pins and ports which are
- * configured by the PORT driver.
+ * PORT driver implementation for the STM32G0xx family of microcontrollers. This file contains the
+ * hardware specific implementation of the PORT driver. The file is implemented as a means of
+ * abstraction from the hardware, this way we can avoid to include Arch headers in the actual
+ * driver header, making the low level interfaces available only for the inmediate upper layer.
  */
 #ifndef PORT_ARCH_H__
 #define PORT_ARCH_H__
+
+#include "Port_Types.h"
 
 void Port_Arch_Init( const Port_ConfigType *ConfigPtr );
 void Port_Arch_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction );

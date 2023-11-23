@@ -19,20 +19,7 @@
 #include "Port_Types.h"
 #include "Port_Arch.h"
 
-/**
- * @defgroup get_bits  macros to extract certaing number of bits from a variable
- *
- * @{*/
-
-/**
- * @}*/
-
-/**
- * @brief  Variable for the initial value of the port configuration array.
- */
-static const Port_ConfigType *Port_ConfigPtr = NULL_PTR;
-
-/* cppcheck-suppress misra-c2012-20.9 ; This is declared at Port_Cfg.h */
+/* cppcheck-suppress misra-c2012-20.9 ; this is declared at Can_Cfg.h */
 #if PORT_DEV_ERROR_DETECT == STD_OFF
 /**
  * @param   ModuleId    module id number
@@ -45,6 +32,10 @@ static const Port_ConfigType *Port_ConfigPtr = NULL_PTR;
 #include "Det.h"
 #endif
 
+/**
+ * @brief  Variable for the initial value of the port configuration array.
+ */
+static const Port_ConfigType *Port_ConfigPtr = NULL_PTR;
 
 /**
  * @brief Initialize the GPIO pins to the configuration store on ConfigPTR.
@@ -56,19 +47,20 @@ static const Port_ConfigType *Port_ConfigPtr = NULL_PTR;
  *
  * @param ConfigPtr       Pointer to ConfigPtr struct array.
  *
- * @reqs   SWS_Port_00140
+ * @reqs   SWS_Port_00140, SWS_Port_00004, SWS_Port_00079, SWS_Port_00081, SWS_Port_00082
  */
 void Port_Init( const Port_ConfigType *ConfigPtr )
 {
     if( ConfigPtr == NULL_PTR )
     {
-        /* If development error detection for the Can module is enabled:
-        */
+        /* If development error detection for the PORT module is enabled:
+        The function Port_Init shall raise the error PORT_E_INIT_FAILED
+        if the parameter ConfigPtr is a null value.*/
         Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_INIT, PORT_E_INIT_FAILED );
     }
     else
     {
-        Port_Arch_Init( &ConfigPtr );
+        Port_Arch_Init( ConfigPtr );
         /*make the port configuration accesible for other functions*/
         Port_ConfigPtr = ConfigPtr;
     }
@@ -84,7 +76,7 @@ void Port_Init( const Port_ConfigType *ConfigPtr )
  * @param Pin             Pin to change the direction.
  * @param Direction       Direction to be changed.
  *
- * @reqs   SWS_Port_00141
+ * @reqs   SWS_Port_00141, SWS_Port_00137, SWS_Port_00138
  */
 /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 #if PORT_SET_PIN_DIRECTION_API == STD_ON
@@ -92,20 +84,23 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
 {
     if( Port_ConfigPtr == NULL_PTR )
     {
-        /* If development error detection for the Can module is enabled:
-        */
+        /* If development error detection for the PORT module is enabled:
+        The function Port_SetPinDirection shall raise the error PORT_E_UNINIT
+        if the parameter Port_ConfigPtr is a null value.*/
         Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_SET_PIN_DIRECTION, PORT_E_UNINIT );
     }
-    else if( ( GET_HIGH_BYTE( Pin ) < MAX_PORT_NUMBER ) && ( GET_LOW_NIBBLE( Pin ) < MAX_PIN_NUMBER ) )
+    else if( ( GET_HIGH_BYTE( Pin ) < MAX_PORT_NUMBER ) && ( GET_LOW_NIBBLE( Pin ) < STD_HIGH ) )
     {
-        /* If development error detection for the Can module is enabled:
-        */
+        /* If development error detection for the PORT module is enabled:
+        The function Port_SetPinDirection shall raise the error PORT_E_PARAM_PIN
+        if an incorrect port pin ID has been passed.*/
         Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_SET_PIN_DIRECTION, PORT_E_PARAM_PIN );
     }
-    else if( Port_ConfigPtr[ Pin >> 8u ].DirChange == PORTS_CHANGEABLE )
+    else if( Port_ConfigPtr[ GET_HIGH_BYTE( Pin ) ].DirChange == FALSE )
     {
-        /* If development error detection for the Can module is enabled:
-        */
+        /* If development error detection for the PORT module is enabled:
+        The function Port_SetPinDirection shall raise the error PORT_E_DIRECTION_UNCHANGEABLE
+        if the pin is not configured as changeable.*/
         Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_SET_PIN_DIRECTION, PORT_E_DIRECTION_UNCHANGEABLE );
     }
     else
@@ -125,17 +120,39 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
  * @param Pin             Pin to change the direction.
  * @param Mode            Mode to be changed.
  *
- * @reqs   SWS_Port_00145
+ * @reqs   SWS_Port_00145, SWS_Port_00005
  */
 /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 #if PORT_SET_PIN_MODE_API == STD_ON
 void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
 {
-    if( 0 )
+    if( Port_ConfigPtr == NULL_PTR )
+    {
+        /* If development error detection for the PORT module is enabled:
+        The function Port_SetPinMode shall raise the error PORT_E_UNINIT
+        if the parameter Port_ConfigPtr is a null value.*/
+        Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_SET_PIN_MODE, PORT_E_UNINIT );
+    }
+    else if( ( GET_HIGH_BYTE( Pin ) < MAX_PORT_NUMBER ) && ( GET_LOW_NIBBLE( Pin ) < STD_HIGH ) )
+    {
+        /* If development error detection for the PORT module is enabled:
+        The function Port_SetPinMode shall raise the error PORT_E_PARAM_PIN
+        if an incorrect port pin ID has been passed.*/
+        Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_SET_PIN_MODE, PORT_E_PARAM_PIN );
+    }
+    else if( ( GET_HIGH_NIBBLE( Pin ) < MAX_PIN_MODES ) && ( GET_LOW_NIBBLE( Mode ) < MAX_ALT_MODES ) )
+    {
+        /* If development error detection for the PORT module is enabled:
+        The function Port_SetPinMode shall raise the error PORT_E_PARAM_PIN
+        if an incorrect port pin ID has been passed.*/
+        Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_SET_PIN_MODE, PORT_E_PARAM_INVALID_MODE );
+    }
+    else if( Port_ConfigPtr[ GET_HIGH_BYTE( Pin ) ].ModeChange == FALSE )
     {
         /* If development error detection for the Can module is enabled:
-        */
-        Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_INIT, PORT_E_INIT_FAILED );
+        The function Port_SetPinMode shall raise the error PORT_E_MODE_UNCHANGEABLE
+        if the mode is unchangeable.*/
+        Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_SET_PIN_MODE, PORT_E_MODE_UNCHANGEABLE );
     }
     else
     {
@@ -158,11 +175,12 @@ void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
 #if PORT_VERSION_INFO_API == STD_ON
 void Port_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
-    if( 0 )
+    if( versioninfo != NULL_PTR )
     {
         /* If development error detection for the Can module is enabled:
-        */
-        Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_INIT, PORT_E_INIT_FAILED );
+        The function Port_GetVersionInfo shall raise the error PORT_E_PARAM_POINTER
+        if the parameter versioninfo is a null pointer */
+        Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_GET_VERSION_INFO, PORT_E_PARAM_POINTER );
     }
     else
     {
@@ -181,15 +199,16 @@ void Port_GetVersionInfo( Std_VersionInfoType *versioninfo )
  * The function refreshes the registers values of the GPIOS moder during runtime to the initial values
  * only if they are configured as non changeables.
  *
- * @reqs   SWS_Port_00142
+ * @reqs   SWS_Port_00142, SWS_Port_00066
  */
 void Port_RefreshPortDirection( void )
 {
-    if( 0 )
+    if( Port_ConfigPtr == NULL_PTR )
     {
-        /* If development error detection for the Can module is enabled:
-        */
-        Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_INIT, PORT_E_INIT_FAILED );
+        /* If development error detection for the PORT module is enabled:
+        The function Port_RefreshPortDirection shall raise the error PORT_E_UNINIT
+        if the parameter Port_ConfigPtr is a null value.*/
+        Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_REFRESH_PORT_DIRECTION, PORT_E_UNINIT );
     }
     else
     {

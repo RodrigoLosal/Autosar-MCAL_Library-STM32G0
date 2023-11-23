@@ -3,31 +3,32 @@
  * @brief   **Port **
  * @author  Enrique Ortega
  *
- * This PORT driver module control the overall configuration and initialization of the port structure
- * which is used in the DIO driver module. Therefore, the DIO driver works on pins and ports which are
- * configured by the PORT driver.
+ * PORT driver implementation for the STM32G0xx family of microcontrollers. This file contains the
+ * hardware specific implementation of the PORT driver. The file is implemented as a means of
+ * abstraction from the hardware, this way we can avoid to include Arch headers in the actual
+ * driver header, making the low level interfaces available only for the inmediate upper layer.
  */
 #include "Std_Types.h"
 #include "Registers.h"
 #include "Port_Types.h"
 #include "Port_Arch.h"
 #include "Port_Cfg.h"
+#include "Bfx.h"
 
 /**
  * @defgroup bits  defines to replace magic numbers
  * @{*/
-#define TWO_BITS             0x02u /*!< operation on two bits */
-#define FOUR_BITS            0x04u /*!< operation on four bits */
+#define TWO_BITS    0x02u /*!< operation on two bits */
+#define FOUR_BITS   0x04u /*!< operation on four bits */
 /**
  * @}*/
-
 
 /**
  * @defgroup mlu_factors  multiplication factors
  *
  * @{*/
-#define MUL_BY_TWO           1u /*!< Multiply by two on a shift operation */
-#define MUL_BY_FOUR          2u /*!< Multiply by four on a shift operation */
+#define MUL_BY_TWO  1u /*!< Multiply by two on a shift operation */
+#define MUL_BY_FOUR 2u /*!< Multiply by four on a shift operation */
 /**
  * @}*/
 
@@ -43,7 +44,17 @@ static const Port_ConfigType *LocalConfigPtr = NULL_PTR;
 static Port_RegisterType *Port_Ports[ MAX_PORT_NUMBER ] = { PORTA, PORTB, PORTC, PORTD, PORTE, PORTF };
 /* clang-format on */
 
-
+/**
+ * @brief Initialize the GPIO pins to the configuration store on ConfigPTR.
+ *
+ * This function changes the values of the registers depending on the ConfigPtr values.
+ * In addition this function initializes all pins and ports of the ConfigPtr array, the
+ * length of the array is given by PORT_PIN_NUMBER_OF_PORTS.
+ *
+ * @param ConfigPtr       Pointer to ConfigPtr struct array.
+ *
+ * @reqs   SWS_Port_00140
+ */
 void Port_Arch_Init( const Port_ConfigType *ConfigPtr )
 {
     Port_RegisterType *PortReg;
@@ -82,6 +93,16 @@ void Port_Arch_Init( const Port_ConfigType *ConfigPtr )
     LocalConfigPtr = ConfigPtr;
 }
 
+/**
+ * @brief Set the direction of a GPIO during runtime.
+ *
+ * The function changes the registers values of the GPIOS direction during runtime.
+ *
+ * @param Pin             Pin to change the direction.
+ * @param Direction       Direction to be changed.
+ *
+ * @reqs   SWS_Port_00141
+ */
 void Port_Arch_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
 {
     Port_RegisterType *PortReg = Port_Ports[ LocalConfigPtr[ GET_HIGH_BYTE( Pin ) ].Port ];
@@ -89,6 +110,16 @@ void Port_Arch_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Directio
     Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->MODER, GET_LOW_NIBBLE( Pin ), 2u, Direction );
 }
 
+/**
+ * @brief Set the mode of a GPIO during runtime.
+ *
+ * The function changes the registers values of the GPIOS mode during runtime.
+ *
+ * @param Pin             Pin to change the direction.
+ * @param Mode            Mode to be changed.
+ *
+ * @reqs   SWS_Port_00145
+ */
 void Port_Arch_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
 {
     Port_RegisterType *PortReg = Port_Ports[ LocalConfigPtr[ GET_HIGH_BYTE( Pin ) ].Port ];
@@ -108,6 +139,14 @@ void Port_Arch_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
     }
 }
 
+/**
+ * @brief Refresh port direction.
+ *
+ * The function refreshes the registers values of the GPIOS moder during runtime to the initial values
+ * only if they are configured as non changeables.
+ *
+ * @reqs   SWS_Port_00142
+ */
 void Port_Arch_RefreshPortDirection( void )
 {
     Port_RegisterType *PortReg;
