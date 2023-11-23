@@ -65,6 +65,18 @@
   @} */
 
 /**
+ * @brief   **Hardware unit status datatype**
+ *
+ * Data type which describes the status of FLS Module (initialized or not-initialized)
+ *
+ */
+typedef enum _Fls_StatusType
+{
+    FLS_STATE_UNINIT = 0x00, /*!< Fls Module not initialized         */
+    FLS_STATE_INIT           /*!< Fls Module has been initialized    */
+} Fls_StatusType;
+
+/**
  * @brief   Fls_ConfigType.
  *
  * A pointer to such a structure is provided to the flash driver initialization routine
@@ -105,6 +117,7 @@ typedef uint32 Fls_LengthType;
 typedef struct _Fls_HwUnit
 {
     const Fls_ConfigType *Config; /*!< Pointer to the configuration structure */
+    uint8 HwUnitState;            /*!< FLS hardware unit state                */
 } Fls_HwUnit;
 
 

@@ -16,12 +16,26 @@
 #include "Fls.h"
 #include "Fls_Arch.h"
 
+/* cppcheck-suppress misra-c2012-20.9 ; this is declared at Fls_Cfg.h */
+#if FLS_DEV_ERROR_DETECT == STD_OFF
+/**
+ * @param   ModuleId    Module ID number
+ * @param   InstanceId  Instance Id
+ * @param   ApiId       Api id
+ * @param   ErrorId     Error code
+ */
+#define Det_ReportError( ModuleId, InstanceId, ApiId, ErrorId ) (void)0
+#else
+#include "Det.h"
+#endif
+
 /**
  * @brief  Variable for the initial value of the port configuration array.
  */
 /* clang-format off */
 static Fls_HwUnit HwUnit_Fls =
 {
+    .HwUnitState = FLS_STATE_UNINIT,
     .Config = NULL_PTR,
 };
 /* clang-format on */
@@ -33,12 +47,27 @@ static Fls_HwUnit HwUnit_Fls =
  *
  * @param   ConfigPtr Pointer to flash driver configuration set.
  *
- * @reqs    SWS_Fls_00249
+ * @reqs    SWS_Fls_00249, SWS_Fls_00015
  */
 void Fls_Init( const Fls_ConfigType *ConfigPtr )
 {
-    Fls_Arch_Init( &HwUnit_Fls, ConfigPtr );
-    HwUnit_Fls.Config = ConfigPtr;
+    if( HwUnit_Fls.HwUnitState != FLS_STATE_UNINIT )
+    {
+        /*If development error detection for the module Fls is enabled:
+        the function Fls_Init shall check the (hardware specific) contents
+        of the given configuration set for being within the allowed range.
+        If this is not the case, it shall raise the development error FLS_E_PARAM_CONFIG.*/
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_E_PARAM_CONFIG );
+    }
+    else
+    {
+        /*Init driver */
+        Fls_Arch_Init( &HwUnit_Fls, ConfigPtr );
+        /*update Hardware init state*/
+        HwUnit_Fls.HwUnitState = FLS_STATE_INIT;
+        /* make the configuration available */
+        HwUnit_Fls.Config = ConfigPtr;
+    }
 }
 
 /**
