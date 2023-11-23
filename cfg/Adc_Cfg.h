@@ -65,6 +65,12 @@
  */
 #define ADC_VERSION_INFO_API            STD_ON
 
+/**
+ * @brief Switches the development error detection and notification on or off.
+ * @typedef EcucBooleanParamDef
+ */
+#define ADC_DEV_ERROR_DETECT            TRUE
+
 extern const Adc_ConfigType AdcConfig;
 
 #endif /* CAN_CFG_H__ */

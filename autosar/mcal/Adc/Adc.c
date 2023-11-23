@@ -11,15 +11,30 @@
 #include "Adc.h"
 #include "Adc_Arch.h"
 
+#if ADC_DEV_ERROR_DETECT == FALSE
+#define Det_ReportError( ModuleId, InstanceId, ApiId, ErrorId ) (void)0
+#else
+#include "Det.h"
+#endif
+
 /**
  * @brief  Variable for the initial value of the Adc configuration array.
  */
 /* clang-format off */
 static Adc_HwUnit HwUnit_Adc =
 {
-.Config = NULL_PTR,
+    .Config = NULL_PTR,
 };
 /* clang-format on */
+
+/**
+ * @brief  Variable with the initial value of the Adc Det struct.
+ */
+static Adc_Det_Str Det_Adc =
+{
+    .Adc_ModuleState = ADC_E_UNINIT,
+    .Adc_ModuleID = ADC_MODULE_ID
+};
 
 /**
  * @brief    **ADC Initialization**
@@ -32,8 +47,16 @@ static Adc_HwUnit HwUnit_Adc =
  */
 void Adc_Init( const Adc_ConfigType *ConfigPtr )
 {
-    Adc_Arch_Init( &HwUnit_Adc, ConfigPtr );
-    HwUnit_Adc.Config = ConfigPtr;
+    if( Det_Adc.Adc_ModuleState == ADC_E_ALREADY_INITIALIZED )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_ALREADY_INITIALIZED );
+    }
+    else
+    {
+        Adc_Arch_Init( &HwUnit_Adc, ConfigPtr );
+        Det_Adc.Adc_ModuleState = ADC_E_ALREADY_INITIALIZED;
+        HwUnit_Adc.Config = ConfigPtr;
+    }
 }
 
 /**
