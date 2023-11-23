@@ -55,7 +55,15 @@ typedef struct
     const char *Error;    /**< Report Error for ErrorId*/
 } DetError;
 
-#include "Det_Cfg.h" /* cppcheck-suppress misra-c2012-20.1 ; Include should be add it after a ConfigType */
+#include "Det_Cfg.h"   /* cppcheck-suppress misra-c2012-20.1 ; Include should be add it after a ConfigType */
+#include "Spi_Types.h" /* cppcheck-suppress misra-c2012-20.1 ; Include should be add it after a ConfigType */
+#include "Spi_Cfg.h"   /* cppcheck-suppress misra-c2012-20.1 ; Include should be add it after a ConfigType */
+#include "Gpt_Cfg.h"   /* cppcheck-suppress misra-c2012-20.1 ; Include should be add it after a ConfigType */
+#include "Can_Cfg.h"   /* cppcheck-suppress misra-c2012-20.1 ; Include should be add it after a ConfigType */
+#include "Adc_Cfg.h"   /* cppcheck-suppress misra-c2012-20.1 ; Include should be add it after a ConfigType */
+#include "Nvic_Cfg.h"  /* cppcheck-suppress misra-c2012-20.1 ; Include should be add it after a ConfigType */
+#include "Mcu_Cfg.h"   /* cppcheck-suppress misra-c2012-20.1 ; Include should be add it after a ConfigType */
+#include "Dio_Cfg.h"   /* cppcheck-suppress misra-c2012-20.1 ; Include should be add it after a ConfigType */
 
 void Det_Init( const Det_ConfigType *ConfigPtr );
 void Det_Start( void );
