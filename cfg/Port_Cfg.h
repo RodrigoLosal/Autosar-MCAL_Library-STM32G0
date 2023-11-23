@@ -45,7 +45,7 @@
  * @brief Switches the development error detection and notification on or off.
  * @typedef EcucBooleanParamDef
  */
-#define PORT_DEV_ERROR_DETECT      STD_OFF
+#define PORT_DEV_ERROR_DETECT      STD_ON
 
 /**
  * @brief   **Number of port settings to configure**
