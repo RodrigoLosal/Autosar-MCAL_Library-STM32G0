@@ -169,7 +169,7 @@ Std_ReturnType Mcu_DistributePllClock( void )
  */
 Mcu_PllStatusType Mcu_GetPllStatus( void )
 {
-    Std_ReturnType ReturnValue = E_NOT_OK;
+    Mcu_PllStatusType ReturnValue = MCU_PLL_UNLOCKED;
 
     if( HwUnit_Mcu.HwUnitState == MCU_STATE_UNINIT )
     {
@@ -198,7 +198,7 @@ Mcu_PllStatusType Mcu_GetPllStatus( void )
  */
 Mcu_ResetType Mcu_GetResetReason( void )
 {
-    Std_ReturnType ReturnValue = E_NOT_OK;
+    Mcu_ResetType ReturnValue = MCU_RESET_UNDEFINED;
 
     if( HwUnit_Mcu.HwUnitState == MCU_STATE_UNINIT )
     {
@@ -330,11 +330,10 @@ void Mcu_GetVersionInfo( Std_VersionInfoType *versioninfo )
  * @retval  Mcu_RamStateType: Status of the RAM Content
  *
  * @reqs    SWS_Mcu_00207, SWS_Mcu_00017, SWS_Mcu_00125
- * @reqs    SWS_Mcu_00207, SWS_Mcu_00017, SWS_Mcu_00125
  */
 Mcu_RamStateType Mcu_GetRamState( void )
 {
-    Std_ReturnType ReturnValue = E_NOT_OK;
+    Mcu_RamStateType ReturnValue = MCU_RAMSTATE_INVALID;
 
     if( HwUnit_Mcu.HwUnitState == MCU_STATE_UNINIT )
     {
