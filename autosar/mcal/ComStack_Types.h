@@ -7,6 +7,9 @@
  * independent.
  * This file contains definitions of variables, structs an enums for the use of ComStack.
  */
+#ifndef COM_STACK_TYPES_H__
+#define COM_STACK_TYPES_H__
+
 #include "Std_Types.h"
 
 /**
@@ -126,3 +129,5 @@ typedef uint8 NetworkHandleType;
  * @reqs  SWS_COMTYPE_91001 DRAFT
  */
 typedef uint16 CbkHandleIdType;
+
+#endif /* COM_STACK_TYPES_H__ */

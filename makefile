@@ -2,20 +2,22 @@
 TARGET = mcal
 
 #---Files to compile
-SRCS = main.c startup.c Nvic.c Crc.c Dio.c Gpt.c Gpt_Cfg.c
-SRCS += Can.c Can_Lcfg.c Can_Arch.c  Pwm.c Pwm_Lcfg.c Pwm_Arch.c Port.c Port_Lcfg.c Port_Arch.c
+SRCS = main.c startup.c Nvic.c Nvic_Lcfg.c Port.c Port_Lcfg.c Port_Arch.c Crc.c Dio.c Dio_Arch.c Dio_Lcfg.c 
+SRCS += Gpt.c Gpt_Cfg.c Can.c Can_Lcfg.c Can_Arch.c Pwm.c Pwm_Lcfg.c Pwm_Arch.c Spi.c Spi_Lcfg.c Spi_Arch.c 
+SRCS += Det.c Det_Lcfg.c Mcu.c Mcu_Lcfg.c Mcu_Arch.c Fls.c Fls_Lcfg.c Fls_Arch.c Adc.c Adc_Arch.c
 
 #---Linker script
 LINKER = linker.ld
 
 #List of subdirectories for MCAL modules
-MCAL_MODULES = Can Dio Fls Gpt Mcu Nvic Port Spi Pwm
+MCAL_MODULES = Can Dio Fls Gpt Mcu Nvic Port Spi Pwm Adc
 
 #directorios con archivos a compilar (.c y .s)
 SRC_PATHS  = .
 SRC_PATHS += $(addprefix autosar/mcal/,$(MCAL_MODULES))
 SRC_PATHS += autosar/libs
 SRC_PATHS += cfg
+SRC_PATHS += autosar/Sys
 #direcotrios con archivos .h
 INC_PATHS  = .
 INC_PATHS += autosar
@@ -24,6 +26,7 @@ INC_PATHS += autosar/mcal
 INC_PATHS += $(addprefix autosar/mcal/,$(MCAL_MODULES))
 INC_PATHS += autosar/mcal/regs
 INC_PATHS += cfg
+INC_PATHS += autosar/Sys
 
 #---Set toolchain
 TOOLCHAIN = arm-none-eabi

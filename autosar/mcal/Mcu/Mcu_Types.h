@@ -14,16 +14,37 @@
 #include "Std_Types.h"
 
 /**
- * @brief **Hardware dependent structure**
+ * @defgroup MCU_Ids MCU Id number for module and each API service
  *
- * A pointer to this type is provided to MCU initialization routines for configuration
+ * @{ */
+#define MCU_ID_INIT                 0x00u /*!< Mcu_Init() api service id */
+#define MCU_ID_INIT_RAM             0x01u /*!< Mcu_InitRamSection() api service id */
+#define MCU_ID_INIT_CLOCK           0x02u /*!< Mcu_InitClock() api service id */
+#define MCU_ID_DISTRIBUTE_PLL_CLOCK 0x03u /*!< Mcu_DistributePllClock() api service id */
+#define MCU_ID_GET_PLL_STATUS       0x04u /*!< Mcu_GetPllStatus() api service id */
+#define MCU_ID_GET_RESET_REASON     0x05u /*!< Mcu_GetResetReason() api service id */
+#define MCU_ID_GET_RESET_RAW_VALUE  0x06u /*!< Mcu_GetResetRawValue() api service id */
+#define MCU_ID_PERFORM_RESET        0x07u /*!< Mcu_PerformReset() api service id */
+#define MCU_ID_SET_MODE             0x08u /*!< Mcu_SetMode() api service id */
+#define MCU_ID_GET_VERSION_INFO     0x09u /*!< Mcu_GetVersionInfo() api service id */
+#define MCU_ID_GET_RAM_STATE        0x0Au /*!< Mcu_GetRamState() api service id */
+/**
+ * @} */
+
+/**
+ * @defgroup MCU_Error_Type MCU Development Error Types
  *
- * @reqs SWS_Mcu_00249
- */
-typedef struct _Mcu_ConfigType
-{
-    uint32 dummy; /*!< dummy element for the moment */
-} Mcu_ConfigType;
+ * @{ */
+#define MCU_E_PARAM_CONFIG          0x0Au /*!< API service called with wrong parameter */
+#define MCU_E_PARAM_CLOCK           0x0Bu /*!< API service called with wrong parameter */
+#define MCU_E_PARAM_MODE            0x0Cu /*!< API service called with wrong parameter */
+#define MCU_E_PARAM_RAMSECTION      0x0Du /*!< API service called with wrong parameter */
+#define MCU_E_PLL_NOT_LOCKED        0x0Eu /*!< API service called with wrong parameter */
+#define MCU_E_UNINIT                0x0Fu /*!< API service called with wrong parameter */
+#define MCU_E_PARAM_POINTER         0x10u /*!< API service called with wrong parameter */
+#define MCU_E_INIT_FAILED           0x11u /*!< API service called with wrong parameter */
+/**
+ * @} */
 
 /**
  * @brief   **Status value returned by the function Mcu_GetPllStatus of the MCU module**
@@ -93,5 +114,45 @@ typedef enum _Mcu_RamStateType
     MCU_RAMSTATE_INVALID = 0x00, /*!< Ram content is not valid or unknown */
     MCU_RAMSTATE_VALID,          /*!< Ram content is valid                */
 } Mcu_RamStateType;
+
+/**
+ * @brief   **Hardware unit status datatype**
+ *
+ * Data type which describes the status of MCU Module (initialized or not-initialized)
+ *
+ */
+typedef enum _Mcu_StatusType
+{
+    MCU_STATE_UNINIT = 0x00, /*!< MCU Module not initialized         */
+    MCU_STATE_INIT,          /*!< MCU Module has been initialized    */
+} Mcu_StatusType;
+
+/**
+ * @brief **Hardware dependent structure**
+ *
+ * A pointer to this type is provided to MCU initialization routines for configuration
+ *
+ * @reqs SWS_Mcu_00249, SWS_Mcu_00017, SWS_Mcu_00019, SWS_Mcu_00020, SWS_Mcu_00021
+ */
+typedef struct _Mcu_ConfigType
+{
+    Mcu_ClockType ClockSetting;    /*!< Specifies the identification (ID) for a clock setting    */
+    Mcu_ModeType McuMode;          /*!< Specifies the identification (ID) for a MCU mode         */
+    Mcu_RamSectionType RamSection; /*!< Specifies the identification (ID) for a RAM section      */
+    Mcu_PllStatusType PllStatus;   /*!< Stores the status of PLL (locked, unlocked or undefined) */
+    uint32 dummy;                  /*!< dummy element for the moment */
+} Mcu_ConfigType;
+
+/**
+ * @brief **Hardware control unit structure**
+ *
+ * This structure contains the hardware unit configuration and the state of the hardware
+ * unit pointers to controller structures.
+ */
+typedef struct _Mcu_HwUnit
+{
+    const Mcu_ConfigType *Config; /*!< Pointer to the configuration structure */
+    uint8 HwUnitState;            /*!< MCU hardware unit state                */
+} Mcu_HwUnit;
 
 #endif

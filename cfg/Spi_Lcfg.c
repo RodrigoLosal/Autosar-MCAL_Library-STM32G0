@@ -17,6 +17,9 @@
 /* clang-format off */
 const Spi_ConfigType SpiConfig =
 {
-    .dummy = 0x12345678;
+    .ChannelCount   = 0u,
+    .SequenceCount  = 0u,
+    .JobCount       = 0u,
+    .HWUnitCount    = 0u,
 };
 /* clang-format off */

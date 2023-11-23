@@ -10,40 +10,55 @@
 #include "Std_Types.h"
 #include "Registers.h"
 #include "Nvic.h"
-#include "Bfx_32bits.h"
+#include "Bfx.h"
+
+/* cppcheck-suppress misra-c2012-20.9 ; this is declared at Can_Cfg.h */
+#if NVIC_DEV_ERROR_DETECT == STD_OFF
+/**
+ * @param   ModuleId    module id number
+ * @param   InstanceId  Instance Id
+ * @param   ApiId       Pai id
+ * @param   ErrorId     Error code
+ */
+#define Det_ReportError( ModuleId, InstanceId, ApiId, ErrorId ) (void)0
+#else
+#include "Det.h"
+#endif
+
 
 /**
   * @defgroup Operations representing the generation of the register offset and the index for the irq priority register
   @{ */
-#define BIT_SHIFT( irq ) ( ( ( ( (uint32)( irq ) ) ) & 0x03UL ) * 8UL ) /*!< Calculate the bit shift for IRQ priority */
-#define IP_IDX( irq )    ( ( ( (uint32)( irq ) ) >> 2UL ) )             /*!< Calculate the index for IRQ priority register */
+#define BIT_SHIFT( irq )  ( ( ( ( (uint32)( irq ) ) ) & 0x03UL ) * 8UL ) /*!< Calculate the bit shift for IRQ priority */
+#define IP_IDX( irq )     ( ( ( (uint32)( irq ) ) >> 2UL ) )             /*!< Calculate the index for IRQ priority register */
 /**
   @} */
 
 /**
-  * @defgroup MinMaxValues representing the minimum and maximum irq value
+  * @defgroup MinMaxValues representing the minimum and maximum irq values and the maximum priority value
   @{ */
-#define NVIC_MIN_IRQ     16U /*!< Minimum IQR value */
-#define NVIC_MAX_IRQ     30U /*!< Maximum IRQ value*/
+#define NVIC_MIN_IRQ      16u /*!< Minimum IQR value */
+#define NVIC_MAX_IRQ      30u /*!< Maximum IRQ value*/
+#define NVIC_MAX_PRIORITY 3u  /*!< Maximum priority value */
 /**
   @} */
 
 /**
   * @defgroup MAskValues representing the byte and irq masks
   @{ */
-#define IRQ_MASK         0x1FUL /*!< Mask to obtain bits from an IRQ value */
+#define IRQ_MASK          0x1FUL /*!< Mask to obtain bits from an IRQ value */
 /**
   @} */
 
 /**
 * @defgroup Values representing return values
 @{ */
-#define IRQ_NOT_PENDING  0UL   /*!< Value to specifie IRQ is not pending */
-#define INVALID_PRIORITY 0xFFU /*!< Invalid priority indicator */
+#define IRQ_NOT_PENDING   0UL   /*!< Value to specifie IRQ is not pending */
+#define INVALID_PRIORITY  0xFFU /*!< Invalid priority indicator */
 /**
   @} */
 
-#define FIRST_INDEX      0U /*!< Starting index for NVIC register */
+#define FIRST_INDEX       0U /*!< Starting index for NVIC register */
 
 /**
  * @brief Sets the priority for a specific peripheral interrupt in the NVIC.
@@ -52,15 +67,29 @@
  * peripherals. If valid, it utilizes the Bfx_PutBitsMask_u32u32u32 function
  * to update the NVIC's IP register with the desired priority.
  *
- * @param irq       Interrupt number to set.
- * @param priority  Priority value to assign to the interrupt.
+ * @param Irq       Interrupt number to set.
+ * @param Priority  Priority value to assign to the interrupt.
  */
-void CDD_Nvic_SetPriority( Nvic_IrqType irq, uint32 priority )
+void CDD_Nvic_SetPriority( Nvic_IrqType Irq, uint32 Priority )
 {
-    if( ( (uint32)irq >= NVIC_MIN_IRQ ) && ( (uint32)irq <= NVIC_MAX_IRQ ) )
+    if( ( Irq < NVIC_MIN_IRQ ) || ( Irq > NVIC_MAX_IRQ ) )
     {
-        Bfx_ClrBitMask_u32u32( (uint32 *)&NVIC->IP[ IP_IDX( irq ) ], ( 0xFFUL << BIT_SHIFT( irq ) ) );
-        Bfx_SetBitMask_u32u32( (uint32 *)&NVIC->IP[ IP_IDX( irq ) ], ( ( ( priority << ( 8U - 2U ) ) & (uint32)0xFFUL ) << BIT_SHIFT( irq ) ) );
+        /* If development error detection for the Nvic module is enabled:
+        the function CDD_Nvic_SetPriority shall raise the error NVIC_E_PARAM_IRQ if the parameter
+        irq is out of range. */
+        Det_ReportError( NVIC_MODULE_ID, NVIC_INSTANCE_ID, NVIC_ID_SET_PRIORITY, NVIC_E_PARAM_IRQ );
+    }
+    else if( Priority > NVIC_MAX_PRIORITY )
+    {
+        /* If development error detection for the Nvic module is enabled:
+        the function CDD_Nvic_SetPriority shall raise the error NVIC_E_PARAM_PRIORITY if the parameter
+        priority is out of range.⌋*/
+        Det_ReportError( NVIC_MODULE_ID, NVIC_INSTANCE_ID, NVIC_ID_SET_PRIORITY, NVIC_E_PARAM_PRIORITY );
+    }
+    else
+    {
+        Bfx_ClrBitMask_u32u32( (uint32 *)&NVIC->IP[ IP_IDX( Irq ) ], ( 0xFFUL << BIT_SHIFT( Irq ) ) );
+        Bfx_SetBitMask_u32u32( (uint32 *)&NVIC->IP[ IP_IDX( Irq ) ], ( ( ( Priority << ( 8U - 2U ) ) & (uint32)0xFFUL ) << BIT_SHIFT( Irq ) ) );
     }
 }
 
@@ -72,24 +101,29 @@ void CDD_Nvic_SetPriority( Nvic_IrqType irq, uint32 priority )
  * extract the priority from the NVIC's IP register. Otherwise, it returns an
  * INVALID_PRIORITY value.
  *
- * @param irq       Interrupt number whose priority is to be retrieved.
+ * @param Irq       Interrupt number whose priority is to be retrieved.
  *
  * @retval          Priority value of the interrupt. Returns INVALID_PRIORITY if the
  *                  interrupt number is not a valid peripheral interrupt.
  */
-uint32 CDD_Nvic_GetPriority( Nvic_IrqType irq )
+uint32 CDD_Nvic_GetPriority( Nvic_IrqType Irq )
 {
-    uint32 priority;
-    if( ( ( (uint32)( irq ) ) >= NVIC_MIN_IRQ ) && ( (uint32)( irq ) <= NVIC_MAX_IRQ ) )
+    uint32 Priority = INVALID_PRIORITY;
+
+    if( ( Irq < NVIC_MIN_IRQ ) || ( Irq > NVIC_MAX_IRQ ) )
     {
-        priority = Bfx_GetBits_u32u8u8_u32( NVIC->IP[ IP_IDX( irq ) ], BIT_SHIFT( irq ), 8U );
-        priority >>= 6;
+        /* If development error detection for the Nvic module is enabled:
+        the function CDD_Nvic_GetPriority shall raise the error NVIC_E_PARAM_IRQ if the parameter
+        irq is out of range. */
+        Det_ReportError( NVIC_MODULE_ID, NVIC_INSTANCE_ID, NVIC_ID_GET_PRIORITY, NVIC_E_PARAM_IRQ );
     }
     else
     {
-        priority = INVALID_PRIORITY;
+        Priority = Bfx_GetBits_u32u8u8_u32( NVIC->IP[ IP_IDX( Irq ) ], BIT_SHIFT( Irq ), 8u );
+        Bfx_ShiftBitRt_u32u8( &Priority, 6u );
     }
-    return priority;
+
+    return Priority;
 }
 
 /**
@@ -99,13 +133,20 @@ uint32 CDD_Nvic_GetPriority( Nvic_IrqType irq )
  * peripherals. If the number is valid, it uses the Bfx_SetBit_u32u8 function
  * to enable the interrupt in the NVIC's ISER register.
  *
- * @param irq Interrupt number to be enabled.
+ * @param Irq Interrupt number to be enabled.
  */
-void CDD_Nvic_EnableIrq( Nvic_IrqType irq )
+void CDD_Nvic_EnableIrq( Nvic_IrqType Irq )
 {
-    if( ( ( (uint32)( irq ) ) >= NVIC_MIN_IRQ ) && ( (uint32)( irq ) <= NVIC_MAX_IRQ ) )
+    if( ( Irq < NVIC_MIN_IRQ ) || ( Irq > NVIC_MAX_IRQ ) )
     {
-        Bfx_SetBit_u32u8( (uint32 *)&NVIC->ISER[ FIRST_INDEX ], ( (uint32)irq ) & IRQ_MASK );
+        /* If development error detection for the Nvic module is enabled:
+        the function CDD_Nvic_EnableIrq shall raise the error NVIC_E_PARAM_IRQ if the parameter
+        irq is out of range. */
+        Det_ReportError( NVIC_MODULE_ID, NVIC_INSTANCE_ID, NVIC_ID_ENABLE_IRQ, NVIC_E_PARAM_IRQ );
+    }
+    else
+    {
+        Bfx_SetBit_u32u8( (uint32 *)&NVIC->ISER[ FIRST_INDEX ], ( (uint32)Irq ) & IRQ_MASK );
     }
 }
 
@@ -116,13 +157,20 @@ void CDD_Nvic_EnableIrq( Nvic_IrqType irq )
  * peripherals. If the number is valid, it uses the Bfx_PutBit_u32u8u8 function
  * to disable the interrupt in the NVIC's ICER register.
  *
- * @param irq Interrupt number to be disabled.
+ * @param Irq Interrupt number to be disabled.
  */
-void CDD_Nvic_DisableIrq( Nvic_IrqType irq )
+void CDD_Nvic_DisableIrq( Nvic_IrqType Irq )
 {
-    if( ( ( (uint32)( irq ) ) >= NVIC_MIN_IRQ ) && ( (uint32)( irq ) <= NVIC_MAX_IRQ ) )
+    if( ( Irq < NVIC_MIN_IRQ ) || ( Irq > NVIC_MAX_IRQ ) )
     {
-        Bfx_PutBit_u32u8u8( (uint32 *)&NVIC->ICER[ FIRST_INDEX ], ( (uint32)irq ) & IRQ_MASK, FALSE );
+        /* If development error detection for the Nvic module is enabled:
+        the function CDD_Nvic_DisableIrq shall raise the error NVIC_E_PARAM_IRQ if the parameter
+        irq is out of range. */
+        Det_ReportError( NVIC_MODULE_ID, NVIC_INSTANCE_ID, NVIC_ID_DISABLE_IRQ, NVIC_E_PARAM_IRQ );
+    }
+    else
+    {
+        Bfx_PutBit_u32u8u8( (uint32 *)&NVIC->ICER[ FIRST_INDEX ], ( (uint32)Irq ) & IRQ_MASK, FALSE );
     }
 }
 
@@ -133,22 +181,27 @@ void CDD_Nvic_DisableIrq( Nvic_IrqType irq )
  * peripherals. If the number is valid, it uses the Bfx_GetBit_u32u8_u8 function to determine
  * if the interrupt is pending in the NVIC's ISPR register.
  *
- * @param irq Interrupt number whose pending status is to be checked.
+ * @param Irq Interrupt number whose pending status is to be checked.
  *
  * @return     Returns TRUE if the interrupt is pending, otherwise returns IRQ_NOT_PENDING.
  */
-uint32 CDD_Nvic_GetPendingIrq( Nvic_IrqType irq )
+uint32 CDD_Nvic_GetPendingIrq( Nvic_IrqType Irq )
 {
-    uint32 pending;
-    if( ( ( (uint32)irq >= NVIC_MIN_IRQ ) ) && ( (uint32)irq <= NVIC_MAX_IRQ ) )
+    uint32 Pending = IRQ_NOT_PENDING;
+
+    if( ( Irq < NVIC_MIN_IRQ ) || ( Irq > NVIC_MAX_IRQ ) )
     {
-        pending = Bfx_GetBit_u32u8_u8( NVIC->ISPR[ FIRST_INDEX ], ( (uint32)irq ) & IRQ_MASK );
+        /* If development error detection for the Nvic module is enabled:
+        the function CDD_Nvic_GetPendingIrq shall raise the error NVIC_E_PARAM_IRQ if the parameter
+        irq is out of range. */
+        Det_ReportError( NVIC_MODULE_ID, NVIC_INSTANCE_ID, NVIC_ID_GET_PENDING_IRQ, NVIC_E_PARAM_IRQ );
     }
     else
     {
-        pending = IRQ_NOT_PENDING;
+        Pending = Bfx_GetBit_u32u8_u8( NVIC->ISPR[ FIRST_INDEX ], ( (uint32)Irq ) & IRQ_MASK );
     }
-    return pending;
+
+    return Pending;
 }
 
 /**
@@ -158,13 +211,20 @@ uint32 CDD_Nvic_GetPendingIrq( Nvic_IrqType irq )
  * peripherals. If the number is valid, it utilizes the Bfx_SetBit_u32u8 function
  * to set the interrupt as pending in the NVIC's ISPR register.
  *
- * @param irq Interrupt number to set as pending.
+ * @param Irq Interrupt number to set as pending.
  */
-void CDD_Nvic_SetPendingIrq( Nvic_IrqType irq )
+void CDD_Nvic_SetPendingIrq( Nvic_IrqType Irq )
 {
-    if( ( (uint32)irq >= NVIC_MIN_IRQ ) && ( (uint32)irq <= NVIC_MAX_IRQ ) )
+    if( ( Irq < NVIC_MIN_IRQ ) || ( Irq > NVIC_MAX_IRQ ) )
     {
-        Bfx_SetBit_u32u8( (uint32 *)&NVIC->ISPR[ FIRST_INDEX ], ( (uint32)irq ) & IRQ_MASK );
+        /* If development error detection for the Nvic module is enabled:
+        the function CDD_Nvic_SetPendingIrq shall raise the error NVIC_E_PARAM_IRQ if the parameter
+        irq is out of range. */
+        Det_ReportError( NVIC_MODULE_ID, NVIC_INSTANCE_ID, NVIC_ID_SET_PENDING_IRQ, NVIC_E_PARAM_IRQ );
+    }
+    else
+    {
+        Bfx_SetBit_u32u8( (uint32 *)&NVIC->ISPR[ FIRST_INDEX ], ( (uint32)Irq ) & IRQ_MASK );
     }
 }
 
@@ -175,12 +235,19 @@ void CDD_Nvic_SetPendingIrq( Nvic_IrqType irq )
  * If the number is valid, it uses the Bfx_PutBit_u32u8u8 function to clear the
  * pending status of that interrupt in the NVIC's ICPR register.
  *
- * @param irq Interrupt number whose pending status is to be cleared.
+ * @param Irq Interrupt number whose pending status is to be cleared.
  */
-void CDD_Nvic_ClearPendingIrq( Nvic_IrqType irq )
+void CDD_Nvic_ClearPendingIrq( Nvic_IrqType Irq )
 {
-    if( ( ( (uint32)( irq ) ) >= NVIC_MIN_IRQ ) && ( (uint32)( irq ) <= NVIC_MAX_IRQ ) )
+    if( ( Irq < NVIC_MIN_IRQ ) || ( Irq > NVIC_MAX_IRQ ) )
     {
-        Bfx_PutBit_u32u8u8( (uint32 *)&NVIC->ICPR[ FIRST_INDEX ], ( (uint32)irq ) & IRQ_MASK, TRUE );
+        /* If development error detection for the Nvic module is enabled:
+        the function CDD_Nvic_ClearPendingIrq shall raise the error NVIC_E_PARAM_IRQ if the parameter
+        irq is out of range. */
+        Det_ReportError( NVIC_MODULE_ID, NVIC_INSTANCE_ID, NVIC_ID_CLEAR_PENDING_IRQ, NVIC_E_PARAM_IRQ );
+    }
+    else
+    {
+        Bfx_PutBit_u32u8u8( (uint32 *)&NVIC->ICPR[ FIRST_INDEX ], ( (uint32)Irq ) & IRQ_MASK, TRUE );
     }
 }

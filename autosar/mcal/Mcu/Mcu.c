@@ -11,6 +11,31 @@
 
 #include "Std_Types.h"
 #include "Mcu.h"
+#include "Mcu_Arch.h"
+
+/* cppcheck-suppress misra-c2012-20.9 ; this is declared at Mcu_Cfg.h */
+#if MCU_DEV_ERROR_DETECT == STD_OFF
+/**
+ * @param   ModuleId    Module ID number
+ * @param   InstanceId  Instance Id
+ * @param   ApiId       Api id
+ * @param   ErrorId     Error code
+ */
+#define Det_ReportError( ModuleId, InstanceId, ApiId, ErrorId ) (void)0
+#else
+#include "Det.h"
+#endif
+
+/**
+ * @brief  Variable for the initial value of the port configuration array.
+ */
+/* clang-format off */
+static Mcu_HwUnit HwUnit_Mcu =
+{
+    .HwUnitState = MCU_STATE_UNINIT,
+    .Config      = NULL_PTR
+};
+/* clang-format on */
 
 /**
  * @brief    **MCU Initialization**
@@ -23,7 +48,10 @@
  */
 void Mcu_Init( const Mcu_ConfigType *ConfigPtr )
 {
-    (void)ConfigPtr;
+    Mcu_Arch_Init( &HwUnit_Mcu, ConfigPtr );
+
+    HwUnit_Mcu.HwUnitState = MCU_STATE_INIT;
+    HwUnit_Mcu.Config      = ConfigPtr;
 }
 
 /**
@@ -36,12 +64,25 @@ void Mcu_Init( const Mcu_ConfigType *ConfigPtr )
  * @retval  Std_ReturnType: E_OK if the command has been accepted, E_NOT_OK if the command has
  *          not been accepted e.g. due to parameter error
  *
- * @reqs    SWS_Mcu_00154
+ * @reqs    SWS_Mcu_00154, SWS_Mcu_00017, SWS_Mcu_00125
  */
 Std_ReturnType Mcu_InitRamSection( Mcu_RamSectionType RamSection )
 {
-    (void)RamSection;
-    return E_OK;
+    Std_ReturnType ReturnValue = E_NOT_OK;
+
+    if( HwUnit_Mcu.HwUnitState == MCU_STATE_UNINIT )
+    {
+        /* If the development error detection is enabled for the MCU module:
+        If any function except Mcu_GetVersionInfo of the MCU module is called before
+        Mcu_Init function, the error code MCU_E_UNINIT shall be reported to the DET. */
+        Det_ReportError( MCU_MODULE_ID, MCU_INSTANCE_ID, MCU_ID_INIT_RAM, MCU_E_UNINIT );
+    }
+    else
+    {
+        ReturnValue = Mcu_Arch_InitRamSection( &HwUnit_Mcu, RamSection );
+    }
+
+    return ReturnValue;
 }
 
 /**
@@ -54,12 +95,25 @@ Std_ReturnType Mcu_InitRamSection( Mcu_RamSectionType RamSection )
  * @retval  Std_ReturnType: E_OK if the command has been accepted, E_NOT_OK if the command has
  *          not been accepted e.g. due to parameter error
  *
- * @reqs    SWS_Mcu_00155
+ * @reqs    SWS_Mcu_00155, SWS_Mcu_00017, SWS_Mcu_00125
  */
 Std_ReturnType Mcu_InitClock( Mcu_ClockType ClockSetting )
 {
-    (void)ClockSetting;
-    return E_OK;
+    Std_ReturnType ReturnValue = E_NOT_OK;
+
+    if( HwUnit_Mcu.HwUnitState == MCU_STATE_UNINIT )
+    {
+        /* If the development error detection is enabled for the MCU module:
+        If any function except Mcu_GetVersionInfo of the MCU module is called before
+        Mcu_Init function, the error code MCU_E_UNINIT shall be reported to the DET. */
+        Det_ReportError( MCU_MODULE_ID, MCU_INSTANCE_ID, MCU_ID_INIT_CLOCK, MCU_E_UNINIT );
+    }
+    else
+    {
+        ReturnValue = Mcu_Arch_InitClock( &HwUnit_Mcu, ClockSetting );
+    }
+
+    return ReturnValue;
 }
 
 /**
@@ -70,11 +124,32 @@ Std_ReturnType Mcu_InitClock( Mcu_ClockType ClockSetting )
  * @retval  Std_ReturnType: E_OK if the command has been accepted, E_NOT_OK if the command has
  *          not been accepted e.g. due to parameter error
  *
- * @reqs    SWS_Mcu_00156
+ * @reqs    SWS_Mcu_00156, SWS_Mcu_00017, SWS_Mcu_00122, SWS_Mcu_00125
  */
 Std_ReturnType Mcu_DistributePllClock( void )
 {
-    return E_OK;
+    Std_ReturnType ReturnValue = E_NOT_OK;
+
+    if( HwUnit_Mcu.HwUnitState == MCU_STATE_UNINIT )
+    {
+        /* If the development error detection is enabled for the MCU module:
+        If any function except Mcu_GetVersionInfo of the MCU module is called before
+        Mcu_Init function, the error code MCU_E_UNINIT shall be reported to the DET. */
+        Det_ReportError( MCU_MODULE_ID, MCU_INSTANCE_ID, MCU_ID_DISTRIBUTE_PLL_CLOCK, MCU_E_UNINIT );
+    }
+    else if( ( HwUnit_Mcu.Config->PllStatus == MCU_PLL_UNLOCKED ) || ( HwUnit_Mcu.Config->PllStatus == MCU_PLL_STATUS_UNDEFINED ) )
+    {
+        /* If the development error detection is enabled for the MCU module:
+        A error shall be reported if the status of the PLL is detected as not locked.
+        The DET error reporting shall be used. Related error value: MCU_E_PLL_NOT_LOCKED */
+        Det_ReportError( MCU_MODULE_ID, MCU_INSTANCE_ID, MCU_ID_DISTRIBUTE_PLL_CLOCK, MCU_E_PLL_NOT_LOCKED );
+    }
+    else
+    {
+        ReturnValue = Mcu_Arch_DistributePllClock( &HwUnit_Mcu );
+    }
+
+    return ReturnValue;
 }
 
 /**
@@ -85,11 +160,25 @@ Std_ReturnType Mcu_DistributePllClock( void )
  * @retval  Mcu_PllStatusType: MCU_PLL_LOCKED when the PLL is locked, MCU_PLL_UNLOCKED,
  *          MCU_PLL_STATUS_UNDEFINED when status is unknown
  *
- * @reqs    SWS_Mcu_00157
+ * @reqs    SWS_Mcu_00157, SWS_Mcu_00017, SWS_Mcu_00125
  */
 Mcu_PllStatusType Mcu_GetPllStatus( void )
 {
-    return E_OK;
+    Std_ReturnType ReturnValue = E_NOT_OK;
+
+    if( HwUnit_Mcu.HwUnitState == MCU_STATE_UNINIT )
+    {
+        /* If the development error detection is enabled for the MCU module:
+        If any function except Mcu_GetVersionInfo of the MCU module is called before
+        Mcu_Init function, the error code MCU_E_UNINIT shall be reported to the DET. */
+        Det_ReportError( MCU_MODULE_ID, MCU_INSTANCE_ID, MCU_ID_GET_PLL_STATUS, MCU_E_UNINIT );
+    }
+    else
+    {
+        ReturnValue = Mcu_Arch_GetPllStatus( &HwUnit_Mcu );
+    }
+
+    return ReturnValue;
 }
 
 /**
@@ -100,11 +189,25 @@ Mcu_PllStatusType Mcu_GetPllStatus( void )
  * @retval  Mcu_ResetType: MCU_POWER_ON_RESET, MCU_WATCHDOG_RESET, MCU_SW_RESET,
  *          MCU_RESET_UNDEFINED
  *
- * @reqs    SWS_Mcu_00158
+ * @reqs    SWS_Mcu_00158, SWS_Mcu_00017, SWS_Mcu_00125
  */
 Mcu_ResetType Mcu_GetResetReason( void )
 {
-    return E_OK;
+    Std_ReturnType ReturnValue = E_NOT_OK;
+
+    if( HwUnit_Mcu.HwUnitState == MCU_STATE_UNINIT )
+    {
+        /* If the development error detection is enabled for the MCU module:
+        If any function except Mcu_GetVersionInfo of the MCU module is called before
+        Mcu_Init function, the error code MCU_E_UNINIT shall be reported to the DET. */
+        Det_ReportError( MCU_MODULE_ID, MCU_INSTANCE_ID, MCU_ID_GET_RESET_REASON, MCU_E_UNINIT );
+    }
+    else
+    {
+        ReturnValue = Mcu_Arch_GetResetReason( &HwUnit_Mcu );
+    }
+
+    return ReturnValue;
 }
 
 /**
@@ -114,11 +217,25 @@ Mcu_ResetType Mcu_GetResetReason( void )
  *
  * @retval  Mcu_RawResetType: Reset raw value
  *
- * @reqs    SWS_Mcu_00159
+ * @reqs    SWS_Mcu_00159, SWS_Mcu_00017, SWS_Mcu_00125
  */
 Mcu_RawResetType Mcu_GetResetRawValue( void )
 {
-    return E_OK;
+    Std_ReturnType ReturnValue = E_NOT_OK;
+
+    if( HwUnit_Mcu.HwUnitState == MCU_STATE_UNINIT )
+    {
+        /* If the development error detection is enabled for the MCU module:
+        If any function except Mcu_GetVersionInfo of the MCU module is called before
+        Mcu_Init function, the error code MCU_E_UNINIT shall be reported to the DET. */
+        Det_ReportError( MCU_MODULE_ID, MCU_INSTANCE_ID, MCU_ID_GET_RESET_RAW_VALUE, MCU_E_UNINIT );
+    }
+    else
+    {
+        ReturnValue = Mcu_Arch_GetResetRawValue( &HwUnit_Mcu );
+    }
+
+    return ReturnValue;
 }
 
 /**
@@ -126,10 +243,21 @@ Mcu_RawResetType Mcu_GetResetRawValue( void )
  *
  * Service to perform a microcontroller reset
  *
- * @reqs    SWS_Mcu_00160
+ * @reqs    SWS_Mcu_00160, SWS_Mcu_00017, SWS_Mcu_00125
  */
 void Mcu_PerformReset( void )
 {
+    if( HwUnit_Mcu.HwUnitState == MCU_STATE_UNINIT )
+    {
+        /* If the development error detection is enabled for the MCU module:
+        If any function except Mcu_GetVersionInfo of the MCU module is called before
+        Mcu_Init function, the error code MCU_E_UNINIT shall be reported to the DET. */
+        Det_ReportError( MCU_MODULE_ID, MCU_INSTANCE_ID, MCU_ID_PERFORM_RESET, MCU_E_UNINIT );
+    }
+    else
+    {
+        Mcu_Arch_PerformReset( &HwUnit_Mcu );
+    }
 }
 
 /**
@@ -139,11 +267,21 @@ void Mcu_PerformReset( void )
  *
  * @param   McuMode  Set different MCU power modes configured in the configuration set
  *
- * @reqs    SWS_Mcu_00161
+ * @reqs    SWS_Mcu_00161, SWS_Mcu_00017, SWS_Mcu_00125
  */
 void Mcu_SetMode( Mcu_ModeType McuMode )
 {
-    (void)McuMode;
+    if( HwUnit_Mcu.HwUnitState == MCU_STATE_UNINIT )
+    {
+        /* If the development error detection is enabled for the MCU module:
+        If any function except Mcu_GetVersionInfo of the MCU module is called before
+        Mcu_Init function, the error code MCU_E_UNINIT shall be reported to the DET. */
+        Det_ReportError( MCU_MODULE_ID, MCU_INSTANCE_ID, MCU_ID_SET_MODE, MCU_E_UNINIT );
+    }
+    else
+    {
+        Mcu_Arch_SetMode( &HwUnit_Mcu, McuMode );
+    }
 }
 
 /**
@@ -153,11 +291,25 @@ void Mcu_SetMode( Mcu_ModeType McuMode )
  *
  * @param   versioninfo  Pointer to where to store the version information of this module
  *
- * @reqs    SWS_Mcu_00162
+ * @reqs    SWS_Mcu_00162, SWS_Mcu_00125
  */
 void Mcu_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
-    (void)versioninfo;
+    if( versioninfo == NULL_PTR )
+    {
+        /* If development error detection for the Mcu module is enabled:
+        The function Mcu_GetVersionInfo shall raise the error MCU_E_PARAM_POINTER if the parameter
+        versionInfo is a null pointer */
+        Det_ReportError( MCU_MODULE_ID, MCU_INSTANCE_ID, MCU_ID_GET_VERSION_INFO, MCU_E_PARAM_POINTER );
+    }
+    else
+    {
+        versioninfo->moduleID         = MCU_MODULE_ID;
+        versioninfo->vendorID         = MCU_VENDOR_ID;
+        versioninfo->sw_major_version = MCU_SW_MAJOR_VERSION;
+        versioninfo->sw_minor_version = MCU_SW_MINOR_VERSION;
+        versioninfo->sw_patch_version = MCU_SW_PATCH_VERSION;
+    }
 }
 
 /**
@@ -167,9 +319,24 @@ void Mcu_GetVersionInfo( Std_VersionInfoType *versioninfo )
  *
  * @retval  Mcu_RamStateType: Status of the RAM Content
  *
- * @reqs    SWS_Mcu_00207
+ * @reqs    SWS_Mcu_00207, SWS_Mcu_00017, SWS_Mcu_00125
+ * @reqs    SWS_Mcu_00207, SWS_Mcu_00017, SWS_Mcu_00125
  */
 Mcu_RamStateType Mcu_GetRamState( void )
 {
-    return E_OK;
+    Std_ReturnType ReturnValue = E_NOT_OK;
+
+    if( HwUnit_Mcu.HwUnitState == MCU_STATE_UNINIT )
+    {
+        /* If the development error detection is enabled for the MCU module:
+        If any function except Mcu_GetVersionInfo of the MCU module is called before
+        Mcu_Init function, the error code MCU_E_UNINIT shall be reported to the DET. */
+        Det_ReportError( MCU_MODULE_ID, MCU_INSTANCE_ID, MCU_ID_GET_RAM_STATE, MCU_E_UNINIT );
+    }
+    else
+    {
+        ReturnValue = Mcu_Arch_GetRamState( &HwUnit_Mcu );
+    }
+
+    return ReturnValue;
 }
