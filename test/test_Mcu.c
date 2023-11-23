@@ -113,7 +113,117 @@ void test__Mcu_InitClock__run_after_Mcu_init( void )
     TEST_ASSERT_EQUAL_MESSAGE( ReturnValue, E_OK, "Expected E_OK (0)" );
 }
 
-//////////Space for DistributePllClock
+/**
+ * @brief   **Test Distribute Pll Clock**
+ *
+ * The test runs Init function, calling Arch_Init and checking that HwUnitState of the HwUnit
+ * struct changes by MCU_STATE_INIT (value 1) and Config of HwUnit points to the passed parameter
+ */
+void test__Mcu_DistributePllClock__run_before_Mcu_init( void )
+{
+    Std_ReturnType ReturnValue = E_NOT_OK;
+
+    Det_ReportError_IgnoreAndReturn( E_OK );
+    ReturnValue = Mcu_DistributePllClock( );
+
+    TEST_ASSERT_EQUAL_MESSAGE( ReturnValue, E_NOT_OK, "Expected E_NOT_OK (1)" );
+}
+
+/**
+ * @brief   **Test Distribute Pll Clock**
+ *
+ * The test runs Init function, calling Arch_Init and checking that HwUnitState of the HwUnit
+ * struct changes by MCU_STATE_INIT (value 1) and Config of HwUnit points to the passed parameter
+ */
+void test__Mcu_DistributePllClock__run_after_Mcu_init_with_pll_unlocked( void )
+{
+    Mcu_ConfigType McuConfigTest = { .PllStatus = MCU_PLL_UNLOCKED };
+    Std_ReturnType ReturnValue   = E_NOT_OK;
+
+    Mcu_Arch_Init_Ignore( );
+    Mcu_Init( &McuConfigTest );
+
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Mcu_Arch_DistributePllClock_IgnoreAndReturn( E_OK );
+    ReturnValue = Mcu_DistributePllClock( );
+
+    TEST_ASSERT_EQUAL_MESSAGE( ReturnValue, E_NOT_OK, "Expected E_OK (1)" );
+}
+
+/**
+ * @brief   **Test Distribute Pll Clock**
+ *
+ * The test runs Init function, calling Arch_Init and checking that HwUnitState of the HwUnit
+ * struct changes by MCU_STATE_INIT (value 1) and Config of HwUnit points to the passed parameter
+ */
+void test__Mcu_DistributePllClock__run_after_Mcu_init_with_pll_undefined( void )
+{
+    Mcu_ConfigType McuConfigTest = { .PllStatus = MCU_PLL_STATUS_UNDEFINED };
+    Std_ReturnType ReturnValue   = E_NOT_OK;
+
+    Mcu_Arch_Init_Ignore( );
+    Mcu_Init( &McuConfigTest );
+
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Mcu_Arch_DistributePllClock_IgnoreAndReturn( E_OK );
+    ReturnValue = Mcu_DistributePllClock( );
+
+    TEST_ASSERT_EQUAL_MESSAGE( ReturnValue, E_NOT_OK, "Expected E_OK (1)" );
+}
+
+/**
+ * @brief   **Test Distribute Pll Clock**
+ *
+ * The test runs Init function, calling Arch_Init and checking that HwUnitState of the HwUnit
+ * struct changes by MCU_STATE_INIT (value 1) and Config of HwUnit points to the passed parameter
+ */
+void test__Mcu_DistributePllClock__run_after_Mcu_init( void )
+{
+    Mcu_ConfigType McuConfigTest = { 0 };
+    Std_ReturnType ReturnValue   = E_NOT_OK;
+
+    Mcu_Arch_Init_Ignore( );
+    Mcu_Init( &McuConfigTest );
+
+    Mcu_Arch_DistributePllClock_IgnoreAndReturn( E_OK );
+    ReturnValue = Mcu_DistributePllClock( );
+
+    TEST_ASSERT_EQUAL_MESSAGE( ReturnValue, E_OK, "Expected E_OK (0)" );
+}
+
+/**
+ * @brief   **Test Get Pll Status**
+ *
+ * The test runs Init function, calling Arch_Init and checking that HwUnitState of the HwUnit
+ * struct changes by MCU_STATE_INIT (value 1) and Config of HwUnit points to the passed parameter
+ */
+void test__Mcu_GetPllStatus__run_before_Mcu_init( void )
+{
+    Det_ReportError_IgnoreAndReturn( E_OK );
+    Mcu_GetPllStatus( );
+}
+
+/**
+ * @brief   **Test Get Pll Status**
+ *
+ * The test runs Init function, calling Arch_Init and checking that HwUnitState of the HwUnit
+ * struct changes by MCU_STATE_INIT (value 1) and Config of HwUnit points to the passed parameter
+ */
+void test__Mcu_GetPllStatus__run_after_Mcu_init( void )
+{
+    Mcu_ConfigType McuConfigTest = { 0 };
+    Std_ReturnType ReturnValue   = E_NOT_OK;
+
+    Mcu_Arch_Init_Ignore( );
+    Mcu_Init( &McuConfigTest );
+
+    Mcu_Arch_GetPllStatus_IgnoreAndReturn( E_OK );
+    ReturnValue = Mcu_GetPllStatus( );
+
+    TEST_ASSERT_EQUAL_MESSAGE( ReturnValue, E_OK, "Expected E_OK (0)" );
+}
 
 /**
  * @brief   **Test Get Reset Reason**
@@ -238,4 +348,67 @@ void test__Mcu_SetMode__run_after_Mcu_init( void )
 
     Mcu_Arch_SetMode_Ignore( );
     Mcu_SetMode( McuModeTest );
+}
+
+/**
+ * @brief   **Test Get Version Info**
+ *
+ * The test runs Init function, calling Arch_Init and checking that HwUnitState of the HwUnit
+ * struct changes by MCU_STATE_INIT (value 1) and Config of HwUnit points to the passed parameter
+ */
+void test__Mcu_GetVersionInfo__run_without_rigth_parameter( void )
+{
+    Det_ReportError_IgnoreAndReturn( E_OK );
+    Mcu_GetVersionInfo( NULL_PTR );
+}
+
+/**
+ * @brief   **Test Get Version Info**
+ *
+ * The test runs Init function, calling Arch_Init and checking that HwUnitState of the HwUnit
+ * struct changes by MCU_STATE_INIT (value 1) and Config of HwUnit points to the passed parameter
+ */
+void test__Mcu_GetVersionInfo__run_with_rigth_parameter( void )
+{
+    Std_VersionInfoType versionInfoTest = { 0 };
+
+    Mcu_GetVersionInfo( &versionInfoTest );
+
+    TEST_ASSERT_EQUAL_MESSAGE( versionInfoTest.moduleID, MCU_MODULE_ID, "Expected MCU_MODULE_ID (0)" );
+    TEST_ASSERT_EQUAL_MESSAGE( versionInfoTest.vendorID, MCU_VENDOR_ID, "Expected MCU_VENDOR_ID (0)" );
+    TEST_ASSERT_EQUAL_MESSAGE( versionInfoTest.sw_major_version, MCU_SW_MAJOR_VERSION, "Expected MCU_SW_MAJOR_VERSION (0)" );
+    TEST_ASSERT_EQUAL_MESSAGE( versionInfoTest.sw_minor_version, MCU_SW_MINOR_VERSION, "Expected MCU_SW_MINOR_VERSION (0)" );
+    TEST_ASSERT_EQUAL_MESSAGE( versionInfoTest.sw_patch_version, MCU_SW_PATCH_VERSION, "Expected MCU_SW_MINOR_VERSION (0)" );
+}
+
+/**
+ * @brief   **Test Get Ram State**
+ *
+ * The test runs Init function, calling Arch_Init and checking that HwUnitState of the HwUnit
+ * struct changes by MCU_STATE_INIT (value 1) and Config of HwUnit points to the passed parameter
+ */
+void test__Mcu_GetRamState__run_before_Mcu_init( void )
+{
+    Det_ReportError_IgnoreAndReturn( E_OK );
+    Mcu_GetRamState( );
+}
+
+/**
+ * @brief   **Test Get Ram State**
+ *
+ * The test runs Init function, calling Arch_Init and checking that HwUnitState of the HwUnit
+ * struct changes by MCU_STATE_INIT (value 1) and Config of HwUnit points to the passed parameter
+ */
+void test__Mcu_GetRamState__run_after_Mcu_init( void )
+{
+    Mcu_ConfigType McuConfigTest = { 0 };
+    Std_ReturnType ReturnValue   = E_NOT_OK;
+
+    Mcu_Arch_Init_Ignore( );
+    Mcu_Init( &McuConfigTest );
+
+    Mcu_Arch_GetRamState_IgnoreAndReturn( E_OK );
+    ReturnValue = Mcu_GetRamState( );
+
+    TEST_ASSERT_EQUAL_MESSAGE( ReturnValue, E_OK, "Expected E_OK (0)" );
 }
