@@ -13,17 +13,6 @@
 
 #include "Mcu_Cfg.h"
 
-/**
- * @defgroup MCU_STATIC MCU static define for testing purposes
- *
- * @{ */
-#ifndef UTEST
-#define MCU_STATIC static /*!< Add static when no testing */
-#else
-#define MCU_STATIC /*!< remove static for testing purposes */
-#endif
-/**
- * @} */
 
 void Mcu_Init( const Mcu_ConfigType *ConfigPtr );
 Std_ReturnType Mcu_InitRamSection( Mcu_RamSectionType RamSection );

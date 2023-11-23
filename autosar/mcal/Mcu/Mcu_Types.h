@@ -47,6 +47,18 @@
  * @} */
 
 /**
+ * @defgroup MCU_STATIC MCU static define for testing purposes
+ *
+ * @{ */
+#ifndef UTEST
+#define MCU_STATIC static /*!< Add static when no testing */
+#else
+#define MCU_STATIC /*!< remove static for testing purposes */
+#endif
+/**
+ * @} */
+
+/**
  * @brief   **Status value returned by the function Mcu_GetPllStatus of the MCU module**
  *
  * @reqs    SWS_Mcu_00250
