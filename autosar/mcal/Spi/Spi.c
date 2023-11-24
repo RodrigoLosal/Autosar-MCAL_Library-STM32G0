@@ -31,11 +31,11 @@
  * @brief  Variable for the initial value of the port configuration array.
  */
 /* clang-format off */
-static Spi_HwUnit HwUnit_Spi =
+/* cppcheck-suppress misra-c2012-8.4 ; qualifier is declared at Spi.h */
+SPI_STATIC Spi_HwUnit HwUnit_Spi =
 {
     .Config         = NULL_PTR,
     .HwUnitState    = SPI_UNINIT,
-    .SpiState       = SPI_UNINIT,
 };
 /* clang-format on */
 
@@ -50,7 +50,7 @@ static Spi_HwUnit HwUnit_Spi =
  */
 void Spi_Init( const Spi_ConfigType *ConfigPtr )
 {
-    if( ( HwUnit_Spi.HwUnitState != SPI_UNINIT ) || ( HwUnit_Spi.SpiState != SPI_UNINIT ) )
+    if( HwUnit_Spi.HwUnitState != SPI_UNINIT )
     {
         /* If development error detection for the SPI module is enabled, the calling of the rou-
         tine SPI_Init() while the SPI driver is already initialized will cause a development error
@@ -63,7 +63,6 @@ void Spi_Init( const Spi_ConfigType *ConfigPtr )
         Spi_Arch_Init( &HwUnit_Spi, ConfigPtr );
         HwUnit_Spi.Config      = ConfigPtr;
         HwUnit_Spi.HwUnitState = SPI_IDLE;
-        HwUnit_Spi.SpiState    = SPI_IDLE;
     }
 }
 
@@ -75,13 +74,13 @@ void Spi_Init( const Spi_ConfigType *ConfigPtr )
  * @retval  E_OK: de-initialisation command has been accepted
  *          E_NOT_OK: de-initialisation command has not been accepted
  *
- * @reqs    SWS_Spi_00176, SWS_Spi_00046
+ * @reqs    SWS_Spi_00176, SWS_Spi_00046, SWS_Spi_00022
  */
 Std_ReturnType Spi_DeInit( void )
 {
     Std_ReturnType value = E_NOT_OK;
 
-    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState == SPI_UNINIT ) )
+    if( HwUnit_Spi.HwUnitState == SPI_UNINIT )
     {
         /*If development error detection for the SPI module is enabled and the SPI Handler/Driver’s environment
         calls any API function before initialization, an error should be reported to the DET with the error value
@@ -90,7 +89,8 @@ Std_ReturnType Spi_DeInit( void )
     }
     else
     {
-        value = Spi_Arch_DeInit( &HwUnit_Spi );
+        value                  = Spi_Arch_DeInit( &HwUnit_Spi );
+        HwUnit_Spi.HwUnitState = SPI_UNINIT;
     }
     return value;
 }
@@ -115,7 +115,7 @@ Std_ReturnType Spi_WriteIB( Spi_ChannelType Channel, const Spi_DataBufferType *D
 {
     Std_ReturnType value = E_NOT_OK;
 
-    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState == SPI_UNINIT ) )
+    if( HwUnit_Spi.HwUnitState == SPI_UNINIT )
     {
         /*If development error detection for the SPI module is enabled and the SPI Handler/Driver’s environment
         calls any API function before initialization, an error should be reported to the DET with the error value
@@ -159,7 +159,7 @@ Std_ReturnType Spi_AsyncTransmit( Spi_SequenceType Sequence )
 {
     Std_ReturnType value = E_NOT_OK;
 
-    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState == SPI_UNINIT ) )
+    if( HwUnit_Spi.HwUnitState == SPI_UNINIT )
     {
         /*If development error detection for the SPI module is enabled and the SPI Handler/Driver’s environment
         calls any API function before initialization, an error should be reported to the DET with the error value
@@ -199,7 +199,7 @@ Std_ReturnType Spi_ReadIB( Spi_ChannelType Channel, const Spi_DataBufferType *Da
 {
     Std_ReturnType value = E_NOT_OK;
 
-    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState == SPI_UNINIT ) )
+    if( HwUnit_Spi.HwUnitState == SPI_UNINIT )
     {
         /*If development error detection for the SPI module is enabled and the SPI Handler/Driver’s environment
         calls any API function before initialization, an error should be reported to the DET with the error value
@@ -248,7 +248,7 @@ Std_ReturnType Spi_SetupEB( Spi_ChannelType Channel, const Spi_DataBufferType *S
 {
     Std_ReturnType value = E_NOT_OK;
 
-    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState == SPI_UNINIT ) )
+    if( HwUnit_Spi.HwUnitState == SPI_UNINIT )
     {
         /*If development error detection for the SPI module is enabled and the SPI Handler/Driver’s environment
         calls any API function before initialization, an error should be reported to the DET with the error value
@@ -274,7 +274,7 @@ Std_ReturnType Spi_SetupEB( Spi_ChannelType Channel, const Spi_DataBufferType *S
         shall be reported in case the value is a NULL pointer*/
         Det_ReportError( SPI_MODULE_ID, SPI_INSTANCE_ID, SPI_ID_SET_UP_EB, SPI_E_PARAM_POINTER );
     }
-    else if( ( Length > 0 ) && ( Length <= 10u ) )
+    else if( Length > 10u )
     {
         /* If development error detection for the Spi module is enabled:
         the function Spi_SetupEB shall raise the error SPI_E_PARAM_LENGTH if the parameter
@@ -317,7 +317,7 @@ Spi_JobResultType Spi_GetJobResult( Spi_JobType Job )
 {
     Std_ReturnType value = E_NOT_OK;
 
-    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState == SPI_UNINIT ) )
+    if( HwUnit_Spi.HwUnitState == SPI_UNINIT )
     {
         /*If development error detection for the SPI module is enabled and the SPI Handler/Driver’s environment
         calls any API function before initialization, an error should be reported to the DET with the error value
@@ -353,7 +353,7 @@ Spi_SeqResultType Spi_GetSequenceResult( Spi_SequenceType Sequence )
 {
     Std_ReturnType value = E_NOT_OK;
 
-    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState == SPI_UNINIT ) )
+    if( HwUnit_Spi.HwUnitState == SPI_UNINIT )
     {
         /*If development error detection for the SPI module is enabled and the SPI Handler/Driver’s environment
         calls any API function before initialization, an error should be reported to the DET with the error value
@@ -419,7 +419,7 @@ Std_ReturnType Spi_SyncTransmit( Spi_SequenceType Sequence )
 {
     Std_ReturnType value = E_NOT_OK;
 
-    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState == SPI_UNINIT ) )
+    if( HwUnit_Spi.HwUnitState == SPI_UNINIT )
     {
         /*If development error detection for the SPI module is enabled and the SPI Handler/Driver’s environment
         calls any API function before initialization, an error should be reported to the DET with the error value
@@ -457,7 +457,7 @@ Spi_StatusType Spi_GetHWUnitStatus( Spi_HWUnitType HWUnit )
 {
     Std_ReturnType value = E_NOT_OK;
 
-    if( ( HwUnit_Spi.HwUnitState == SPI_UNINIT ) || ( HwUnit_Spi.SpiState == SPI_UNINIT ) )
+    if( HwUnit_Spi.HwUnitState == SPI_UNINIT )
     {
         /*If development error detection for the SPI module is enabled and the SPI Handler/Driver’s environment
         calls any API function before initialization, an error should be reported to the DET with the error value
