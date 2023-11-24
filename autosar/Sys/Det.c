@@ -221,18 +221,16 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     [DIO_E_PARAM_POINTER]            = "DIO_E_PARAM_POINTER",
     };
 
-    DetError ReportError; // PORT//GPT//PWM
+    DetError ReportError;
 
     ReportError.Module   = ModuleName[ ModuleId ];
     ReportError.Instance = InstanceName[ InstanceId ];
     ReportError.Api      = ApiName[ ApiId ];
     ReportError.Error    = ErrorName[ ErrorId ];
 
-    (void)printf( "Module: %s\n", ReportError.Module );
-    (void)printf( "Instance: %s\n", ReportError.Instance );
-    (void)printf( "API: %s\n", ReportError.Api );
-    (void)printf( "Error: %s\n", ReportError.Error );
-
+    (void)printf( "ERROR %s in: %s Module with the function %s detected in %s\n" , ReportError.Error,ReportError.Module
+                  ,ReportError.Instance,ReportError.Api);
+                  
     return E_OK;
 }
 
