@@ -1,9 +1,9 @@
 /**
- * @file    test_Dio.c
- * @brief   **Unit testing for Dio Driver**
+ * @file    test_Dio_Arch.c
+ * @brief   **Unit testing for Dio Arch Driver**
  * @author  Diego Perez
  *
- * group of unit test cases for Dio.h file
+ * group of unit test cases for Dio_Arch.h file
  */
 #include "unity.h"
 #include "Registers.h"
