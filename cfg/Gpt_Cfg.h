@@ -11,6 +11,8 @@
 #ifndef GPT_CFG_H_
 #define GPT_CFG_H_
 
+#include "Gpt_Types.h"
+
 /**
  * @brief   **Number of channels to configure**
  *
@@ -18,6 +20,17 @@
  * driver and shall be set by the user.
  */
 #define GPT_NUMBER_OF_CHANNELS              2u
+
+/**
+ * @defgroup GPT TIM References
+ *
+ * Specifies the controller IDs of the MCU TIM's
+ *
+ * @typedef EcucIntegerParamDef
+ *
+ * @{ */
+#define GPT_TIM6                            0 /*!< TIM6 */
+#define GPT_TIM7                            1 /*!< TIM7  */
 
 /**
  * @defgroup   Test values of the two different possible operation modes of the GPT channels
@@ -40,6 +53,12 @@
  * @} */
 
 /**
+ * @brief Switches the development error detection and notification on or off.
+ * @typedef EcucBooleanParamDef
+ */
+#define GPT_DEV_ERROR_DETECT                STD_OFF
+
+/**
   * @defgroup GPT-ID to get the version information of this module.
   @{ */
 #define GPT_VENDOR_ID                       (uint16)1000u /*!< Id for the company in the AUTOSAR*/
@@ -51,6 +70,6 @@
  * @} */
 
 /*External reference to Gpt_Config array*/
-extern const Gpt_ConfigType GptConfig[ GPT_NUMBER_OF_CHANNELS ];
+extern const Gpt_ConfigType GptConfig;
 
 #endif /* GPT_CFG_H_ */
