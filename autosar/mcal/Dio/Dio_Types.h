@@ -10,6 +10,8 @@
 #ifndef DIO_TYPES_H__
 #define DIO_TYPES_H__
 
+#include "Std_Types.h"
+
 /**
  * @defgroup DIO_STATIC DIO static define for testing purposes
  *
