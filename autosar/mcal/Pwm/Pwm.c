@@ -92,6 +92,7 @@ void Pwm_DeInit( void )
     else
     {
         Pwm_Arch_DeInit( &HwUnit_Pwm );
+        HwUnit_Pwm.HwUnitState = PWM_STATE_UNINIT;
     }
 }
 
