@@ -74,7 +74,7 @@ void Spi_Init( const Spi_ConfigType *ConfigPtr )
  * @retval  E_OK: de-initialisation command has been accepted
  *          E_NOT_OK: de-initialisation command has not been accepted
  *
- * @reqs    SWS_Spi_00176, SWS_Spi_00046
+ * @reqs    SWS_Spi_00176, SWS_Spi_00046, SWS_Spi_00022
  */
 Std_ReturnType Spi_DeInit( void )
 {
@@ -89,7 +89,8 @@ Std_ReturnType Spi_DeInit( void )
     }
     else
     {
-        value = Spi_Arch_DeInit( &HwUnit_Spi );
+        value                  = Spi_Arch_DeInit( &HwUnit_Spi );
+        HwUnit_Spi.HwUnitState = SPI_UNINIT;
     }
     return value;
 }

@@ -115,6 +115,7 @@ void test__Spi_DeInit__when_all_values_are_correct( void )
     Std_ReturnType Return = Spi_DeInit( );
 
     TEST_ASSERT_EQUAL_MESSAGE( E_OK, Return, "Unit state should change" );
+    TEST_ASSERT_EQUAL_MESSAGE( SPI_UNINIT, HwUnit_Spi.HwUnitState, "Unit state should change" );
 }
 
 

@@ -12,18 +12,6 @@
 
 #include "Spi_Cfg.h"
 
-/**
- * @defgroup CAN_STATIC CAN static define for testing purposes
- *
- * @{ */
-#ifndef UTEST
-#define SPI_STATIC static /*!< Add static when no testing */
-#else
-#define SPI_STATIC /*!< remove static for testing purposes */
-#endif
-/**
- * @} */
-
 void Spi_Init( const Spi_ConfigType *Config );
 Std_ReturnType Spi_DeInit( void );
 Std_ReturnType Spi_WriteIB( Spi_ChannelType Channel, const Spi_DataBufferType *DataBufferPtr );

@@ -14,6 +14,18 @@
 #include "Registers.h"
 
 /**
+ * @defgroup CAN_STATIC CAN static define for testing purposes
+ *
+ * @{ */
+#ifndef UTEST
+#define SPI_STATIC static /*!< Add static when no testing */
+#else
+#define SPI_STATIC /*!< remove static for testing purposes */
+#endif
+/**
+ * @} */
+
+/**
  * @defgroup Spi_Ids Spi Id number for module and each API
  *
  * @{ */
