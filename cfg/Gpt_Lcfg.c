@@ -20,7 +20,7 @@
  * the application needs.
  */
 // clang-format off
-Gpt_ChannelConfigType GptChannelConfig[ GPT_NUMBER_OF_CHANNELS ] =
+const Gpt_ChannelConfigType GptChannelConfig[ GPT_NUMBER_OF_CHANNELS ] =
 {
     {
         .GptChannelId = GPT_CHANNEL_0,
