@@ -60,10 +60,14 @@ void Gpt_Arch_DeInit( const Gpt_ConfigType *ConfigPtr, uint32 ChannelsToDeinit )
     Gpt_RegisterType *channel;
 
     channel = GptPeripherals[ ConfigPtr->Channels[ ChannelsToDeinit ].GptReference ];
-    Bfx_SetBits_u32u8u8u8( (uint32 *)&channel->PSC, GPT_PRESCALER_LSB, GPT_PRESCALER_MSB, STD_OFF );    /*Clearing the value of the prescaler on TIMx_PSC*/
-    Bfx_ClrBit_u32u8( (uint32 *)&channel->CR1, GPT_ONE_PULSE_MODE_BIT );                                /*Clearing the OPM: bit of TIMx_CR1*/
-    Bfx_ClrBit_u32u8( (uint32 *)&channel->SR, GPT_INTERRUPT_FLAG_BIT );                                 /*Clearing the update interrupt flag of TIMx_SR*/
-    Bfx_SetBits_u32u8u8u8( (uint32 *)&channel->ARR, GPT_AUTO_RELOAD_LSB, GPT_AUTO_RELOAD_MSB, STD_ON ); /*Setting back the reset value of TIMx_ARR*/
+    /*Clearing the value of the prescaler on TIMx_PSC*/
+    Bfx_SetBits_u32u8u8u8( (uint32 *)&channel->PSC, GPT_PRESCALER_LSB, GPT_PRESCALER_MSB, STD_OFF );
+    /*Clearing the OPM: bit of TIMx_CR1*/
+    Bfx_ClrBit_u32u8( (uint32 *)&channel->CR1, GPT_ONE_PULSE_MODE_BIT );
+    /*Clearing the update interrupt flag of TIMx_SR*/
+    Bfx_ClrBit_u32u8( (uint32 *)&channel->SR, GPT_INTERRUPT_FLAG_BIT );
+    /*Setting back the reset value of TIMx_ARR*/                                
+    Bfx_SetBits_u32u8u8u8( (uint32 *)&channel->ARR, GPT_AUTO_RELOAD_LSB, GPT_AUTO_RELOAD_MSB, STD_ON );
 }
 
 /**
@@ -124,9 +128,12 @@ void Gpt_Arch_StartTimer( const Gpt_ConfigType *ConfigPtr, Gpt_ChannelType Chann
     Gpt_RegisterType *channel;
 
     channel = GptPeripherals[ ConfigPtr->Channels[ Channel ].GptReference ];
-    Bfx_SetBits_u32u8u8u8( (uint32 *)&channel->ARR, GPT_AUTO_RELOAD_LSB, GPT_AUTO_RELOAD_MSB, STD_OFF ); /*Clearing the reset value of TIMx_ARR*/
-    Bfx_SetBitMask_u32u32( (uint32 *)&channel->ARR, Value );                                             /*Writing the value of Period on TIMx_ARR*/
-    Bfx_SetBit_u32u8( (uint32 *)&channel->CR1, GPT_COUNTER_ENABLE_BIT );                                 /*Setting the CEN: bit of TIMx_CR1*/
+    /*Clearing the reset value of TIMx_ARR*/
+    Bfx_SetBits_u32u8u8u8( (uint32 *)&channel->ARR, GPT_AUTO_RELOAD_LSB, GPT_AUTO_RELOAD_MSB, STD_OFF );
+    /*Writing the value of Period on TIMx_ARR*/
+    Bfx_SetBitMask_u32u32( (uint32 *)&channel->ARR, Value );
+    /*Setting the CEN: bit of TIMx_CR1*/
+    Bfx_SetBit_u32u8( (uint32 *)&channel->CR1, GPT_COUNTER_ENABLE_BIT );
 }
 
 /**
