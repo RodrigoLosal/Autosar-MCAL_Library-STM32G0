@@ -17,25 +17,37 @@
  * @brief   **GPT array with settings to configure**
  *
  * Array with the settings to configure the channels, this array shall be set by the user according to
- * the application needs, the user shall set the number of elements in the array in the
- * GPT_NUMBER_OF_CHANNELS macro, each index is not limited  to a scpecific channel.
+ * the application needs.
  */
 // clang-format off
-const Gpt_ConfigType GptConfig[ GPT_NUMBER_OF_CHANNELS ] =
+Gpt_ChannelConfigType GptChannelConfig[ GPT_NUMBER_OF_CHANNELS ] =
 {
     {
-        .GptChannelId                       = GPT_CHANNEL_0,
-        .GptReference                       = GPT_TIM6, 
-        .GptChannelMode                     = TEST_GPT_CH_MODE_CONTINUOUS,
-        .GptChannelPrescaler                = 0x0000FFFF,
-        .GptNotification                    = NULL_PTR
+        .GptChannelId = GPT_CHANNEL_0,
+        .GptReference = GPT_TIM6,
+        .GptChannelMode = TEST_GPT_CH_MODE_CONTINUOUS,
+        .GptChannelPrescaler = 0x0000FFFF,
+        .GptNotification    = NULL_PTR
     },
     {
-        .GptChannelId                       = GPT_CHANNEL_1,
-        .GptReference                       = GPT_TIM7,
-        .GptChannelMode                     = TEST_GPT_CH_MODE_ONESHOT,
-        .GptChannelPrescaler                = 0x000000001,
-        .GptNotification                    = NULL_PTR
+        .GptChannelId = GPT_CHANNEL_1,
+        .GptReference = GPT_TIM7,
+        .GptChannelMode = TEST_GPT_CH_MODE_ONESHOT,
+        .GptChannelPrescaler = 0x00000001,
+        .GptNotification    = NULL_PTR
     }
+};
+// clang-format on
+
+/**
+ * @brief   **GPT configuration structure**
+ *
+ * Settings to configure the channels.
+ */
+// clang-format off
+const Gpt_ConfigType GptConfig =
+{
+    .Channels = GptChannelConfig,
+    .NumberOfChannels   = GPT_NUMBER_OF_CHANNELS
 };
 // clang-format on

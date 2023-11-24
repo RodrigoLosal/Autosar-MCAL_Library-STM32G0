@@ -13,15 +13,15 @@
 
 #include "Gpt_Types.h"
 
-void Gpt_Arch_Init( const Gpt_ConfigType *ConfigPtr );
-void Gpt_Arch_DeInit( void );
-Gpt_ValueType Gpt_Arch_GetTimeElapsed( Gpt_ChannelType Channel );
-Gpt_ValueType Gpt_Arch_GetTimeRemaining( Gpt_ChannelType Channel );
-void Gpt_Arch_StartTimer( Gpt_ChannelType Channel, Gpt_ValueType Value );
-void Gpt_Arch_StopTimer( Gpt_ChannelType Channel );
-void Gpt_Arch_EnableNotification( Gpt_ChannelType Channel );
-void Gpt_Arch_DisableNotification( Gpt_ChannelType Channel );
-void Gpt_Arch_Notification_Channel0( void );
-void Gpt_Arch_Notification_Channel1( void );
+void Gpt_Arch_Init( const Gpt_ConfigType *ConfigPtr, uint32 ChannelsToInit );
+void Gpt_Arch_DeInit( uint32 ChannelsToDeinit );
+Gpt_ValueType Gpt_Arch_GetTimeElapsed( Gpt_ChannelType Channel, const Gpt_ConfigType *ConfigPtr );
+Gpt_ValueType Gpt_Arch_GetTimeRemaining( Gpt_ChannelType Channel, const Gpt_ConfigType *ConfigPtr );
+void Gpt_Arch_StartTimer( Gpt_ChannelType Channel, const Gpt_ConfigType *ConfigPtr, Gpt_ValueType Value );
+void Gpt_Arch_StopTimer( Gpt_ChannelType Channel, const Gpt_ConfigType *ConfigPtr );
+void Gpt_Arch_EnableNotification( Gpt_ChannelType Channel, const Gpt_ConfigType *ConfigPtr );
+void Gpt_Arch_DisableNotification( Gpt_ChannelType Channel, const Gpt_ConfigType *ConfigPtr );
+void Gpt_Arch_Notification_Channel0( const Gpt_ConfigType *ConfigPtr );
+void Gpt_Arch_Notification_Channel1( const Gpt_ConfigType *ConfigPtr );
 
 #endif

@@ -34,9 +34,9 @@ static const Gpt_ConfigType *LocalGptConfigPtr = NULL_PTR;
  */
 void Gpt_Init( const Gpt_ConfigType *ConfigPtr )
 {
-    for( uint8 ChannelsToInit = 0; ChannelsToInit < GPT_NUMBER_OF_CHANNELS; ChannelsToInit++ )
+    for( uint32 ChannelsToInit = 0; ChannelsToInit < ConfigPtr->NumberOfChannels; ChannelsToInit++ )
     {
-        Gpt_Arch_Init( &ConfigPtr[ ChannelsToInit ] );
+        Gpt_Arch_Init( ConfigPtr, ChannelsToInit );
     }
     LocalGptConfigPtr = ConfigPtr;
 }
@@ -52,7 +52,10 @@ void Gpt_Init( const Gpt_ConfigType *ConfigPtr )
 #if GPT_DEINIT_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_DeInit( void )
 {
-    Gpt_Arch_DeInit( );
+    for( uint32 ChannelsToDeinit = 0; ChannelsToDeinit < LocalGptConfigPtr->NumberOfChannels; ChannelsToDeinit++ )
+    {
+        Gpt_Arch_DeInit( ChannelsToDeinit );
+    }
 }
 #endif
 
@@ -71,7 +74,7 @@ void Gpt_DeInit( void )
 #if GPT_TIME_ELAPSED_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Gpt_ValueType Gpt_GetTimeElapsed( Gpt_ChannelType Channel )
 {
-    return Gpt_Arch_GetTimeElapsed( Channel );
+    return Gpt_Arch_GetTimeElapsed( Channel, LocalGptConfigPtr );
 }
 #endif
 
@@ -90,7 +93,7 @@ Gpt_ValueType Gpt_GetTimeElapsed( Gpt_ChannelType Channel )
 #if GPT_TIME_REMAINING_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Gpt_ValueType Gpt_GetTimeRemaining( Gpt_ChannelType Channel )
 {
-    return Gpt_Arch_GetTimeRemaining( Channel );
+    return Gpt_Arch_GetTimeRemaining( Channel, LocalGptConfigPtr );
 }
 #endif
 
@@ -107,7 +110,7 @@ Gpt_ValueType Gpt_GetTimeRemaining( Gpt_ChannelType Channel )
  */
 void Gpt_StartTimer( Gpt_ChannelType Channel, Gpt_ValueType Value )
 {
-    Gpt_Arch_StartTimer( Channel, Value );
+    Gpt_Arch_StartTimer( Channel, LocalGptConfigPtr, Value );
 }
 
 /**
@@ -121,7 +124,7 @@ void Gpt_StartTimer( Gpt_ChannelType Channel, Gpt_ValueType Value )
  */
 void Gpt_StopTimer( Gpt_ChannelType Channel )
 {
-    Gpt_Arch_StopTimer( Channel );
+    Gpt_Arch_StopTimer( Channel, LocalGptConfigPtr );
 }
 
 /**
@@ -158,7 +161,7 @@ void Gpt_GetVersionInfo( Std_VersionInfoType *versioninfo )
 #if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_EnableNotification( Gpt_ChannelType Channel )
 {
-    Gpt_Arch_EnableNotification( Channel );
+    Gpt_Arch_EnableNotification( Channel, LocalGptConfigPtr );
 }
 #endif
 
@@ -175,7 +178,7 @@ void Gpt_EnableNotification( Gpt_ChannelType Channel )
 #if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_DisableNotification( Gpt_ChannelType Channel )
 {
-    Gpt_Arch_DisableNotification( Channel );
+    Gpt_Arch_DisableNotification( Channel, LocalGptConfigPtr );
 }
 #endif
 
@@ -192,11 +195,7 @@ void Gpt_DisableNotification( Gpt_ChannelType Channel )
 #if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_Notification_Channel0( void )
 {
-    Gpt_Arch_Notification_Channel0( );
-    if( LocalGptConfigPtr[ GPT_CHANNEL_0 ].GptNotification != NULL_PTR )
-    {
-        LocalGptConfigPtr[ GPT_CHANNEL_0 ].GptNotification( );
-    }
+    Gpt_Arch_Notification_Channel0( LocalGptConfigPtr );
 }
 #endif
 
@@ -213,10 +212,6 @@ void Gpt_Notification_Channel0( void )
 #if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_Notification_Channel1( void )
 {
-    Gpt_Arch_Notification_Channel1( );
-    if( LocalGptConfigPtr[ GPT_CHANNEL_1 ].GptNotification != NULL_PTR )
-    {
-        LocalGptConfigPtr[ GPT_CHANNEL_1 ].GptNotification( );
-    }
+    Gpt_Arch_Notification_Channel0( LocalGptConfigPtr );
 }
 #endif

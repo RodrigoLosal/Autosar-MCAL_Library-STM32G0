@@ -70,6 +70,6 @@
  * @} */
 
 /*External reference to Gpt_Config array*/
-extern const Gpt_ConfigType GptConfig[ GPT_NUMBER_OF_CHANNELS ];
+extern const Gpt_ConfigType GptConfig;
 
 #endif /* GPT_CFG_H_ */

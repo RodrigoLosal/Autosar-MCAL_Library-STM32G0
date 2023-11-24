@@ -12,6 +12,20 @@
 #include "Registers.h"
 
 /**
+ * @brief **Config Elements of a GPT**
+ *
+ * @reqs   SWS_Gpt_00358
+ */
+typedef struct _Gpt_ChannelType
+{
+    uint8 GptChannelId;                /*!< Gpt Channel to be configured */
+    uint8 GptReference;                /*!< Microcontroller specific Timer reference */
+    uint8 GptChannelMode;              /*!< Continuous or One-Pulse mode*/
+    uint16 GptChannelPrescaler;        /*!< Prescaler from 0x0 to 0xFFFF*/
+    void ( *GptNotification )( void ); /*!< Array of Pointers to user-defined functions*/
+} Gpt_ChannelConfigType;
+
+/**
  * @brief **Definition of the external data structure containing the initialization data**
  *
  * This is the type of the data structure including the configuration set required for
@@ -25,11 +39,8 @@
  */
 typedef struct _Gpt_ConfigType
 {
-    uint8 GptChannelId;                /*!< Gpt Channel to be configured */
-    uint8 GptReference;                /*!< Microcontroller specific Timer reference */
-    uint8 GptChannelMode;              /*!< Continuous or One-Pulse mode*/
-    uint16 GptChannelPrescaler;        /*!< Prescaler from 0x0 to 0xFFFF*/
-    void ( *GptNotification )( void ); /*!< Array of Pointers to user-defined functions*/
+    Gpt_ChannelConfigType *Channels; /*!< Pointer to the structure with the channel configuration elements. */
+    uint8 NumberOfChannels;          /*!< Total number of GPT channels available. */
 } Gpt_ConfigType;
 
 /**
@@ -40,7 +51,7 @@ typedef struct _Gpt_ConfigType
 typedef enum
 {
     GPT_CHANNEL_0 = 0, /*!< Gpt Channel 0 */
-    GPT_CHANNEL_1,     /*!< Gpt Channel 1 */
+    GPT_CHANNEL_1      /*!< Gpt Channel 1 */
 } Gpt_ChannelType;
 
 /**
@@ -49,5 +60,16 @@ typedef enum
  * @reqs   SWS_Gpt_00359
  */
 typedef uint32 Gpt_ValueType;
+
+/**
+ * @brief **Hardware control unit structure**
+ *
+ * This structure contains the hardware unit configuration and the state of the hardware
+ * unit pointers to controller structures.
+ */
+typedef struct _Gpt_HwUnit
+{
+    const Gpt_ConfigType *Config; /*!< Pointer to the configuration structure */
+} Gpt_HwUnit;
 
 #endif /* GPT_TYPES_H__ */
