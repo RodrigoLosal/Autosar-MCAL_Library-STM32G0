@@ -11,6 +11,8 @@
 #ifndef GPT_CFG_H_
 #define GPT_CFG_H_
 
+#include "Gpt_Types.h"
+
 /**
  * @brief   **Number of channels to configure**
  *
@@ -40,6 +42,12 @@
  * @} */
 
 /**
+ * @brief Switches the development error detection and notification on or off.
+ * @typedef EcucBooleanParamDef
+ */
+#define GPT_DEV_ERROR_DETECT                STD_OFF
+
+/**
   * @defgroup GPT-ID to get the version information of this module.
   @{ */
 #define GPT_VENDOR_ID                       (uint16)1000u /*!< Id for the company in the AUTOSAR*/
@@ -51,6 +59,6 @@
  * @} */
 
 /*External reference to Gpt_Config array*/
-extern const Gpt_ConfigType GptConfig[ GPT_NUMBER_OF_CHANNELS ];
+extern const Gpt_ConfigType GptConfig;
 
 #endif /* GPT_CFG_H_ */

@@ -9,7 +9,9 @@
  * the right way
  */
 #include "Std_Types.h"
-#include "Port.h"
+#include "Port_Types.h"
+#include "Port_Arch.h"
+#include "Port_Cfg.h"
 
 
 /**
