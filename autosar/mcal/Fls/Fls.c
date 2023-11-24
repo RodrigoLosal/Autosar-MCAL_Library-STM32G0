@@ -57,7 +57,7 @@ void Fls_Init( const Fls_ConfigType *ConfigPtr )
         the function Fls_Init shall check the (hardware specific) contents
         of the given configuration set for being within the allowed range.
         If this is not the case, it shall raise the development error FLS_E_PARAM_CONFIG.*/
-        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_E_PARAM_CONFIG );
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_INIT, FLS_E_PARAM_CONFIG );
     }
     else
     {
@@ -81,11 +81,30 @@ void Fls_Init( const Fls_ConfigType *ConfigPtr )
  *
  * @retval  Std_ReturnType E_OK: erase command has been accepted E_NOT_OK: erase command has not been accepted.
  *
- * @reqs     SWS_Fls_00250
+ * @reqs     SWS_Fls_00250, SWS_Fls_00020
  */
 Std_ReturnType Fls_Erase( Fls_AddressType TargetAddress, Fls_LengthType Length )
 {
-    return Fls_Arch_Erase( &HwUnit_Fls, TargetAddress, Length );
+    Std_ReturnType returnValue = E_NOT_OK;
+
+    if( HwUnit_Fls.HwUnitState == FLS_STATE_UNINIT )
+    {
+        /*If development error detection for the module Fls is enabled: the function Fls_Erase
+        shall check that the erase start address (flash memory base address + TargetAddress) is 
+        aligned to a flash sector boundary and that it lies within the specified lower and upper 
+        flash address boundaries. If this check fails, the function Fls_Erase shall reject the erase request,
+        raise the development error FLS_E_- PARAM_ADDRESS and return with E_NOT_OK.*/
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_ERASE, FLS_E_PARAM_ADDRESS );
+    }
+    else if( )
+    {
+
+    }
+    else
+    {
+        return Fls_Arch_Erase( &HwUnit_Fls, TargetAddress, Length );
+    }
+    
 }
 
 /**
