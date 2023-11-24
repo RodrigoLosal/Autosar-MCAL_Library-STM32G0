@@ -14,6 +14,32 @@
 #include "Pwm_Types.h"
 
 /**
+ * @defgroup PWM_SWC_Ids PWM software version and Ids
+ *
+ * {@ */
+#define PWM_MODULE_ID              0u /*!< Pwm Module ID */
+#define PWM_INSTANCE_ID            0u /*!< Pwm Instance ID */
+#define PWM_VENDOR_ID              0u /*!< Pwm Module Vendor ID */
+/**
+ * @} */
+
+/**
+ * @defgroup PWM_SWC_Ids PWM software version and Ids
+ *
+ * {@ */
+#define PWM_SW_MAJOR_VERSION       0u /*!< PWM Module Major Version */
+#define PWM_SW_MINOR_VERSION       0u /*!< Pwm Module Minor Version */
+#define PWM_SW_PATCH_VERSION       0u /*!< Pwm Module Patch Version */
+/**
+ * @} */
+
+/**
+ * @brief Switches the development error detection and notification on or off.
+ * @typedef EcucBooleanParamDef
+ */
+#define PWM_DEV_ERROR_DETECT       STD_ON
+
+/**
  * @brief Adds / removes the service Pwm_DeInit() from the code.
  * @typedef EcucBooleanParamDef
  */
