@@ -36,10 +36,14 @@ void Gpt_Arch_Init( const Gpt_ConfigType *ConfigPtr, uint32 ChannelsToInit )
     Gpt_RegisterType *channel;
 
     channel = GptPeripherals[ ConfigPtr->Channels[ ChannelsToInit ].GptReference ];
-    Bfx_SetBits_u32u8u8u8( (uint32 *)&channel->PSC, GPT_PRESCALER_LSB, GPT_PRESCALER_MSB, STD_OFF );                                     /*Clearing the value of the prescaler on TIMx_PSC*/
-    Bfx_SetBitMask_u32u32( (uint32 *)&channel->PSC, (uint32)ConfigPtr->Channels[ ChannelsToInit ].GptChannelPrescaler );                 /*Writing the value of the prescaler on TIMx_PSC*/
-    Bfx_PutBit_u32u8u8( (uint32 *)&channel->CR1, GPT_ONE_PULSE_MODE_BIT, (uint32)ConfigPtr->Channels[ ChannelsToInit ].GptChannelMode ); /*Writing the OPM: bit of TIMx_CR1 for continuous or one-pulse mode*/
-    Bfx_ClrBit_u32u8( (uint32 *)&channel->SR, GPT_INTERRUPT_FLAG_BIT ); /*Clearing the Status Register Flag*/                            /*Clearing the update interrupt flag of TIMx_SR*/
+    /*Clearing the value of the prescaler on TIMx_PSC*/
+    Bfx_SetBits_u32u8u8u8( (uint32 *)&channel->PSC, GPT_PRESCALER_LSB, GPT_PRESCALER_MSB, STD_OFF );
+    /*Writing the value of the prescaler on TIMx_PSC*/ 
+    Bfx_SetBitMask_u32u32( (uint32 *)&channel->PSC, (uint32)ConfigPtr->Channels[ ChannelsToInit ].GptChannelPrescaler );
+    /*Writing the OPM: bit of TIMx_CR1 for continuous or one-pulse mode*/
+    Bfx_PutBit_u32u8u8( (uint32 *)&channel->CR1, GPT_ONE_PULSE_MODE_BIT, (uint32)ConfigPtr->Channels[ ChannelsToInit ].GptChannelMode );
+    /*Clearing the update interrupt flag of TIMx_SR*/
+    Bfx_ClrBit_u32u8( (uint32 *)&channel->SR, GPT_INTERRUPT_FLAG_BIT );
 }
 
 /**
