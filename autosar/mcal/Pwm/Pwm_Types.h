@@ -108,10 +108,10 @@ typedef enum _Pwm_PowerStateRequestResultType
 {
     PWM_SERVICE_ACCEPTED = 0x00, /*!< Power state change executed. */
     PWM_NOT_INIT,                /*!< PWM Module not initialized. */
-    PWM_SEQUENCE_ERROR,          /*!<Wrong API call sequence.*/
+    PWM_SEQUENCE_ERROR,          /*!< Wrong API call sequence.*/
     PWM_HW_FAILURE,              /*!< Hardware failure prevents state change.*/
     PWM_POWER_STATE_NOT_SUPP,    /*!< Power State not supported.  */
-    PWM_TRANS_NOT_POSSIBLE       /*!< Transition not possible or HW busy.*/
+    PWM_TRANS_NOT_POSSIBLE,      /*!< Transition not possible or HW busy.*/
 } Pwm_PowerStateRequestResultType;
 
 /**
@@ -138,17 +138,16 @@ typedef struct _Pwm_ConfigType
 } Pwm_ConfigType;
 
 /**
- * @brief **Hardware unit configuration structure**
+ * @brief **PWM driver Status**
  *
  * This is the type of data structure containing the module state for the PWM driver.
  *
  */
 typedef enum
 {
-    PWM_STATE_UNINITIALIZED, /*!< Pwm State Uninitialized */
-    PWM_STATE_INITIALIZED    /*!< Pwm State Initialized */
-} Pwm_ModuleStateType;
-
+    PWM_STATE_UNINIT, /*!< Pwm State Uninitialized */
+    PWM_STATE_INIT    /*!< Pwm State Initialized */
+} Pwm_StatusType;
 
 /**
  * @brief **Hardware control unit structure**
@@ -159,8 +158,7 @@ typedef enum
 typedef struct _Pwm_HwUnit
 {
     const Pwm_ConfigType *Config;          /*!< Pointer to the configuration structure */
-    uint8 HwUnitState;                     /*!< Pwm hardware unit state */
-    Pwm_ModuleStateType Pwm_ModuleState;   /*!< Pwm module states */
+    Pwm_StatusType HwUnitState;            /*!< Pwm hardware unit state */
     Pwm_ChannelClassType Pwm_ChannelClass; /*!< Pwm channel class*/
     uint8 Pwm_channelNumber;               /*!< Pwm channel number */
 } Pwm_HwUnit;

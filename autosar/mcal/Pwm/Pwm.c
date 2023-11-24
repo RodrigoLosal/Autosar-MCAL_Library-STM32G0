@@ -39,12 +39,11 @@
 /* clang-format off */
 static Pwm_HwUnit HwUnit_Pwm =
 {
-    .HwUnitState = PWM_E_UNINIT,                            /*!< Pwm hardware unit state */
-    .Config = NULL_PTR,
-    .Pwm_ModuleState = PWM_STATE_UNINITIALIZED,
-    .Pwm_ChannelClass =PWM_VARIABLE_PERIOD,
-    .Pwm_channelNumber = PWM_CHANNEL_MAX
-};
+.HwUnitState       = PWM_NOT_INIT, /*!< Pwm hardware unit state */
+.Config            = NULL_PTR,
+.Pwm_ChannelClass  = PWM_VARIABLE_PERIOD,
+.Pwm_channelNumber = PWM_CHANNEL_MAX };
+
 /* clang-format on */
 
 /**
@@ -58,7 +57,7 @@ static Pwm_HwUnit HwUnit_Pwm =
  */
 void Pwm_Init( const Pwm_ConfigType *ConfigPtr )
 {
-    if( HwUnit_Pwm.Pwm_ModuleState == PWM_STATE_INITIALIZED )
+    if( HwUnit_Pwm.HwUnitState == PWM_STATE_INIT )
     {
         /* If development error detection for the Pwm module is enabled:
         calling the routine Pwm_Init while the PWM driver and hardware
@@ -69,9 +68,8 @@ void Pwm_Init( const Pwm_ConfigType *ConfigPtr )
     else
     {
         Pwm_Arch_Init( &HwUnit_Pwm, ConfigPtr );
-        HwUnit_Pwm.Pwm_ModuleState = PWM_STATE_INITIALIZED;
-        HwUnit_Pwm.Config          = ConfigPtr;
-        HwUnit_Pwm.HwUnitState     = PWM_STATE_INITIALIZED;
+        HwUnit_Pwm.Config      = ConfigPtr;
+        HwUnit_Pwm.HwUnitState = PWM_STATE_INIT;
     }
 }
 
@@ -84,7 +82,7 @@ void Pwm_Init( const Pwm_ConfigType *ConfigPtr )
  */
 void Pwm_DeInit( void )
 {
-    if( HwUnit_Pwm.HwUnitState != PWM_STATE_INITIALIZED )
+    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINIT )
     {
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
@@ -109,7 +107,7 @@ void Pwm_DeInit( void )
  */
 void Pwm_SetDutyCycle( Pwm_ChannelType ChannelNumber, uint16 DutyCycle )
 {
-    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINITIALIZED )
+    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINIT )
     {
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
@@ -143,7 +141,7 @@ void Pwm_SetDutyCycle( Pwm_ChannelType ChannelNumber, uint16 DutyCycle )
  */
 void Pwm_SetPeriodAndDuty( Pwm_ChannelType ChannelNumber, Pwm_PeriodType Period, uint16 DutyCycle )
 {
-    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINITIALIZED )
+    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINIT )
     {
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
@@ -183,7 +181,7 @@ void Pwm_SetPeriodAndDuty( Pwm_ChannelType ChannelNumber, Pwm_PeriodType Period,
  */
 void Pwm_SetOutputToIdle( Pwm_ChannelType ChannelNumber )
 {
-    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINITIALIZED )
+    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINIT )
     {
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
@@ -220,7 +218,7 @@ Pwm_OutputStateType Pwm_GetOutputState( Pwm_ChannelType ChannelNumber )
 {
     Pwm_OutputStateType outputState = PWM_HIGH;
 
-    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINITIALIZED )
+    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINIT )
     {
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
@@ -253,7 +251,7 @@ Pwm_OutputStateType Pwm_GetOutputState( Pwm_ChannelType ChannelNumber )
  */
 void Pwm_DisableNotification( Pwm_ChannelType ChannelNumber )
 {
-    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINITIALIZED )
+    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINIT )
     {
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
@@ -286,7 +284,7 @@ void Pwm_DisableNotification( Pwm_ChannelType ChannelNumber )
  */
 void Pwm_EnableNotification( Pwm_ChannelType ChannelNumber, Pwm_EdgeNotificationType Notification )
 {
-    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINITIALIZED )
+    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINIT )
     {
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
@@ -327,7 +325,7 @@ void Pwm_EnableNotification( Pwm_ChannelType ChannelNumber, Pwm_EdgeNotification
 Std_ReturnType Pwm_SetPowerState( Pwm_PowerStateRequestResultType *Result )
 {
     Std_ReturnType returnValue = E_NOT_OK;
-    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINITIALIZED )
+    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINIT )
     {
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
@@ -358,7 +356,7 @@ Std_ReturnType Pwm_SetPowerState( Pwm_PowerStateRequestResultType *Result )
 Std_ReturnType Pwm_GetCurrentPowerState( Pwm_PowerStateType *CurrentPowerState, Pwm_PowerStateRequestResultType *Result )
 {
     Std_ReturnType returnValue = E_NOT_OK;
-    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINITIALIZED )
+    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINIT )
     {
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
@@ -389,7 +387,7 @@ Std_ReturnType Pwm_GetCurrentPowerState( Pwm_PowerStateType *CurrentPowerState, 
 Std_ReturnType Pwm_GetTargetPowerState( Pwm_PowerStateType *TargetPowerState, Pwm_PowerStateRequestResultType *Result )
 {
     Std_ReturnType returnValue = E_NOT_OK;
-    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINITIALIZED )
+    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINIT )
     {
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
@@ -425,7 +423,7 @@ Std_ReturnType Pwm_GetTargetPowerState( Pwm_PowerStateType *TargetPowerState, Pw
 Std_ReturnType Pwm_PreparePowerState( Pwm_PowerStateType PowerState, Pwm_PowerStateRequestResultType *Result )
 {
     Std_ReturnType returnValue = E_NOT_OK;
-    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINITIALIZED )
+    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINIT )
     {
         /*If development error detection for the Pwm module is enabled:
         if any function (except Pwm_Init) is called before Pwm_Init has been called, the
@@ -450,12 +448,12 @@ Std_ReturnType Pwm_PreparePowerState( Pwm_PowerStateType PowerState, Pwm_PowerSt
  */
 void Pwm_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
-    if( HwUnit_Pwm.HwUnitState == PWM_STATE_UNINITIALIZED )
+    if( versioninfo == NULL_PTR )
     {
-        /*If development error detection for the Pwm module is enabled:
-        if any function (except Pwm_Init) is called before Pwm_Init has been called, the
-        called function shall raise development error PWM_E_UNINIT.*/
-        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_GET_VERSION_INFO, PWM_E_UNINIT );
+        /* If development error detection for the Pwm module is enabled:
+        The function Pwm_GetVersionInfo shall raise the error PWM_E_PARAM_POINTER if the parameter
+        versionInfo is a null pointer */
+        Det_ReportError( PWM_MODULE_ID, PWM_INSTANCE_ID, PWM_ID_GET_VERSION_INFO, PWM_E_PARAM_POINTER );
     }
     else
     {
