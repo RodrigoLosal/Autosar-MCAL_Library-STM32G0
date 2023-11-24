@@ -13,14 +13,30 @@
 
 #include "Gpt_Types.h"
 
+/**
+ * @defgroup    GPT bits values
+ *
+ * Symbols to specify the values of the bits on the registers.
+ * @{ */
+#define GPT_INTERRUPT_FLAG_BIT 0   /*!< TIMx_SR -> UIF: Update Interrupt flag bit */
+#define GPT_ONE_PULSE_MODE_BIT 3u  /*!< TIMx_CR1 -> OPM: One pulse mode bit */
+#define GPT_PRESCALER_LSB      0   /*!< TIMx_PSC -> [PSC:0]: GPT prescaler least significant bit */
+#define GPT_PRESCALER_MSB      16u /*!< TIMx_PSC -> [PSC:15]: GPT prescaler most significant bit */
+#define GPT_AUTO_RELOAD_LSB    0   /*!< TIMx_ARR -> [ARR:0]: GPT auto-reload counter least significant bit */
+#define GPT_AUTO_RELOAD_MSB    16u /*!< TIMx_ARR -> [ARR:15]: GPT auto-reload counter most significant bit */
+#define GPT_COUNTER_ENABLE_BIT 0   /*!< TIMx_CR1 -> CEN: Counter enable bit */
+#define GPT_UPDATE_DISABLE_BIT 1u  /*!< TIMx_CR1 -> UDIS: Update disable bit */
+/**
+ * @} */
+
 void Gpt_Arch_Init( const Gpt_ConfigType *ConfigPtr, uint32 ChannelsToInit );
-void Gpt_Arch_DeInit( uint32 ChannelsToDeinit );
-Gpt_ValueType Gpt_Arch_GetTimeElapsed( Gpt_ChannelType Channel, const Gpt_ConfigType *ConfigPtr );
-Gpt_ValueType Gpt_Arch_GetTimeRemaining( Gpt_ChannelType Channel, const Gpt_ConfigType *ConfigPtr );
-void Gpt_Arch_StartTimer( Gpt_ChannelType Channel, const Gpt_ConfigType *ConfigPtr, Gpt_ValueType Value );
-void Gpt_Arch_StopTimer( Gpt_ChannelType Channel, const Gpt_ConfigType *ConfigPtr );
-void Gpt_Arch_EnableNotification( Gpt_ChannelType Channel, const Gpt_ConfigType *ConfigPtr );
-void Gpt_Arch_DisableNotification( Gpt_ChannelType Channel, const Gpt_ConfigType *ConfigPtr );
+void Gpt_Arch_DeInit( const Gpt_ConfigType *ConfigPtr, uint32 ChannelsToDeinit );
+Gpt_ValueType Gpt_Arch_GetTimeElapsed( const Gpt_ConfigType *ConfigPtr, Gpt_ChannelType Channel );
+Gpt_ValueType Gpt_Arch_GetTimeRemaining( const Gpt_ConfigType *ConfigPtr, Gpt_ChannelType Channel );
+void Gpt_Arch_StartTimer( const Gpt_ConfigType *ConfigPtr, Gpt_ChannelType Channel, Gpt_ValueType Value );
+void Gpt_Arch_StopTimer( const Gpt_ConfigType *ConfigPtr, Gpt_ChannelType Channel );
+void Gpt_Arch_EnableNotification( const Gpt_ConfigType *ConfigPtr, Gpt_ChannelType Channel );
+void Gpt_Arch_DisableNotification( const Gpt_ConfigType *ConfigPtr, Gpt_ChannelType Channel );
 void Gpt_Arch_Notification_Channel0( const Gpt_ConfigType *ConfigPtr );
 void Gpt_Arch_Notification_Channel1( const Gpt_ConfigType *ConfigPtr );
 

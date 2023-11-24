@@ -61,15 +61,4 @@ typedef enum
  */
 typedef uint32 Gpt_ValueType;
 
-/**
- * @brief **Hardware control unit structure**
- *
- * This structure contains the hardware unit configuration and the state of the hardware
- * unit pointers to controller structures.
- */
-typedef struct _Gpt_HwUnit
-{
-    const Gpt_ConfigType *Config; /*!< Pointer to the configuration structure */
-} Gpt_HwUnit;
-
 #endif /* GPT_TYPES_H__ */
