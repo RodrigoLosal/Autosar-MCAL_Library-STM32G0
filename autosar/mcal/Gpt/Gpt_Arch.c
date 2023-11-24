@@ -27,7 +27,8 @@ static Gpt_RegisterType *GptPeripherals[ GPT_NUMBER_OF_CHANNELS ] = { TIM6, TIM7
  * microcontroller according to the parameters specified in ConfigPtr and HwUnit.
  * Furthermore disable all notifications.
  *
- * @param    Config Pointer to driver configuration.
+ * @param    ConfigPtr      Pointer to driver configuration.
+ * @param    ChannelsToInit Number of channels to init.
  *
  * @reqs   SWS_Gpt_00280, SWS_Gpt_00006, SWS_Gpt_00107, SWS_Gpt_00068, SWS_Gpt_00258
  */
@@ -51,6 +52,7 @@ void Gpt_Arch_Init( const Gpt_ConfigType *ConfigPtr, uint32 ChannelsToInit )
  *
  * This function de-initializes the Gpt module.
  *
+ * @param ConfigPtr              Pointer to driver configuration.
  * @param ChannelsToDeinit       Numeric identifier of the GPT channels to Deinit.
  *
  * @reqs   SWS_Gpt_00281, SWS_Gpt_00008, SWS_Gpt_00105, SWS_Gpt_00162, SWS_Gpt_00194
@@ -66,7 +68,7 @@ void Gpt_Arch_DeInit( const Gpt_ConfigType *ConfigPtr, uint32 ChannelsToDeinit )
     Bfx_ClrBit_u32u8( (uint32 *)&channel->CR1, GPT_ONE_PULSE_MODE_BIT );
     /*Clearing the update interrupt flag of TIMx_SR*/
     Bfx_ClrBit_u32u8( (uint32 *)&channel->SR, GPT_INTERRUPT_FLAG_BIT );
-    /*Setting back the reset value of TIMx_ARR*/                                
+    /*Setting back the reset value of TIMx_ARR*/
     Bfx_SetBits_u32u8u8u8( (uint32 *)&channel->ARR, GPT_AUTO_RELOAD_LSB, GPT_AUTO_RELOAD_MSB, STD_ON );
 }
 
@@ -76,6 +78,7 @@ void Gpt_Arch_DeInit( const Gpt_ConfigType *ConfigPtr, uint32 ChannelsToDeinit )
  * The function returns the time already elapsed. When the channel is in mode “one-shot mode”,
  * this is the value relative to the point in time, the channel has been started.
  *
+ * @param ConfigPtr      Pointer to driver configuration.
  * @param Channel       Numeric identifier of the GPT channel.
  *
  * @retval  Returns the current number of ticks already elapsed.
@@ -97,6 +100,7 @@ Gpt_ValueType Gpt_Arch_GetTimeElapsed( const Gpt_ConfigType *ConfigPtr, Gpt_Chan
  * The function returns the timer value remaining until the target time will be reached next time.
  * he remaining time is the "target time" minus the time already elapsed.
  *
+ * @param    ConfigPtr      Pointer to driver configuration.
  * @param Channel       Numeric identifier of the GPT channel.
  *
  * @retval  Returns the remaining number of ticks before the timer overflows.
@@ -118,6 +122,7 @@ Gpt_ValueType Gpt_Arch_GetTimeRemaining( const Gpt_ConfigType *ConfigPtr, Gpt_Ch
  * The function starts the selected timer channel with a defined target time. If configured and
  * enabled, an interrupt notification or a wakeup interrupt occurs, when the target time is reached.
  *
+ * @param    ConfigPtr      Pointer to driver configuration.
  * @param Channel       Numeric identifier of the GPT channel.
  * @param Value         Target time in number of ticks.
  *
@@ -141,6 +146,7 @@ void Gpt_Arch_StartTimer( const Gpt_ConfigType *ConfigPtr, Gpt_ChannelType Chann
  *
  * The function stops the selected timer channel.
  *
+ * @param    ConfigPtr      Pointer to driver configuration.
  * @param Channel       Numeric identifier of the GPT channel.
  *
  * @reqs   SWS_Gpt_00285, SWS_Gpt_00013
@@ -159,6 +165,7 @@ void Gpt_Arch_StopTimer( const Gpt_ConfigType *ConfigPtr, Gpt_ChannelType Channe
  * The function enables the interrupt notification of the referenced channel configured for
  * notification.
  *
+ * @param    ConfigPtr      Pointer to driver configuration.
  * @param Channel       Numeric identifier of the GPT channel.
  *
  * @reqs   SWS_Gpt_00286, SWS_Gpt_00199
@@ -177,6 +184,7 @@ void Gpt_Arch_EnableNotification( const Gpt_ConfigType *ConfigPtr, Gpt_ChannelTy
  * The function disables the interrupt notification of the referenced channel configured for
  * notification.
  *
+ * @param    ConfigPtr      Pointer to driver configuration.
  * @param Channel       Numeric identifier of the GPT channel.
  *
  * @reqs   SWS_Gpt_00287, SWS_Gpt_00200
@@ -196,6 +204,8 @@ void Gpt_Arch_DisableNotification( const Gpt_ConfigType *ConfigPtr, Gpt_ChannelT
  * The notification prototype Gpt_Notification_Channel0 is for the notification callback function
  * and shall be implemented by the user. The callback notifications Gpt_Notification_<channel> shall
  * be configurable as pointers to user defined functions within the configuration structure.
+ *
+ * @param    ConfigPtr      Pointer to driver configuration.
  *
  * @reqs   SWS_Gpt_00292, SWS_Gpt_00086, SWS_Gpt_00209, SWS_Gpt_00093, SWS_Gpt_00233, SWS_Gpt_00206
  */
@@ -222,6 +232,8 @@ void Gpt_Arch_Notification_Channel0( const Gpt_ConfigType *ConfigPtr )
  * The notification prototype Gpt_Notification_Channel1 is for the notification callback function
  * and shall be implemented by the user. The callback notifications Gpt_Notification_<channel> shall
  * be configurable as pointers to user defined functions within the configuration structure.
+ *
+ * @param    ConfigPtr      Pointer to driver configuration.
  *
  * @reqs   SWS_Gpt_00292, SWS_Gpt_00086, SWS_Gpt_00209, SWS_Gpt_00093, SWS_Gpt_00233, SWS_Gpt_00206
  */

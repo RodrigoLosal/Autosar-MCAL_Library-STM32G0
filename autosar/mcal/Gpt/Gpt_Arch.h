@@ -14,18 +14,18 @@
 #include "Gpt_Types.h"
 
 /**
- * @defgroup GPT TIM References
+ * @defgroup GPT_Peripherals GPT TIM References
  *
  * Specifies the controller IDs of the MCU TIM's
- *
- * @typedef EcucIntegerParamDef
  *
  * @{ */
 #define GPT_TIM6               0 /*!< TIM6 */
 #define GPT_TIM7               1 /*!< TIM7  */
+/**
+ * @} */
 
 /**
- * @defgroup    GPT bits values
+ * @defgroup GPT_Bit_Values GPT bits values
  *
  * Symbols to specify the values of the bits on the registers.
  * @{ */
