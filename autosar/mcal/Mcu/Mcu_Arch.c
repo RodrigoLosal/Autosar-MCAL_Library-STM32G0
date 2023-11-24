@@ -19,6 +19,8 @@
  *
  * @param   HwUnit Pointer to the hardware unit configuration
  * @param   ConfigPtr  Pointer to MCU driver configuration set
+ *
+ * @reqs    SWS_Mcu_00153
  */
 void Mcu_Arch_Init( Mcu_HwUnit *HwUnit, const Mcu_ConfigType *ConfigPtr )
 {
@@ -36,6 +38,8 @@ void Mcu_Arch_Init( Mcu_HwUnit *HwUnit, const Mcu_ConfigType *ConfigPtr )
  *
  * @retval  Std_ReturnType: E_OK if the command has been accepted, E_NOT_OK if the command has
  *          not been accepted e.g. due to parameter error
+ *
+ * @reqs    SWS_Mcu_00154
  */
 Std_ReturnType Mcu_Arch_InitRamSection( Mcu_HwUnit *HwUnit, Mcu_RamSectionType RamSection )
 {
@@ -54,6 +58,8 @@ Std_ReturnType Mcu_Arch_InitRamSection( Mcu_HwUnit *HwUnit, Mcu_RamSectionType R
  *
  * @retval  Std_ReturnType: E_OK if the command has been accepted, E_NOT_OK if the command has
  *          not been accepted e.g. due to parameter error
+ *
+ * @reqs    SWS_Mcu_00155
  */
 Std_ReturnType Mcu_Arch_InitClock( Mcu_HwUnit *HwUnit, Mcu_ClockType ClockSetting )
 {
@@ -71,6 +77,8 @@ Std_ReturnType Mcu_Arch_InitClock( Mcu_HwUnit *HwUnit, Mcu_ClockType ClockSettin
  *
  * @retval  Std_ReturnType: E_OK if the command has been accepted, E_NOT_OK if the command has
  *          not been accepted e.g. due to parameter error
+ *
+ * @reqs    SWS_Mcu_00156
  */
 Std_ReturnType Mcu_Arch_DistributePllClock( Mcu_HwUnit *HwUnit )
 {
@@ -87,6 +95,8 @@ Std_ReturnType Mcu_Arch_DistributePllClock( Mcu_HwUnit *HwUnit )
  *
  * @retval  Mcu_PllStatusType: MCU_PLL_LOCKED when the PLL is locked, MCU_PLL_UNLOCKED,
  *          MCU_PLL_STATUS_UNDEFINED when status is unknown
+ *
+ * @reqs    SWS_Mcu_00157
  */
 Mcu_PllStatusType Mcu_Arch_GetPllStatus( Mcu_HwUnit *HwUnit )
 {
@@ -103,6 +113,8 @@ Mcu_PllStatusType Mcu_Arch_GetPllStatus( Mcu_HwUnit *HwUnit )
  *
  * @retval  Mcu_ResetType: MCU_POWER_ON_RESET, MCU_WATCHDOG_RESET, MCU_SW_RESET,
  *          MCU_RESET_UNDEFINED
+ *
+ * @reqs    SWS_Mcu_00158
  */
 Mcu_ResetType Mcu_Arch_GetResetReason( Mcu_HwUnit *HwUnit )
 {
@@ -118,6 +130,8 @@ Mcu_ResetType Mcu_Arch_GetResetReason( Mcu_HwUnit *HwUnit )
  * @param   HwUnit Pointer to the hardware unit configuration
  *
  * @retval  Mcu_RawResetType: Reset raw value
+ *
+ * @reqs    SWS_Mcu_00159
  */
 Mcu_RawResetType Mcu_Arch_GetResetRawValue( Mcu_HwUnit *HwUnit )
 {
@@ -131,6 +145,8 @@ Mcu_RawResetType Mcu_Arch_GetResetRawValue( Mcu_HwUnit *HwUnit )
  * Service to perform a microcontroller reset
  *
  * @param   HwUnit Pointer to the hardware unit configuration
+ *
+ * @reqs    SWS_Mcu_00160
  */
 void Mcu_Arch_PerformReset( Mcu_HwUnit *HwUnit )
 {
@@ -144,25 +160,13 @@ void Mcu_Arch_PerformReset( Mcu_HwUnit *HwUnit )
  *
  * @param   HwUnit Pointer to the hardware unit configuration
  * @param   McuMode  Set different MCU power modes configured in the configuration set
+ *
+ * @reqs    SWS_Mcu_00161
  */
 void Mcu_Arch_SetMode( Mcu_HwUnit *HwUnit, Mcu_ModeType McuMode )
 {
     (void)HwUnit;
     (void)McuMode;
-}
-
-/**
- * @brief    **Get version information Low Level **
- *
- * Service to return the version information of this module
- *
- * @param   HwUnit Pointer to the hardware unit configuration
- * @param   versioninfo  Pointer to where to store the version information of this module
- */
-void Mcu_Arch_GetVersionInfo( Mcu_HwUnit *HwUnit, Std_VersionInfoType *versioninfo )
-{
-    (void)HwUnit;
-    (void)versioninfo;
 }
 
 /**
@@ -173,6 +177,8 @@ void Mcu_Arch_GetVersionInfo( Mcu_HwUnit *HwUnit, Std_VersionInfoType *versionin
  * @param   HwUnit Pointer to the hardware unit configuration
  *
  * @retval  Mcu_RamStateType: Status of the RAM Content
+ *
+ * @reqs    SWS_Mcu_00207
  */
 Mcu_RamStateType Mcu_Arch_GetRamState( Mcu_HwUnit *HwUnit )
 {
