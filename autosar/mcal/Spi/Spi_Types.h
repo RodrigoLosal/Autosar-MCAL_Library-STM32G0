@@ -155,7 +155,6 @@ typedef struct _Spi_HwUnit
 {
     const Spi_ConfigType *Config; /*!< Pointer to the configuration structure */
     uint8 HwUnitState;            /*!< SPI hardware unit state */
-    Spi_StatusType SpiState;      /*!< SPI Handler/Driver states */
 } Spi_HwUnit;
 
 /**
