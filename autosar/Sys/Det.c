@@ -12,6 +12,13 @@
 #include "Pwm.h"
 #include "Fls.h"
 #include "Port.h"
+#include "Spi.h"
+#include "Gpt.h"
+#include "Can.h"
+#include "Adc.h"
+#include "Nvic.h"
+#include "Mcu.h"
+#include "Dio.h"
 
 /**
  * @brief    **Det Initialization**
@@ -67,9 +74,10 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     [ADC_INSTANCE_ID]  = "ADC_INSTANCE_ID",
     [NVIC_INSTANCE_ID] = "NVIC_INSTANCE_ID",
     [MCU_INSTANCE_ID]  = "MCU_INSTANCE_ID",
+    [DIO_INSTANCE_ID]  = "DIO_INSTANCE_ID",
     };
 
-    /* cppcheck-suppress misra-c2012-9.5 ; Currently in develop  */
+    /* cppcheck-suppress misra-c2012-9.5 ; Currently in development*/
     static const char *ApiName[] = {
     /*Det Api*/
     [DET_ID_INIT]                   = "DET_ID_INIT",
@@ -140,9 +148,19 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     [FLS_ID_SETMODE]        = "FLS_ID_SETMODE",
     [FLS_ID_GETVERSIONINFO] = "FLS_ID_GETVERSIONINFO",
     [FLS_ID_BLANKCHECK]     = "FLS_ID_BLANKCHECK",
+    /*Dio Api*/
+    [DIO_ID_READ_CHANNEL]      = "DIO_ID_READ_CHANNEL",
+    [DIO_ID_WRITE_CHANNEL]     = "DIO_ID_WRITE_CHANNEL",
+    [DIO_ID_READ_PORT]         = "DIO_ID_READ_PORT",
+    [DIO_ID_WRITE_PORT]        = "DIO_ID_WRITE_PORT",
+    [DIO_ID_READ_CHANNEL_GRP]  = "DIO_ID_READ_CHANNEL_GRP",
+    [DIO_ID_WRITE_CHANNEL_GRP] = "DIO_ID_WRITE_CHANNEL_GRP",
+    [DIO_ID_GET_VERSION_INFO]  = "DIO_ID_GET_VERSION_INFO",
+    [DIO_ID_FLIP_CHANNEL]      = "DIO_ID_FLIP_CHANNEL",
+    [DIO_ID_MASKED_WRITE_PORT] = "DIO_ID_MASKED_WRITE_PORT",
     };
 
-    /* cppcheck-suppress misra-c2012-9.5 ; Currently in develop  */
+    /* cppcheck-suppress misra-c2012-9.5 ; Currently in development*/
     static const char *ErrorName[] = {
     /*Det Error*/
     [DET_E_PARAM_POINTER] = "DET_E_PARAM_POINTER",
@@ -196,9 +214,14 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     [FLS_E_UNINIT]              = "FLS_E_UNINIT",
     [FLS_E_PARAM_POINTER]       = "FLS_E_PARAM_POINTER",
     [FLS_E_ALREADY_INITIALIZED] = "FLS_E_ALREADY_INITIALIZED",
+    /*Dio Error*/
+    [DIO_E_PARAM_INVALID_CHANNEL_ID] = "DIO_E_PARAM_INVALID_CHANNEL_ID",
+    [DIO_E_PARAM_INVALID_PORT_ID]    = "DIO_E_PARAM_INVALID_PORT_ID",
+    [DIO_E_PARAM_INVALID_GROUP]      = "DIO_E_PARAM_INVALID_GROUP",
+    [DIO_E_PARAM_POINTER]            = "DIO_E_PARAM_POINTER",
     };
 
-    DetError ReportError; // PORT/DIO/CAN/GPT
+    DetError ReportError; // PORT//GPT//PWM
 
     ReportError.Module   = ModuleName[ ModuleId ];
     ReportError.Instance = InstanceName[ InstanceId ];
