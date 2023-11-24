@@ -58,6 +58,7 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
 {
     static const char *ModuleName[] = {
     [SPI_MODULE_ID]  = "SPI_MODULE_ID",
+    [PWM_MODULE_ID]  = "PWM_MODULE_ID",
     [GPT_MODULE_ID]  = "GPT_MODULE_ID",
     [DET_MODULE_ID]  = "DET_MODULE_ID",
     [CAN_MODULE_ID]  = "CAN_MODULE_ID",
@@ -65,16 +66,22 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     [NVIC_MODULE_ID] = "NVIC_MODULE_ID",
     [MCU_MODULE_ID]  = "MCU_MODULE_ID",
     [DIO_MODULE_ID]  = "DIO_MODULE_ID",
+    [PORT_MODULE_ID] = "PORT_MODULE_ID",
+    //[FLS_MODULE_ID]  = "FLS_MODULE_ID",
     };
 
     static const char *InstanceName[] = {
-    [SPI_INSTANCE_ID]  = "SPI_INSTANCE_ID",
+    [SPI_INSTANCE_ID] = "SPI_INSTANCE_ID",
+    [PWM_INSTANCE_ID] = "PWM_INSTANCE_ID",
+    //[GPT_INSTANCE_ID]  = "GPT_INSTANCE_ID",
     [DET_INSTANCE_ID]  = "DET_INSTANCE_ID",
     [CAN_INSTANCE_ID]  = "CAN_INSTANCE_ID",
     [ADC_INSTANCE_ID]  = "ADC_INSTANCE_ID",
     [NVIC_INSTANCE_ID] = "NVIC_INSTANCE_ID",
     [MCU_INSTANCE_ID]  = "MCU_INSTANCE_ID",
     [DIO_INSTANCE_ID]  = "DIO_INSTANCE_ID",
+    [PORT_INSTANCE_ID] = "PORT_INSTANCE_ID",
+    //[FLS_INSTANCE_ID]  = "FLS_INSTANCE_ID"
     };
 
     /* cppcheck-suppress misra-c2012-9.5 ; Currently in development*/
@@ -101,6 +108,29 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     [SPI_ID_GET_HWUNIT_STATUS]   = "SPI_ID_GET_HWUNIT_STATUS",
     [SPI_ID_CANCEL]              = "SPI_ID_CANCEL",
     [SPI_ID_SET_ASYNC_MODE]      = "SPI_ID_SET_ASYNC_MODE",
+    /*Can Api*/
+    [CAN_ID_INIT]                = "CAN_ID_INIT",
+    [CAN_ID_DE_INIT]             = "CAN_ID_DE_INIT",
+    [CAN_ID_SET_BAUDRATE]        = "CAN_ID_SET_BAUDRATE",
+    [CAN_ID_SET_CTRL_MODE]       = "CAN_ID_SET_CTRL_MODE",
+    [CAN_ID_DISABLE_CTRL_INT]    = "CAN_ID_DISABLE_CTRL_INT",
+    [CAN_ID_ENABLE_CTRL_INT]     = "CAN_ID_ENABLE_CTRL_INT",
+    [CAN_ID_CHECK_WAKEUP]        = "CAN_ID_CHECK_WAKEUP",
+    [CAN_ID_GET_CTRL_MODE]       = "CAN_ID_GET_CTRL_MODE",
+    [CAN_ID_GET_CTRL_ERR_STATE]  = "CAN_ID_GET_CTRL_ERR_STATE",
+    [CAN_ID_GET_CTRL_RX_ERR_CNT] = "CAN_ID_GET_CTRL_RX_ERR_CNT",
+    [CAN_ID_GET_CTRL_TX_ERR_CNT] = "CAN_ID_GET_CTRL_TX_ERR_CNT",
+    [CAN_ID_WRITE]               = "CAN_ID_WRITE",
+    [CAN_ID_MF_WRITE]            = "CAN_ID_MF_WRITE",
+    [CAN_ID_MF_READ]             = "CAN_ID_MF_READ",
+    [CAN_ID_MF_BUSOFF]           = "CAN_ID_MF_BUSOFF",
+    [CAN_ID_MF_WAKEUP]           = "CAN_ID_MF_WAKEUP",
+    [CAN_ID_MF_MODE]             = "CAN_ID_MF_MODE",
+    [CAN_ID_GET_VERSION_INFO]    = "CAN_ID_GET_VERSION_INFO",
+    [CAN_ID_GET_CURRENT_TIME]    = "CAN_ID_GET_CURRENT_TIME",
+    [CAN_ID_ENABLE_EGRESS_TS]    = "CAN_ID_ENABLE_EGRESS_TS",
+    [CAN_ID_GET_EGRESS_TS]       = "CAN_ID_GET_EGRESS_TS",
+    [CAN_ID_GET_INGRESS_TS]      = "CAN_ID_GET_INGRESS_TS",
     /*Nvic Api*/
     [NVIC_ID_SET_PRIORITY]      = "NVIC_ID_SET_PRIORITY",
     [NVIC_ID_GET_PRIORITY]      = "NVIC_ID_GET_PRIORITY",
@@ -124,7 +154,23 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     [PWM_ID_GET_TARGET_POWER_STATE]  = "PWM_ID_GET_TARGET_POWER_STATE",
     [PWM_ID_PREPARE_POWER_STATE]     = "PWM_ID_PREPARE_POWER_STATE",
     [PWM_ID_GET_VERSION_INFO]        = "PWM_ID_GET_VERSION_INFO",
-    /*MCU Api*/
+    /*Port Api*/
+    [PORT_ID_INIT]                   = "PORT_ID_INIT",
+    [PORT_ID_SET_PIN_DIRECTION]      = "PORT_ID_SET_PIN_DIRECTION",
+    [PORT_ID_SET_PIN_MODE]           = "PORT_ID_SET_PIN_MODE",
+    [PORT_ID_GET_VERSION_INFO]       = "PORT_ID_GET_VERSION_INFO",
+    [PORT_ID_REFRESH_PORT_DIRECTION] = "PORT_ID_REFRESH_PORT_DIRECTION",
+    /*Gpt Api*/
+    [GPT_ID_GET_VERSION_INFO]     = "GPT_ID_GET_VERSION_INFO",
+    [GPT_ID_INIT]                 = "GPT_ID_INIT",
+    [GPT_ID_DEINIT]               = "GPT_ID_DEINIT",
+    [GPT_ID_GET_TIME_ELAPSED]     = "GPT_ID_GET_TIME_ELAPSED",
+    [GPT_ID_GET_TIME_REMAINING]   = "GPT_ID_GET_TIME_REMAINING",
+    [GPT_ID_START_TIMER]          = "GPT_ID_START_TIMER",
+    [GPT_ID_STOP_TIMER]           = "GPT_ID_STOP_TIMER",
+    [GPT_ID_ENABLE_NOTIFICATION]  = "GPT_ID_ENABLE_NOTIFICATION",
+    [GPT_ID_DISABLE_NOTIFICATION] = "GPT_ID_DISABLE_NOTIFICATION",
+    /*Mcu Api*/
     [MCU_ID_INIT]                 = "MCU_ID_INIT",
     [MCU_ID_INIT_RAM]             = "MCU_ID_INIT_RAM",
     [MCU_ID_INIT_CLOCK]           = "MCU_ID_INIT_CLOCK",
@@ -158,10 +204,30 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     [DIO_ID_GET_VERSION_INFO]  = "DIO_ID_GET_VERSION_INFO",
     [DIO_ID_FLIP_CHANNEL]      = "DIO_ID_FLIP_CHANNEL",
     [DIO_ID_MASKED_WRITE_PORT] = "DIO_ID_MASKED_WRITE_PORT",
+    /*Adc Api*/
+    [ADC_ID_INIT]                       = "ADC_ID_INIT",
+    [ADC_RESULT_BUFFER]                 = "ADC_RESULT_BUFFER",
+    [ADC_ID_DE_INIT]                    = "ADC_ID_DE_INIT",
+    [ADC_START_GROUP_CONVERSION]        = "ADC_START_GROUP_CONVERSION",
+    [ADC_STOP_GROUP_CONVERSION]         = "ADC_STOP_GROUP_CONVERSION",
+    [ADC_READ_GROUP]                    = "ADC_READ_GROUP",
+    [ADC_ENABLE_HARDWARE_TRIGGER]       = "ADC_ENABLE_HARDWARE_TRIGGER",
+    [ADC_DISABLE_HARDWARE_TRIGGER]      = "ADC_DISABLE_HARDWARE_TRIGGER",
+    [ADC_ENABLE_GROUP_NOTIFICATION]     = "ADC_ENABLE_GROUP_NOTIFICATION",
+    [ADC_DISABLE_GROUP_NOTIFICATION]    = "ADC_DISABLE_GROUP_NOTIFICATION",
+    [ADC_GET_GROUP_STATUS]              = "ADC_GET_GROUP_STATUS",
+    [ADC_GET_STREAM_LAST_POINTER]       = "ADC_GET_STREAM_LAST_POINTER",
+    [ADC_GET_VERSION_INFO]              = "ADC_GET_VERSION_INFO",
+    [ADC_SET_POWER_STATE]               = "ADC_SET_POWER_STATE",
+    [ADC_GET_CURRENT_POWER_STATE]       = "ADC_GET_CURRENT_POWER_STATE",
+    [ADC_GET_TARGET_POWER_STATE]        = "ADC_GET_TARGET_POWER_STATE",
+    [ADC_PREPARE_POWER_STATE]           = "ADC_PREPARE_POWER_STATE",
+    [ADC_MAIN_POWER_TRANSITION_MANAGER] = "ADC_MAIN_POWER_TRANSITION_MANAGER",
     };
 
     /* cppcheck-suppress misra-c2012-9.5 ; Currently in development*/
     static const char *ErrorName[] = {
+    // Missing Gpt Errors
     /*Det Error*/
     [DET_E_PARAM_POINTER] = "DET_E_PARAM_POINTER",
     /*Spi Error*/
@@ -173,6 +239,16 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     [SPI_E_PARAM_POINTER]       = "SPI_E_PARAM_POINTER",
     [SPI_E_UNINIT]              = "SPI_E_UNINIT",
     [SPI_E_ALREADY_INITIALIZED] = "SPI_E_ALREADY_INITIALIZED",
+    /*Can Error*/
+    [CAN_E_PARAM_POINTER]     = "CAN_E_PARAM_POINTER",
+    [CAN_E_PARAM_HANDLE]      = "CAN_E_PARAM_HANDLE",
+    [CAN_E_PARAM_DATA_LENGTH] = "CAN_E_PARAM_DATA_LENGTH",
+    [CAN_E_PARAM_CONTROLLER]  = "CAN_E_PARAM_CONTROLLER",
+    [CAN_E_UNINIT]            = "CAN_E_UNINIT",
+    [CAN_E_TRANSITION]        = "CAN_E_TRANSITION",
+    [CAN_E_PARAM_BAUDRATE]    = "CAN_E_PARAM_BAUDRATE",
+    [CAN_E_INIT_FAILED]       = "CAN_E_INIT_FAILED",
+    [CAN_E_PARAM_LPDU]        = "CAN_E_PARAM_LPDU",
     /*Nvic Error*/
     [NVIC_E_PARAM_IRQ]       = "NVIC_E_PARAM_IRQ",
     [NVIC_E_PARAM_PRIORITY]  = "NVIC_E_PARAM_PRIORITY",
@@ -219,6 +295,21 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     [DIO_E_PARAM_INVALID_PORT_ID]    = "DIO_E_PARAM_INVALID_PORT_ID",
     [DIO_E_PARAM_INVALID_GROUP]      = "DIO_E_PARAM_INVALID_GROUP",
     [DIO_E_PARAM_POINTER]            = "DIO_E_PARAM_POINTER",
+    /*Adc Error*/
+    [ADC_E_UNINIT]                    = "ADC_E_UNINIT",
+    [ADC_E_ALREADY_INITIALIZED]       = "ADC_E_ALREADY_INITIALIZED",
+    [ADC_E_PARAM_POINTER]             = "ADC_E_PARAM_POINTER",
+    [ADC_E_PARAM_GROUP]               = "ADC_E_PARAM_GROUP",
+    [ADC_E_WRONG_CONV_MODE]           = "ADC_E_WRONG_CONV_MODE",
+    [ADC_E_WRONG_TRIGG_SRC]           = "ADC_E_WRONG_TRIGG_SRC",
+    [ADC_E_NOTIF_CAPABILITY]          = "ADC_E_NOTIF_CAPABILITY",
+    [ADE_E_BUFFER_UNINIT]             = "ADE_E_BUFFER_UNINIT",
+    [ADE_E_POWER_STATE_NOT_SUPPORTED] = "ADE_E_POWER_STATE_NOT_SUPPORTED",
+    [ADC_E_PERIPHERAL_NOT_PREPARED]   = "ADC_E_PERIPHERAL_NOT_PREPARED",
+    [ADC_E_BUSY]                      = "ADC_E_BUSY",
+    [ADC_E_IDLE]                      = "ADC_E_IDLE",
+    [ADC_E_NOT_DISENGAGED]            = "ADC_E_NOT_DISENGAGED",
+    [ADC_E_TRANSITION_NOT_POSSIBLE]   = "ADC_E_TRANSITION_NOT_POSSIBLE",
     };
 
     DetError ReportError;
@@ -228,9 +319,9 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     ReportError.Api      = ApiName[ ApiId ];
     ReportError.Error    = ErrorName[ ErrorId ];
 
-    (void)printf( "ERROR %s in: %s Module with the function %s detected in %s\n" , ReportError.Error,ReportError.Module
-                  ,ReportError.Instance,ReportError.Api);
-                  
+    (void)printf( "ERROR %s in: %s Module with the function %s detected in %s\n",
+                  ReportError.Error, ReportError.Module, ReportError.Instance, ReportError.Api );
+
     return E_OK;
 }
 
