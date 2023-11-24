@@ -67,8 +67,6 @@ const Can_ControllerBaudrateConfig ArchBaudrates[ CANARCH_NUMBER_OF_BAUDRATES ] 
 {
     {
         .BaudRateConfigID = CANARCH_BAUDRATE_100k_CLASSIC,
-        .BaudRate         = 100000,
-        .PropSeg          = 16,
         .Seg1             = 13,
         .Seg2             = 2,
         .SyncJumpWidth    = 1,
@@ -77,13 +75,10 @@ const Can_ControllerBaudrateConfig ArchBaudrates[ CANARCH_NUMBER_OF_BAUDRATES ] 
     },
     {
         .BaudRateConfigID = CANARCH_BAUDRATE_100k_FD,
-        .BaudRate         = 100000,
-        .PropSeg          = 16,
         .Seg1             = 13,
         .Seg2             = 2,
         .SyncJumpWidth    = 1,
         .Prescaler        = 4,
-        .FdPropSeg      = 16,
         .FdSeg1         = 13,
         .FdSeg2         = 2,
         .FdSyncJumpWidth = 1,
@@ -194,7 +189,6 @@ const Can_HardwareObject ArchHohs[ CANARCH_NUMBER_OF_HOHS ] =
     {
         .CanObjectId = CANARCH_HTH_0_CTRL_0,
         .HandleType = CAN_FULL,
-        .HwObjectCount = 3u,
         .IdType = CAN_ID_STANDARD,
         .ObjectPayloadLength = 8u,
         .ObjectType = CAN_HOH_TYPE_TRANSMIT,
@@ -203,7 +197,6 @@ const Can_HardwareObject ArchHohs[ CANARCH_NUMBER_OF_HOHS ] =
     {
         .CanObjectId = CANARCH_HRH_0_CTRL_0,
         .HandleType = CAN_FULL,
-        .HwObjectCount = 3u,
         .IdType = CAN_ID_STANDARD,
         .ObjectPayloadLength = 8u, 
         .ObjectType = CAN_HOH_TYPE_RECEIVE,
@@ -214,7 +207,6 @@ const Can_HardwareObject ArchHohs[ CANARCH_NUMBER_OF_HOHS ] =
     {
         .CanObjectId = CANARCH_HRH_1_CTRL_0,
         .HandleType = CAN_FULL,
-        .HwObjectCount = 3u,
         .IdType = CAN_ID_STANDARD,
         .ObjectPayloadLength = 8u,
         .ObjectType = CAN_HOH_TYPE_RECEIVE,
