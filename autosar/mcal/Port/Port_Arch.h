@@ -1,6 +1,6 @@
 /**
  * @file    Port_Arch.h
- * @brief   **  **
+ * @brief   **Port Specific Arquitecture Driver**
  * @author  Enrique Ortega
  *
  * PORT driver implementation for the STM32G0xx family of microcontrollers. This file contains the
@@ -27,6 +27,16 @@
 #define PORTS_F               5u /*!< Port F value */
 /**
  * @} */
+
+/**
+ * @defgroup get_bits  macros to extract certaing number of bits from a variable
+ *
+ * @{*/
+#define GET_LOW_NIBBLE( x )   ( (x)&0xFu )    /*!< get the less significant bits */
+#define GET_HIGH_NIBBLE( x )  ( ( x ) >> 4u ) /*!< get the four most significant nibble */
+#define GET_HIGH_BYTE( x )    ( ( x ) >> 8u ) /*!< get hte MSB from and 16 bit variable */
+/**
+ * @}*/
 
 /**
  * @defgroup    PORTS_pins Pins values

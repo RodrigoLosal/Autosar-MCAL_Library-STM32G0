@@ -1,26 +1,16 @@
 /**
  * @file    Port_Types.h
- * @brief   **  **
- * @author  Enrique Ortega
+ * @brief   **PORT Driver Types**
+ * @author  Diego Perez, Enrique Ortega
  *
- * This PORT driver module control the overall configuration and initialization of the port structure
- * which is used in the DIO driver module. Therefore, the DIO driver works on pins and ports which are
- * configured by the PORT driver.
+ * The header contains the type definitions that are used by the PORT module. The file is implemnted
+ * as a means of abstraction from the hardware, this way we can avoid to include Arch headers in
+ * the actual driver header, making the low level interfaces available for upper layers.
  */
 #ifndef PORT_TYPES_H__
 #define PORT_TYPES_H__
 
 #include "Std_Types.h"
-
-/**
- * @defgroup get_bits  macros to extract certaing number of bits from a variable
- *
- * @{*/
-#define GET_LOW_NIBBLE( x )            ( (x)&0xFu )    /*!< get the less significant bits */
-#define GET_HIGH_NIBBLE( x )           ( ( x ) >> 4u ) /*!< get the four most significant nibble */
-#define GET_HIGH_BYTE( x )             ( ( x ) >> 8u ) /*!< get hte MSB from and 16 bit variable */
-/**
- * @}*/
 
 /**
  * @defgroup PORT_errors Driver erros

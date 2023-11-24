@@ -1,6 +1,6 @@
 /**
  * @file    Port_Arch.c
- * @brief   **Port **
+ * @brief   **Port Specific Arquitecture Driver**
  * @author  Enrique Ortega
  *
  * PORT driver implementation for the STM32G0xx family of microcontrollers. This file contains the
