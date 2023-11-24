@@ -33,11 +33,6 @@
  * @}*/
 
 /**
- * @brief  Variable for the initial value of the port configuration array.
- */
-static const Port_ConfigType *LocalConfigPtr = NULL_PTR;
-
-/**
  * @brief Global port register array
  */
 /* clang-format off */
@@ -48,8 +43,6 @@ static Port_RegisterType *Port_Ports[ MAX_PORT_NUMBER ] = { PORTA, PORTB, PORTC,
  * @brief Initialize the GPIO pins to the configuration store on ConfigPTR.
  *
  * This function changes the values of the registers depending on the ConfigPtr values.
- * In addition this function initializes all pins and ports of the ConfigPtr array, the
- * length of the array is given by PORT_PIN_NUMBER_OF_PORTS.
  *
  * @param ConfigPtr       Pointer to ConfigPtr struct array.
  *
@@ -89,8 +82,6 @@ void Port_Arch_Init( const Port_ConfigType *ConfigPtr )
             }
         }
     }
-    /*make the port configuration accesible for other functions*/
-    LocalConfigPtr = ConfigPtr;
 }
 
 /**
@@ -103,7 +94,7 @@ void Port_Arch_Init( const Port_ConfigType *ConfigPtr )
  *
  * @reqs   SWS_Port_00141
  */
-void Port_Arch_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
+void Port_Arch_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction, const Port_ConfigType *LocalConfigPtr )
 {
     Port_RegisterType *PortReg = Port_Ports[ LocalConfigPtr[ GET_HIGH_BYTE( Pin ) ].Port ];
 
@@ -120,7 +111,7 @@ void Port_Arch_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Directio
  *
  * @reqs   SWS_Port_00145
  */
-void Port_Arch_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
+void Port_Arch_SetPinMode( Port_PinType Pin, Port_PinModeType Mode, const Port_ConfigType *LocalConfigPtr )
 {
     Port_RegisterType *PortReg = Port_Ports[ LocalConfigPtr[ GET_HIGH_BYTE( Pin ) ].Port ];
 
@@ -147,7 +138,7 @@ void Port_Arch_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
  *
  * @reqs   SWS_Port_00142
  */
-void Port_Arch_RefreshPortDirection( void )
+void Port_Arch_RefreshPortDirection( const Port_ConfigType *LocalConfigPtr )
 {
     Port_RegisterType *PortReg;
 

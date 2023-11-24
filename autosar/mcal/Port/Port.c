@@ -105,7 +105,7 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
     }
     else
     {
-        Port_Arch_SetPinDirection( Pin, Direction );
+        Port_Arch_SetPinDirection( Pin, Direction, Port_ConfigPtr );
     }
 }
 #endif
@@ -156,7 +156,7 @@ void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
     }
     else
     {
-        Port_Arch_SetPinMode( Pin, Mode );
+        Port_Arch_SetPinMode( Pin, Mode, Port_ConfigPtr );
     }
 }
 #endif
@@ -212,6 +212,6 @@ void Port_RefreshPortDirection( void )
     }
     else
     {
-        Port_Arch_RefreshPortDirection( );
+        Port_Arch_RefreshPortDirection( Port_ConfigPtr );
     }
 }

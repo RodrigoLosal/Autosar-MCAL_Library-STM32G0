@@ -166,8 +166,8 @@
  * @}*/
 
 void Port_Arch_Init( const Port_ConfigType *ConfigPtr );
-void Port_Arch_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction );
-void Port_Arch_SetPinMode( Port_PinType Pin, Port_PinModeType Mode );
-void Port_Arch_RefreshPortDirection( void );
+void Port_Arch_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction, const Port_ConfigType *LocalConfigPtr );
+void Port_Arch_SetPinMode( Port_PinType Pin, Port_PinModeType Mode, const Port_ConfigType *LocalConfigPtr );
+void Port_Arch_RefreshPortDirection( const Port_ConfigType *LocalConfigPtr );
 
 #endif /* PORT_ARCH_H__ */

@@ -13,6 +13,44 @@
 #include "Std_Types.h"
 
 /**
+ * @defgroup get_bits  macros to extract certaing number of bits from a variable
+ *
+ * @{*/
+#define GET_LOW_NIBBLE( x )            ( (x)&0xFu )    /*!< get the less significant bits */
+#define GET_HIGH_NIBBLE( x )           ( ( x ) >> 4u ) /*!< get the four most significant nibble */
+#define GET_HIGH_BYTE( x )             ( ( x ) >> 8u ) /*!< get hte MSB from and 16 bit variable */
+/**
+ * @}*/
+
+/**
+ * @defgroup PORT_errors Driver erros
+ *
+ * PORTS Driver Errors messages, this values are intended to use with DET functionality
+ *
+ * @{ */
+#define PORT_E_PARAM_PIN               0x0Au /*!< Invalid Port Pin ID requested        */
+#define PORT_E_DIRECTION_UNCHANGEABLE  0x0Bu /*!< Port Pin not configured as changeable */
+#define PORT_E_INIT_FAILED             0x0Cu /*!< Invalid configuration set            */
+#define PORT_E_PARAM_INVALID_MODE      0x0Du /*!< Invalid Port Pin mode specified      */
+#define PORT_E_MODE_UNCHANGEABLE       0x0Eu /*!< Port Pin mode is not configurable    */
+#define PORT_E_UNINIT                  0x0Fu /*!< Port driver not initialized          */
+#define PORT_E_PARAM_POINTER           0x10u /*!< Invalid Port Pin ID requested        */
+/**
+ * @} */
+
+/**
+ * @defgroup PORT_Ids Can Id number for module and each API
+ *
+ * @{ */
+#define PORT_ID_INIT                   0x00u /*!< Port_Init() api service id */
+#define PORT_ID_SET_PIN_DIRECTION      0x10u /*!< Port_SetPinDirection() api service id */
+#define PORT_ID_SET_PIN_MODE           0x0fu /*!< Port_SetPinMode() api service id */
+#define PORT_ID_GET_VERSION_INFO       0x03u /*!< Port_GetVersionInfo() api service id */
+#define PORT_ID_REFRESH_PORT_DIRECTION 0x04u /*!< Port_RefreshPortDirection() api service id */
+/**
+ * @} */
+
+/**
  * @brief **Definition of the external data structure containing the initialization data**
  *
  * The Port_PortsConfigType data structure holds the initialization information for each port available
@@ -64,43 +102,5 @@ typedef uint8 Port_PinDirectionType; /*!< Data type for the symbolic direction o
  * @reqs   SWS_Port_00231
  */
 typedef uint8 Port_PinModeType; /*!< Data type for the symbolic mode of a pin.*/
-
-/**
- * @defgroup get_bits  macros to extract certaing number of bits from a variable
- *
- * @{*/
-#define GET_LOW_NIBBLE( x )            ( (x)&0xFu )    /*!< get the less significant bits */
-#define GET_HIGH_NIBBLE( x )           ( ( x ) >> 4u ) /*!< get the four most significant nibble */
-#define GET_HIGH_BYTE( x )             ( ( x ) >> 8u ) /*!< get hte MSB from and 16 bit variable */
-/**
- * @}*/
-
-/**
- * @defgroup PORT_errors Driver erros
- *
- * PORTS Driver Errors messages, this values are intended to use with DET functionality
- *
- * @{ */
-#define PORT_E_PARAM_PIN               0x0Au /*!< Invalid Port Pin ID requested        */
-#define PORT_E_DIRECTION_UNCHANGEABLE  0x0Bu /*!< Port Pin not configured as changeable */
-#define PORT_E_INIT_FAILED             0x0Cu /*!< Invalid configuration set            */
-#define PORT_E_PARAM_INVALID_MODE      0x0Du /*!< Invalid Port Pin mode specified      */
-#define PORT_E_MODE_UNCHANGEABLE       0x0Eu /*!< Port Pin mode is not configurable    */
-#define PORT_E_UNINIT                  0x0Fu /*!< Port driver not initialized          */
-#define PORT_E_PARAM_POINTER           0x10u /*!< Invalid Port Pin ID requested        */
-/**
- * @} */
-
-/**
- * @defgroup PORT_Ids Can Id number for module and each API
- *
- * @{ */
-#define PORT_ID_INIT                   0x00u /*!< Port_Init() api service id */
-#define PORT_ID_SET_PIN_DIRECTION      0x10u /*!< Port_SetPinDirection() api service id */
-#define PORT_ID_SET_PIN_MODE           0x0fu /*!< Port_SetPinMode() api service id */
-#define PORT_ID_GET_VERSION_INFO       0x03u /*!< Port_GetVersionInfo() api service id */
-#define PORT_ID_REFRESH_PORT_DIRECTION 0x04u /*!< Port_RefreshPortDirection() api service id */
-/**
- * @} */
 
 #endif /* PORT_TYPES_H__ */
