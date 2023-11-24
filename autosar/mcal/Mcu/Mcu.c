@@ -30,7 +30,8 @@
  * @brief  Variable for the initial value of the port configuration array.
  */
 /* clang-format off */
-static Mcu_HwUnit HwUnit_Mcu =
+/* cppcheck-suppress misra-c2012-8.4 ; qualifier is declared at Mcu.h */
+MCU_STATIC Mcu_HwUnit HwUnit_Mcu =
 {
     .HwUnitState = MCU_STATE_UNINIT,
     .Config      = NULL_PTR
@@ -85,6 +86,7 @@ Std_ReturnType Mcu_InitRamSection( Mcu_RamSectionType RamSection )
     return ReturnValue;
 }
 
+#if MCU_INIT_CLOCK == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief    **MCU Clock Initialization**
  *
@@ -115,7 +117,9 @@ Std_ReturnType Mcu_InitClock( Mcu_ClockType ClockSetting )
 
     return ReturnValue;
 }
+#endif
 
+#if MCU_NO_PLL == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief    **PLL to MCU Clock distribution**
  *
@@ -151,6 +155,7 @@ Std_ReturnType Mcu_DistributePllClock( void )
 
     return ReturnValue;
 }
+#endif
 
 /**
  * @brief    **Get PLL lock status**
@@ -164,7 +169,7 @@ Std_ReturnType Mcu_DistributePllClock( void )
  */
 Mcu_PllStatusType Mcu_GetPllStatus( void )
 {
-    Std_ReturnType ReturnValue = E_NOT_OK;
+    Mcu_PllStatusType ReturnValue = MCU_PLL_UNLOCKED;
 
     if( HwUnit_Mcu.HwUnitState == MCU_STATE_UNINIT )
     {
@@ -193,7 +198,7 @@ Mcu_PllStatusType Mcu_GetPllStatus( void )
  */
 Mcu_ResetType Mcu_GetResetReason( void )
 {
-    Std_ReturnType ReturnValue = E_NOT_OK;
+    Mcu_ResetType ReturnValue = MCU_RESET_UNDEFINED;
 
     if( HwUnit_Mcu.HwUnitState == MCU_STATE_UNINIT )
     {
@@ -238,6 +243,7 @@ Mcu_RawResetType Mcu_GetResetRawValue( void )
     return ReturnValue;
 }
 
+#if MCU_PERFORM_RESET_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief    **Reset the MCU**
  *
@@ -259,6 +265,7 @@ void Mcu_PerformReset( void )
         Mcu_Arch_PerformReset( &HwUnit_Mcu );
     }
 }
+#endif
 
 /**
  * @brief    **Set MCU power mode**
@@ -284,6 +291,7 @@ void Mcu_SetMode( Mcu_ModeType McuMode )
     }
 }
 
+#if MCU_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief    **Get version information**
  *
@@ -311,7 +319,9 @@ void Mcu_GetVersionInfo( Std_VersionInfoType *versioninfo )
         versioninfo->sw_patch_version = MCU_SW_PATCH_VERSION;
     }
 }
+#endif
 
+#if MCU_GET_RAM_STATE_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief    **Get status of MCU RAM**
  *
@@ -320,11 +330,10 @@ void Mcu_GetVersionInfo( Std_VersionInfoType *versioninfo )
  * @retval  Mcu_RamStateType: Status of the RAM Content
  *
  * @reqs    SWS_Mcu_00207, SWS_Mcu_00017, SWS_Mcu_00125
- * @reqs    SWS_Mcu_00207, SWS_Mcu_00017, SWS_Mcu_00125
  */
 Mcu_RamStateType Mcu_GetRamState( void )
 {
-    Std_ReturnType ReturnValue = E_NOT_OK;
+    Mcu_RamStateType ReturnValue = MCU_RAMSTATE_INVALID;
 
     if( HwUnit_Mcu.HwUnitState == MCU_STATE_UNINIT )
     {
@@ -340,3 +349,4 @@ Mcu_RamStateType Mcu_GetRamState( void )
 
     return ReturnValue;
 }
+#endif

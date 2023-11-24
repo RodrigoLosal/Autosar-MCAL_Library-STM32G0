@@ -11,6 +11,44 @@
 
 #include "Registers.h"
 
+
+/**
+ * @defgroup PWM_Ids Pwm Id number for module and each API
+ *
+ * @{ */
+#define PWM_ID_INIT                     0x00u /*!< Pwm_Init() api service id */
+#define PWM_ID_DE_INIT                  0x01u /*!< Pwm_DeInit() api service id */
+#define PWM_ID_SET_DUTY_CYCLE           0x02u /*!< Pwm_SetDutyCycle() api service id */
+#define PWM_ID_SET_PERIOD_AND_DUTY      0x03u /*!< Pwm_SetPeridoAndDuty() api service id */
+#define PWM_ID_SET_OUTPUT_TO_IDLE       0x04u /*!< Pwm_SetOutputToIdle() api service id */
+#define PWM_ID_GET_OUTPUT_STATE         0x05u /*!< Pwm_GetOutputState() api service id */
+#define PWM_ID_DISABLE_NOTIFICATION     0x06u /*!< Pwm_DisableNotification() api service id */
+#define PWM_ID_ENABLE_NOTIFICATION      0x07u /*!< Pwm_EnableNotification() api service id */
+#define PWM_ID_SET_POWER_STATE          0x09u /*!< Pwm_SetPowerState() api service id */
+#define PWM_ID_GET_CURRENT_POWER_STATE  0x0au /*!< Pwm_GetCurrentPowerState() api service id */
+#define PWM_ID_GET_TARGET_POWER_STATE   0x0bu /*!< Pwm_GetTargetPowerState() api service id */
+#define PWM_ID_PREPARE_POWER_STATE      0x0cu /*!< Pwm_PreparePowerState() api service id */
+#define PWM_ID_GET_VERSION_INFO         0x08u /*!< Pwm_GetVersionInfo() api service id */
+/**
+ * @} */
+
+/**
+ * @defgroup PWM_Error_Type Pwm Developtment Error Types
+ *
+ * @{ */
+#define PWM_E_INIT_FAILED               0x10u /*!< API Pwm_Init service called with wrong parameter */
+#define PWM_E_UNINIT                    0x11u /*!< API service used without module initialization */
+#define PWM_E_PARAM_CHANNEL             0x12u /*!< API service used with an invalid channel Identifier */
+#define PWM_E_PERIOD_UNCHANGEABLE       0x13u /*!< Usage of unauthorized PWM service on PWM channel configured a fixed period */
+#define PWM_E_ALREADY_INITIALIZED       0x14u /*!< API Pwm_Init service called while the PWM driver has already been initialised */
+#define PWM_E_PARAM_POINTER             0x15u /*!< API Pwm_GetVersionInfo is called with a NULL parameter. */
+#define PWM_E_POWER_STATE_NOT_SUPPORTED 0x17u /*!< The requested power state is not supported by the PWM module. */
+#define PWM_E_TRANSITION_NOT_POSSIBLE   0x18u /*!< The requested power state is not reachable from the current one. */
+#define PWM_E_PERIPHERAL_NOT_PREPARED   0x19u /*!< PWM_E_PERIPHERAL_NOT_PREPARED. */
+#define PWM_E_NOT_DISENGAGED            0x16u /*!< API Pwm_SetPowerState is called while the PWM module is still in use.*/
+/**
+ * @} */
+
 /**
  * @brief   Numeric identifier of a PWM channel.
  *
@@ -70,10 +108,10 @@ typedef enum _Pwm_PowerStateRequestResultType
 {
     PWM_SERVICE_ACCEPTED = 0x00, /*!< Power state change executed. */
     PWM_NOT_INIT,                /*!< PWM Module not initialized. */
-    PWM_SEQUENCE_ERROR,          /*!<Wrong API call sequence.*/
+    PWM_SEQUENCE_ERROR,          /*!< Wrong API call sequence.*/
     PWM_HW_FAILURE,              /*!< Hardware failure prevents state change.*/
     PWM_POWER_STATE_NOT_SUPP,    /*!< Power State not supported.  */
-    PWM_TRANS_NOT_POSSIBLE       /*!< Transition not possible or HW busy.*/
+    PWM_TRANS_NOT_POSSIBLE,      /*!< Transition not possible or HW busy.*/
 } Pwm_PowerStateRequestResultType;
 
 /**
@@ -100,6 +138,18 @@ typedef struct _Pwm_ConfigType
 } Pwm_ConfigType;
 
 /**
+ * @brief **PWM driver Status**
+ *
+ * This is the type of data structure containing the module state for the PWM driver.
+ *
+ */
+typedef enum
+{
+    PWM_STATE_UNINIT, /*!< Pwm State Uninitialized */
+    PWM_STATE_INIT    /*!< Pwm State Initialized */
+} Pwm_StatusType;
+
+/**
  * @brief **Hardware control unit structure**
  *
  * This structure contains the hardware unit configuration and the state of the hardware
@@ -107,7 +157,10 @@ typedef struct _Pwm_ConfigType
  */
 typedef struct _Pwm_HwUnit
 {
-    const Pwm_ConfigType *Config; /*!< Pointer to the configuration structure */
+    const Pwm_ConfigType *Config;          /*!< Pointer to the configuration structure */
+    Pwm_StatusType HwUnitState;            /*!< Pwm hardware unit state */
+    Pwm_ChannelClassType Pwm_ChannelClass; /*!< Pwm channel class*/
+    uint8 Pwm_channelNumber;               /*!< Pwm channel number */
 } Pwm_HwUnit;
 
 #endif /* PWM_TYPES_H__ */
