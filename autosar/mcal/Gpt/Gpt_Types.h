@@ -12,6 +12,24 @@
 #include "Registers.h"
 
 /**
+ * @defgroup GPT_Ids GPT Id number for module and each API service
+ *
+ * @{ */
+#define GPT_ID_                      0x00u /*!< Gpt_Init() api service id */
+#define GPT_ID_INIT                  0x01u /*!< Gpt_DeInit() api service id */
+#define GPT_ID_DEINIT                0x02u /*!< Gpt_GetTimeElapsed() api service id */
+#define GPT_ID_GET_TIME_REMAINING    0x03u /*!< Gpt_GetTimeRemaining() api service id */
+#define GPT_ID_START_TIMER           0x04u /*!< Gpt_StartTimer() api service id */
+#define GPT_ID_STOP_TIMER            0x05u /*!< Gpt_StopTimer() api service id */
+#define GPT_ID_GET_VERSION_INFO      0x06u /*!< Gpt_GetVersionInfo() api service id */
+#define GPT_ID_ENABLE_NOTIFICATION   0x07u /*!< Gpt_EnableNotification() api service id */
+#define GPT_ID_DISABLE_NOTIFICATION  0x08u /*!< Gpt_DisableNotification() api service id */
+#define GPT_ID_NOTIFICATION_CHANNEL0 0x09u /*!< Gpt_Notification_Channel0() api service id */
+#define GPT_ID_NOTIFICATION_CHANNEL1 0x0Au /*!< Gpt_Notification_Channel1() api service id */
+/**
+ * @} */
+
+/**
  * @brief **Config Elements of a GPT**
  *
  * @reqs   SWS_Gpt_00358
