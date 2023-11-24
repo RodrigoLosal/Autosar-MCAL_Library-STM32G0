@@ -91,6 +91,7 @@ void Port_Arch_Init( const Port_ConfigType *ConfigPtr )
  *
  * @param Pin             Pin to change the direction.
  * @param Direction       Direction to be changed.
+ * @param LocalConfigPtr            Pointer for the port configuration value.
  *
  * @reqs   SWS_Port_00141
  */
@@ -108,6 +109,7 @@ void Port_Arch_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Directio
  *
  * @param Pin             Pin to change the direction.
  * @param Mode            Mode to be changed.
+ * @param LocalConfigPtr            Pointer for the port configuration value.
  *
  * @reqs   SWS_Port_00145
  */
@@ -135,6 +137,8 @@ void Port_Arch_SetPinMode( Port_PinType Pin, Port_PinModeType Mode, const Port_C
  *
  * The function refreshes the registers values of the GPIOS moder during runtime to the initial values
  * only if they are configured as non changeables.
+ *
+ * @param LocalConfigPtr            Pointer for the port configuration value.
  *
  * @reqs   SWS_Port_00142
  */
