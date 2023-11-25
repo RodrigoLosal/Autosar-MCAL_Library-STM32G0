@@ -77,6 +77,7 @@ void setUp( void )
     CAN1->RXGFC  = 0x00000000,
     CAN1->IE     = 0x00000000,
     CAN1->ILS    = 0x00000000,
+    CAN1->ILE    = 0x00000000,
     CAN1->TXBTIE = 0x00000000,
     CAN1->TXBCIE = 0x00000000,
     CAN1->TXEFS  = 0x00000000,
@@ -398,6 +399,68 @@ void test__Can_Arch_SetControllerMode__invalid_state( void )
 {
     Can_Arch_SetControllerMode( &HwUnit, CAN_CONTROLLER_0, 0xFFu );
 }
+
+/**
+ * @brief   Test case for enable interrupts
+ * 
+ * This test case will check that the ILE register is set to the correct values when the function
+ * is called.
+*/
+void test__Can_Arch_EnableControllerInterrupts__enable_all_interrupts( void )
+{
+    HwUnit.DisableIntsLvl[ CAN_CONTROLLER_0 ] = 0;
+    Can_Arch_EnableControllerInterrupts( &HwUnit, CAN_CONTROLLER_0 );
+
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x00000003, CAN1->ILE, "Wrong IE value" );
+}
+
+/**
+ * @brief   Test case for decrease int level
+ * 
+ * This test case will check that the ILE register is not nmodified when the function
+ * is called but DisableIntsLvl is decreased.
+*/
+void test__Can_Arch_EnableControllerInterrupts__decrease_int_level( void )
+{
+    HwUnit.DisableIntsLvl[ CAN_CONTROLLER_0 ] = 3;
+    Can_Arch_EnableControllerInterrupts( &HwUnit, CAN_CONTROLLER_0 );
+
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x00000000, CAN1->ILE, "Wrong IE value" );
+    TEST_ASSERT_EQUAL_MESSAGE( 2, HwUnit.DisableIntsLvl[ CAN_CONTROLLER_0 ], "Wrong disable int level" );
+}
+
+/**
+ * @brief   Test case for disable interrupts
+ * 
+ * This test case will check that the ILE register is set to the correct values when the function
+ * is called.
+*/
+void test__Can_Arch_DisableControllerInterrupts__disable_all_interrupts( void )
+{
+    HwUnit.DisableIntsLvl[ CAN_CONTROLLER_0 ] = 10;
+    CAN1->ILE                                 = 0x00000003;
+    Can_Arch_DisableControllerInterrupts( &HwUnit, CAN_CONTROLLER_0 );
+
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x00000000, CAN1->ILE, "Wrong IE value" );
+    TEST_ASSERT_EQUAL_MESSAGE( 11, HwUnit.DisableIntsLvl[ CAN_CONTROLLER_0 ], "Wrong disable int level" );
+}
+
+/**
+ * @brief   Test case for increase int level
+ * 
+ * This test case will check that the ILE register is set to the correct values when the function
+ * is called.
+*/
+void test__Can_Arch_DisableControllerInterrupts__not_increase_int_level( void )
+{
+    HwUnit.DisableIntsLvl[ CAN_CONTROLLER_0 ] = 255;
+    CAN1->ILE                                 = 0x00000003;
+    Can_Arch_DisableControllerInterrupts( &HwUnit, CAN_CONTROLLER_0 );
+
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x00000000, CAN1->ILE, "Wrong IE value" );
+    TEST_ASSERT_EQUAL_MESSAGE( 255, HwUnit.DisableIntsLvl[ CAN_CONTROLLER_0 ], "Wrong disable int level" );
+}
+
 
 /**
  * @brief   Test case for getting error active
