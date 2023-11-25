@@ -93,7 +93,9 @@
  * @brief Specifies the number of controllers to mange by the driver when test Arch files.
  * @typedef EcucIntegerParamDef
  */
-#define CANARCH_NUMBER_OF_CONTROLLERS       5
+#define CANARCH_NUMBER_OF_CONTROLLERS       2
+
+#define CANARCH_INIT_NUMBER_OF_CONTROLLERS  5
 
 /**
  * @defgroup Controller_IDs Can controllers
@@ -104,6 +106,7 @@
  *
  * @{ */
 #define CANARCH_CONTROLLER_0                0 /*!< Controller zero */
+#define CANARCH_CONTROLLER_1                1 /*!< Controller one  */
 #define CANARCH_RESTRICTED_OPERATION        1 /*!< Controller one  */
 #define CANARCH_BUS_MONITORING              2 /*!< Controller one  */
 #define CANARCH_INTERNAL_LOOPBACK           3 /*!< Controller one  */
@@ -115,9 +118,10 @@
  * @brief Specifies the number of buadrate configuration for controller 0
  * @typedef EcucIntegerParamDef
  */
-#define CANARCH_NUMBER_OF_BAUDRATES         2
+#define CANARCH_NUMBER_OF_BAUDRATES         3
 #define CANARCH_BAUDRATE_100k_CLASSIC       0
 #define CANARCH_BAUDRATE_100k_FD            1
+#define CANARCH_BAUDRATE_500k_CLASSIC       2
 
 /**
  * @brief Specifies the number of hardware objects to mange by each controller.
@@ -173,5 +177,6 @@
 
 extern const Can_ConfigType CanConfig;
 extern const Can_ConfigType ArchCanConfig;
+extern const Can_ConfigType ArchCanInitConfig;
 
 #endif /* CAN_CFG_H__ */

@@ -84,13 +84,21 @@ const Can_ControllerBaudrateConfig ArchBaudrates[ CANARCH_NUMBER_OF_BAUDRATES ] 
         .FdSyncJumpWidth = 1,
         .FdPrescaler     = 4,
         .FdTxBitRateSwitch = STD_ON,
+    },
+    {
+        .BaudRateConfigID = CANARCH_BAUDRATE_500k_CLASSIC,
+        .Seg1             = 15,
+        .Seg2             = 4,
+        .SyncJumpWidth    = 2,
+        .Prescaler        = 10,
+        .FdTxBitRateSwitch = STD_OFF,
     }
 
 };
 /* clang-format on */
 
 /* clang-format off */
-const Can_Controller ArchControllers[ CANARCH_NUMBER_OF_CONTROLLERS ] =
+const Can_Controller ArchInitControllers[ CANARCH_INIT_NUMBER_OF_CONTROLLERS ] =
 {
     {
         .ControllerId         = CANARCH_CONTROLLER_0, 
@@ -166,6 +174,39 @@ const Can_Controller ArchControllers[ CANARCH_NUMBER_OF_CONTROLLERS ] =
 /* clang-format on */
 
 /* clang-format off */
+const Can_Controller ArchControllers[ CANARCH_NUMBER_OF_CONTROLLERS ] =
+{
+    {
+        .ControllerId         = CANARCH_CONTROLLER_0, 
+        .Mode                 = CAN_MODE_NORMAL,
+        .FrameFormat          = CAN_FRAME_CLASSIC,
+        .ClockDivider         = CAN_CLOCK_DIV10,
+        .AutoRetransmission   = STD_OFF,
+        .TransmitPause        = STD_ON,
+        .ProtocolException    = STD_OFF,
+        .TxFifoQueueMode      = CAN_TX_FIFO_OPERATION,
+        .BaudrateConfigsCount = CAN_NUMBER_OF_BAUDRATES_CTRL0,
+        .CanReference         = CAN_FDCAN1,
+        .BaudrateConfigs      = ArchBaudrates,
+        .DefaultBaudrate    = &ArchBaudrates[ CANARCH_BAUDRATE_100k_CLASSIC ]
+    },
+    {
+        .ControllerId         = CANARCH_CONTROLLER_1, 
+        .Mode                 = CAN_MODE_NORMAL,
+        .FrameFormat          = CAN_FRAME_CLASSIC,
+        .ClockDivider         = CAN_CLOCK_DIV10,
+        .AutoRetransmission   = STD_OFF,
+        .TransmitPause        = STD_ON,
+        .ProtocolException    = STD_OFF,
+        .TxFifoQueueMode      = CAN_TX_FIFO_OPERATION,
+        .BaudrateConfigsCount = CAN_NUMBER_OF_BAUDRATES_CTRL0,
+        .CanReference         = CAN_FDCAN2,
+        .BaudrateConfigs      = ArchBaudrates,
+        .DefaultBaudrate    = &ArchBaudrates[ CANARCH_BAUDRATE_100k_CLASSIC ]
+    }
+};
+
+/* clang-format off */
 const Can_HwFilter ArchHwFilter[] =
 {
     { 
@@ -219,6 +260,18 @@ const Can_HardwareObject ArchHohs[ CANARCH_NUMBER_OF_HOHS ] =
 };
 /* clang-format on */
 
+/**
+ * @brief Can driver configuration.
+ */
+/* clang-format off */
+const Can_ConfigType ArchCanInitConfig =
+{
+    .Controllers = ArchInitControllers,
+    .ControllersCount = CANARCH_INIT_NUMBER_OF_CONTROLLERS,
+    .Hohs         = ArchHohs,
+    .HohsCount = CANARCH_NUMBER_OF_HOHS 
+};
+/* clang-format on */
 
 /**
  * @brief Can driver configuration.
