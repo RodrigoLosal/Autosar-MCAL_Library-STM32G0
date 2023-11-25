@@ -65,37 +65,12 @@
   @} */
 
 /**
- * @brief   **Hardware unit status datatype**
- *
- * Data type which describes the status of FLS Module (initialized or not-initialized)
- *
- */
-typedef enum _Fls_StatusType
-{
-    FLS_STATE_UNINIT = 0x00, /*!< Fls Module not initialized         */
-    FLS_STATE_INIT           /*!< Fls Module has been initialized    */
-} Fls_StatusType;
-
-/**
- * @brief   Fls_ConfigType.
- *
- * A pointer to such a structure is provided to the flash driver initialization routine
- * for configuration of the driver and flash memory hardware.
- *
- * @reqs    SWS_Fls_00368
- */
-typedef struct _Fls_ConfigType
-{
-    uint32 dummy; /*!< dummy element for the moment */
-} Fls_ConfigType;
-
-/**
  * @brief   Fls_AddressType.
  *
  * Used as address offset from the configured flash base address
  * to access a certain flash memory area.
  *
- * @reqs    SWS_Fls_00369
+ * @reqs    SWS_Fls_00369, SWS_Fls_00216
  */
 typedef uint32 Fls_AddressType;
 
@@ -107,6 +82,24 @@ typedef uint32 Fls_AddressType;
  * @reqs    SWS_Fls_00370
  */
 typedef uint32 Fls_LengthType;
+
+
+/**
+ * @brief   Fls_ConfigType.
+ *
+ * A pointer to such a structure is provided to the flash driver initialization routine
+ * for configuration of the driver and flash memory hardware.
+ *
+ * @reqs    SWS_Fls_00368
+ */
+typedef struct _Fls_ConfigType
+{
+    Fls_AddressType MemoryBaseAddress;  /*!<Variable to use to erase start address*/
+    Fls_AddressType EraseStartAddress ; /*!<Variable to use to erase end address*/
+    Fls_LengthType  FlsSectorSize;      /*!<Variable to use to flash sector boundary*/
+    uint16 FlsNumberOfSectors;          /*!<Variable to describe the sector in Flash*/
+    uint32 dummy;                       /*!< dummy element for the moment */
+} Fls_ConfigType;
 
 /**
  * @brief **Hardware control unit structure**
