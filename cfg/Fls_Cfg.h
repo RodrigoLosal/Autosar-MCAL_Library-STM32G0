@@ -77,6 +77,12 @@
  */
 #define FLS_BLANK_CHECK_API      STD_ON
 
+/**
+ * @brief Switches the development error detection and notification on or off.
+ * @typedef EcucBooleanParamDef
+ */
+#define FLS_DEV_ERROR_DETECT     STD_ON
+
 extern const Fls_ConfigType FlashConfig;
 
 #endif

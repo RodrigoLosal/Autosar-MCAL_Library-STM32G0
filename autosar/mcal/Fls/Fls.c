@@ -112,8 +112,9 @@ Std_ReturnType Fls_Erase( Fls_AddressType TargetAddress, Fls_LengthType Length )
     }
     else
     {
-        return Fls_Arch_Erase( &HwUnit_Fls, TargetAddress, Length );
+        returnValue = Fls_Arch_Erase( &HwUnit_Fls, TargetAddress, Length );
     }
+    return returnValue;
 }
 
 /**
@@ -166,8 +167,9 @@ Std_ReturnType Fls_Write( Fls_AddressType TargetAddress, const uint8 *SourceAddr
     }
     else
     {
-        return Fls_Arch_Write( &HwUnit_Fls, TargetAddress, SourceAddressPtr, Length );
+        returnValue = Fls_Arch_Write( &HwUnit_Fls, TargetAddress, SourceAddressPtr, Length );
     }
+    return returnValue;
 }
 
 /**
@@ -243,8 +245,9 @@ MemIf_JobResultType Fls_GetJobResult( void )
     }
     else
     {
-        return Fls_Arch_GetJobResult( &HwUnit_Fls );
+        returnValue = Fls_Arch_GetJobResult( &HwUnit_Fls );
     }
+    return returnValue;
 }
 #endif
 
@@ -299,8 +302,9 @@ Std_ReturnType Fls_Read( Fls_AddressType SourceAddress, uint8 *TargetAddressPtr,
     }
     else
     {
-        return Fls_Arch_Read( &HwUnit_Fls, SourceAddress, TargetAddressPtr, Length );
+        returnValue = Fls_Arch_Read( &HwUnit_Fls, SourceAddress, TargetAddressPtr, Length );
     }
+    return returnValue;
 }
 
 /**
@@ -355,8 +359,9 @@ Std_ReturnType Fls_Compare( Fls_AddressType SourceAddress, const uint8 *TargetAd
     }
     else
     {
-        return Fls_Arch_Compare( &HwUnit_Fls, SourceAddress, TargetAddressPtr, Length );
+        returnValue = Fls_Arch_Compare( &HwUnit_Fls, SourceAddress, TargetAddressPtr, Length );
     }
+    return returnValue;
 }
 #endif
 
@@ -453,7 +458,8 @@ Std_ReturnType Fls_BlankCheck( Fls_AddressType TargetAddress, Fls_LengthType Len
     }
     else
     {
-        return Fls_Arch_BlankCheck( &HwUnit_Fls, TargetAddress, Length );
+        returnValue = Fls_Arch_BlankCheck( &HwUnit_Fls, TargetAddress, Length );
     }
+    return returnValue;
 }
 #endif
