@@ -373,12 +373,19 @@ Std_ReturnType Fls_Compare( Fls_AddressType SourceAddress, const uint8 *TargetAd
  * @param   Mode  MEMIF_MODE_SLOW: Slow read access / normal SPI access.
  *                MEMIF_MODE_FAST: Fast read access / SPI burst access.
  *
- * @reqs    SWS_Fls_00258, SWS_Fls_00187
+ * @reqs    SWS_Fls_00258, SWS_Fls_00187, SWS_Fls_00156
  */
 #if FLS_SET_MODE_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Fls_SetMode( MemIf_ModeType Mode )
 {
-    Fls_Arch_SetMode( &HwUnit_Fls, Mode );
+    if( HwUnit_Fls.HwUnitState == MEMIF_BUSY)
+    {
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_SETMODE, FLS_E_BUSY );
+    }
+    else
+    {
+        Fls_Arch_SetMode( &HwUnit_Fls, Mode );
+    }
 }
 #endif
 
