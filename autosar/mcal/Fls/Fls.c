@@ -57,7 +57,7 @@ void Fls_Init( const Fls_ConfigType *ConfigPtr )
         the function Fls_Init shall check the (hardware specific) contents
         of the given configuration set for being within the allowed range.
         If this is not the case, it shall raise the development error FLS_E_PARAM_CONFIG.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_INIT, FLS_E_PARAM_CONFIG );
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_INIT, FLS_E_PARAM_CONFIG );
     }
     else
     {
@@ -90,25 +90,25 @@ Std_ReturnType Fls_Erase( Fls_AddressType TargetAddress, Fls_LengthType Length )
     if( HwUnit_Fls.HwUnitState == MEMIF_UNINIT )
     {
         /*If development error detection for the module Fls is enabled: the function Fls_Erase shall check
-        that the FLS module has been initialized. If this check fails, the function Fls_Erase shall reject 
+        that the FLS module has been initialized. If this check fails, the function Fls_Erase shall reject
         the erase request, raise the development error FLS_E_UNINIT and return with E_NOT_OK.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_ERASE, FLS_E_UNINIT );
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_ERASE, FLS_E_UNINIT );
     }
-    else if( ((HwUnit_Fls.Config->MemoryBaseAddress + TargetAddress) != HwUnit_Fls.Config->FlsSectorSize) || ( TargetAddress > (HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors) -1) )
+    else if( ( ( HwUnit_Fls.Config->MemoryBaseAddress + TargetAddress ) != HwUnit_Fls.Config->FlsSectorSize ) || ( TargetAddress > ( HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors ) - 1 ) )
     {
-        /*If development error detection for the module Fls is enabled: the function Fls_Erase shall check that 
-        the erase start address (flash memory base address + TargetAddress) is aligned to a flash sector boundary 
-        and that it lies within the specified lower and upper flash address boundaries. If this check fails, the 
+        /*If development error detection for the module Fls is enabled: the function Fls_Erase shall check that
+        the erase start address (flash memory base address + TargetAddress) is aligned to a flash sector boundary
+        and that it lies within the specified lower and upper flash address boundaries. If this check fails, the
         function Fls_Erase shall reject the erase request, raise the development error FLS_E_- PARAM_ADDRESS and return with E_NOT_OK.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_ERASE, FLS_E_PARAM_ADDRESS );
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_ERASE, FLS_E_PARAM_ADDRESS );
     }
-    else if( (Length == 0) || ((TargetAddress + Length) != HwUnit_Fls.Config->FlsSectorSize) || (Length > (HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors) - TargetAddress))
+    else if( ( Length == 0 ) || ( ( TargetAddress + Length ) != HwUnit_Fls.Config->FlsSectorSize ) || ( Length > ( HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors ) - TargetAddress ) )
     {
-        /*If development error detection for the module Fls is enabled: the function Fls_Erase shall check that the 
-        erase length is greater than 0 and that the erase end address (erase start address + length) is aligned to a 
+        /*If development error detection for the module Fls is enabled: the function Fls_Erase shall check that the
+        erase length is greater than 0 and that the erase end address (erase start address + length) is aligned to a
         flash sector boundary and that it lies within the specified upper flash address boundary. If this check fails,
         the function Fls_Erase shall reject the erase request, raise the development error FLS_E_PARAM_LENGTH and return with E_NOT_OK.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_ERASE, FLS_E_PARAM_LENGTH);
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_ERASE, FLS_E_PARAM_LENGTH );
     }
     else
     {
@@ -136,33 +136,33 @@ Std_ReturnType Fls_Write( Fls_AddressType TargetAddress, const uint8 *SourceAddr
 
     if( HwUnit_Fls.HwUnitState == MEMIF_UNINIT )
     {
-        /*If development error detection for the module Fls is enabled: the function Fls_Write shall check that 
+        /*If development error detection for the module Fls is enabled: the function Fls_Write shall check that
         the FLS module has been initialized. If this check fails, the function Fls_Write shall reject the write
         request, raise the development error FLS_E_UNINIT and return with E_NOT_OK.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_WRITE, FLS_E_UNINIT);
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_WRITE, FLS_E_UNINIT );
     }
-    else if( ((HwUnit_Fls.Config->MemoryBaseAddress + TargetAddress) != HwUnit_Fls.Config->FlsSectorSize) || (TargetAddress > (HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors) -1))
+    else if( ( ( HwUnit_Fls.Config->MemoryBaseAddress + TargetAddress ) != HwUnit_Fls.Config->FlsSectorSize ) || ( TargetAddress > ( HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors ) - 1 ) )
     {
-        /*If development error detection for the module Fls is enabled: the function Fls_Write shall check that the 
-        write start address (flash memory base address + TargetAddress) is aligned to a flash page boundary and that 
-        it lies within the specified lower and upper flash address boundaries. If this check fails, the function Fls_Write 
+        /*If development error detection for the module Fls is enabled: the function Fls_Write shall check that the
+        write start address (flash memory base address + TargetAddress) is aligned to a flash page boundary and that
+        it lies within the specified lower and upper flash address boundaries. If this check fails, the function Fls_Write
         shall reject the write request, raise the development error FLS_E_- PARAM_ADDRESS and return with E_NOT_OK.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_WRITE, FLS_E_PARAM_ADDRESS);
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_WRITE, FLS_E_PARAM_ADDRESS );
     }
-    else if( (Length == 0) || ((TargetAddress + Length) != HwUnit_Fls.Config->FlsSectorSize) || (Length > (HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors) - TargetAddress))
+    else if( ( Length == 0 ) || ( ( TargetAddress + Length ) != HwUnit_Fls.Config->FlsSectorSize ) || ( Length > ( HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors ) - TargetAddress ) )
     {
-        /*If development error detection for the module Fls is enabled: the function Fls_Write shall check that the write 
-        length is greater than 0, that the write end address (write start address + length) is aligned to a flash page boundary 
-        and that it lies within the specified upper flash address boundary. If this check fails, the function Fls_Write shall 
+        /*If development error detection for the module Fls is enabled: the function Fls_Write shall check that the write
+        length is greater than 0, that the write end address (write start address + length) is aligned to a flash page boundary
+        and that it lies within the specified upper flash address boundary. If this check fails, the function Fls_Write shall
         reject the write request, raise the development error FLS_E_- PARAM_LENGTH and return with E_NOT_OK.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_WRITE, FLS_E_PARAM_LENGTH);
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_WRITE, FLS_E_PARAM_LENGTH );
     }
-    else if( SourceAddressPtr == NULL_PTR)
+    else if( SourceAddressPtr == NULL_PTR )
     {
-        /*If development error detection for the module Fls is enabled: the function Fls_Write shall check the given data buffer 
-        pointer for not being a null pointer. If the data buffer pointer is a null pointer, the function Fls_Write shall reject 
+        /*If development error detection for the module Fls is enabled: the function Fls_Write shall check the given data buffer
+        pointer for not being a null pointer. If the data buffer pointer is a null pointer, the function Fls_Write shall reject
         the write request, raise the development error FLS_E_PARAM_DATA and return with E_NOT_OK.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_WRITE, FLS_E_PARAM_DATA);
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_WRITE, FLS_E_PARAM_DATA );
     }
     else
     {
@@ -182,11 +182,12 @@ void Fls_Cancel( void )
 {
     if( HwUnit_Fls.HwUnitState == MEMIF_UNINIT )
     {
-        /*If development error detection for the module Fls is enabled: the function Fls_Cancel shall check that the FLS module 
+        /*If development error detection for the module Fls is enabled: the function Fls_Cancel shall check that the FLS module
         has been initialized. If this check fails, the function Fls_Cancel shall raise the development error FLS_E_- UNINIT and return.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_CANCEL, FLS_E_UNINIT);
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_CANCEL, FLS_E_UNINIT );
     }
-    else{
+    else
+    {
         Fls_Arch_Cancel( &HwUnit_Fls );
     }
 }
@@ -206,12 +207,13 @@ MemIf_StatusType Fls_GetStatus( void )
 {
     MemIf_StatusType returnValue = 0;
 
-    if( HwUnit_Fls.HwUnitState == MEMIF_UNINIT)
+    if( HwUnit_Fls.HwUnitState == MEMIF_UNINIT )
     {
         returnValue = MEMIF_UNINIT;
     }
-    else{
-       
+    else
+    {
+
         returnValue = Fls_Arch_GetStatus( &HwUnit_Fls );
     }
     return returnValue;
@@ -237,7 +239,7 @@ MemIf_JobResultType Fls_GetJobResult( void )
         /*f development error detection for the module Fls is enabled: the function Fls_GetJobResult
         shall check that the FLS module has been initialized. If this check fails, the function Fls_GetJobResult
         shall raise the development error FLS_E_UNINIT and return with MEMIF_JOB_FAILED.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_GETJOBRESULT, FLS_E_UNINIT);
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_GETJOBRESULT, FLS_E_UNINIT );
     }
     else
     {
@@ -264,36 +266,36 @@ Std_ReturnType Fls_Read( Fls_AddressType SourceAddress, uint8 *TargetAddressPtr,
 {
     Std_ReturnType returnValue = E_NOT_OK;
 
-    if ( HwUnit_Fls.HwUnitState == MEMIF_UNINIT )
+    if( HwUnit_Fls.HwUnitState == MEMIF_UNINIT )
     {
-        /*If development error detection for the module Fls is enabled: the function Fls_Read 
-        shall check that the driver has been initialized. If this check fails, the function Fls_Read 
+        /*If development error detection for the module Fls is enabled: the function Fls_Read
+        shall check that the driver has been initialized. If this check fails, the function Fls_Read
         shall reject the read request, raise the development error FLS_- E_UNINIT and return with E_NOT_OK.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_READ, FLS_E_UNINIT);
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_READ, FLS_E_UNINIT );
     }
-    else if( (HwUnit_Fls.Config->MemoryBaseAddress + SourceAddress) > (HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors) -1 )
-    {
-        /*If development error detection for the module Fls is enabled: the function Fls_Read shall check 
-        that the read start address (flash memory base address + SourceAddress) lies within the specified 
-        lower and upper flash address boundaries. If this check fails, the function Fls_Read shall reject 
-        the read job, raise development error FLS_E_PARAM_ADDRESS and return with E_NOT_OK.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_READ, FLS_E_PARAM_ADDRESS);
-    }
-    else if( (Length == 0) || (SourceAddress + Length) > (HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors) - SourceAddress )
+    else if( ( HwUnit_Fls.Config->MemoryBaseAddress + SourceAddress ) > ( HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors ) - 1 )
     {
         /*If development error detection for the module Fls is enabled: the function Fls_Read shall check
-        that the read length is greater than 0 and that the read end address (read start address + length) 
-        lies within the specified upper flash address boundary. If this check fails, the function Fls_Read 
-        shall reject the read job, raise the development error FLS_E_PARAM_LENGTH and return with E_NOT_OK.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_READ, FLS_E_PARAM_LENGTH);
+        that the read start address (flash memory base address + SourceAddress) lies within the specified
+        lower and upper flash address boundaries. If this check fails, the function Fls_Read shall reject
+        the read job, raise development error FLS_E_PARAM_ADDRESS and return with E_NOT_OK.*/
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_READ, FLS_E_PARAM_ADDRESS );
     }
-    else if( TargetAddressPtr == NULL_PTR)
+    else if( ( Length == 0 ) || ( SourceAddress + Length ) > ( HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors ) - SourceAddress )
     {
-        /*If development error detection for the module Fls is enabled: the function Fls_Read shall check the 
-        given data buffer pointer for not being a null pointer. If the data buffer pointer is a null pointer, 
+        /*If development error detection for the module Fls is enabled: the function Fls_Read shall check
+        that the read length is greater than 0 and that the read end address (read start address + length)
+        lies within the specified upper flash address boundary. If this check fails, the function Fls_Read
+        shall reject the read job, raise the development error FLS_E_PARAM_LENGTH and return with E_NOT_OK.*/
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_READ, FLS_E_PARAM_LENGTH );
+    }
+    else if( TargetAddressPtr == NULL_PTR )
+    {
+        /*If development error detection for the module Fls is enabled: the function Fls_Read shall check the
+        given data buffer pointer for not being a null pointer. If the data buffer pointer is a null pointer,
         the function Fls_Read shall reject the read request, raise the development error FLS_E_PARAM_DATA and
         return with E_NOT_ OK.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_READ, FLS_E_PARAM_DATA);
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_READ, FLS_E_PARAM_DATA );
     }
     else
     {
@@ -320,38 +322,39 @@ Std_ReturnType Fls_Compare( Fls_AddressType SourceAddress, const uint8 *TargetAd
 {
     Std_ReturnType returnValue = E_NOT_OK;
 
-    if( HwUnit_Fls.HwUnitState == MEMIF_UNINIT)
+    if( HwUnit_Fls.HwUnitState == MEMIF_UNINIT )
     {
-        /*If development error detection for the module Fls is enabled: the function Fls_Compare shall check 
-        that the driver has been initialized. If this check fails, the function Fls_Compare shall reject the 
+        /*If development error detection for the module Fls is enabled: the function Fls_Compare shall check
+        that the driver has been initialized. If this check fails, the function Fls_Compare shall reject the
         compare job, raise the development error FLS_E_UNINIT and return with E_NOT_OK.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_COMPARE, FLS_E_UNINIT);
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_COMPARE, FLS_E_UNINIT );
     }
-    else if( (HwUnit_Fls.Config->MemoryBaseAddress + SourceAddress) > (HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors) -1 )
+    else if( ( HwUnit_Fls.Config->MemoryBaseAddress + SourceAddress ) > ( HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors ) - 1 )
     {
-        /*If development error detection for the module Fls is enabled: the function Fls_Compare shall check 
-        that the compare start address (flash memory base address + SourceAddress) lies within the specified 
-        lower and upper flash address boundaries. If this check fails, the function Fls_Compare shall reject 
+        /*If development error detection for the module Fls is enabled: the function Fls_Compare shall check
+        that the compare start address (flash memory base address + SourceAddress) lies within the specified
+        lower and upper flash address boundaries. If this check fails, the function Fls_Compare shall reject
         the compare job, raise the development error FLS_E_PARAM_ADDRESS and return with E_NOT_OK.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_COMPARE, FLS_E_PARAM_ADDRESS);
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_COMPARE, FLS_E_PARAM_ADDRESS );
     }
-    else if( (Length == 0) || ((SourceAddress + Length) > (HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors) -SourceAddress))
+    else if( ( Length == 0 ) || ( ( SourceAddress + Length ) > ( HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors ) - SourceAddress ) )
     {
-        /*If If development error detection for the module Fls is enabled: the function Fls_Compare shall check 
-        that the given length is greater than 0 and that the compare end address (compare start address + length) 
-        lies within the specified upper flash address boundary. If this check fails, the function Fls_Compare shall 
+        /*If If development error detection for the module Fls is enabled: the function Fls_Compare shall check
+        that the given length is greater than 0 and that the compare end address (compare start address + length)
+        lies within the specified upper flash address boundary. If this check fails, the function Fls_Compare shall
         reject the compare job, raise the development error FLS_E_PARAM_LENGTH and return with E_ NOT_OK.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_COMPARE, FLS_E_PARAM_LENGTH);
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_COMPARE, FLS_E_PARAM_LENGTH );
     }
-    else if( TargetAddressPtr == NULL_PTR)
+    else if( TargetAddressPtr == NULL_PTR )
     {
-        /*If development error detection for the module Fls is enabled: the function Fls_Compare shall check the 
-        given data buffer pointer for not being a null pointer. If the data buffer pointer is a null pointer, 
+        /*If development error detection for the module Fls is enabled: the function Fls_Compare shall check the
+        given data buffer pointer for not being a null pointer. If the data buffer pointer is a null pointer,
         the function Fls_Compare shall reject the request, raise the development error FLS_E_PARAM_DATA and return
         with E_NOT_OK.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_COMPARE, FLS_E_PARAM_DATA);
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_COMPARE, FLS_E_PARAM_DATA );
     }
-    else{
+    else
+    {
         return Fls_Arch_Compare( &HwUnit_Fls, SourceAddress, TargetAddressPtr, Length );
     }
 }
@@ -386,20 +389,20 @@ void Fls_SetMode( MemIf_ModeType Mode )
 #if FLS_GET_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Fls_GetVersionInfo( Std_VersionInfoType *VersioninfoPtr )
 {
-    if( VersioninfoPtr == NULL_PTR)
+    if( VersioninfoPtr == NULL_PTR )
     {
-        /*If development error detection for the module Fls is enabled: the function Fls_GetVersionInfo 
-        shall raise the development error FLS_E_PARAM_- POINTER if the argument is a NULL pointer and 
+        /*If development error detection for the module Fls is enabled: the function Fls_GetVersionInfo
+        shall raise the development error FLS_E_PARAM_- POINTER if the argument is a NULL pointer and
         return without any action.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_GETVERSIONINFO, FLS_E_PARAM_POINTER);
-    }else
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_GETVERSIONINFO, FLS_E_PARAM_POINTER );
+    }
+    else
     {
-        VersioninfoPtr->moduleID = FLS_MODULE_ID;
-        VersioninfoPtr->vendorID = FLS_VENDOR_ID;
+        VersioninfoPtr->moduleID         = FLS_MODULE_ID;
+        VersioninfoPtr->vendorID         = FLS_VENDOR_ID;
         VersioninfoPtr->sw_major_version = FLS_SW_MAJOR_VERSION;
         VersioninfoPtr->sw_minor_version = FLS_SW_MINOR_VERSION;
         VersioninfoPtr->sw_patch_version = FLS_SW_PATCH_VERSION;
-        
     }
 }
 #endif
@@ -424,31 +427,32 @@ Std_ReturnType Fls_BlankCheck( Fls_AddressType TargetAddress, Fls_LengthType Len
 {
     Std_ReturnType returnValue = E_NOT_OK;
 
-    if( HwUnit_Fls.HwUnitState == MEMIF_UNINIT)
+    if( HwUnit_Fls.HwUnitState == MEMIF_UNINIT )
     {
-        /*If development error detection for the module FLS is enabled: the function Fls_BlankCheck shall 
-        check that the driver has been initialized. If this check fails, the function Fls_BlankCheck shall 
+        /*If development error detection for the module FLS is enabled: the function Fls_BlankCheck shall
+        check that the driver has been initialized. If this check fails, the function Fls_BlankCheck shall
         reject the verification request, raise the development error FLS_E_UNINIT and return with E_NOT_OK.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_BLANKCHECK, FLS_E_UNINIT);
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_BLANKCHECK, FLS_E_UNINIT );
     }
-    else if( (HwUnit_Fls.Config->MemoryBaseAddress + TargetAddress) > (HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors) -1 )
+    else if( ( HwUnit_Fls.Config->MemoryBaseAddress + TargetAddress ) > ( HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors ) - 1 )
     {
-        /*If development error detection for the module FLS is enabled; the function Fls_BlankCheck shall 
-        check that the verification start address (flash memory base address + TargetAddress) lies within 
-        the specified lower and upper flash address boundaries. If this check fails, the function Fls_BlankCheck 
+        /*If development error detection for the module FLS is enabled; the function Fls_BlankCheck shall
+        check that the verification start address (flash memory base address + TargetAddress) lies within
+        the specified lower and upper flash address boundaries. If this check fails, the function Fls_BlankCheck
         shall reject the verification job, raise the development error FLS_E_PARAM_ADDRESS and return with E_NOT_OK.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_BLANKCHECK, FLS_E_PARAM_ADDRESS);
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_BLANKCHECK, FLS_E_PARAM_ADDRESS );
     }
-    else if( (Length == 0) || (TargetAddress + Length) > (HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors) - TargetAddress)
+    else if( ( Length == 0 ) || ( TargetAddress + Length ) > ( HwUnit_Fls.Config->FlsSectorSize * HwUnit_Fls.Config->FlsNumberOfSectors ) - TargetAddress )
     {
-        /*If development error detection for the module FLS is enabled: the function Fls_BlankCheck shall 
-        check that the given length is greater than 0 and that the verification end address 
-        (verification start address + length) lies within the specified upper flash address boundary. 
-        If this check fails, the function Fls_BlankCheck shall reject the verification job, raise the 
+        /*If development error detection for the module FLS is enabled: the function Fls_BlankCheck shall
+        check that the given length is greater than 0 and that the verification end address
+        (verification start address + length) lies within the specified upper flash address boundary.
+        If this check fails, the function Fls_BlankCheck shall reject the verification job, raise the
         development error FLS_E_PARAM_LENGTH and return with E_NOT_OK.*/
-        Det_ReportError(FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_BLANKCHECK, FLS_E_PARAM_LENGTH);
+        Det_ReportError( FLS_MODULE_ID, FLS_INSTANCE_ID, FLS_ID_BLANKCHECK, FLS_E_PARAM_LENGTH );
     }
-    else{
+    else
+    {
         return Fls_Arch_BlankCheck( &HwUnit_Fls, TargetAddress, Length );
     }
 }

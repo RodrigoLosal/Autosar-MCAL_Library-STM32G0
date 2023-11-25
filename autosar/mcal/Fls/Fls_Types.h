@@ -94,11 +94,11 @@ typedef uint32 Fls_LengthType;
  */
 typedef struct _Fls_ConfigType
 {
-    Fls_AddressType MemoryBaseAddress;  /*!<Variable to use to erase start address*/
-    Fls_AddressType EraseStartAddress ; /*!<Variable to use to erase end address*/
-    Fls_LengthType  FlsSectorSize;      /*!<Variable to use to flash sector boundary*/
-    uint16 FlsNumberOfSectors;          /*!<Variable to describe the sector in Flash*/
-    uint32 dummy;                       /*!< dummy element for the moment */
+    Fls_AddressType MemoryBaseAddress; /*!<Variable to use to erase start address*/
+    Fls_AddressType EraseStartAddress; /*!<Variable to use to erase end address*/
+    Fls_LengthType FlsSectorSize;      /*!<Variable to use to flash sector boundary*/
+    uint16 FlsNumberOfSectors;         /*!<Variable to describe the sector in Flash*/
+    uint32 dummy;                      /*!< dummy element for the moment */
 } Fls_ConfigType;
 
 /**
