@@ -63,7 +63,29 @@ void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can_Regist
 uint8 Can_GetClosestDlcWithPadding( uint8 Dlc, uint32 *RamBuffer, uint8 PaddingValue );
 uint8 Can_GetTxPduId( const Can_Controller *Controller, PduIdType *CanPduId );
 uint8 Can_GetTxPduId( const Can_Controller *Controller, PduIdType *CanPduId );
-
+void Can_Isr_RxFifo0NewMessage( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_RxFifo0Full( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_RxFifo0MessageLost( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_RxFifo1NewMessage( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_RxFifo1Full( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_RxFifo1MessageLost( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_HighPriorityMessageRx( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_TransmissionCompleted( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_TransmissionCancellationFinished( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_TxEventFifoElementLost( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_TxEventFifoFull( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_TxEventFifoNewEntry( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_TxFifoEmpty( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_TimestampWraparound( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_MessageRamAccessFailure( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_TimeoutOccurred( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_ErrorLoggingOverflow( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_ErrorPassive( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_WarningStatus( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_BusOffStatus( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_WatchdogInterrupt( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_ProtocolErrorInArbitrationPhase( Can_HwUnit *HwUnit, uint8 Controller );
+void Can_Isr_ProtocolErrorInDataPhase( Can_HwUnit *HwUnit, uint8 Controller );
 
 /*this function is required by Ceedling to run any code before the test cases*/
 void setUp( void )
@@ -78,6 +100,7 @@ void setUp( void )
     CAN1->IE     = 0x00000000,
     CAN1->ILS    = 0x00000000,
     CAN1->ILE    = 0x00000000,
+    CAN1->ECR    = 0x00000000,
     CAN1->TXBTIE = 0x00000000,
     CAN1->TXBCIE = 0x00000000,
     CAN1->TXEFS  = 0x00000000,
@@ -402,10 +425,10 @@ void test__Can_Arch_SetControllerMode__invalid_state( void )
 
 /**
  * @brief   Test case for enable interrupts
- * 
+ *
  * This test case will check that the ILE register is set to the correct values when the function
  * is called.
-*/
+ */
 void test__Can_Arch_EnableControllerInterrupts__enable_all_interrupts( void )
 {
     HwUnit.DisableIntsLvl[ CAN_CONTROLLER_0 ] = 0;
@@ -416,10 +439,10 @@ void test__Can_Arch_EnableControllerInterrupts__enable_all_interrupts( void )
 
 /**
  * @brief   Test case for decrease int level
- * 
+ *
  * This test case will check that the ILE register is not nmodified when the function
  * is called but DisableIntsLvl is decreased.
-*/
+ */
 void test__Can_Arch_EnableControllerInterrupts__decrease_int_level( void )
 {
     HwUnit.DisableIntsLvl[ CAN_CONTROLLER_0 ] = 3;
@@ -431,10 +454,10 @@ void test__Can_Arch_EnableControllerInterrupts__decrease_int_level( void )
 
 /**
  * @brief   Test case for disable interrupts
- * 
+ *
  * This test case will check that the ILE register is set to the correct values when the function
  * is called.
-*/
+ */
 void test__Can_Arch_DisableControllerInterrupts__disable_all_interrupts( void )
 {
     HwUnit.DisableIntsLvl[ CAN_CONTROLLER_0 ] = 10;
@@ -447,10 +470,10 @@ void test__Can_Arch_DisableControllerInterrupts__disable_all_interrupts( void )
 
 /**
  * @brief   Test case for increase int level
- * 
+ *
  * This test case will check that the ILE register is set to the correct values when the function
  * is called.
-*/
+ */
 void test__Can_Arch_DisableControllerInterrupts__not_increase_int_level( void )
 {
     HwUnit.DisableIntsLvl[ CAN_CONTROLLER_0 ] = 255;
@@ -461,6 +484,10 @@ void test__Can_Arch_DisableControllerInterrupts__not_increase_int_level( void )
     TEST_ASSERT_EQUAL_MESSAGE( 255, HwUnit.DisableIntsLvl[ CAN_CONTROLLER_0 ], "Wrong disable int level" );
 }
 
+void test__Can_Arch_CheckWakeup_void_test( void )
+{
+    Can_Arch_CheckWakeup( &HwUnit, CAN_CONTROLLER_0 );
+}
 
 /**
  * @brief   Test case for getting error active
@@ -511,6 +538,64 @@ void test__Can_Arch_GetControllerErrorState__controller_bus_off( void )
     Can_Arch_GetControllerErrorState( &HwUnit, CAN_CONTROLLER_0, &ErrorState );
 
     TEST_ASSERT_EQUAL_MESSAGE( CAN_ERRORSTATE_BUSOFF, ErrorState, "Wrong controller error state" );
+}
+
+/**
+ * @brief   Test case for getting controller mode
+ *
+ * This test case will check that the function return the correct value for controller mode when
+ * the controller is in stopeed mode.
+ */
+void test__Can_Arch_GetControllerMode__get_stop_mode( void )
+{
+    Can_ControllerStateType ControllerMode;
+
+    Can_Arch_GetControllerMode( &HwUnit, CAN_CONTROLLER_0, &ControllerMode );
+
+    TEST_ASSERT_EQUAL_MESSAGE( CAN_CS_STOPPED, ControllerMode, "Wrong controller state" );
+}
+
+/**
+ * @brief   Test case for getting Rx error counter
+ *
+ * This test case will check that the function return the correct value for Rx error counter when
+ * the controller is in stopeed mode.
+ */
+void test__Can_Arch_GetControllerRxErrorCounter__get_rx_error_counter( void )
+{
+    uint8 RxErrorCounter;
+
+    CAN1->ECR = 0x00009F00;
+
+    Can_Arch_GetControllerRxErrorCounter( &HwUnit, CAN_CONTROLLER_0, &RxErrorCounter );
+
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( 0x9F, RxErrorCounter, "Wrong controller state" );
+}
+
+/**
+ * @brief   Test case for getting Tx error counter
+ *
+ * This test case will check that the function return the correct value for Tx error counter when
+ * the controller is in stopeed mode.
+ */
+void test__Can_Arch_GetControllerTxErrorCounter__get_tx_error_counter( void )
+{
+    uint8 TxErrorCounter;
+
+    CAN1->ECR = 0x00000008;
+
+    Can_Arch_GetControllerTxErrorCounter( &HwUnit, CAN_CONTROLLER_0, &TxErrorCounter );
+
+    TEST_ASSERT_EQUAL_HEX8_MESSAGE( 0x08, TxErrorCounter, "Wrong controller state" );
+}
+
+void test__Can_Arch_Write__tx_fifo_full( void )
+{
+    CAN1->TXFQS = 0x00100000;
+
+    Std_ReturnType Retval = Can_Arch_Write( &HwUnit, 0, NULL_PTR );
+
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( CAN_BUSY, Retval, "Wrong TXFQS value" );
 }
 
 /**
@@ -1368,4 +1453,166 @@ void test__Can_GetTxPduId__get_the_oldes_pdu_id( void )
 
     TEST_ASSERT_EQUAL_MESSAGE( 2, Left, "Wrong number of elements left in FIFO" );
     TEST_ASSERT_EQUAL_HEX8_MESSAGE( 0xCC, CanPduId, "Wrong PduId" );
+}
+
+/**
+ * @brief   void test for Can_Isr_HighPriorityMessageRx
+ *
+ * empty test case to complete 100% code coverage
+ */
+void test__Can_Isr_HighPriorityMessageRx__void_test( void )
+{
+    Can_Isr_HighPriorityMessageRx( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+/**
+ * @brief   void test for Can_Isr_LowPriorityMessageRx
+ *
+ * empty test case to complete 100% code coverage
+ */
+void test__Can_Isr_TransmissionCancellationFinished__void_test( void )
+{
+    Can_Isr_TransmissionCancellationFinished( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+/**
+ * @brief   void test for Can_Isr_TimestampWraparound
+ *
+ * empty test case to complete 100% code coverage
+ */
+void test__Can_Isr_TimestampWraparound__void_test( void )
+{
+    Can_Isr_TimestampWraparound( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+/**
+ * @brief   void test for Can_Isr_MessageRamAccessFailure
+ *
+ * empty test case to complete 100% code coverage
+ */
+void test__Can_Isr_MessageRamAccessFailure__void_test( void )
+{
+    Can_Isr_MessageRamAccessFailure( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+/**
+ * @brief   void test for Can_Isr_TimeoutOccurred
+ *
+ * empty test case to complete 100% code coverage
+ */
+void test__Can_Isr_TimeoutOccurred__void_test( void )
+{
+    Can_Isr_TimeoutOccurred( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+/**
+ * @brief   void test for Can_Isr_ErrorLoggingOverflow
+ * 
+ * empty test case to complete 100% code coverage
+*/
+void test__Can_Isr_ErrorLoggingOverflow__void_test( void )
+{
+    Can_Isr_ErrorLoggingOverflow( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+/**
+ * @brief   test case for error active isr
+ * 
+ * This test case will check that the CanIf_ControllerErrorStateActive is not called when a error
+ * active is detected 
+*/
+void test__Can_Isr_ErrorPassive__move_to_error_active( void )
+{
+    CAN1->PSR = 0x00000000;
+
+    Can_Isr_ErrorPassive( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+/**
+ * @brief   test case for error pasive isr
+ * 
+ * This test case will check that the CanIf_ControllerErrorStatePassive is called when a error
+ * passive is detected
+*/
+void test__Can_Isr_ErrorPassive__move_to_error_passive( void )
+{
+    CAN1->PSR = 0x00000020;
+
+    CanIf_ControllerErrorStatePassive_Ignore( );
+    Can_Isr_ErrorPassive( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+/**
+ * @brief   void test for Can_Isr_WarningStatus
+ *
+ * empty test case to complete 100% code coverage
+ */
+void test__Can_Isr_WarningStatus__void_test( void )
+{
+    Can_Isr_WarningStatus( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+/**
+ * @brief   test case for bus on isr
+ * 
+ * This test case will check that the CanIf_ControllerBusOff is not called when a bus on is detected
+ * and the controller is in the error active state
+*/
+void test__Can_Isr_BusOffStatus__bus_to_on( void )
+{
+    CAN1->PSR = 0x00000000;
+
+    Can_Isr_BusOffStatus( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+/**
+ * @brief   test case for bus off isr
+ * 
+ * This test case will check that the CanIf_ControllerBusOff is called when a bus off is detected
+ * and the controller is in the error passive state
+*/
+void test__Can_Isr_BusOffStatus__bus_to_off( void )
+{
+    CAN1->PSR = 0x00000080;
+
+    CanIf_ControllerBusOff_Ignore( );
+
+    Can_Isr_BusOffStatus( &HwUnit, CAN_CONTROLLER_0 );
+
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x00005043, CAN1->CCCR, "Wrong CCCR value" );
+    TEST_ASSERT_EQUAL_MESSAGE( CAN_CS_STOPPED, HwUnit.ControllerState[ CAN_CONTROLLER_0 ], "Wrong number of calls" );
+}
+
+/**
+ * @brief   void test for Can_Isr_WatchdogInterrupt
+ *
+ * empty test case to complete 100% code coverage
+ */
+void test__Can_Isr_WatchdogInterrupt_void_test( void )
+{
+    Can_Isr_WatchdogInterrupt( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+/**
+ * @brief   Test case for arbitrariation pahse errors
+ *
+ * This test case will check that the CanIf_ErrorNotification is called when a data phase error
+ * is detected
+ */
+void test__Can_Isr_ProtocolErrorInArbitrationPhase__error( void )
+{
+    CanIf_ErrorNotification_Ignore( );
+    Can_Isr_ProtocolErrorInArbitrationPhase( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+/**
+ * @brief   Test case for data pahse errors
+ *
+ * This test case will check that the CanIf_ErrorNotification is called when a data phase error
+ * is detected
+ */
+void test__Can_Isr_ProtocolErrorInDataPhase__error( void )
+{
+    CanIf_ErrorNotification_Ignore( );
+    Can_Isr_ProtocolErrorInDataPhase( &HwUnit, CAN_CONTROLLER_0 );
 }
