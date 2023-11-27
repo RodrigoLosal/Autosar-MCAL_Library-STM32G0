@@ -34,7 +34,8 @@ static Adc_HwUnit HwUnit_Adc =
 static Adc_Det_Str Det_Adc =
 {
     .Adc_InitState = FALSE,
-    .Adc_ModuleID = ADC_MODULE_ID
+    .Adc_ModuleID = ADC_MODULE_ID,
+    .Adc_SetupResultBuffer = FALSE
 };
 
 /**
@@ -87,7 +88,6 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
     }
     else
     {
-        RetValue = Adc_Arch_SetupResultBuffer( &HwUnit_Adc, Group, DataBufferPtr );
     }
     if ( Det_Adc.Adc_InitState == FALSE )
     {
@@ -102,6 +102,8 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
     }
     else
     {
+        RetValue = Adc_Arch_SetupResultBuffer( &HwUnit_Adc, Group, DataBufferPtr );
+        Det_Adc.Adc_InitState = TRUE;
     }
     return RetValue;
 }
@@ -116,8 +118,6 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
 #if ADC_DE_INIT_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DeInit( void )
 {
-    Adc_Arch_DeInit( &HwUnit_Adc );
-
     if( Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_UNINIT );
@@ -156,6 +156,20 @@ void Adc_StartGroupConversion( Adc_GroupType Group )
     }
     else
     {
+    }
+    if ( Det_Adc.Adc_InitState == FALSE )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_UNINIT );
+    }
+    else
+    {
+    }
+    if ( Det_Adc.Adc_SetupResultBuffer == FALSE )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_BUFFER_UNINIT );
+    }
+    else
+    {
         Adc_Arch_StartGroupConversion( &HwUnit_Adc, Group );
     }
 }
@@ -173,7 +187,28 @@ void Adc_StartGroupConversion( Adc_GroupType Group )
 #if ADC_ENABLE_START_STOP_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_StopGroupConversion( Adc_GroupType Group )
 {
-    Adc_Arch_StopGroupConversion( &HwUnit_Adc, Group );
+    if ( Group > 10 )   /*(Size tbd)*/
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_PARAM_GROUP );
+    }
+    else
+    { 
+    }
+    if ( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_HW )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_WRONG_TRIGG_SRC );
+    }
+    else
+    {
+    }
+    if ( Det_Adc.Adc_InitState == FALSE )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_UNINIT );
+    }
+    else
+    {
+        Adc_Arch_StopGroupConversion( &HwUnit_Adc, Group );
+    }
 }
 #endif
 

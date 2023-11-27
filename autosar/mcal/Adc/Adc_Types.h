@@ -52,9 +52,9 @@
                                                 configuration. */
 #define ADC_E_NOTIF_CAPABILITY            0x18u /*!< API called and notification function pointer \
                                                 is NULL. */
-#define ADE_E_BUFFER_UNINIT               0x19u /*!< API called while result buffer pointer is not \
+#define ADC_E_BUFFER_UNINIT               0x19u /*!< API called while result buffer pointer is not \
                                                 initialized. */
-#define ADE_E_POWER_STATE_NOT_SUPPORTED   0x1Bu /*!< API call with unsupported power state request.*/
+#define ADC_E_POWER_STATE_NOT_SUPPORTED   0x1Bu /*!< API call with unsupported power state request.*/
 #define ADC_E_PERIPHERAL_NOT_PREPARED     0x1Du /*!< ADC not prepared for requested target power \
                                                 state. */
 #define ADC_E_BUSY                        0x0Bu /*!< API is called while another conversion is      \
@@ -380,6 +380,7 @@ typedef struct _Adc_Det_Str
 {
     boolean *Adc_InitState;
     uint8 *Adc_ModuleID;
+    boolean *Adc_SetupResultBuffer;
 }Adc_Det_Str;
 
 #endif /* ADC_TYPES_H__ */
