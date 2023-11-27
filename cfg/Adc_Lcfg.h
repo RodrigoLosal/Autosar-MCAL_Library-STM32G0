@@ -18,6 +18,7 @@
 /* clang-format off */
 const Adc_ConfigType AdcConfig =
 {
-    .dummy = 0x12345678u
+    .dummy = 0x12345678u,
+    .Adc_TriggerSource = ADC_TRIGG_SRC_SW
 };
 /* clang-format on */

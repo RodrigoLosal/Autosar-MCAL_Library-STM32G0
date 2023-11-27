@@ -79,6 +79,8 @@
 typedef struct
 {
     uint32 dummy;           /*!< dummy element */
+    Adc_TriggerSourceType Adc_TriggerSource;  /*Type for configuring the trigger source for an ADC
+                                                Channel group*/
 } Adc_ConfigType;
 
 /**
@@ -376,7 +378,7 @@ typedef struct _Adc_HwUnit
  */
 typedef struct _Adc_Det_Str
 {
-    uint8 *Adc_ModuleState;
+    boolean *Adc_InitState;
     uint8 *Adc_ModuleID;
 }Adc_Det_Str;
 

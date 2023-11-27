@@ -10,6 +10,7 @@
 #include "Std_Types.h"
 #include "Adc.h"
 #include "Adc_Arch.h"
+#include "Adc_Cfg.h"
 
 #if ADC_DEV_ERROR_DETECT == FALSE
 #define Det_ReportError( ModuleId, InstanceId, ApiId, ErrorId ) (void)0
@@ -32,7 +33,7 @@ static Adc_HwUnit HwUnit_Adc =
  */
 static Adc_Det_Str Det_Adc =
 {
-    .Adc_ModuleState = ADC_E_UNINIT,
+    .Adc_InitState = FALSE,
     .Adc_ModuleID = ADC_MODULE_ID
 };
 
@@ -47,14 +48,14 @@ static Adc_Det_Str Det_Adc =
  */
 void Adc_Init( const Adc_ConfigType *ConfigPtr )
 {
-    if( Det_Adc.Adc_ModuleState == ADC_E_ALREADY_INITIALIZED )
+    if( Det_Adc.Adc_InitState == TRUE )
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_ALREADY_INITIALIZED );
     }
     else
     {
         Adc_Arch_Init( &HwUnit_Adc, ConfigPtr );
-        Det_Adc.Adc_ModuleState = ADC_E_ALREADY_INITIALIZED;
+        Det_Adc.Adc_InitState = TRUE;
         HwUnit_Adc.Config = ConfigPtr;
     }
 }
@@ -78,7 +79,31 @@ void Adc_Init( const Adc_ConfigType *ConfigPtr )
  */
 Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr )
 {
-    return Adc_Arch_SetupResultBuffer( &HwUnit_Adc, Group, DataBufferPtr );
+    Std_ReturnType RetValue;
+    if ( Group > 10 )   /*(Size tbd)*/
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_PARAM_GROUP );
+        RetValue = NULL_PTR;
+    }
+    else
+    {
+        RetValue = Adc_Arch_SetupResultBuffer( &HwUnit_Adc, Group, DataBufferPtr );
+    }
+    if ( Det_Adc.Adc_InitState == FALSE )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_UNINIT );
+    }
+    else
+    {
+    }
+    if ( DataBufferPtr == NULL_PTR )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_PARAM_POINTER );
+    }
+    else
+    {
+    }
+    return RetValue;
 }
 
 /**
@@ -92,6 +117,16 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
 void Adc_DeInit( void )
 {
     Adc_Arch_DeInit( &HwUnit_Adc );
+
+    if( Det_Adc.Adc_InitState == FALSE )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_UNINIT );
+    }
+    else
+    {
+        Adc_Arch_DeInit( &HwUnit_Adc );
+        Det_Adc.Adc_InitState = FALSE;
+    }
 }
 #endif
 
@@ -107,7 +142,22 @@ void Adc_DeInit( void )
 #if ADC_ENABLE_START_STOP_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_StartGroupConversion( Adc_GroupType Group )
 {
-    Adc_Arch_StartGroupConversion( &HwUnit_Adc, Group );
+    Std_ReturnType RetValue = NULL_PTR;
+    if ( Group > 10 )   /*(Size tbd)*/
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_PARAM_GROUP );
+    }
+    else
+    {
+    }
+    if ( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_HW )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_WRONG_TRIGG_SRC );
+    }
+    else
+    {
+        Adc_Arch_StartGroupConversion( &HwUnit_Adc, Group );
+    }
 }
 #endif
 
