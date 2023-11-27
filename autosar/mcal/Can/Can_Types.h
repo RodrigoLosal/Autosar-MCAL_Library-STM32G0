@@ -10,7 +10,6 @@
 #ifndef CAN_TYPES_H__
 #define CAN_TYPES_H__
 
-#include "Registers.h"
 #include "ComStack_Types.h"
 #include "Can_GeneralTypes.h"
 

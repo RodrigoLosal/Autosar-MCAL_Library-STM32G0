@@ -9,8 +9,10 @@
  * device drivers, and upwards the CAN Driver / CAN Transceiver Driver events are forwarded by the
  * CAN Interface module to e.g. the corresponding NM module.
  */
+#include "Std_Types.h"
 #include "Can.h"
 #include "CanIf.h"
+#include "CanIf_Can.h"
 
 /**
  * @brief Initializes the CAN interface.
@@ -121,6 +123,7 @@ Std_ReturnType CanIf_Transmit( PduIdType TxPduId, const PduInfoType *PduInfoPtr 
     return E_NOT_OK;
 }
 
+#if CANIF_PUBLIC_READ_RX_PDU_DATA == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief Reads the received data of a CAN L-PDU from the receive buffer.
  *
@@ -143,7 +146,9 @@ Std_ReturnType CanIf_ReadRxPduData( PduIdType CanIfRxSduId, PduInfoType *CanIfRx
     (void)CanIfRxInfoPtr;
     return E_NOT_OK;
 }
+#endif
 
+#if CANIF_PUBLIC_READ_TX_PDU_NOTIFY_STATUS == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief Read the Tx notification status of a CAN L-PDU.
  *
@@ -163,7 +168,9 @@ CanIf_NotifStatusType CanIf_ReadTxNotifStatus( PduIdType CanIfTxSduId )
     (void)CanIfTxSduId;
     return CANIF_NO_NOTIFICATION;
 }
+#endif
 
+#if CANIF_PUBLIC_READ_RX_PDU_NOTIFY_STATUS == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief Sets the requested PDU mode.
  *
@@ -182,6 +189,7 @@ CanIf_NotifStatusType CanIf_ReadRxNotifStatus( PduIdType CanIfRxSduId )
     (void)CanIfRxSduId;
     return CANIF_NO_NOTIFICATION;
 }
+#endif
 
 /**
  * @brief Sets the requested PDU mode.
@@ -225,6 +233,7 @@ Std_ReturnType CanIf_GetPduMode( uint8 ControllerId, CanIf_PduModeType *PduModeP
     return E_NOT_OK;
 }
 
+#if CANIF_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief Gets the version information of the CAN interface.
  *
@@ -238,6 +247,7 @@ void CanIf_GetVersionInfo( Std_VersionInfoType *VersionInfo )
 {
     (void)VersionInfo;
 }
+#endif
 
 /**
  * @brief Sets the CAN controller baudrate.
@@ -276,6 +286,7 @@ CanIf_NotifStatusType CanIf_GetTxConfirmationState( uint8 ControllerId )
     return CANIF_NO_NOTIFICATION;
 }
 
+#if CANIF_SET_BAUDRATE_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief Sets the CAN controller baudrate.
  *
@@ -296,6 +307,7 @@ Std_ReturnType CanIf_SetBaudrate( uint8 ControllerId, uint16 BaudRateConfigID )
     (void)BaudRateConfigID;
     return E_NOT_OK;
 }
+#endif
 
 /**
  * @brief Gets the CAN controller Rx error counter.
@@ -318,6 +330,7 @@ Std_ReturnType CanIf_GetControllerRxErrorCounter( uint8 ControllerId, uint8 *RxE
     return E_NOT_OK;
 }
 
+#if CANIF_BUS_MIRRORING_SUPPORT == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief Enables/Disables the bus mirroring feature.
  *
@@ -340,7 +353,9 @@ Std_ReturnType CanIf_EnableBusMirroring( uint8 ControllerId, boolean MirroringAc
     (void)MirroringActive;
     return E_NOT_OK;
 }
+#endif
 
+#if CANIF_GLOBAL_TIME_SUPPORT == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief Gets the current time.
  *
@@ -418,16 +433,17 @@ Std_ReturnType CanIf_GetIngressTimeStamp( PduIdType RxPduId, Can_TimeStampType *
     (void)timeStampPtr;
     return E_NOT_OK;
 }
+#endif
 
 /**
  * @brief Handles the transmit confirmation.
- * 
+ *
  * This service confirms a previously successfully processed transmission of a CAN TxPDU.
- * 
+ *
  * @param[in] CanTxPduId ID of the successfully transmitted Tx L-PDU
- * 
+ *
  * @reqs    SWS_CANIF_00007
-*/
+ */
 void CanIf_TxConfirmation( PduIdType CanTxPduId )
 {
     (void)CanTxPduId;
@@ -435,16 +451,16 @@ void CanIf_TxConfirmation( PduIdType CanTxPduId )
 
 /**
  * @brief Handles the received CAN frame.
- * 
- * This service indicates a successful reception of a received CAN Rx L-PDU to the CanIf after 
+ *
+ * This service indicates a successful reception of a received CAN Rx L-PDU to the CanIf after
  * passing all filters and validation checks.
- * 
+ *
  * @param[in] Mailbox Identifies the HRH and its corresponding CAN Controller
  * @param[in] PduInfoPtr Pointer to the received L-PDU
- * 
+ *
  * @reqs    SWS_CANIF_00006
-*/
-void CanIf_RxIndication( const Can_HwType* Mailbox, const PduInfoType* PduInfoPtr )
+ */
+void CanIf_RxIndication( const Can_HwType *Mailbox, const PduInfoType *PduInfoPtr )
 {
     (void)Mailbox;
     (void)PduInfoPtr;
@@ -452,14 +468,14 @@ void CanIf_RxIndication( const Can_HwType* Mailbox, const PduInfoType* PduInfoPt
 
 /**
  * @brief Handles the bus-off event.
- * 
- * This service indicates a Controller BusOff event referring to the corresponding CAN Controller 
+ *
+ * This service indicates a Controller BusOff event referring to the corresponding CAN Controller
  * with the abstract CanIf ControllerId.
- * 
+ *
  * @param[in] ControllerId CAN controller for which the status shall be changed.
- * 
+ *
  * @reqs    SWS_CANIF_00218
-*/
+ */
 void CanIf_ControllerBusOff( uint8 ControllerId )
 {
     (void)ControllerId;
@@ -467,15 +483,15 @@ void CanIf_ControllerBusOff( uint8 ControllerId )
 
 /**
  * @brief Controller mode indication.
- * 
+ *
  * This service indicates a controller state transition referring to the corresponding CAN controller
  * with the abstract CanIf ControllerId.
- * 
+ *
  * @param[in] ControllerId CAN controller for which the status shall be changed.
  * @param[in] ControllerMode New controller mode.
- * 
+ *
  * @reqs    SWS_CANIF_00699
-*/
+ */
 void CanIf_ControllerModeIndication( uint8 ControllerId, Can_ControllerStateType ControllerMode )
 {
     (void)ControllerId;
@@ -484,19 +500,19 @@ void CanIf_ControllerModeIndication( uint8 ControllerId, Can_ControllerStateType
 
 /**
  * @brief Signal the error state of the CAN controller.
- * 
+ *
  * The function derives the ErrorCounterTreshold from RxErrorCounter/ TxErrorCounter values
  * and reports it to the IdsM as security event CANIF_SEV_ERRORSTATE_PASSIVE to the IdsM.
  * It also prepares the context data for the respective security event.
- * 
+ *
  * @param[in] ControllerId Abstracted CanIf ControllerId which is assigned to a CAN
  *                          controller.
  * @param[in] RxErrorCounter Value of the Rx error counter
  * @param[in] TxErrorCounter Value of the Tx error counter
- * 
+ *
  * @reqs    SWS_CANIF_91008
-*/
-void CanIf_ControllerErrorStatePassive(  uint8 ControllerId, uint16 RxErrorCounter, uint16 TxErrorCounter )
+ */
+void CanIf_ControllerErrorStatePassive( uint8 ControllerId, uint16 RxErrorCounter, uint16 TxErrorCounter )
 {
     (void)ControllerId;
     (void)RxErrorCounter;
@@ -505,18 +521,18 @@ void CanIf_ControllerErrorStatePassive(  uint8 ControllerId, uint16 RxErrorCount
 
 /**
  * @brief Signal the error notification of the CAN controller.
- * 
+ *
  * The function shall derive the bus error source rx or tx from the parameter CanError and report
  * the bus error as security event CANIF_SEV_TX_ERROR_DETECTED or CANIF_SEV_RX_
  * ERROR_DETECTED. It also prepares the context data for the respective security event.
- * 
+ *
  * @param[in] ControllerId CAN controller for which the status shall be changed.
- * @param[in] CanErrorType Reported CAN error
- * 
+ * @param[in] CanError Reported CAN error
+ *
  * @reqs    SWS_CANIF_91009
-*/
-void CanIf_ErrorNotification( uint8 ControllerId, Can_ErrorType Can_ErrorType )
+ */
+void CanIf_ErrorNotification( uint8 ControllerId, Can_ErrorType CanError )
 {
     (void)ControllerId;
-    (void)Can_ErrorType;
+    (void)CanError;
 }
