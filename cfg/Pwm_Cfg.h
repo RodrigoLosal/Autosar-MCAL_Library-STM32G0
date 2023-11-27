@@ -75,6 +75,8 @@
  */
 #define PWM_NOTIFICATION_SUPPORTED STD_ON
 
+#define PWM_VERSION_INFO_API       STD_ON
+
 extern const Pwm_ConfigType PwmConfig;
 
 #endif /* PWM_CFG_H__ */
