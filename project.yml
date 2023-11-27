@@ -28,6 +28,7 @@
     - test/support/Spi_Lcfg.c
     - test/support/Mcu_Lcfg.c
     - test/support/Dio_Lcfg.c
+    - test/support/Pwm_Lcfg.c
 
 # Global defines applicable only when you run the code using ceedling
 :defines:
