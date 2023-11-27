@@ -232,7 +232,25 @@ void Adc_StopGroupConversion( Adc_GroupType Group )
 #if ADC_READ_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr )
 {
-    return Adc_Arch_ReadGroup( &HwUnit_Adc, Group, DataBufferPtr );
+    Std_ReturnType RetValue;
+    if ( Group > 10 )   /*(Size tbd)*/
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_PARAM_GROUP );
+        RetValue = E_NOT_OK;
+    }
+    else
+    { 
+    }
+    if ( Det_Adc.Adc_InitState == FALSE )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_UNINIT );
+        RetValue = E_NOT_OK;
+    }
+    else
+    {
+        RetValue = Adc_Arch_ReadGroup( &HwUnit_Adc, Group, DataBufferPtr );
+    }
+    return RetValue;
 }
 #endif
 
