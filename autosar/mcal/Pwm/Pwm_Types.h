@@ -50,6 +50,18 @@
  * @} */
 
 /**
+ * @defgroup PWM_STATIC PWM static define for testing purposes
+ *
+ * @{ */
+#ifndef UTEST
+#define PWM_STATIC static /*!< Add static when no testing */
+#else
+#define PWM_STATIC /*!< remove static for testing purposes */
+#endif
+/**
+ * @} */
+
+/**
  * @brief   Numeric identifier of a PWM channel.
  *
  * @reqs    SWS_Pwm_00106
@@ -161,6 +173,8 @@ typedef struct _Pwm_HwUnit
     Pwm_StatusType HwUnitState;            /*!< Pwm hardware unit state */
     Pwm_ChannelClassType Pwm_ChannelClass; /*!< Pwm channel class*/
     uint8 Pwm_channelNumber;               /*!< Pwm channel number */
+    uint16 Duty_Cycle;                     /*!< Pwm Duty Cycle */
+    Pwm_PeriodType Period;                 /*!< Pwm Period */
 } Pwm_HwUnit;
 
 #endif /* PWM_TYPES_H__ */
