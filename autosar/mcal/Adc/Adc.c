@@ -266,7 +266,49 @@ Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBuffe
 #if ADC_HW_TRIGGER_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_EnableHardwareTrigger( Adc_GroupType Group )
 {
-    Adc_Arch_EnableHardwareTrigger( &HwUnit_Adc, Group );
+    if ( Group > 10 )   /*(Size tbd)*/
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_PARAM_GROUP );
+    }
+    else
+    { 
+    }
+    if ( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_SW )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_WRONG_TRIGG_SRC );
+    }
+    else
+    {
+    }
+    if ( AdcConfig.Adc_GroupConvMode == ADC_CONV_MODE_CONTINUOUS )
+    {
+        if ( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_SW )
+        {
+            Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_WRONG_TRIGG_SRC );
+        }
+        else
+        {
+            Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_WRONG_CONV_MODE );
+        }
+    }
+    else
+    {
+    }
+    if ( Det_Adc.Adc_InitState == FALSE )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_UNINIT );
+    }
+    else
+    {
+    }
+    if ( Det_Adc.Adc_SetupResultBuffer == FALSE )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_BUFFER_UNINIT );
+    }
+    else
+    {
+        Adc_Arch_EnableHardwareTrigger( &HwUnit_Adc, Group );
+    }
 }
 #endif
 

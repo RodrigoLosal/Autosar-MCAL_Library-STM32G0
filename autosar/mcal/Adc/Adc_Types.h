@@ -81,6 +81,8 @@ typedef struct
     uint32 dummy;           /*!< dummy element */
     Adc_TriggerSourceType Adc_TriggerSource;  /*Type for configuring the trigger source for an ADC
                                                 Channel group*/
+    Adc_GroupConvModeType Adc_GroupConvMode;  /*Type for configuring the conversion mode of an ADC
+                                                Channel group*/
 } Adc_ConfigType;
 
 /**
