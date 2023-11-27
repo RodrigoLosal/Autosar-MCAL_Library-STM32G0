@@ -12,6 +12,14 @@
 #include "Pwm_Arch.h"
 
 /**
+ * @defgroup These definitions set the current Period and duty Cycle
+ * @{ */
+#define DUTY_CYCLE      50 /*!< Duty Cycle used in the pwm configuration array  */
+#define PERIOD          10 /*!< Period used in the pwm configuration array  */
+/**
+ * @} */
+
+/**
  * @defgroup These definitions set the minimum and maximum channel numbers for PWM operations.
  *
  * @{ */
@@ -34,16 +42,17 @@
 #endif
 
 /**
- * @brief  Variable for the initial value of the port configuration array.
+ * @brief  Variable for the initial value of the pwm configuration array.
  */
 /* clang-format off */
-static Pwm_HwUnit HwUnit_Pwm =
+/* cppcheck-suppress misra-c2012-8.4 ; qualifier is declared at Pwm.h */
+PWM_STATIC Pwm_HwUnit HwUnit_Pwm =
 {
-.HwUnitState       = PWM_NOT_INIT, /*!< Pwm hardware unit state */
-.Config            = NULL_PTR,
-.Pwm_ChannelClass  = PWM_VARIABLE_PERIOD,
-.Pwm_channelNumber = PWM_CHANNEL_MAX };
-
+    .HwUnitState       = PWM_STATE_UNINIT, /*!< Pwm hardware unit state */
+    .Config            = NULL_PTR,
+    .Pwm_ChannelClass  = PWM_VARIABLE_PERIOD,
+    .Pwm_channelNumber = PWM_CHANNEL_MAX,
+};
 /* clang-format on */
 
 /**
