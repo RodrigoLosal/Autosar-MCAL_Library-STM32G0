@@ -1456,6 +1456,60 @@ void test__Can_GetTxPduId__get_the_oldes_pdu_id( void )
 }
 
 /**
+ * @brief   test to check that the CanIf_TxConfirmation is called
+ * 
+ * This test case will check that the CanIf_TxConfirmation is called when the TXEFS register is
+ * updated with the correct value
+*/
+void test__Can_Isr_RxFifo0NewMessage__call_rx_indication( void )
+{
+    CanIf_RxIndication_Ignore( );
+
+    Can_Isr_RxFifo0NewMessage( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+/**
+ * @brief   test to check that the CanIf_ErrorNotification is called
+ * 
+ * This test case will check that the CanIf_ErrorNotification is called when the TXEFS register is
+ * updated with the correct value
+*/
+void test__Can_Isr_RxFifo0MessageLost__call_can_if_error_notification( void )
+{
+    CanIf_ErrorNotification_Ignore( );
+    Det_ReportRuntimeError_IgnoreAndReturn( E_OK );
+
+    Can_Isr_RxFifo0MessageLost( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+/**
+ * @brief   test to check that the CanIf_TxConfirmation is called
+ * 
+ * This test case will check that the CanIf_TxConfirmation is called when the TXEFS register is
+ * updated with the correct value
+*/
+void test__Can_Isr_RxFifo1NewMessage__call_rx_indication( void )
+{
+    CanIf_RxIndication_Ignore( );
+
+    Can_Isr_RxFifo1NewMessage( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+/**
+ * @brief   test to check that the CanIf_ErrorNotification is called
+ * 
+ * This test case will check that the CanIf_ErrorNotification is called when the TXEFS register is
+ * updated with the correct value
+*/
+void test__Can_Isr_RxFifo1MessageLost__call_can_if_error_notification( void )
+{
+    CanIf_ErrorNotification_Ignore( );
+    Det_ReportRuntimeError_IgnoreAndReturn( E_OK );
+
+    Can_Isr_RxFifo1MessageLost( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+/**
  * @brief   void test for Can_Isr_HighPriorityMessageRx
  *
  * empty test case to complete 100% code coverage
@@ -1473,6 +1527,28 @@ void test__Can_Isr_HighPriorityMessageRx__void_test( void )
 void test__Can_Isr_TransmissionCancellationFinished__void_test( void )
 {
     Can_Isr_TransmissionCancellationFinished( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+void test__Can_Isr_TransmissionCompleted__call_tx_confirmation( void )
+{
+    CanIf_TxConfirmation_Ignore( );
+
+    Can_Isr_TransmissionCompleted( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+void test__Can_Isr_TxEventFifoElementLost__call_can_if_error_notification( void )
+{
+    CanIf_ErrorNotification_Ignore( );
+    Det_ReportRuntimeError_IgnoreAndReturn( E_OK );
+
+    Can_Isr_TxEventFifoElementLost( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+void test__Can_Isr_TxEventFifoNewEntry__call_tx_confirmation( void )
+{
+    CanIf_TxConfirmation_Ignore( );
+
+    Can_Isr_TxEventFifoNewEntry( &HwUnit, CAN_CONTROLLER_0 );
 }
 
 /**
@@ -1507,9 +1583,9 @@ void test__Can_Isr_TimeoutOccurred__void_test( void )
 
 /**
  * @brief   void test for Can_Isr_ErrorLoggingOverflow
- * 
+ *
  * empty test case to complete 100% code coverage
-*/
+ */
 void test__Can_Isr_ErrorLoggingOverflow__void_test( void )
 {
     Can_Isr_ErrorLoggingOverflow( &HwUnit, CAN_CONTROLLER_0 );
@@ -1517,10 +1593,10 @@ void test__Can_Isr_ErrorLoggingOverflow__void_test( void )
 
 /**
  * @brief   test case for error active isr
- * 
+ *
  * This test case will check that the CanIf_ControllerErrorStateActive is not called when a error
- * active is detected 
-*/
+ * active is detected
+ */
 void test__Can_Isr_ErrorPassive__move_to_error_active( void )
 {
     CAN1->PSR = 0x00000000;
@@ -1530,10 +1606,10 @@ void test__Can_Isr_ErrorPassive__move_to_error_active( void )
 
 /**
  * @brief   test case for error pasive isr
- * 
+ *
  * This test case will check that the CanIf_ControllerErrorStatePassive is called when a error
  * passive is detected
-*/
+ */
 void test__Can_Isr_ErrorPassive__move_to_error_passive( void )
 {
     CAN1->PSR = 0x00000020;
@@ -1554,10 +1630,10 @@ void test__Can_Isr_WarningStatus__void_test( void )
 
 /**
  * @brief   test case for bus on isr
- * 
+ *
  * This test case will check that the CanIf_ControllerBusOff is not called when a bus on is detected
  * and the controller is in the error active state
-*/
+ */
 void test__Can_Isr_BusOffStatus__bus_to_on( void )
 {
     CAN1->PSR = 0x00000000;
@@ -1567,10 +1643,10 @@ void test__Can_Isr_BusOffStatus__bus_to_on( void )
 
 /**
  * @brief   test case for bus off isr
- * 
+ *
  * This test case will check that the CanIf_ControllerBusOff is called when a bus off is detected
  * and the controller is in the error passive state
-*/
+ */
 void test__Can_Isr_BusOffStatus__bus_to_off( void )
 {
     CAN1->PSR = 0x00000080;
