@@ -59,7 +59,6 @@
     - autosar/mcal/Gpt/Gpt.c
     - autosar/mcal/Gpt/Gpt_Arch.c
     - autosar/mcal/Can/Can_Arch.c
-    - autosar/mcal/Pwm/Pwm.c
     - autosar/mcal/Pwm/Pwm_Arch.c
     - autosar/mcal/Det/Det.c
     - autosar/mcal/Fls/Fls.c
