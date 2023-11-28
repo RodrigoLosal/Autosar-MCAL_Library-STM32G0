@@ -75,6 +75,10 @@
  */
 #define PWM_NOTIFICATION_SUPPORTED STD_ON
 
+/**
+ * @brief Specifies if the Pwm_GetVersionInfo API shall be supported.
+ * @typedef EcucBooleanParamDef
+ */
 #define PWM_VERSION_INFO_API       STD_ON
 
 extern const Pwm_ConfigType PwmConfig;
