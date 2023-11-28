@@ -16,6 +16,26 @@
 #include "Fls_Types.h"
 
 /**
+ * @defgroup FLS_SWC_Ids FLS software version and Ids
+ *
+ * {@ */
+#define FLS_MODULE_ID            0u /*!< Fls Module ID */
+#define FLS_INSTANCE_ID          0u /*!< Fls Instance ID */
+#define FLS_VENDOR_ID            0u /*!< Fls Module Vendor ID */
+/**
+ * @} */
+
+/**
+ * @defgroup FLS_SWC_Ids FLS software version and Ids
+ *
+ * {@ */
+#define FLS_SW_MAJOR_VERSION     0u /*!< Fls Module Major Version */
+#define FLS_SW_MINOR_VERSION     0u /*!< Fls Module Minor Version */
+#define FLS_SW_PATCH_VERSION     0u /*!< Fls Module Patch Version */
+/**
+ * @} */
+
+/**
  * @brief Enable / disable the Fls_Cancel() function.
  * @typedef EcucBooleanParamDef
  */
@@ -56,6 +76,12 @@
  * @typedef EcucBooleanParamDef
  */
 #define FLS_BLANK_CHECK_API      STD_ON
+
+/**
+ * @brief Switches the development error detection and notification on or off.
+ * @typedef EcucBooleanParamDef
+ */
+#define FLS_DEV_ERROR_DETECT     STD_ON
 
 extern const Fls_ConfigType FlashConfig;
 

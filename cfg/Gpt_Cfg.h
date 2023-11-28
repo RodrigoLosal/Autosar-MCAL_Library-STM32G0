@@ -45,16 +45,25 @@
  * @brief Switches the development error detection and notification on or off.
  * @typedef EcucBooleanParamDef
  */
-#define GPT_DEV_ERROR_DETECT                STD_OFF
+#define GPT_DEV_ERROR_DETECT                STD_ON
 
 /**
-  * @defgroup GPT-ID to get the version information of this module.
-  @{ */
-#define GPT_VENDOR_ID                       (uint16)1000u /*!< Id for the company in the AUTOSAR*/
-#define GPT_MODULE_ID                       2u            /*!< GPT Module Id */
-#define GPT_SW_MAJOR_VERSION                (uint8)1u     /*!< GPT Module Major Version */
-#define GPT_SW_MINOR_VERSION                (uint8)0u     /*!< GPT Module Major Version */
-#define GPT_SW_PATCH_VERSION                (uint8)0u     /*!< GPT Module Major Version */
+ * @defgroup GPT_SWC_Ids GPT software version and Ids
+ *
+ * {@ */
+#define GPT_MODULE_ID                       0u /*!< GPT Module ID */
+#define GPT_INSTANCE_ID                     0u /*!< GPT Instance ID */
+#define GPT_VENDOR_ID                       0u /*!< GPT Module Vendor ID */
+/**
+ * @} */
+
+/**
+ * @defgroup GPT_SWC_Ids GPT software version and Ids
+ *
+ * {@ */
+#define GPT_SW_MAJOR_VERSION                0u /*!< GPT Module Major Version */
+#define GPT_SW_MINOR_VERSION                0u /*!< GPT Module Minor Version */
+#define GPT_SW_PATCH_VERSION                0u /*!< GPT Module Patch Version */
 /**
  * @} */
 
