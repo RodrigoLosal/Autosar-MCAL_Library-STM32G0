@@ -12,14 +12,6 @@
 #include "Pwm_Arch.h"
 
 /**
- * @defgroup These definitions set the current Period and duty Cycle
- * @{ */
-#define DUTY_CYCLE      50 /*!< Duty Cycle used in the pwm configuration array  */
-#define PERIOD          10 /*!< Period used in the pwm configuration array  */
-/**
- * @} */
-
-/**
  * @defgroup Defines to set the minimum and maximum channel numbers for PWM operations.
  *
  * @{ */
