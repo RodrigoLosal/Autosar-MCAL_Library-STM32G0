@@ -266,11 +266,11 @@ void Gpt_GetVersionInfo( Std_VersionInfoType *versioninfo )
     }
     else
     {
-        versioninfo->moduleID         = 0;
-        versioninfo->sw_major_version = 0;
-        versioninfo->sw_minor_version = 0;
-        versioninfo->sw_patch_version = 0;
-        versioninfo->vendorID         = 0;
+        versioninfo->moduleID         = GPT_MODULE_ID;
+        versioninfo->sw_major_version = GPT_SW_MAJOR_VERSION;
+        versioninfo->sw_minor_version = GPT_SW_MINOR_VERSION;
+        versioninfo->sw_patch_version = GPT_SW_PATCH_VERSION;
+        versioninfo->vendorID         = GPT_VENDOR_ID;
     }
 }
 #endif
