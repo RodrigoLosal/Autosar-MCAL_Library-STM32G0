@@ -694,7 +694,7 @@ Std_ReturnType CanIf_GetControllerRxErrorCounter( uint8 ControllerId, uint8 *RxE
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_CTRL_RX_ERR_CNT, CANIF_E_UNINIT );
     }
-    else if()
+    else if(ControllerId)
     {
         /*If parameter ControllerId of CanIf_GetControllerRxErrorCounter() has an invalid value, the 
         CanIf shall report development error code CANIF_E_PARAM_CONTROLLERID to the Det_ReportError 
@@ -727,13 +727,40 @@ Std_ReturnType CanIf_GetControllerRxErrorCounter( uint8 ControllerId, uint8 *RxE
  * @return  E_OK: Rx error counter available.
  *          E_NOT_OK: Wrong ControllerId, or Rx error counter not available.
  *
- * @reqs    SWS_CANIF_91004
+ * @reqs    SWS_CANIF_91005, SWS_CANIF_00909, SWS_CANIF_00910
  */
 Std_ReturnType CanIf_GetControllerTxErrorCounter( uint8 ControllerId, uint8 *TxErrorCounterPtr )
 {
-    (void)ControllerId;
-    (void)TxErrorCounterPtr;
-    return E_NOT_OK;
+    Std_ReturnType RetVal = E_NOT_OK;
+
+    if( LocalConfigPtr == NULL_PTR )
+    {
+        /*All CanIf API services other than CanIf_Init() and CanIf_GetVersionInfo() shall not execute 
+        their normal operation and return E_NOT_OK unless the CanIf has been initialized with a 
+        preceding call of CanIf_Init */
+        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_CTRL_TX_ERR_CNT, CANIF_E_UNINIT );
+    }
+    else if(ControllerId)
+    {
+        /*If parameter ControllerId of CanIf_GetControllerTxErrorCounter() has an invalid value, the 
+        CanIf shall report development error code CANIF_E_PARAM_CONTROLLERID to the Det_ReportError 
+        service of the DET module, when CanIf_GetControllerTxErrorCounter() is called.*/
+        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_CTRL_TX_ERR_CNT, CANIF_E_PARAM_CONTROLLERID );
+    }
+    else if(RxErrorCounterPtr == NULL_PTR)
+    {
+        /*If parameter RxErrorCounterPtr of CanIf_GetControllerTxErrorCounter() has an invalid value 
+        (NULL_PTR), the CanIf shall report development error code CANIF_E_PARAM_POINTER to the 
+        Det_ReportError service of the DET module, when CanIf_GetControllerTxErrorCounter() is called.*/
+        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_CTRL_TX_ERR_CNT, CANIF_E_PARAM_POINTER );
+    }
+    else
+    {
+        /* Get controller Tx error counter */
+        RetVal = E_OK;
+    }
+
+    return RetVal;
 }
 
 #if CANIF_BUS_MIRRORING_SUPPORT == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
