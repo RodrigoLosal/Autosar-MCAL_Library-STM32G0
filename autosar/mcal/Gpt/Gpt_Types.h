@@ -28,6 +28,34 @@
  * @} */
 
 /**
+ * @defgroup GPT_Error_Type GPT Development Error Types
+ *
+ * @reqs    SWS_Gpt_91000
+ * @{ */
+#define GPT_E_UNINIT                0x0Au /*!< API service called without the module initialization */
+#define GPT_E_ALREADY_INITIALIZED   0x0Du /*!< API service for initialization called when already initialized */
+#define GPT_E_INIT_FAILED           0x0Eu /*!< API error return code: Init function failed */
+#define GPT_E_PARAM_CHANNEL         0x14u /*!< API parameter checking: invalid channel */
+#define GPT_E_PARAM_VALUE           0x15u /*!< API parameter checking: invalid value */
+#define GPT_E_PARAM_POINTER         0x16u /*!< API parameter checking: invalid pointer */
+#define GPT_E_PARAM_PREDEF_TIMER    0x17u /*!< API parameter checking: invalid Predef Timer */
+#define GPT_E_PARAM_MODE            0x1Fu /*!< API parameter checking: invalid mode */
+/**
+ * @} */
+
+/**
+ * @defgroup GPT_STATIC GPT static define for testing purposes
+ *
+ * @{ */
+#ifndef UTEST
+#define GPT_STATIC static /*!< Add static when no testing */
+#else
+#define GPT_STATIC /*!< remove static for testing purposes */
+#endif
+/**
+ * @} */
+
+/**
  * @brief **Config Elements of a GPT**
  *
  * @reqs   SWS_Gpt_00358
@@ -76,5 +104,29 @@ typedef enum
  * @reqs   SWS_Gpt_00359
  */
 typedef uint32 Gpt_ValueType;
+
+/**
+ * @brief   **Hardware unit status datatype**
+ *
+ * Data type which describes the status of GPT Module (initialized, not-initialized).
+ *
+ */
+typedef enum _Gpt_StatusType
+{
+    GPT_STATE_UNINIT = 0x00, /*!< GPT Module not initialized         */
+    GPT_STATE_INIT,          /*!< GPT Module has been initialized    */
+} Gpt_StatusType;
+
+/**
+ * @brief **Hardware control unit structure**
+ *
+ * This structure contains the hardware unit configuration and the state of the hardware
+ * unit pointers to controller structures.
+ */
+typedef struct _Gpt_HwUnit
+{
+    const Gpt_ConfigType *Config; /*!< Pointer to the configuration structure */
+    Gpt_StatusType HwUnitState;   /*!< MCU hardware unit state                */
+} Gpt_HwUnit;
 
 #endif /* GPT_TYPES_H__ */
