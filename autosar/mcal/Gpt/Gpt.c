@@ -122,7 +122,7 @@ Gpt_ValueType Gpt_GetTimeElapsed( Gpt_ChannelType Channel )
         initialized, the function Gpt_GetTimeElapsed shall raise the error GPT_E_UNINIT. */
         Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_GET_TIME_ELAPSED, GPT_E_UNINIT );
     }
-    else if( HwUnit_Gpt.Config->NumberOfChannels > GPT_MAX_NUMBER_OF_CHANNELS )
+    else if( Channel >= HwUnit_Gpt.Config->NumberOfChannels )
     {
         /* If development error detection is enabled for GPT module: If the parameter Channel is
         invalid (not within the range specified by configuration), the function Gpt_GetTimeElapsed
@@ -160,7 +160,7 @@ Gpt_ValueType Gpt_GetTimeRemaining( Gpt_ChannelType Channel )
          the function Gpt_GetTimeRemaining shall raise the error GPT_E_UNINIT. */
         Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_GET_TIME_REMAINING, GPT_E_UNINIT );
     }
-    else if( HwUnit_Gpt.Config->NumberOfChannels > GPT_MAX_NUMBER_OF_CHANNELS )
+    else if( Channel >= HwUnit_Gpt.Config->NumberOfChannels )
     {
         /* If development error detection is enabled for GPT module: If the parameter Channel is
         invalid (not within the range specified by configuration), the function Gpt_GetTimeRemaining
@@ -188,7 +188,7 @@ Gpt_ValueType Gpt_GetTimeRemaining( Gpt_ChannelType Channel )
  */
 void Gpt_StartTimer( Gpt_ChannelType Channel, Gpt_ValueType Value )
 {
-    if( HwUnit_Gpt.Config->NumberOfChannels > GPT_MAX_NUMBER_OF_CHANNELS )
+    if( Channel >= HwUnit_Gpt.Config->NumberOfChannels )
     {
         /* If development error detection is enabled for GPT module: If the parameter Channel is
         invalid (not within the range specified by configuration), the function Gpt_StartTimer shall
@@ -225,7 +225,7 @@ void Gpt_StartTimer( Gpt_ChannelType Channel, Gpt_ValueType Value )
  */
 void Gpt_StopTimer( Gpt_ChannelType Channel )
 {
-    if( HwUnit_Gpt.Config->NumberOfChannels > GPT_MAX_NUMBER_OF_CHANNELS )
+    if( Channel >= HwUnit_Gpt.Config->NumberOfChannels )
     {
         /* If development error detection is enabled for GPT module: If the parameter Channel is
         invalid (not within the range specified by configuration), the function Gpt_StopTimer shall
@@ -294,7 +294,7 @@ void Gpt_EnableNotification( Gpt_ChannelType Channel )
         the function Gpt_EnableNotification shall raise the error GPT_E_UNINIT. */
         Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_ENABLE_NOTIFICATION, GPT_E_UNINIT );
     }
-    else if( HwUnit_Gpt.Config->NumberOfChannels > GPT_MAX_NUMBER_OF_CHANNELS )
+    else if( Channel >= HwUnit_Gpt.Config->NumberOfChannels )
     {
         /* If development error detection is enabled for GPT module: If the parameter Channel is
         invalid (not within the range specified by configuration), the function
@@ -334,7 +334,7 @@ void Gpt_DisableNotification( Gpt_ChannelType Channel )
         the function Gpt_DisableNotification shall raise the error GPT_E_UNINIT. */
         Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_DISABLE_NOTIFICATION, GPT_E_UNINIT );
     }
-    else if( HwUnit_Gpt.Config->NumberOfChannels > GPT_MAX_NUMBER_OF_CHANNELS )
+    else if( Channel >= HwUnit_Gpt.Config->NumberOfChannels )
     {
         /* If development error detection is enabled for GPT module: If the driver is not initialized,
         the function Gpt_DisableNotification shall raise the error GPT_E_UNINIT. */

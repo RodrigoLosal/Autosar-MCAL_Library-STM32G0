@@ -30,7 +30,6 @@
  * Specifies the controller maximum values for its config. parameters.
  *
  * @{ */
-#define GPT_MAX_NUMBER_OF_CHANNELS 2u         /* GPT Module maximum number of channels available */
 #define GPT_ARR_MAX                0X0000FFFF /*!< TIMx Auto-reload register maximum admissible value */
 /**
  * @} */
