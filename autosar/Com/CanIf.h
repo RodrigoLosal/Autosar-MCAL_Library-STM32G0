@@ -41,6 +41,7 @@ CanIf_NotifStatusType CanIf_GetTxConfirmationState( uint8 ControllerId );
 Std_ReturnType CanIf_SetBaudrate( uint8 ControllerId, uint16 BaudRateConfigID );
 #endif
 Std_ReturnType CanIf_GetControllerRxErrorCounter( uint8 ControllerId, uint8 *RxErrorCounterPtr );
+Std_ReturnType CanIf_GetControllerTxErrorCounter( uint8 ControllerId, uint8 *TxErrorCounterPtr );
 #if CANIF_BUS_MIRRORING_SUPPORT == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Std_ReturnType CanIf_EnableBusMirroring( uint8 ControllerId, boolean MirroringActive );
 #endif

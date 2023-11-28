@@ -330,6 +330,27 @@ Std_ReturnType CanIf_GetControllerRxErrorCounter( uint8 ControllerId, uint8 *RxE
     return E_NOT_OK;
 }
 
+/**
+ * @brief Gets the CAN controller Tx error counter.
+ *
+ * This service calls the corresponding CAN Driver service for obtaining the Tx error counter of
+ * the CAN controller.
+ *
+ * @param[in] ControllerId CAN controller for which the status shall be changed.
+ * @param[out] TxErrorCounterPtr Pointer to a memory location, where the current Tx error counter
+ *
+ * @return  E_OK: Rx error counter available.
+ *          E_NOT_OK: Wrong ControllerId, or Rx error counter not available.
+ *
+ * @reqs    SWS_CANIF_91004
+ */
+Std_ReturnType CanIf_GetControllerTxErrorCounter( uint8 ControllerId, uint8 *TxErrorCounterPtr )
+{
+    (void)ControllerId;
+    (void)TxErrorCounterPtr;
+    return E_NOT_OK;
+}
+
 #if CANIF_BUS_MIRRORING_SUPPORT == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief Enables/Disables the bus mirroring feature.
