@@ -78,10 +78,10 @@
  */
 typedef struct
 {
-    Adc_TriggerSourceType Adc_TriggerSource;  /*Type for configuring the trigger source for an ADC
-                                                Channel group*/
-    Adc_GroupConvModeType Adc_GroupConvMode;  /*Type for configuring the conversion mode of an ADC
-                                                Channel group*/
+    Adc_TriggerSourceType Adc_TriggerSource; /*Type for configuring the trigger source for an ADC
+                                               Channel group*/
+    Adc_GroupConvModeType Adc_GroupConvMode; /*Type for configuring the conversion mode of an ADC
+                                               Channel group*/
 } Adc_ConfigType;
 
 /**
@@ -184,7 +184,7 @@ typedef enum
                                     group are performed. ’Continuous conversion mode’ is only
                                     available for ’group trigger source software’. A started
                                     ’Continuous conversion’ can be stopped by a software API call.*/
-} Adc_GroupConvModeType;       
+} Adc_GroupConvModeType;
 
 /**
  * @brief   Priority level of the channel. Lowest priority is 0.
@@ -221,7 +221,7 @@ typedef enum
     ADC_STREAM_BUFFER_CIRCULAR    /*!< The ADC Driver continues the conversion even if the stream
                                     buffer is full (number of samples reached) by wrapping around
                                     the stream buffer itself.*/
-} Adc_StreamBufferModeType;       
+} Adc_StreamBufferModeType;
 
 /**
  * @brief Type for configuring the access mode to group conversion results.
@@ -233,7 +233,7 @@ typedef enum
 {
     ADC_ACCESS_MODE_SINGLE = 0, /*!< Single value access mode.*/
     ADC_ACCESS_MODE_STREAMING   /*!< Streaming access mode.*/
-} Adc_GroupAccessModeType;      
+} Adc_GroupAccessModeType;
 
 /**
  * @brief Type for configuring on which edge of the hardware trigger signal the driver should
@@ -250,7 +250,7 @@ typedef enum
                                     (only if supported by the ADC hardware).*/
     ADC_HW_TRIG_BOTH_EDGES       /*!< React on both edges of the hardware trigger signal (only if
                                     supported by the ADC hardware).*/
-} Adc_HwTriggerSignalType;       
+} Adc_HwTriggerSignalType;
 
 /**
  * @brief   Type for the reload value of the ADC module embedded timer (only if supported by the
@@ -268,10 +268,10 @@ typedef uint8 Adc_HwTriggerTimerType; /* cppcheck-suppress misra-c2012-2.3 ; it 
 /* cppcheck-suppress misra-c2012-2.4 ; it is fot future use */
 typedef enum
 {
-    ADC_PRIORITY_NONE = 0,        /*!< Priority mechanism is not available*/
-    ADC_PRIORITY_HW,              /*!< Hardware priority mechanism is available only*/
-    ADC_PRIORITY_HW_SW            /*!< Hardware and software priority mechanism is available*/
-} Adc_PriorityImplementationType; 
+    ADC_PRIORITY_NONE = 0, /*!< Priority mechanism is not available*/
+    ADC_PRIORITY_HW,       /*!< Hardware priority mechanism is available only*/
+    ADC_PRIORITY_HW_SW     /*!< Hardware and software priority mechanism is available*/
+} Adc_PriorityImplementationType;
 
 /**
  * @brief Replacement mechanism, which is used on ADC group level, if a group conversion is
@@ -297,7 +297,7 @@ typedef enum
                                         after the higher priority group conversion is finished.
                                         Results of previous conversion rounds which are already
                                         written to the result buffer are not affected.*/
-} Adc_GroupReplacementType;           
+} Adc_GroupReplacementType;
 
 /**
  * @brief In case of active limit checking: defines which conversion values are taken into account
@@ -308,16 +308,16 @@ typedef enum
 /* cppcheck-suppress misra-c2012-2.4 ; it is fot future use */
 typedef enum
 {
-    ADC_RANGE_UNDER_LOW = 0,  /*!< Range below low limit - low limit value included*/
-    ADC_RANGE_BETWEEN,        /*!< Range between low limit and high limit - high limit value
-                                 included*/
-    ADC_RANGE_OVER_HIGH,      /*!< Range above high limit*/
-    ADC_RANGE_ALWAYS,         /*!< Complete range - independent from channel limit settings*/
-    ADC_RANGE_NOT_UNDER_LOW,  /*!< Range above low limit*/
-    ADC_RANGE_NOT_BETWEEN,    /*!< Range above high limit or below low limit - low limit value
-                                 included*/
-    ADC_RANGE_NOT_OVER_HIGH   /*!< Range below high limit - high limit value included*/
-} Adc_ChannelRangeSelectType; 
+    ADC_RANGE_UNDER_LOW = 0, /*!< Range below low limit - low limit value included*/
+    ADC_RANGE_BETWEEN,       /*!< Range between low limit and high limit - high limit value
+                                included*/
+    ADC_RANGE_OVER_HIGH,     /*!< Range above high limit*/
+    ADC_RANGE_ALWAYS,        /*!< Complete range - independent from channel limit settings*/
+    ADC_RANGE_NOT_UNDER_LOW, /*!< Range above low limit*/
+    ADC_RANGE_NOT_BETWEEN,   /*!< Range above high limit or below low limit - low limit value
+                                included*/
+    ADC_RANGE_NOT_OVER_HIGH  /*!< Range below high limit - high limit value included*/
+} Adc_ChannelRangeSelectType;
 
 /**
  * @brief Type for alignment of ADC raw results in ADC result buffer (left/right alignment).
@@ -327,9 +327,9 @@ typedef enum
 /* cppcheck-suppress misra-c2012-2.4 ; it is fot future use */
 typedef enum
 {
-    ADC_ALIGN_LEFT = 0,    /*!< left alignment*/
-    ADC_ALIGN_RIGHT        /*!< right alignment*/
-} Adc_ResultAlignmentType; 
+    ADC_ALIGN_LEFT = 0, /*!< left alignment*/
+    ADC_ALIGN_RIGHT     /*!< right alignment*/
+} Adc_ResultAlignmentType;
 
 /**
  * @brief Power state currently active or set as target power state.
@@ -363,12 +363,12 @@ typedef enum
 /**
  * @brief **Hardware control unit structure**
  *
- * This structure contains the hardware unit configuration and the state of the hardware unit 
+ * This structure contains the hardware unit configuration and the state of the hardware unit
  * pointers to control structures.
  */
 typedef struct _Adc_HwUnit
 {
-    const Adc_ConfigType *Config;           /*!< Pointer to the configuration structure */
+    const Adc_ConfigType *Config; /*!< Pointer to the configuration structure */
 } Adc_HwUnit;
 
 /**
@@ -385,6 +385,6 @@ typedef struct _Adc_Det_Str
     uint8 *GroupNotifFunctionPtr;
     uint8 *PwrState;
     boolean *PreparePwrStateFlag;
-}Adc_Det_Str;
+} Adc_Det_Str;
 
 #endif /* ADC_TYPES_H__ */
