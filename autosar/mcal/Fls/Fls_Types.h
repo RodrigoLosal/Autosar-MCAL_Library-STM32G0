@@ -98,6 +98,9 @@ typedef struct _Fls_ConfigType
     Fls_AddressType EraseStartAddress; /*!<Variable to use to erase end address*/
     Fls_LengthType FlsSectorSize;      /*!<Variable to use to flash sector boundary*/
     uint16 FlsNumberOfSectors;         /*!<Variable to describe the sector in Flash*/
+    Fls_LengthType MaxReadMode;        /*!<Maximum elemnt to read*/
+    Fls_LengthType MaxWriteMode;       /*!<Maximum element to write*/
+    Fls_LengthType num_bytes;          /*!<Num of bytes to read, write, erase, compare*/
     uint32 dummy;                      /*!< dummy element for the moment */
 } Fls_ConfigType;
 
