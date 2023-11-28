@@ -84,19 +84,12 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
     if ( Group > 10 )   /*(Size tbd)*/
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_RESULT_BUFFER, ADC_E_PARAM_GROUP );
-        RetValue = NULL_PTR;
     }
-    else
-    {
-    }
-    if ( Det_Adc.Adc_InitState == FALSE )
+    else if ( Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_RESULT_BUFFER, ADC_E_UNINIT );
     }
-    else
-    {
-    }
-    if ( DataBufferPtr == NULL_PTR )
+    else if ( DataBufferPtr == NULL_PTR )
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_RESULT_BUFFER, ADC_E_PARAM_POINTER );
     }
@@ -147,24 +140,15 @@ void Adc_StartGroupConversion( Adc_GroupType Group )
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_PARAM_GROUP );
     }
-    else
-    {
-    }
-    if ( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_HW )
+    else if ( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_HW )
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_WRONG_TRIGG_SRC );
     }
-    else
-    {
-    }
-    if ( Det_Adc.Adc_InitState == FALSE )
+    else if ( Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_UNINIT );
     }
-    else
-    {
-    }
-    if ( Det_Adc.Adc_SetupResultBuffer == FALSE )
+    else if ( Det_Adc.Adc_SetupResultBuffer == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_BUFFER_UNINIT );
     }
@@ -191,17 +175,11 @@ void Adc_StopGroupConversion( Adc_GroupType Group )
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_STOP_GROUP_CONVERSION, ADC_E_PARAM_GROUP );
     }
-    else
-    { 
-    }
-    if ( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_HW )
+    else if ( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_HW )
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_STOP_GROUP_CONVERSION, ADC_E_WRONG_TRIGG_SRC );
     }
-    else
-    {
-    }
-    if ( Det_Adc.Adc_InitState == FALSE )
+    else if ( Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_STOP_GROUP_CONVERSION, ADC_E_UNINIT );
     }
@@ -232,16 +210,14 @@ void Adc_StopGroupConversion( Adc_GroupType Group )
 #if ADC_READ_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr )
 {
-    Std_ReturnType RetValue;
+    Std_ReturnType RetValue = E_NOT_OK;
     if ( Group > 10 )   /*(Size tbd)*/
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_READ_GROUP, ADC_E_PARAM_GROUP );
-        RetValue = E_NOT_OK;
     }
     else if ( Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_READ_GROUP, ADC_E_UNINIT );
-        RetValue = E_NOT_OK;
     }
     else
     {
@@ -267,17 +243,11 @@ void Adc_EnableHardwareTrigger( Adc_GroupType Group )
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_PARAM_GROUP );
     }
-    else
-    { 
-    }
-    if ( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_SW )
+    else if ( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_SW )
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_WRONG_TRIGG_SRC );
     }
-    else
-    {
-    }
-    if ( AdcConfig.Adc_GroupConvMode == ADC_CONV_MODE_CONTINUOUS )
+    else if ( AdcConfig.Adc_GroupConvMode == ADC_CONV_MODE_CONTINUOUS )
     {
         if ( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_SW )
         {
@@ -288,17 +258,11 @@ void Adc_EnableHardwareTrigger( Adc_GroupType Group )
             Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_WRONG_CONV_MODE );
         }
     }
-    else
-    {
-    }
-    if ( Det_Adc.Adc_InitState == FALSE )
+    else if ( Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_UNINIT );
     }
-    else
-    {
-    }
-    if ( Det_Adc.Adc_SetupResultBuffer == FALSE )
+    else if ( Det_Adc.Adc_SetupResultBuffer == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_BUFFER_UNINIT );
     }
