@@ -517,7 +517,16 @@ Std_ReturnType Adc_SetPowerState( Adc_PowerStateRequestResultType *Result )
  */
 Std_ReturnType Adc_GetCurrentPowerState( Adc_PowerStateType *CurrentPowerState, Adc_PowerStateRequestResultType *Result )
 {
-    return Adc_Arch_GetCurrentPowerState( &HwUnit_Adc, CurrentPowerState, Result );
+    Std_ReturnType RetValue = E_NOT_OK;
+    if ( Det_Adc.Adc_InitState == FALSE )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_GET_CURRENT_POWER_STATE, ADC_E_UNINIT );
+    }
+    else
+    {
+        RetValue = Adc_Arch_GetCurrentPowerState( &HwUnit_Adc, CurrentPowerState, Result );
+    }
+    return RetValue;
 }
 
 /**
@@ -537,7 +546,16 @@ Std_ReturnType Adc_GetCurrentPowerState( Adc_PowerStateType *CurrentPowerState, 
  */
 Std_ReturnType Adc_GetTargetPowerState( Adc_PowerStateType *TargetPowerState, Adc_PowerStateRequestResultType *Result )
 {
-    return Adc_Arch_GetTargetPowerState( &HwUnit_Adc, TargetPowerState, Result );
+    Std_ReturnType RetValue = E_NOT_OK;
+    if ( Det_Adc.Adc_InitState == FALSE )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_GET_TARGET_POWER_STATE, ADC_E_UNINIT );
+    }
+    else
+    {
+        RetValue = Adc_Arch_GetTargetPowerState( &HwUnit_Adc, TargetPowerState, Result );
+    }
+    return RetValue;
 }
 
 /**
@@ -561,5 +579,18 @@ Std_ReturnType Adc_GetTargetPowerState( Adc_PowerStateType *TargetPowerState, Ad
  */
 Std_ReturnType Adc_PreparePowerState( Adc_PowerStateType PowerState, Adc_PowerStateRequestResultType *Result )
 {
-    return Adc_Arch_PreparePowerState( &HwUnit_Adc, PowerState, Result );
+    Std_ReturnType RetValue = E_NOT_OK;
+    if ( Det_Adc.Adc_InitState == FALSE )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_PREPARE_POWER_STATE, ADC_E_UNINIT );
+    }
+    else if ( Det_Adc.PwrState > 10 )   /*(Size tbd)*/
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_PREPARE_POWER_STATE, ADC_E_POWER_STATE_NOT_SUPPORTED );
+    }
+    else
+    {
+        RetValue = Adc_Arch_PreparePowerState( &HwUnit_Adc, PowerState, Result );
+    }
+    return RetValue;
 }
