@@ -35,7 +35,10 @@ static Adc_Det_Str Det_Adc =
 {
     .Adc_InitState = FALSE,
     .Adc_ModuleID = ADC_MODULE_ID,
-    .Adc_SetupResultBuffer = FALSE
+    .Adc_SetupResultBuffer = FALSE,
+    .GroupNotifFunctionPtr = NULL_PTR,
+    .PwrState = 0,
+    .PreparePwrStateFlag = FALSE
 };
 
 /**
@@ -479,7 +482,22 @@ void Adc_GetVersionInfo( Std_VersionInfoType *versioninfo )
  */
 Std_ReturnType Adc_SetPowerState( Adc_PowerStateRequestResultType *Result )
 {
-    return Adc_Arch_SetPowerState( &HwUnit_Adc, Result );
+    if ( Det_Adc.Adc_InitState == FALSE )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_SET_POWER_STATE, ADC_E_UNINIT );
+    }
+    else if ( Det_Adc.PwrState > 10 )   /*(Size tbd)*/
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_SET_POWER_STATE, ADC_E_POWER_STATE_NOT_SUPPORTED );
+    }
+    else if ( Det_Adc.PreparePwrStateFlag == FALSE )   /*(Size tbd)*/
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_SET_POWER_STATE, ADC_E_PERIPHERAL_NOT_PREPARED );
+    }
+    else
+    {
+        return Adc_Arch_SetPowerState( &HwUnit_Adc, Result );
+    }
 }
 
 /**
