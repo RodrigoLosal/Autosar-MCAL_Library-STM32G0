@@ -358,7 +358,22 @@ void Adc_EnableGroupNotification( Adc_GroupType Group )
 #if ADC_GRP_NOTIF_CAPABILITY == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DisableGroupNotification( Adc_GroupType Group )
 {
-    Adc_Arch_DisableGroupNotification( &HwUnit_Adc, Group );
+    if ( Group > 10 )   /*(Size tbd)*/
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_DISABLE_GROUP_NOTIFICATION, ADC_E_PARAM_GROUP );
+    }
+    else if ( GroupNotifFunctionPtr == NULL_PTR )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_DISABLE_GROUP_NOTIFICATION, ADC_E_NOTIF_CAPABILITY );
+    }
+    else if ( Det_Adc.Adc_InitState == FALSE )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_DISABLE_GROUP_NOTIFICATION, ADC_E_UNINIT );
+    }
+    else
+    {
+        Adc_Arch_DisableGroupNotification( &HwUnit_Adc, Group );
+    }
 }
 #endif
 
@@ -375,7 +390,16 @@ void Adc_DisableGroupNotification( Adc_GroupType Group )
  */
 Adc_StatusType Adc_GetGroupStatus( Adc_GroupType Group )
 {
-    return Adc_Arch_GetGroupStatus( &HwUnit_Adc, Group );
+    Adc_StatusType RetValue = ADC_IDLE;
+    if ( Det_Adc.Adc_InitState == FALSE )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_GET_GROUP_STATUS, ADC_E_UNINIT );
+    }
+    else
+    {
+        RetValue = Adc_Arch_GetGroupStatus( &HwUnit_Adc, Group );
+    }
+    return RetValue;
 }
 
 /**
@@ -396,7 +420,22 @@ Adc_StatusType Adc_GetGroupStatus( Adc_GroupType Group )
  */
 Adc_StreamNumSampleType Adc_GetStreamLastPointer( Adc_GroupType Group, Adc_ValueGroupType **PtrToSamplePtr )
 {
-    return Adc_Arch_GetStreamLastPointer( &HwUnit_Adc, Group, PtrToSamplePtr );
+    Adc_StreamNumSampleType RetValue = 0;
+    if ( Group > 10 )   /*(Size tbd)*/
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_GET_STREAM_LAST_POINTER, ADC_E_PARAM_GROUP );
+        PtrToSamplePtr = NULL_PTR;
+    }
+    else if ( Det_Adc.Adc_InitState == FALSE )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_GET_STREAM_LAST_POINTER, ADC_E_UNINIT );
+        PtrToSamplePtr = NULL_PTR;
+    }
+    else
+    {
+        RetValue = Adc_Arch_GetStreamLastPointer( &HwUnit_Adc, Group, PtrToSamplePtr );
+    }
+    return RetValue;
 }
 
 /**
@@ -411,7 +450,14 @@ Adc_StreamNumSampleType Adc_GetStreamLastPointer( Adc_GroupType Group, Adc_Value
 #if ADC_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
-    (void)versioninfo;
+    if ( versioninfo == NULL_PTR )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_GET_VERSION_INFO, ADC_E_PARAM_POINTER );
+    }
+    else
+    {
+        (void) versioninfo;
+    }
 }
 #endif
 
