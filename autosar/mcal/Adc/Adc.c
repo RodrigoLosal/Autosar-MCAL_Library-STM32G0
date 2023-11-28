@@ -289,17 +289,11 @@ void Adc_DisableHardwareTrigger( Adc_GroupType Group )
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_DISABLE_HARDWARE_TRIGGER, ADC_E_PARAM_GROUP );
     }
-    else
-    { 
-    }
-    if ( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_SW )
+    else if ( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_SW )
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_DISABLE_HARDWARE_TRIGGER, ADC_E_WRONG_TRIGG_SRC );
     }
-    else
-    {
-    }
-    if ( AdcConfig.Adc_GroupConvMode == ADC_CONV_MODE_CONTINUOUS )
+    else if ( AdcConfig.Adc_GroupConvMode == ADC_CONV_MODE_CONTINUOUS )
     {
         if ( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_SW )
         {
@@ -310,7 +304,7 @@ void Adc_DisableHardwareTrigger( Adc_GroupType Group )
             Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_DISABLE_HARDWARE_TRIGGER, ADC_E_WRONG_CONV_MODE );
         }
     }
-    if ( Det_Adc.Adc_InitState == FALSE )
+    else if ( Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_DISABLE_HARDWARE_TRIGGER, ADC_E_UNINIT );
     }
@@ -333,7 +327,22 @@ void Adc_DisableHardwareTrigger( Adc_GroupType Group )
 #if ADC_GRP_NOTIF_CAPABILITY == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_EnableGroupNotification( Adc_GroupType Group )
 {
-    Adc_Arch_EnableGroupNotification( HwUnit_Adc, Group );
+    if ( Group > 10 )   /*(Size tbd)*/
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ENABLE_GROUP_NOTIFICATION, ADC_E_PARAM_GROUP );
+    }
+    else if ( GroupNotifFunctionPtr == NULL_PTR )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ENABLE_GROUP_NOTIFICATION, ADC_E_NOTIF_CAPABILITY );
+    }
+    else if ( Det_Adc.Adc_InitState == FALSE )
+    {
+        Det_ReportError( ADC_MODULE_ID , ADC_INSTANCE_ID, ADC_ENABLE_GROUP_NOTIFICATION, ADC_E_UNINIT );
+    }
+    else
+    {
+        Adc_Arch_EnableGroupNotification( HwUnit_Adc, Group );
+    }
 }
 #endif
 
