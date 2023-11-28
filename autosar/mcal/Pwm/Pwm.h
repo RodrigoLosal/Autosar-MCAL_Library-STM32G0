@@ -28,7 +28,7 @@ void Pwm_SetOutputToIdle( Pwm_ChannelType ChannelNumber );
 #if PWM_GET_OUTPUT_STATE == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Pwm_OutputStateType Pwm_GetOutputState( Pwm_ChannelType ChannelNumber );
 #endif
-#if PWM_NOTIFICATION_SUPPORTED == STD_OFF /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if PWM_NOTIFICATION_SUPPORTED == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Pwm_DisableNotification( Pwm_ChannelType ChannelNumber );
 #endif
 #if PWM_NOTIFICATION_SUPPORTED == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */

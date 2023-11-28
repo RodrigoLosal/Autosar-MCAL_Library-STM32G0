@@ -12,7 +12,7 @@
 #include "Pwm_Arch.h"
 
 /**
- * @defgroup These definitions set the minimum and maximum channel numbers for PWM operations.
+ * @defgroup Defines to set the minimum and maximum channel numbers for PWM operations.
  *
  * @{ */
 #define PWM_CHANNEL_MIN 1 /*!< Minimum valid PWM channel number.  */
@@ -34,16 +34,17 @@
 #endif
 
 /**
- * @brief  Variable for the initial value of the port configuration array.
+ * @brief  Variable for the initial value of the pwm configuration array.
  */
 /* clang-format off */
-static Pwm_HwUnit HwUnit_Pwm =
+/* cppcheck-suppress misra-c2012-8.4 ; qualifier is declared at Pwm.h */
+PWM_STATIC Pwm_HwUnit HwUnit_Pwm =
 {
-.HwUnitState       = PWM_NOT_INIT, /*!< Pwm hardware unit state */
-.Config            = NULL_PTR,
-.Pwm_ChannelClass  = PWM_VARIABLE_PERIOD,
-.Pwm_channelNumber = PWM_CHANNEL_MAX };
-
+    .HwUnitState       = PWM_STATE_UNINIT, /*!< Pwm hardware unit state */
+    .Config            = NULL_PTR,
+    .Pwm_ChannelClass  = PWM_VARIABLE_PERIOD,
+    .Pwm_channelNumber = PWM_CHANNEL_MAX,
+};
 /* clang-format on */
 
 /**

@@ -19,8 +19,20 @@
  * Specifies the controller IDs of the MCU TIM's
  *
  * @{ */
+/* cppcheck-suppress misra-c2012-2.5 ; This reference number is meant to be used as an input in the config file/structure. */
 #define GPT_TIM6               0 /*!< TIM6 */
+/* cppcheck-suppress misra-c2012-2.5 ; This reference number is meant to be used as an input in the config file/structure. */
 #define GPT_TIM7               1 /*!< TIM7  */
+/**
+ * @} */
+
+/**
+ * @defgroup GPT Maximum values
+ *
+ * Specifies the controller maximum values for its config. parameters.
+ *
+ * @{ */
+#define GPT_ARR_MAX            0X0000FFFF /*!< TIMx Auto-reload register maximum admissible value */
 /**
  * @} */
 

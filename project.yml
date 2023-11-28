@@ -28,6 +28,7 @@
     - test/support/Spi_Lcfg.c
     - test/support/Mcu_Lcfg.c
     - test/support/Dio_Lcfg.c
+    - test/support/Pwm_Lcfg.c
 
 # Global defines applicable only when you run the code using ceedling
 :defines:
@@ -58,7 +59,6 @@
     - autosar/mcal/Gpt/Gpt.c
     - autosar/mcal/Gpt/Gpt_Arch.c
     - autosar/mcal/Can/Can_Arch.c
-    - autosar/mcal/Pwm/Pwm.c
     - autosar/mcal/Pwm/Pwm_Arch.c
     - autosar/mcal/Det/Det.c
     - autosar/mcal/Fls/Fls.c
@@ -68,6 +68,7 @@
     - autosar/mcal/Mcu/Mcu_Arch.c
     - autosar/mcal/Adc/Adc.c
     - autosar/mcal/Adc/Adc_Arch.c
+    - autosar/Com/CanIf.c
   :utilities:
     - gcovr
   :reports:
