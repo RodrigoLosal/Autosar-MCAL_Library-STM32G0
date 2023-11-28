@@ -58,270 +58,383 @@ void Det_Init( const Det_ConfigType *ConfigPtr )
  */
 Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, uint8 ErrorId )
 {
+    (void)ApiId;
+    (void)ErrorId;
+
     static const char *ModuleName[] = {
-    [SPI_MODULE_ID]  = "SPI",
-    [PWM_MODULE_ID]  = "PWM",
-    [GPT_MODULE_ID]  = "GPT",
-    [DET_MODULE_ID]  = "DET",
-    [CAN_MODULE_ID]  = "CAN",
-    [ADC_MODULE_ID]  = "ADC",
-    [NVIC_MODULE_ID] = "NVIC",
-    [MCU_MODULE_ID]  = "MCU",
-    [DIO_MODULE_ID]  = "DIO",
-    [PORT_MODULE_ID] = "PORT",
-    //[FLS_MODULE_ID]  = "FLS",
+    "SPI", // #define SPI_MODULE_ID                       0u
+    "PWM", // #define PWM_MODULE_ID                       1u
+    "GPT", // #define GPT_MODULE_ID                       2u
+    "DET",
+    "CAN",
+    "ADC",
+    "NVIC",
+    "MCU",
+    "DIO",
+    "PORT",
+    //"FLS",
     };
 
     static const char *InstanceName[] = {
-    [SPI_INSTANCE_ID] = "SPI",
-    [PWM_INSTANCE_ID] = "PWM",
-    //[GPT_INSTANCE_ID]  = "GPT",
-    [DET_INSTANCE_ID]  = "DET",
-    [CAN_INSTANCE_ID]  = "CAN",
-    [ADC_INSTANCE_ID]  = "ADC",
-    [NVIC_INSTANCE_ID] = "NVIC",
-    [MCU_INSTANCE_ID]  = "MCU",
-    [DIO_INSTANCE_ID]  = "DIO",
-    [PORT_INSTANCE_ID] = "PORT",
-    //[FLS_INSTANCE_ID]  = "FLS"
+    "SPI", // #define SPI_INSTANCE_ID              0u
+    "PWM", // #define PWM_INSTANCE_ID              1u
+    "DET",
+    "CAN",
+    "ADC",
+    "NVIC",
+    "MCU",
+    "DIO",
+    "PORT",
     };
 
     /* cppcheck-suppress misra-c2012-9.5 ; Currently in development*/
-    static const char *ApiName[] = {
-    /*Det Api*/
-    [DET_ID_INIT]                   = "Det_Init()",
-    [DET_ID_REPORT_ERROR]           = "Det_ReportError()",
-    [DET_ID_DE_START]               = "Det_Start()",
-    [DET_ID_GET_VERSION_INFO]       = "Det_GetVersionInfo()",
-    [DET_ID_REPORT_RUNTIME_ERROR]   = "Det_ReportRuntimeError()",
-    [DET_ID_REPORT_TRANSIENT_FAULT] = "Det_ReportTransientFault()",
+    static const char *SpiApiName[] = {
     /*Spi Api*/
-    [SPI_ID_INIT]                = "Spi_Init()",
-    [SPI_ID_DE_INIT]             = "Spi_DeInit()",
-    [SPI_ID_WRITE_IB]            = "Spi_WriteIB()",
-    [SPI_ID_ASYNC_TRANSMIT]      = "Spi_AsyncTransmit()",
-    [SPI_ID_READ_IB]             = "Spi_ReadIB()",
-    [SPI_ID_SET_UP_EB]           = "Spi_SetupEB()",
-    [SPI_ID_GET_STATUS]          = "Spi_GetStatus()",
-    [SPI_ID_GET_JOB_RESULT]      = "Spi_GetJobResult()",
-    [SPI_ID_GET_SEQUENCE_RESULT] = "Spi_GetSequenceResult()",
-    [SPI_ID_GET_VERSION_INFO]    = "Spi_GetVersionInfo()",
-    [SPI_ID_SYNC_TRANSMIT]       = "Spi_SyncTransmit()",
-    [SPI_ID_GET_HWUNIT_STATUS]   = "Spi_GetHWUnitStatus()",
-    [SPI_ID_CANCEL]              = "Spi_Cancel()",
-    [SPI_ID_SET_ASYNC_MODE]      = "Spi_SetAsyncMode()",
-    /*Can Api*/
-    [CAN_ID_INIT]                = "Can_Init()",
-    [CAN_ID_DE_INIT]             = "Can_DeInit()",
-    [CAN_ID_SET_BAUDRATE]        = "Can_ChangeBaudrate()",
-    [CAN_ID_SET_CTRL_MODE]       = "Can_SetControllerMode()",
-    [CAN_ID_DISABLE_CTRL_INT]    = "Can_DisableControllerInterrupts()",
-    [CAN_ID_ENABLE_CTRL_INT]     = "Can_EnableControllerInterrupts()",
-    [CAN_ID_CHECK_WAKEUP]        = "Can_CheckWakeup()",
-    [CAN_ID_GET_CTRL_MODE]       = "Can_GetControllerState()",
-    [CAN_ID_GET_CTRL_ERR_STATE]  = "Can_GetControllerErrorState()",
-    [CAN_ID_GET_CTRL_RX_ERR_CNT] = "Can_GetControllerRxErrorCounter()",
-    [CAN_ID_GET_CTRL_TX_ERR_CNT] = "Can_GetControllerTxErrorCounter()",
-    [CAN_ID_WRITE]               = "Can_Write()",
-    [CAN_ID_MF_WRITE]            = "Can_MainFunction_Write()",
-    [CAN_ID_MF_READ]             = "Can_MainFunction_Read()",
-    [CAN_ID_MF_BUSOFF]           = "Can_MainFunction_BusOff()",
-    [CAN_ID_MF_WAKEUP]           = "Can_MainFunction_Wakeup()",
-    [CAN_ID_MF_MODE]             = "Can_MainFunction_MODE()",
-    [CAN_ID_GET_VERSION_INFO]    = "Can_GetVersionInfo()",
-    [CAN_ID_GET_CURRENT_TIME]    = "Can_GetCurrentTime()",
-    [CAN_ID_ENABLE_EGRESS_TS]    = "Can_EnableEgressTimeStamp()",
-    [CAN_ID_GET_EGRESS_TS]       = "Can_GetEgressTimeStamp()",
-    [CAN_ID_GET_INGRESS_TS]      = "Can_GetIngressTimeStamp()",
-    /*Nvic Api*/
-    [NVIC_ID_SET_PRIORITY]      = "CDD_Nvic_SetPriority()",
-    [NVIC_ID_GET_PRIORITY]      = "CDD_Nvic_GetPriority()",
-    [NVIC_ID_ENABLE_IRQ]        = "CDD_Nvic_EnableIrq()",
-    [NVIC_ID_DISABLE_IRQ]       = "CDD_Nvic_DisableIrq()",
-    [NVIC_ID_GET_PENDING_IRQ]   = "CDD_Nvic_GetPendingIrq()",
-    [NVIC_ID_SET_PENDING_IRQ]   = "CDD_Nvic_SetPendingIrq()",
-    [NVIC_ID_CLEAR_PENDING_IRQ] = "CDD_Nvic_ClearPendingIrq()",
-    [NVIC_ID_NMI_HANDLER]       = "NMI_Handler",
-    [NVIC_ID_HARDFAULT_HANDLER] = "HardFault_Handler",
+    "Spi_Init()",
+    "Spi_DeInit()",
+    "Spi_WriteIB()",
+    "Spi_AsyncTransmit()",
+    "Spi_ReadIB()",
+    "Spi_SetupEB()",
+    "Spi_GetStatus()",
+    "Spi_GetJobResult()",
+    "Spi_GetSequenceResult()",
+    "Spi_GetVersionInfo()",
+    "Spi_SyncTransmit()",
+    "Spi_GetHWUnitStatus()",
+    "Spi_Cancel()",
+    "Spi_SetAsyncMode()",
+    };
+
+    static const char *PwmApiName[] = {
     /*Pwm Api*/
-    [PWM_ID_INIT]                    = "Pwm_Init()",
-    [PWM_ID_DE_INIT]                 = "Pwm_DeInit()",
-    [PWM_ID_SET_DUTY_CYCLE]          = "Pwm_SetDutyCycle()",
-    [PWM_ID_SET_PERIOD_AND_DUTY]     = "Pwm_SetPeridoAndDuty()",
-    [PWM_ID_SET_OUTPUT_TO_IDLE]      = "Pwm_SetOutputToIdle()",
-    [PWM_ID_GET_OUTPUT_STATE]        = "Pwm_GetOutputState()",
-    [PWM_ID_DISABLE_NOTIFICATION]    = "Pwm_DisableNotification()",
-    [PWM_ID_ENABLE_NOTIFICATION]     = "Pwm_EnableNotification()",
-    [PWM_ID_SET_POWER_STATE]         = "Pwm_SetPowerState()",
-    [PWM_ID_GET_CURRENT_POWER_STATE] = "Pwm_GetCurrentPowerState()",
-    [PWM_ID_GET_TARGET_POWER_STATE]  = "Pwm_GetTargetPowerState()",
-    [PWM_ID_PREPARE_POWER_STATE]     = "Pwm_PreparePowerState()",
-    [PWM_ID_GET_VERSION_INFO]        = "Pwm_GetVersionInfo()",
-    /*Port Api*/
-    [PORT_ID_INIT]                   = "Port_Init()",
-    [PORT_ID_SET_PIN_DIRECTION]      = "Port_SetPinDirection()",
-    [PORT_ID_SET_PIN_MODE]           = "Port_SetPinMode()",
-    [PORT_ID_GET_VERSION_INFO]       = "Port_GetVersionInfo()",
-    [PORT_ID_REFRESH_PORT_DIRECTION] = "Port_RefreshPortDirection()",
+    "Pwm_Init()",
+    "Pwm_DeInit()",
+    "Pwm_SetDutyCycle()",
+    "Pwm_SetPeridoAndDuty()",
+    "Pwm_SetOutputToIdle()",
+    "Pwm_GetOutputState()",
+    "Pwm_DisableNotification()",
+    "Pwm_EnableNotification()",
+    "Pwm_SetPowerState()",
+    "Pwm_GetCurrentPowerState()",
+    "Pwm_GetTargetPowerState()",
+    "Pwm_PreparePowerState()",
+    "Pwm_GetVersionInfo()",
+    };
+
+    static const char *GptApiName[] = {
     /*Gpt Api*/
-    [GPT_ID_GET_VERSION_INFO]     = "Gpt_GetVersionInfo()",
-    [GPT_ID_INIT]                 = "Gpt_Init()",
-    [GPT_ID_DEINIT]               = "Gpt_DeInit()",
-    [GPT_ID_GET_TIME_ELAPSED]     = "Gpt_GetTimeElapsed()",
-    [GPT_ID_GET_TIME_REMAINING]   = "Gpt_GetTimeRemaining()",
-    [GPT_ID_START_TIMER]          = "Gpt_StartTimer()",
-    [GPT_ID_STOP_TIMER]           = "Gpt_StopTimer()",
-    [GPT_ID_ENABLE_NOTIFICATION]  = "Gpt_EnableNotification()",
-    [GPT_ID_DISABLE_NOTIFICATION] = "Gpt_DisableNotification()",
-    /*Mcu Api*/
-    [MCU_ID_INIT]                 = "Mcu_Init()",
-    [MCU_ID_INIT_RAM]             = "Mcu_InitRamSection()",
-    [MCU_ID_INIT_CLOCK]           = "Mcu_InitClock()",
-    [MCU_ID_DISTRIBUTE_PLL_CLOCK] = "Mcu_DistributePllClock()",
-    [MCU_ID_GET_PLL_STATUS]       = "Mcu_GetPllStatus()",
-    [MCU_ID_GET_RESET_REASON]     = "Mcu_GetResetReason()",
-    [MCU_ID_GET_RESET_RAW_VALUE]  = "Mcu_GetResetRawValue()",
-    [MCU_ID_PERFORM_RESET]        = "Mcu_PerformReset()",
-    [MCU_ID_SET_MODE]             = "Mcu_SetMode()",
-    [MCU_ID_GET_VERSION_INFO]     = "Mcu_GetVersionInfo()",
-    [MCU_ID_GET_RAM_STATE]        = "Mcu_GetRamState()",
-    /*Fls Api*/
-    [FLS_ID_INIT]           = "Fls_Init()",
-    [FLS_ID_ERASE]          = "Fls_Erase()",
-    [FLS_ID_WRITE]          = "Fls_Write()",
-    [FLS_ID_CANCEL]         = "Fls_Cancel()",
-    [FLS_ID_GETSTATUS]      = "Fls_GetStatus()",
-    [FLS_ID_GETJOBRESULT]   = "Fls_GetJobResults()",
-    [FLS_ID_READ]           = "Fls_Read()",
-    [FLS_ID_COMPARE]        = "Fls_Compare()",
-    [FLS_ID_SETMODE]        = "Fls_SetMode()",
-    [FLS_ID_GETVERSIONINFO] = "Fls_GetVersionInfo()",
-    [FLS_ID_BLANKCHECK]     = "Fls_BlankCheck()",
-    /*Dio Api*/
-    [DIO_ID_READ_CHANNEL]      = "Dio_ReadChannel()",
-    [DIO_ID_WRITE_CHANNEL]     = "Dio_WriteChannel()",
-    [DIO_ID_READ_PORT]         = "Dio_ReadPort()",
-    [DIO_ID_WRITE_PORT]        = "Dio_WritePort()",
-    [DIO_ID_READ_CHANNEL_GRP]  = "Dio_ReadChannelGroup()",
-    [DIO_ID_WRITE_CHANNEL_GRP] = "Dio_WriteChannelGroup()",
-    [DIO_ID_GET_VERSION_INFO]  = "Dio_GetVersionInfo()",
-    [DIO_ID_FLIP_CHANNEL]      = "Dio_FlipChannel()",
-    [DIO_ID_MASKED_WRITE_PORT] = "Dio_MaskedWritePort()",
+    "Gpt_GetVersionInfo()",
+    "Gpt_Init()",
+    "Gpt_DeInit()",
+    "Gpt_GetTimeElapsed()",
+    "Gpt_GetTimeRemaining()",
+    "Gpt_StartTimer()",
+    "Gpt_StopTimer()",
+    "Gpt_EnableNotification()",
+    "Gpt_DisableNotification()",
+    };
+
+    static const char *DetApiName[] = {
+    /*Det Api*/
+    "Det_Init()",
+    "Det_ReportError()",
+    "Det_Start()",
+    "Det_GetVersionInfo()",
+    "Det_ReportRuntimeError()",
+    "Det_ReportTransientFault()",
+    };
+
+    static const char *CanApiName[] = {
+    /*Can Api*/
+    "Can_Init()",
+    "Can_DeInit()",
+    "Can_ChangeBaudrate()",
+    "Can_SetControllerMode()",
+    "Can_DisableControllerInterrupts()",
+    "Can_EnableControllerInterrupts()",
+    "Can_CheckWakeup()",
+    "Can_GetControllerState()",
+    "Can_GetControllerErrorState()",
+    "Can_GetControllerRxErrorCounter()",
+    "Can_GetControllerTxErrorCounter()",
+    "Can_Write()",
+    "Can_MainFunction_Write()",
+    "Can_MainFunction_Read()",
+    "Can_MainFunction_BusOff()",
+    "Can_MainFunction_Wakeup()",
+    "Can_MainFunction_MODE()",
+    "Can_GetVersionInfo()",
+    "Can_GetCurrentTime()",
+    "Can_EnableEgressTimeStamp()",
+    "Can_GetEgressTimeStamp()",
+    "Can_GetIngressTimeStamp()",
+    };
+
+    static const char *AdcApiName[] = {
     /*Adc Api*/
-    [ADC_ID_INIT]                       = "Adc_Init()",
-    [ADC_RESULT_BUFFER]                 = "Adc_SetupResultBuffer()",
-    [ADC_ID_DE_INIT]                    = "Adc_DeInit()",
-    [ADC_START_GROUP_CONVERSION]        = "Adc_StartGroupConversion()",
-    [ADC_STOP_GROUP_CONVERSION]         = "Adc_StopGroupConversion()",
-    [ADC_READ_GROUP]                    = "Adc_ReadGroup()",
-    [ADC_ENABLE_HARDWARE_TRIGGER]       = "Adc_EnableHardwareTrigger()",
-    [ADC_DISABLE_HARDWARE_TRIGGER]      = "Adc_DisableHardwareTrigger()",
-    [ADC_ENABLE_GROUP_NOTIFICATION]     = "Adc_EnableGroupNotification()",
-    [ADC_DISABLE_GROUP_NOTIFICATION]    = "Adc_DisableGroupNotification()",
-    [ADC_GET_GROUP_STATUS]              = "Adc_GetGroupStatus()",
-    [ADC_GET_STREAM_LAST_POINTER]       = "Adc_GetStreamLastPointer()",
-    [ADC_GET_VERSION_INFO]              = "Adc_GetVersionInfo()",
-    [ADC_SET_POWER_STATE]               = "Adc_SetPowerState()",
-    [ADC_GET_CURRENT_POWER_STATE]       = "Adc_GetCurrentPowerState()",
-    [ADC_GET_TARGET_POWER_STATE]        = "Adc_GetTargetPowerState()",
-    [ADC_PREPARE_POWER_STATE]           = "Adc_PreparePowerState()",
-    [ADC_MAIN_POWER_TRANSITION_MANAGER] = "Adc_Main_PowerTransitionManager()",
+    "Adc_Init()",
+    "Adc_SetupResultBuffer()",
+    "Adc_DeInit()",
+    "Adc_StartGroupConversion()",
+    "Adc_StopGroupConversion()",
+    "Adc_ReadGroup()",
+    "Adc_EnableHardwareTrigger()",
+    "Adc_DisableHardwareTrigger()",
+    "Adc_EnableGroupNotification()",
+    "Adc_DisableGroupNotification()",
+    "Adc_GetGroupStatus()",
+    "Adc_GetStreamLastPointer()",
+    "Adc_GetVersionInfo()",
+    "Adc_SetPowerState()",
+    "Adc_GetCurrentPowerState()",
+    "Adc_GetTargetPowerState()",
+    "Adc_PreparePowerState()",
+    "Adc_Main_PowerTransitionManager()",
     };
 
-    /* cppcheck-suppress misra-c2012-9.5 ; Currently in development*/
-    static const char *ErrorName[] = {
-    // Missing Gpt Errors
-    /*Det Error*/
-    [DET_E_PARAM_POINTER] = "DET_E_PARAM_POINTER",
-    /*Spi Error*/
-    [SPI_E_PARAM_CHANNEL]       = "SPI_E_PARAM_CHANNEL",
-    [SPI_E_PARAM_JOB]           = "SPI_E_PARAM_JOB",
-    [SPI_E_PARAM_SEQ]           = "SPI_E_PARAM_SEQ",
-    [SPI_E_PARAM_LENGTH]        = "SPI_E_PARAM_LENGTH",
-    [SPI_E_PARAM_UNIT]          = "SPI_E_PARAM_UNIT",
-    [SPI_E_PARAM_POINTER]       = "SPI_E_PARAM_POINTER",
-    [SPI_E_UNINIT]              = "SPI_E_UNINIT",
-    [SPI_E_ALREADY_INITIALIZED] = "SPI_E_ALREADY_INITIALIZED",
-    /*Can Error*/
-    [CAN_E_PARAM_POINTER]     = "CAN_E_PARAM_POINTER",
-    [CAN_E_PARAM_HANDLE]      = "CAN_E_PARAM_HANDLE",
-    [CAN_E_PARAM_DATA_LENGTH] = "CAN_E_PARAM_DATA_LENGTH",
-    [CAN_E_PARAM_CONTROLLER]  = "CAN_E_PARAM_CONTROLLER",
-    [CAN_E_UNINIT]            = "CAN_E_UNINIT",
-    [CAN_E_TRANSITION]        = "CAN_E_TRANSITION",
-    [CAN_E_PARAM_BAUDRATE]    = "CAN_E_PARAM_BAUDRATE",
-    [CAN_E_INIT_FAILED]       = "CAN_E_INIT_FAILED",
-    [CAN_E_PARAM_LPDU]        = "CAN_E_PARAM_LPDU",
-    /*Nvic Error*/
-    [NVIC_E_PARAM_IRQ]       = "NVIC_E_PARAM_IRQ",
-    [NVIC_E_PARAM_PRIORITY]  = "NVIC_E_PARAM_PRIORITY",
-    [NVIC_E_NMI_ENTRY]       = "NVIC_E_NMI_ENTRY",
-    [NVIC_E_HARDFAULT_ENTRY] = "NVIC_E_HARDFAULT_ENTRY",
-    /*Pwm Error*/
-    [PWM_E_INIT_FAILED]               = "PWM_E_INIT_FAILED",
-    [PWM_E_UNINIT]                    = "PWM_E_UNINIT",
-    [PWM_E_PARAM_CHANNEL]             = "PWM_E_PARAM_CHANNEL",
-    [PWM_E_PERIOD_UNCHANGEABLE]       = "PWM_E_PERIOD_UNCHANGEABLE",
-    [PWM_E_ALREADY_INITIALIZED]       = "PWM_E_ALREADY_INITIALIZED",
-    [PWM_E_PARAM_POINTER]             = "PWM_E_PARAM_POINTER",
-    [PWM_E_POWER_STATE_NOT_SUPPORTED] = "PWM_E_POWER_STATE_NOT_SUPPORTED",
-    [PWM_E_TRANSITION_NOT_POSSIBLE]   = "PWM_E_TRANSITION_NOT_POSSIBLE",
-    [PWM_E_PERIPHERAL_NOT_PREPARED]   = "PWM_E_PERIPHERAL_NOT_PREPARED",
-    [PWM_E_NOT_DISENGAGED]            = "PWM_E_NOT_DISENGAGED",
-    /*Port Error*/
-    [PORT_E_PARAM_PIN]              = "PORT_E_PARAM_PIN",
-    [PORT_E_DIRECTION_UNCHANGEABLE] = "PORT_E_DIRECTION_UNCHANGEABLE",
-    [PORT_E_INIT_FAILED]            = "PORT_E_INIT_FAILED",
-    [PORT_E_PARAM_INVALID_MODE]     = "PORT_E_PARAM_INVALID_MODE",
-    [PORT_E_MODE_UNCHANGEABLE]      = "PORT_E_MODE_UNCHANGEABLE",
-    [PORT_E_UNINIT]                 = "PORT_E_UNINIT",
-    [PORT_E_PARAM_POINTER]          = "PORT_E_PARAM_POINTER",
-    /*MCU Error*/
-    [MCU_E_PARAM_CONFIG]     = "MCU_E_PARAM_CONFIG",
-    [MCU_E_PARAM_CLOCK]      = "MCU_E_PARAM_CLOCK",
-    [MCU_E_PARAM_MODE]       = "MCU_E_PARAM_MODE",
-    [MCU_E_PARAM_RAMSECTION] = "MCU_E_PARAM_RAMSECTION",
-    [MCU_E_PLL_NOT_LOCKED]   = "MCU_E_PLL_NOT_LOCKED",
-    [MCU_E_UNINIT]           = "MCU_E_UNINIT",
-    [MCU_E_PARAM_POINTER]    = "MCU_E_PARAM_POINTER",
-    [MCU_E_INIT_FAILED]      = "MCU_E_INIT_FAILED",
-    /*Fls Error*/
-    [FLS_E_PARAM_CONFIG]        = "FLS_E_PARAM_CONFIG",
-    [FLS_E_PARAM_ADDRESS]       = "FLS_E_PARAM_ADDRESS",
-    [FLS_E_PARAM_LENGTH]        = "FLS_E_PARAM_LENGTH",
-    [FLS_E_PARAM_DATA]          = "FLS_E_PARAM_DATA",
-    [FLS_E_UNINIT]              = "FLS_E_UNINIT",
-    [FLS_E_PARAM_POINTER]       = "FLS_E_PARAM_POINTER",
-    [FLS_E_ALREADY_INITIALIZED] = "FLS_E_ALREADY_INITIALIZED",
-    /*Dio Error*/
-    [DIO_E_PARAM_INVALID_CHANNEL_ID] = "DIO_E_PARAM_INVALID_CHANNEL_ID",
-    [DIO_E_PARAM_INVALID_PORT_ID]    = "DIO_E_PARAM_INVALID_PORT_ID",
-    [DIO_E_PARAM_INVALID_GROUP]      = "DIO_E_PARAM_INVALID_GROUP",
-    [DIO_E_PARAM_POINTER]            = "DIO_E_PARAM_POINTER",
-    /*Adc Error*/
-    [ADC_E_UNINIT]                    = "ADC_E_UNINIT",
-    [ADC_E_ALREADY_INITIALIZED]       = "ADC_E_ALREADY_INITIALIZED",
-    [ADC_E_PARAM_POINTER]             = "ADC_E_PARAM_POINTER",
-    [ADC_E_PARAM_GROUP]               = "ADC_E_PARAM_GROUP",
-    [ADC_E_WRONG_CONV_MODE]           = "ADC_E_WRONG_CONV_MODE",
-    [ADC_E_WRONG_TRIGG_SRC]           = "ADC_E_WRONG_TRIGG_SRC",
-    [ADC_E_NOTIF_CAPABILITY]          = "ADC_E_NOTIF_CAPABILITY",
-    [ADE_E_BUFFER_UNINIT]             = "ADE_E_BUFFER_UNINIT",
-    [ADE_E_POWER_STATE_NOT_SUPPORTED] = "ADE_E_POWER_STATE_NOT_SUPPORTED",
-    [ADC_E_PERIPHERAL_NOT_PREPARED]   = "ADC_E_PERIPHERAL_NOT_PREPARED",
-    [ADC_E_BUSY]                      = "ADC_E_BUSY",
-    [ADC_E_IDLE]                      = "ADC_E_IDLE",
-    [ADC_E_NOT_DISENGAGED]            = "ADC_E_NOT_DISENGAGED",
-    [ADC_E_TRANSITION_NOT_POSSIBLE]   = "ADC_E_TRANSITION_NOT_POSSIBLE",
+    static const char *NvicApiName[] = {
+    "CDD_Nvic_SetPriority()",
+    "CDD_Nvic_GetPriority()",
+    "CDD_Nvic_EnableIrq()",
+    "CDD_Nvic_DisableIrq()",
+    "CDD_Nvic_GetPendingIrq()",
+    "CDD_Nvic_SetPendingIrq()",
+    "CDD_Nvic_ClearPendingIrq()",
+    "NMI_Handler",
+    "HardFault_Handler",
     };
 
-    const char *module   = ModuleName[ ModuleId ];
-    const char *instance = InstanceName[ InstanceId ];
-    const char *api      = ApiName[ ApiId ];
-    const char *error    = ErrorName[ ErrorId ];
+    static const char *McuApiName[] = {
+    "Mcu_Init()",
+    "Mcu_InitRamSection()",
+    "Mcu_InitClock()",
+    "Mcu_DistributePllClock()",
+    "Mcu_GetPllStatus()",
+    "Mcu_GetResetReason()",
+    "Mcu_GetResetRawValue()",
+    "Mcu_PerformReset()",
+    "Mcu_SetMode()",
+    "Mcu_GetVersionInfo()",
+    "Mcu_GetRamState()",
+    };
 
-    (void)printf( "ERROR %s in: %s Module with the function %s detected in %s\n",
-                  error, module, instance, api );
+    static const char *DioApiName[] = {
+    "Dio_ReadChannel()",
+    "Dio_WriteChannel()",
+    "Dio_ReadPort()",
+    "Dio_WritePort()",
+    "Dio_ReadChannelGroup()",
+    "Dio_WriteChannelGroup()",
+    "Dio_GetVersionInfo()",
+    "Dio_FlipChannel()",
+    "Dio_MaskedWritePort()",
+    };
+
+    static const char *PortApiName[] = {
+    "Port_Init()",
+    "Port_SetPinDirection()",
+    "Port_SetPinMode()",
+    "Port_GetVersionInfo()",
+    "Port_RefreshPortDirection()",
+    };
+
+    static const char *SpiErrorName[] = {
+    "SPI_E_PARAM_CHANNEL",
+    "SPI_E_PARAM_JOB",
+    "SPI_E_PARAM_SEQ",
+    "SPI_E_PARAM_LENGTH",
+    "SPI_E_PARAM_UNIT",
+    "SPI_E_PARAM_POINTER",
+    "SPI_E_UNINIT",
+    "SPI_E_ALREADY_INITIALIZED",
+    };
+
+    static const char *PwmErrorName[] = {
+    "PWM_E_INIT_FAILED",
+    "PWM_E_UNINIT",
+    "PWM_E_PARAM_CHANNEL",
+    "PWM_E_PERIOD_UNCHANGEABLE",
+    "PWM_E_ALREADY_INITIALIZED",
+    "PWM_E_PARAM_POINTER",
+    "PWM_E_POWER_STATE_NOT_SUPPORTED",
+    "PWM_E_TRANSITION_NOT_POSSIBLE",
+    "PWM_E_PERIPHERAL_NOT_PREPARED",
+    "PWM_E_NOT_DISENGAGED",
+    };
+
+    /*
+    static const char *GptErrorName[] = {
+    };
+    */
+
+    static const char *DetErrorName[] = {
+    "DET_E_PARAM_POINTER",
+    };
+
+    static const char *CanErrorName[] = {
+    "CAN_E_PARAM_POINTER",
+    "CAN_E_PARAM_HANDLE",
+    "CAN_E_PARAM_DATA_LENGTH",
+    "CAN_E_PARAM_CONTROLLER",
+    "CAN_E_UNINIT",
+    "CAN_E_TRANSITION",
+    "CAN_E_PARAM_BAUDRATE",
+    "CAN_E_INIT_FAILED",
+    "CAN_E_PARAM_LPDU",
+    };
+
+    static const char *AdcErrorName[] = {
+    "ADC_E_UNINIT",
+    "ADC_E_ALREADY_INITIALIZED",
+    "ADC_E_PARAM_POINTER",
+    "ADC_E_PARAM_GROUP",
+    "ADC_E_WRONG_CONV_MODE",
+    "ADC_E_WRONG_TRIGG_SRC",
+    "ADC_E_NOTIF_CAPABILITY",
+    "ADE_E_BUFFER_UNINIT",
+    "ADE_E_POWER_STATE_NOT_SUPPORTED",
+    "ADC_E_PERIPHERAL_NOT_PREPARED",
+    "ADC_E_BUSY",
+    "ADC_E_IDLE",
+    "ADC_E_NOT_DISENGAGED",
+    "ADC_E_TRANSITION_NOT_POSSIBLE",
+    };
+
+    static const char *NvicErrorName[] = {
+    "NVIC_E_PARAM_IRQ",
+    "NVIC_E_PARAM_PRIORITY",
+    "NVIC_E_NMI_ENTRY",
+    "NVIC_E_HARDFAULT_ENTRY",
+    };
+
+    static const char *McuErrorName[] = {
+    "MCU_E_PARAM_CONFIG",
+    "MCU_E_PARAM_CLOCK",
+    "MCU_E_PARAM_MODE",
+    "MCU_E_PARAM_RAMSECTION",
+    "MCU_E_PLL_NOT_LOCKED",
+    "MCU_E_UNINIT",
+    "MCU_E_PARAM_POINTER",
+    "MCU_E_INIT_FAILED",
+    };
+
+    static const char *DioErrorName[] = {
+    "DIO_E_PARAM_INVALID_CHANNEL_ID",
+    "DIO_E_PARAM_INVALID_PORT_ID",
+    "DIO_E_PARAM_INVALID_GROUP",
+    "DIO_E_PARAM_POINTER",
+    };
+
+    static const char *PortErrorName[] = {
+    "PORT_E_PARAM_PIN",
+    "PORT_E_DIRECTION_UNCHANGEABLE",
+    "PORT_E_INIT_FAILED",
+    "PORT_E_PARAM_INVALID_MODE",
+    "PORT_E_MODE_UNCHANGEABLE",
+    "PORT_E_UNINIT",
+    "PORT_E_PARAM_POINTER",
+    };
+
+
+    const char *api;
+    if( ModuleId == 0 )
+    {
+        api = SpiApiName[ ApiId ];
+    }
+    else if( ModuleId == 1 )
+    {
+        api = PwmApiName[ ApiId ];
+    }
+    else if( ModuleId == 2 )
+    {
+        api = GptApiName[ ApiId ];
+    }
+    else if( ModuleId == 3 )
+    {
+        api = DetApiName[ ApiId ];
+    }
+    else if( ModuleId == 4 )
+    {
+        api = CanApiName[ ApiId ];
+    }
+    else if( ModuleId == 5 )
+    {
+        api = AdcApiName[ ApiId ];
+    }
+    else if( ModuleId == 6 )
+    {
+        api = NvicApiName[ ApiId ];
+    }
+    else if( ModuleId == 7 )
+    {
+        api = McuApiName[ ApiId ];
+    }
+    else if( ModuleId == 8 )
+    {
+        api = DioApiName[ ApiId ];
+    }
+    else if( ModuleId == 9 )
+    {
+        api = PortApiName[ ApiId ];
+    }
+    else
+    {
+        (void)printf( "Other error" );
+    }
+
+    const char *error;
+    if( ModuleId == 0 )
+    {
+        error = SpiErrorName[ ErrorId ];
+    }
+    else if( ModuleId == 1 )
+    {
+        error = PwmErrorName[ ErrorId ];
+    }
+    else if( ModuleId == 2 )
+    {
+        // error = GptErrorName[  ErrorId ];
+    }
+    else if( ModuleId == 3 )
+    {
+        error = DetErrorName[ ErrorId ];
+    }
+    else if( ModuleId == 4 )
+    {
+        error = CanErrorName[ ErrorId ];
+    }
+    else if( ModuleId == 5 )
+    {
+        error = AdcErrorName[ ErrorId ];
+    }
+    else if( ModuleId == 6 )
+    {
+        error = NvicErrorName[ ErrorId ];
+    }
+    else if( ModuleId == 7 )
+    {
+        error = McuErrorName[ ErrorId ];
+    }
+    else if( ModuleId == 8 )
+    {
+        error = DioErrorName[ ErrorId ];
+    }
+    else if( ModuleId == 9 )
+    {
+        error = PortErrorName[ ErrorId ];
+    }
+    else
+    {
+        (void)printf( "Other error" );
+    }
+
+    (void)printf( "Module: %s\n", ModuleName[ ModuleId ] );
+    (void)printf( "Instance: %s\n", InstanceName[ InstanceId ] );
+    (void)printf( "Api: %s\n", api );
+    (void)printf( "Error: %s\n", error );
+
 
     return E_OK;
 }

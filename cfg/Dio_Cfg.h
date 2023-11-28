@@ -14,8 +14,8 @@
  * @defgroup DIO_SWC_Ids DIO software version and Ids
  *
  * {@ */
-#define DIO_MODULE_ID             0u /*!< Dio Module ID */
-#define DIO_INSTANCE_ID           0u /*!< Dio Instance ID */
+#define DIO_MODULE_ID             8u /*!< Dio Module ID */
+#define DIO_INSTANCE_ID           8u /*!< Dio Instance ID */
 #define DIO_VENDOR_ID             0u /*!< Dio Module Vendor ID */
 /**
  * @} */

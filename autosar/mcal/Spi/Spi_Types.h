@@ -50,8 +50,8 @@
  * @defgroup Spi_Error_Typse Spi Developtmnet Error Types
  *
  * @{ */
-#define SPI_E_PARAM_CHANNEL        0x0Au /*!< API service called with wrong channel  */
-#define SPI_E_PARAM_JOB            0x0Bu /*!< API service called with wrong job */
+#define SPI_E_PARAM_CHANNEL        0x00u /*!< API service called with wrong channel  */
+#define SPI_E_PARAM_JOB            0x01u /*!< API service called with wrong job */
 #define SPI_E_PARAM_SEQ            0x0Cu /*!< API service called with wrong sequence */
 #define SPI_E_PARAM_LENGTH         0x0Du /*!< API service called with wrong length for EB */
 #define SPI_E_PARAM_UNIT           0x0Eu /*!< API service called with wrong hardware unit */

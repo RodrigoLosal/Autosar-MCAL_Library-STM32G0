@@ -17,8 +17,8 @@
  * @defgroup PWM_SWC_Ids PWM software version and Ids
  *
  * {@ */
-#define PWM_MODULE_ID              0u /*!< Pwm Module ID */
-#define PWM_INSTANCE_ID            0u /*!< Pwm Instance ID */
+#define PWM_MODULE_ID              1u /*!< Pwm Module ID */
+#define PWM_INSTANCE_ID            1u /*!< Pwm Instance ID */
 #define PWM_VENDOR_ID              0u /*!< Pwm Module Vendor ID */
 /**
  * @} */

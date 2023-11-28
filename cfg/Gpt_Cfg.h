@@ -51,7 +51,7 @@
   * @defgroup GPT-ID to get the version information of this module.
   @{ */
 #define GPT_VENDOR_ID                       (uint16)1000u /*!< Id for the company in the AUTOSAR*/
-#define GPT_MODULE_ID                       (uint16)120u  /*!< GPT Module Id */
+#define GPT_MODULE_ID                       2u            /*!< GPT Module Id */
 #define GPT_SW_MAJOR_VERSION                (uint8)1u     /*!< GPT Module Major Version */
 #define GPT_SW_MINOR_VERSION                (uint8)0u     /*!< GPT Module Major Version */
 #define GPT_SW_PATCH_VERSION                (uint8)0u     /*!< GPT Module Major Version */

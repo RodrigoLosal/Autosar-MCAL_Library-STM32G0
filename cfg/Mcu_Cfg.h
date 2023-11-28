@@ -17,8 +17,8 @@
  * @defgroup MCU_SWC_Ids MCU software version and Ids
  *
  * {@ */
-#define MCU_MODULE_ID         0u /*!< MCU Module ID */
-#define MCU_INSTANCE_ID       0u /*!< MCU Instance ID */
+#define MCU_MODULE_ID         7u /*!< MCU Module ID */
+#define MCU_INSTANCE_ID       7u /*!< MCU Instance ID */
 #define MCU_VENDOR_ID         0u /*!< MCU Module Vendor ID */
 /**
  * @} */

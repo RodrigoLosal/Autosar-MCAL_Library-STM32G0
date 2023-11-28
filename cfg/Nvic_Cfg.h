@@ -17,8 +17,8 @@
  * @defgroup NVIC_SWC_Ids NVIC software version and Ids
  *
  * {@ */
-#define NVIC_MODULE_ID        0u /*!< Can Module ID */
-#define NVIC_INSTANCE_ID      0u /*!< Can Instance ID */
+#define NVIC_MODULE_ID        6u /*!< Can Module ID */
+#define NVIC_INSTANCE_ID      6u /*!< Can Instance ID */
 #define NVIC_VENDOR_ID        0u /*!< Can Module Vendor ID */
 /**
  * @} */

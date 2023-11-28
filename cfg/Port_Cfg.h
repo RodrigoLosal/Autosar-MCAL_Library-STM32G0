@@ -15,8 +15,8 @@
  * @defgroup PORT_SWC_Ids PORT software version and Ids
  *
  * {@ */
-#define PORT_MODULE_ID             0u /*!< Port Module ID */
-#define PORT_INSTANCE_ID           0u /*!< Port Instance ID */
+#define PORT_MODULE_ID             9u /*!< Port Module ID */
+#define PORT_INSTANCE_ID           9u /*!< Port Instance ID */
 #define PORT_VENDOR_ID             0u /*!< Port Module Vendor ID */
 /**
  * @} */

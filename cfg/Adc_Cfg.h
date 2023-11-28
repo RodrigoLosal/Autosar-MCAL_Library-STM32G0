@@ -17,8 +17,8 @@
  * @defgroup ADC_SWC_Ids ADC software Ids
  *
  * {@ */
-#define ADC_MODULE_ID                   0u /*!< ADC Module ID */
-#define ADC_INSTANCE_ID                 0u /*!< ADC Instance ID */
+#define ADC_MODULE_ID                   5u /*!< ADC Module ID */
+#define ADC_INSTANCE_ID                 5u /*!< ADC Instance ID */
 #define ADC_VENDOR_ID                   0u /*!< ADC Module Vendor ID */
 /**
  * @} */

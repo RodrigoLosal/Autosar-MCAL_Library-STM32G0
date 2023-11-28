@@ -17,8 +17,8 @@
  * @defgroup CAN_SWC_Ids CAN software version and Ids
  *
  * {@ */
-#define CAN_MODULE_ID             0u /*!< Can Module ID */
-#define CAN_INSTANCE_ID           0u /*!< Can Instance ID */
+#define CAN_MODULE_ID             4u /*!< Can Module ID */
+#define CAN_INSTANCE_ID           4u /*!< Can Instance ID */
 #define CAN_VENDOR_ID             0u /*!< Can Module Vendor ID */
 /**
  * @} */
