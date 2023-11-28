@@ -1623,7 +1623,7 @@ CAN_STATIC void Can_Isr_RxFifo0MessageLost( Can_HwUnit *HwUnit, uint8 Controller
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
     Can_ErrorType Error = CAN_ERROR_OVERLOAD;
-    CanIf_ErrorNotification( ControllerConfig->ControllerId, &Error );
+    CanIf_ErrorNotification( ControllerConfig->ControllerId, Error );
 #endif
 
     Det_ReportRuntimeError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_ISR_RECEPTION, CAN_E_DATALOST );
@@ -1731,7 +1731,7 @@ CAN_STATIC void Can_Isr_RxFifo1MessageLost( Can_HwUnit *HwUnit, uint8 Controller
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
     Can_ErrorType Error = CAN_ERROR_OVERLOAD;
-    CanIf_ErrorNotification( ControllerConfig->ControllerId, &Error );
+    CanIf_ErrorNotification( ControllerConfig->ControllerId, Error );
 #endif
 
     Det_ReportRuntimeError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_ISR_RECEPTION, CAN_E_DATALOST );
@@ -1811,7 +1811,7 @@ CAN_STATIC void Can_Isr_TxEventFifoElementLost( Can_HwUnit *HwUnit, uint8 Contro
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
     Can_ErrorType Error = CAN_ERROR_OVERLOAD;
-    CanIf_ErrorNotification( ControllerConfig->ControllerId, &Error );
+    CanIf_ErrorNotification( ControllerConfig->ControllerId, Error );
 #endif
 }
 
@@ -2080,7 +2080,7 @@ CAN_STATIC void Can_Isr_ProtocolErrorInArbitrationPhase( Can_HwUnit *HwUnit, uin
     /*Get the erro code */
     uint8 ErrorCode = Bfx_GetBits_u32u8u8_u32( Can->PSR, PSR_LEC_BIT, PSR_LEC_SIZE );
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    CanIf_ErrorNotification( ControllerConfig->ControllerId, (Can_ErrorType *)&AutosarError[ ErrorCode ] );
+    CanIf_ErrorNotification( ControllerConfig->ControllerId, AutosarError[ ErrorCode ] );
 #endif
 }
 
@@ -2110,6 +2110,6 @@ CAN_STATIC void Can_Isr_ProtocolErrorInDataPhase( Can_HwUnit *HwUnit, uint8 Cont
     /*Get the erro code */
     uint8 ErrorCode = Bfx_GetBits_u32u8u8_u32( Can->PSR, PSR_DLEC_BIT, PSR_DLEC_SIZE );
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    CanIf_ErrorNotification( ControllerConfig->ControllerId, (Can_ErrorType *)&AutosarError[ ErrorCode ] );
+    CanIf_ErrorNotification( ControllerConfig->ControllerId, AutosarError[ ErrorCode ] );
 #endif
 }

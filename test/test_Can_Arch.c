@@ -12,7 +12,7 @@
 #include "Can.h"
 #include "Can_Arch.h"
 #include "mock_Det.h"
-#include "mock_CanIf.h"
+#include "mock_CanIf_Can.h"
 #include <string.h>
 
 typedef struct _Std_Filter
@@ -104,6 +104,7 @@ void setUp( void )
     CAN1->TXBTIE = 0x00000000,
     CAN1->TXBCIE = 0x00000000,
     CAN1->TXEFS  = 0x00000000,
+    CAN1->TXFQS  = 0x00000003,
 
     /*se inti values for control structure*/
     HwUnit.HwUnitState                         = CAN_CS_UNINIT;
@@ -588,7 +589,12 @@ void test__Can_Arch_GetControllerTxErrorCounter__get_tx_error_counter( void )
 
     TEST_ASSERT_EQUAL_HEX8_MESSAGE( 0x08, TxErrorCounter, "Wrong controller state" );
 }
-
+/**
+ * @brief   Test case Write funtion with full buffer
+ * 
+ * This test case will try to trnasmit a message but it will rejected due to Tx buffer is full
+ * fucntion shall return a CAN_BUSY
+*/
 void test__Can_Arch_Write__tx_fifo_full( void )
 {
     CAN1->TXFQS = 0x00100000;
@@ -596,6 +602,109 @@ void test__Can_Arch_Write__tx_fifo_full( void )
     Std_ReturnType Retval = Can_Arch_Write( &HwUnit, 0, NULL_PTR );
 
     TEST_ASSERT_EQUAL_HEX32_MESSAGE( CAN_BUSY, Retval, "Wrong TXFQS value" );
+}
+
+/**
+ * @brief   Test case Write funtion std id and classic frame
+ * 
+ * This test case will to transmit a message with standard id and classic frame
+ * fucntion shall return a E_OK
+*/
+void test__Can_Arch_write__transmit_standard_id_classic_frame( void )
+{
+    uint8 message[ 8 ] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 };
+
+    Can_PduType PduInfo = {
+    .id          = 0x123,
+    .length      = 8,
+    .sdu         = message,
+    .swPduHandle = 0x55 };
+
+    volatile uint32 *Header1 = &SRAMCAN1->TBSA[ 0u ];
+    volatile uint32 *Header2 = &SRAMCAN1->TBSA[ 1u ];
+    volatile uint32 *Data0   = &SRAMCAN1->TBSA[ 2u ];
+    volatile uint32 *Data1   = &SRAMCAN1->TBSA[ 3u ];
+
+    Std_ReturnType Retval = Can_Arch_Write( &HwUnit, CANARCH_HTH_0_CTRL_0, &PduInfo );
+
+    TEST_ASSERT_EQUAL_MESSAGE( E_OK, Retval, "Wrong retval value" );
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x048C0000, *Header1, "Wrong Header1 value" );
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x55880000, *Header2, "Wrong Header2 value" );
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x04030201, *Data0, "Wrong Data0 value" );
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x08070605, *Data1, "Wrong Data1 value" );
+}
+
+/**
+ * @brief   Test case Write funtion ext id and fd frame with padding
+ * 
+ * This test case will to transmit a message with extended id and fd frame and two bytes padding
+ * function shall return a E_OK
+*/
+void test__Can_Arch_write__transmit_extended_id_fd_frame( void )
+{
+    uint8 message[ 64 ] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+                            0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E };
+
+    Can_PduType PduInfo = {
+    .id          = 0xC1234567,
+    .length      = 14,
+    .sdu         = message,
+    .swPduHandle = 0x34 };
+
+    volatile uint32 *Header1 = &SRAMCAN1->TBSA[ 0u ];
+    volatile uint32 *Header2 = &SRAMCAN1->TBSA[ 1u ];
+    volatile uint32 *Data0   = &SRAMCAN1->TBSA[ 2u ];
+    volatile uint32 *Data1   = &SRAMCAN1->TBSA[ 3u ];
+    volatile uint32 *Data2   = &SRAMCAN1->TBSA[ 4u ];
+    volatile uint32 *Data3   = &SRAMCAN1->TBSA[ 5u ];
+
+    Std_ReturnType Retval = Can_Arch_Write( &HwUnit, CANARCH_HTH_0_CTRL_0, &PduInfo );
+
+    TEST_ASSERT_EQUAL_MESSAGE( E_OK, Retval, "Wrong retval value" );
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x41234567, *Header1, "Wrong Header1 value" );
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x34AA0000, *Header2, "Wrong Header2 value" );
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x04030201, *Data0, "Wrong Data0 value" );
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x08070605, *Data1, "Wrong Data1 value" );
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x0C0B0A09, *Data2, "Wrong Data2 value" );
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x55550E0D, *Data3, "Wrong Data3 value" );
+}
+
+/**
+ * @brief   Test case Write funtion ext id and fd frame with padding plus BRS
+ * 
+ * This test case will to transmit a message with extended id and fd frame and two bytes padding
+ * function shall return a E_OK
+*/
+void test__Can_Arch_write__transmit_extended_id_fd_frame_with_brs( void )
+{
+    uint8 message[ 64 ] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+                            0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E };
+
+    Can_PduType PduInfo = {
+    .id          = 0xC1234567,
+    .length      = 14,
+    .sdu         = message,
+    .swPduHandle = 0x34 };
+
+    volatile uint32 *Header1 = &SRAMCAN1->TBSA[ 0u ];
+    volatile uint32 *Header2 = &SRAMCAN1->TBSA[ 1u ];
+    volatile uint32 *Data0   = &SRAMCAN1->TBSA[ 2u ];
+    volatile uint32 *Data1   = &SRAMCAN1->TBSA[ 3u ];
+    volatile uint32 *Data2   = &SRAMCAN1->TBSA[ 4u ];
+    volatile uint32 *Data3   = &SRAMCAN1->TBSA[ 5u ];
+
+    /*simulate bit rate switch*/
+    CAN1->CCCR |= ( 1u << 9u );
+
+    Std_ReturnType Retval = Can_Arch_Write( &HwUnit, CANARCH_HTH_0_CTRL_0, &PduInfo );
+
+    TEST_ASSERT_EQUAL_MESSAGE( E_OK, Retval, "Wrong retval value" );
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x41234567, *Header1, "Wrong Header1 value" );
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x34BA0000, *Header2, "Wrong Header2 value" );
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x04030201, *Data0, "Wrong Data0 value" );
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x08070605, *Data1, "Wrong Data1 value" );
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x0C0B0A09, *Data2, "Wrong Data2 value" );
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x55550E0D, *Data3, "Wrong Data3 value" );
 }
 
 /**
@@ -1457,10 +1566,10 @@ void test__Can_GetTxPduId__get_the_oldes_pdu_id( void )
 
 /**
  * @brief   test to check that the CanIf_TxConfirmation is called
- * 
+ *
  * This test case will check that the CanIf_TxConfirmation is called when the TXEFS register is
  * updated with the correct value
-*/
+ */
 void test__Can_Isr_RxFifo0NewMessage__call_rx_indication( void )
 {
     CanIf_RxIndication_Ignore( );
@@ -1470,10 +1579,10 @@ void test__Can_Isr_RxFifo0NewMessage__call_rx_indication( void )
 
 /**
  * @brief   test to check that the CanIf_ErrorNotification is called
- * 
+ *
  * This test case will check that the CanIf_ErrorNotification is called when the TXEFS register is
  * updated with the correct value
-*/
+ */
 void test__Can_Isr_RxFifo0MessageLost__call_can_if_error_notification( void )
 {
     CanIf_ErrorNotification_Ignore( );
@@ -1484,10 +1593,10 @@ void test__Can_Isr_RxFifo0MessageLost__call_can_if_error_notification( void )
 
 /**
  * @brief   test to check that the CanIf_TxConfirmation is called
- * 
+ *
  * This test case will check that the CanIf_TxConfirmation is called when the TXEFS register is
  * updated with the correct value
-*/
+ */
 void test__Can_Isr_RxFifo1NewMessage__call_rx_indication( void )
 {
     CanIf_RxIndication_Ignore( );
@@ -1497,10 +1606,10 @@ void test__Can_Isr_RxFifo1NewMessage__call_rx_indication( void )
 
 /**
  * @brief   test to check that the CanIf_ErrorNotification is called
- * 
+ *
  * This test case will check that the CanIf_ErrorNotification is called when the TXEFS register is
  * updated with the correct value
-*/
+ */
 void test__Can_Isr_RxFifo1MessageLost__call_can_if_error_notification( void )
 {
     CanIf_ErrorNotification_Ignore( );

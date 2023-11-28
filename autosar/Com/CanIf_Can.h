@@ -10,6 +10,8 @@
 #ifndef CANIF_CAN_H__
 #define CANIF_CAN_H__
 
+#include "Can_Types.h"
+
 void CanIf_TxConfirmation( PduIdType CanTxPduId );
 void CanIf_RxIndication( const Can_HwType *Mailbox, const PduInfoType *PduInfoPtr );
 void CanIf_ControllerBusOff( uint8 ControllerId );

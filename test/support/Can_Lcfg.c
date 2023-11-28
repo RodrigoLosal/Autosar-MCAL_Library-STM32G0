@@ -232,8 +232,9 @@ const Can_HardwareObject ArchHohs[ CANARCH_NUMBER_OF_HOHS ] =
         .HandleType = CAN_FULL,
         .IdType = CAN_ID_STANDARD,
         .ObjectPayloadLength = 8u,
+        .FdPaddingValue = 0x55u,
         .ObjectType = CAN_HOH_TYPE_TRANSMIT,
-        .ControllerRef = &Controllers[ CANARCH_CONTROLLER_0 ]
+        .ControllerRef = &ArchControllers[ CANARCH_CONTROLLER_0 ]
     },
     {
         .CanObjectId = CANARCH_HRH_0_CTRL_0,
@@ -243,7 +244,7 @@ const Can_HardwareObject ArchHohs[ CANARCH_NUMBER_OF_HOHS ] =
         .ObjectType = CAN_HOH_TYPE_RECEIVE,
         .RxFifo = CAN_RX_FIFO0,
         .HwFilter = NULL_PTR,
-        .ControllerRef = &Controllers[ CANARCH_CONTROLLER_0 ]
+        .ControllerRef = &ArchControllers[ CANARCH_CONTROLLER_0 ]
     },
     {
         .CanObjectId = CANARCH_HRH_1_CTRL_0,
@@ -255,7 +256,7 @@ const Can_HardwareObject ArchHohs[ CANARCH_NUMBER_OF_HOHS ] =
         .HwFilter = ArchHwFilter,
         .HwFilterCount = 2,
         .ObjectType = CAN_HOH_TYPE_RECEIVE,
-        .ControllerRef = &Controllers[ CANARCH_CONTROLLER_0 ]
+        .ControllerRef = &ArchControllers[ CANARCH_CONTROLLER_0 ]
     }
 };
 /* clang-format on */
