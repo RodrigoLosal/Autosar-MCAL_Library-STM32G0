@@ -188,7 +188,13 @@ Gpt_ValueType Gpt_GetTimeRemaining( Gpt_ChannelType Channel )
  */
 void Gpt_StartTimer( Gpt_ChannelType Channel, Gpt_ValueType Value )
 {
-    if( Channel >= HwUnit_Gpt.Config->NumberOfChannels )
+    if( HwUnit_Gpt.HwUnitState != GPT_STATE_INIT )
+    {
+        /* If development error detection is enabled for GPT module: If the driver is not initialized,
+        the function Gpt_StartTimer shall raise the error GPT_E_UNINIT. */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_START_TIMER, GPT_E_UNINIT );
+    }
+    else if( Channel >= HwUnit_Gpt.Config->NumberOfChannels )
     {
         /* If development error detection is enabled for GPT module: If the parameter Channel is
         invalid (not within the range specified by configuration), the function Gpt_StartTimer shall
@@ -201,12 +207,6 @@ void Gpt_StartTimer( Gpt_ChannelType Channel, Gpt_ValueType Value )
         shall raise the error GPT_E_PARAM_VALUE if the parameter Value is "0" or not within the
         allowed range (exceeding the maximum timer resolution). */
         Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_START_TIMER, GPT_E_PARAM_VALUE );
-    }
-    else if( HwUnit_Gpt.HwUnitState != GPT_STATE_INIT )
-    {
-        /* If development error detection is enabled for GPT module: If the driver is not initialized,
-        the function Gpt_StartTimer shall raise the error GPT_E_UNINIT. */
-        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_START_TIMER, GPT_E_UNINIT );
     }
     else
     {
@@ -225,18 +225,18 @@ void Gpt_StartTimer( Gpt_ChannelType Channel, Gpt_ValueType Value )
  */
 void Gpt_StopTimer( Gpt_ChannelType Channel )
 {
-    if( Channel >= HwUnit_Gpt.Config->NumberOfChannels )
+    if( HwUnit_Gpt.HwUnitState != GPT_STATE_INIT )
+    {
+        /* If development error detection is enabled for GPT module: If the driver is not initialized,
+        the function Gpt_StopTimer shall raise the error GPT_E_UNINIT. */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_STOP_TIMER, GPT_E_UNINIT );
+    }
+    else if( Channel >= HwUnit_Gpt.Config->NumberOfChannels )
     {
         /* If development error detection is enabled for GPT module: If the parameter Channel is
         invalid (not within the range specified by configuration), the function Gpt_StopTimer shall
         raise the error GPT_E_PARAM_CHANNEL. */
         Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_STOP_TIMER, GPT_E_PARAM_CHANNEL );
-    }
-    else if( HwUnit_Gpt.HwUnitState != GPT_STATE_INIT )
-    {
-        /* If development error detection is enabled for GPT module: If the driver is not initialized,
-        the function Gpt_StopTimer shall raise the error GPT_E_UNINIT. */
-        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_STOP_TIMER, GPT_E_UNINIT );
     }
     else
     {

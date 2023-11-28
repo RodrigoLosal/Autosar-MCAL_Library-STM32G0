@@ -14,23 +14,12 @@
 #include "Gpt_Types.h"
 
 /**
- * @defgroup GPT_Peripherals GPT TIM References
- *
- * Specifies the controller IDs of the MCU TIM's
- *
- * @{ */
-#define GPT_TIM6                   0 /*!< TIM6 */
-#define GPT_TIM7                   1 /*!< TIM7  */
-/**
- * @} */
-
-/**
  * @defgroup GPT Maximum values
  *
  * Specifies the controller maximum values for its config. parameters.
  *
  * @{ */
-#define GPT_ARR_MAX                0X0000FFFF /*!< TIMx Auto-reload register maximum admissible value */
+#define GPT_ARR_MAX            0X0000FFFF /*!< TIMx Auto-reload register maximum admissible value */
 /**
  * @} */
 
@@ -39,14 +28,14 @@
  *
  * Symbols to specify the values of the bits on the registers.
  * @{ */
-#define GPT_INTERRUPT_FLAG_BIT     0   /*!< TIMx_SR -> UIF: Update Interrupt flag bit */
-#define GPT_ONE_PULSE_MODE_BIT     3u  /*!< TIMx_CR1 -> OPM: One pulse mode bit */
-#define GPT_PRESCALER_LSB          0   /*!< TIMx_PSC -> [PSC:0]: GPT prescaler least significant bit */
-#define GPT_PRESCALER_MSB          16u /*!< TIMx_PSC -> [PSC:15]: GPT prescaler most significant bit */
-#define GPT_AUTO_RELOAD_LSB        0   /*!< TIMx_ARR -> [ARR:0]: GPT auto-reload counter least significant bit */
-#define GPT_AUTO_RELOAD_MSB        16u /*!< TIMx_ARR -> [ARR:15]: GPT auto-reload counter most significant bit */
-#define GPT_COUNTER_ENABLE_BIT     0   /*!< TIMx_CR1 -> CEN: Counter enable bit */
-#define GPT_UPDATE_DISABLE_BIT     1u  /*!< TIMx_CR1 -> UDIS: Update disable bit */
+#define GPT_INTERRUPT_FLAG_BIT 0   /*!< TIMx_SR -> UIF: Update Interrupt flag bit */
+#define GPT_ONE_PULSE_MODE_BIT 3u  /*!< TIMx_CR1 -> OPM: One pulse mode bit */
+#define GPT_PRESCALER_LSB      0   /*!< TIMx_PSC -> [PSC:0]: GPT prescaler least significant bit */
+#define GPT_PRESCALER_MSB      16u /*!< TIMx_PSC -> [PSC:15]: GPT prescaler most significant bit */
+#define GPT_AUTO_RELOAD_LSB    0   /*!< TIMx_ARR -> [ARR:0]: GPT auto-reload counter least significant bit */
+#define GPT_AUTO_RELOAD_MSB    16u /*!< TIMx_ARR -> [ARR:15]: GPT auto-reload counter most significant bit */
+#define GPT_COUNTER_ENABLE_BIT 0   /*!< TIMx_CR1 -> CEN: Counter enable bit */
+#define GPT_UPDATE_DISABLE_BIT 1u  /*!< TIMx_CR1 -> UDIS: Update disable bit */
 /**
  * @} */
 
