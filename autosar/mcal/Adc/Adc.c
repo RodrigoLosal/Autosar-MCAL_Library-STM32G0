@@ -48,7 +48,7 @@ static Adc_Det_Str Det_Adc =
  *
  * @param    ConfigPtr Pointer to configuration set in Variant PB (Variant PC requires a NULL_PTR).
  *
- * @reqs    SWS_Adc_00365
+ * @reqs    SWS_Adc_00365 SWS_Adc_00107
  */
 void Adc_Init( const Adc_ConfigType *ConfigPtr )
 {
@@ -79,7 +79,7 @@ void Adc_Init( const Adc_ConfigType *ConfigPtr )
  * @retval  E_OK: result buffer pointer initialized correctly
  *          E_NOT_OK: operation failed or development error occured
  *
- * @reqs    SWS_Adc_91000
+ * @reqs    SWS_Adc_91000 SWS_Adc_00423 SWS_Adc_00434 SWS_Adc_00457
  */
 Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr )
 {
@@ -109,7 +109,7 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
  *
  * This function Returns all ADC HW Units to a state comparable to their power on reset state.
  *
- * @reqs    SWS_Adc_00366 SWS_Adc_00228
+ * @reqs    SWS_Adc_00366 SWS_Adc_00228 SWS_Adc_00154
  */
 #if ADC_DE_INIT_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DeInit( void )
@@ -133,7 +133,7 @@ void Adc_DeInit( void )
  *
  * @param    Group Numeric ID of requested ADC Channel group.
  *
- * @reqs    SWS_Adc_00367 SWS_Adc_00259
+ * @reqs    SWS_Adc_00367 SWS_Adc_00259 SWS_Adc_00125 SWS_Adc_00133 SWS_Adc_00294 SWS_Adc_00424
  */
 #if ADC_ENABLE_START_STOP_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_StartGroupConversion( Adc_GroupType Group )
@@ -169,7 +169,7 @@ void Adc_StartGroupConversion( Adc_GroupType Group )
  *
  * @param    Group Numeric ID of requested ADC Channel group.
  *
- * @reqs    SWS_Adc_00368 SWS_Adc_00260
+ * @reqs    SWS_Adc_00368 SWS_Adc_00260 SWS_Adc_00126 SWS_Adc_00164 SWS_Adc_00295
  */
 #if ADC_ENABLE_START_STOP_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_StopGroupConversion( Adc_GroupType Group )
@@ -208,7 +208,7 @@ void Adc_StopGroupConversion( Adc_GroupType Group )
  * @retval  E_OK: results are available and written to the data buffer
  *          E_NOT_OK: no results are available or development error occured
  *
- * @reqs    SWS_Adc_00369 SWS_Adc_00359
+ * @reqs    SWS_Adc_00369 SWS_Adc_00359 SWS_Adc_00152 SWS_Adc_00296
  */
 #if ADC_READ_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr )
@@ -237,7 +237,8 @@ Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBuffe
  *
  * @param    Group Numeric ID of requested ADC Channel group.
  *
- * @reqs    SWS_Adc_91001 SWS_Adc_00265
+ * @reqs    SWS_Adc_91001 SWS_Adc_00265 SWS_Adc_00128 SWS_Adc_00136 SWS_Adc_00281 SWS_Adc_00297
+ *          SWS_Adc_00425
  */
 #if ADC_HW_TRIGGER_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_EnableHardwareTrigger( Adc_GroupType Group )
@@ -283,7 +284,7 @@ void Adc_EnableHardwareTrigger( Adc_GroupType Group )
  *
  * @param    Group Numeric ID of requested ADC Channel group.
  *
- * @reqs    SWS_Adc_91002 SWS_Adc_00266
+ * @reqs    SWS_Adc_91002 SWS_Adc_00266 SWS_Adc_00129 SWS_Adc_00137 SWS_Adc_00282 SWS_Adc_00298
  */
 #if ADC_HW_TRIGGER_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DisableHardwareTrigger( Adc_GroupType Group )
@@ -325,7 +326,7 @@ void Adc_DisableHardwareTrigger( Adc_GroupType Group )
  *
  * @param    Group Numeric ID of requested ADC Channel group.
  *
- * @reqs    SWS_Adc_91003 SWS_Adc_00100
+ * @reqs    SWS_Adc_91003 SWS_Adc_00100 SWS_Adc_00130 SWS_Adc_00165 SWS_Adc_00299
  */
 #if ADC_GRP_NOTIF_CAPABILITY == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_EnableGroupNotification( Adc_GroupType Group )
@@ -356,7 +357,7 @@ void Adc_EnableGroupNotification( Adc_GroupType Group )
  *
  * @param    Group Numeric ID of requested ADC Channel group.
  *
- * @reqs    SWS_Adc_91004 SWS_Adc_00101
+ * @reqs    SWS_Adc_91004 SWS_Adc_00101 SWS_Adc_00131 SWS_Adc_00166 SWS_Adc_00300
  */
 #if ADC_GRP_NOTIF_CAPABILITY == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DisableGroupNotification( Adc_GroupType Group )
@@ -389,7 +390,7 @@ void Adc_DisableGroupNotification( Adc_GroupType Group )
  *
  * @retval  Conversion status for the requested group.
  *
- * @reqs    SWS_Adc_00374
+ * @reqs    SWS_Adc_00374 SWS_Adc_00301
  */
 Adc_StatusType Adc_GetGroupStatus( Adc_GroupType Group )
 {
@@ -419,7 +420,7 @@ Adc_StatusType Adc_GetGroupStatus( Adc_GroupType Group )
  *
  * @retval  Number of valid samples per channel.
  *
- * @reqs    SWS_Adc_00375
+ * @reqs    SWS_Adc_00375 SWS_Adc_00218 SWS_Adc_00302
  */
 Adc_StreamNumSampleType Adc_GetStreamLastPointer( Adc_GroupType Group, Adc_ValueGroupType **PtrToSamplePtr )
 {
@@ -448,7 +449,7 @@ Adc_StreamNumSampleType Adc_GetStreamLastPointer( Adc_GroupType Group, Adc_Value
  *
  * @param    versioninfo Pointer to where to store the version information of this module.
  *
- * @reqs    SWS_Adc_00376
+ * @reqs    SWS_Adc_00376 SWS_Adc_00458
  */
 #if ADC_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_GetVersionInfo( Std_VersionInfoType *versioninfo )
@@ -478,7 +479,7 @@ void Adc_GetVersionInfo( Std_VersionInfoType *versioninfo )
  * @retval  E_OK: Power Mode changed
  *          E_NOT_OK: request rejected
  *
- * @reqs    SWS_Adc_00475
+ * @reqs    SWS_Adc_00475 SWS_Adc_00486 SWS_Adc_00488 SWS_Adc_00490
  */
 Std_ReturnType Adc_SetPowerState( Adc_PowerStateRequestResultType *Result )
 {
@@ -513,7 +514,7 @@ Std_ReturnType Adc_SetPowerState( Adc_PowerStateRequestResultType *Result )
  * @retval  E_OK: Mode could be read
  *          E_NOT_OK: Service is rejected
  *
- * @reqs    SWS_Adc_00476
+ * @reqs    SWS_Adc_00476 SWS_Adc_00491
  */
 Std_ReturnType Adc_GetCurrentPowerState( Adc_PowerStateType *CurrentPowerState, Adc_PowerStateRequestResultType *Result )
 {
@@ -542,7 +543,7 @@ Std_ReturnType Adc_GetCurrentPowerState( Adc_PowerStateType *CurrentPowerState, 
  * @retval  E_OK: Mode could be read
  *          E_NOT_OK: Service is rejected
  *
- * @reqs    SWS_Adc_00477
+ * @reqs    SWS_Adc_00477 SWS_Adc_00493
  */
 Std_ReturnType Adc_GetTargetPowerState( Adc_PowerStateType *TargetPowerState, Adc_PowerStateRequestResultType *Result )
 {
@@ -575,7 +576,7 @@ Std_ReturnType Adc_GetTargetPowerState( Adc_PowerStateType *TargetPowerState, Ad
  * @retval  E_OK: Mode could be read
  *          E_NOT_OK: Service is rejected
  *
- * @reqs    SWS_Adc_00478
+ * @reqs    SWS_Adc_00478 SWS_Adc_00496 SWS_Adc_00497
  */
 Std_ReturnType Adc_PreparePowerState( Adc_PowerStateType PowerState, Adc_PowerStateRequestResultType *Result )
 {
