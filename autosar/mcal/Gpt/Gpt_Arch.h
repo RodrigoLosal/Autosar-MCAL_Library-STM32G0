@@ -25,6 +25,16 @@
  * @} */
 
 /**
+ * @defgroup GPT Maximum values
+ *
+ * Specifies the controller maximum values for its config. parameters.
+ *
+ * @{ */
+#define GPT_ARR_MAX            0X0000FFFF /*!< TIMx Auto-reload register maximum admissible value */
+/**
+ * @} */
+
+/**
  * @defgroup GPT_Bit_Values GPT bits values
  *
  * Symbols to specify the values of the bits on the registers.
