@@ -84,15 +84,8 @@
  */
 typedef struct _Can_ControllerBaudrateConfig
 {
-    uint8 BaudRateConfigID /*!< Unique identifier for a baudrate configuration
+    uint8 BaudRateConfigID; /*!< Unique identifier for a baudrate configuration
                                 This parameter value is defined in Can_Cfg.h */
-    ;
-
-    uint32 BaudRate; /*!< Baudrate in Kbps
-                         The field is only for indication purposes */
-
-    uint8 PropSeg; /*!< Propagation segment in time quanta
-                       The field is only for indication purposes */
 
     uint32 Seg1; /*!< Segment 1 in time quanta
                      This parameter must be a number between 2 and 256 */
@@ -105,9 +98,6 @@ typedef struct _Can_ControllerBaudrateConfig
 
     uint32 Prescaler; /*!< Baudrate prescaler
                           This parameter must be a number between 1 and 512 */
-
-    uint8 FdPropSeg; /*!< Propagation segment in time quantas 1 + Seg1 + Seg2
-                       The field is only for indication purposes */
 
     uint32 FdSeg1; /*!< Segment 1 in time quanta for data payload
                      this parameter must be a number between 1 and 32 */
@@ -170,9 +160,6 @@ typedef struct _Can_Controller
     uint8 CanReference; /*!< Base address of the Mcu CAN controller
                                   this paramter must be CAN_FDCAN1 or CAN_FDCAN2 */
 
-    uint8 SramReference; /*!< Reference to the SRAM location where the HOH is mapped to
-                                       this paramter must be CAN_SRAMCAN1 or CAN_SRAMCAN2 */
-
     const Can_ControllerBaudrateConfig *DefaultBaudrate; /*!< Reference to baudrate configuration container configured for the
                                                         Can Controller*/
 
@@ -214,9 +201,6 @@ typedef struct _Can_HardwareObject
     uint8 HandleType; /*!< Specifies the type (Full-CAN or Basic-CAN) of a hardware object.
                           This paramter can be a set of @ref CAN_Hardware_Handler_Type */
 
-    uint16 HwObjectCount; /*!< Number of hardware objects used to implement one HOH.
-                              On stm32g0 microcontroller this numnber is fixed to 3 for HTH and HRH */
-
     Can_IdType IdType; /*!< Specifies whether the HOH handles standard identifiers, extended
                            or mixed, @ref CAN_Id_Type */
 
@@ -228,6 +212,9 @@ typedef struct _Can_HardwareObject
 
     uint8 FdPaddingValue; /*!< Specifies the value which is used to pad unspecified data in CAN FD frames > 8
                               bytes for transmission. Any number form 0x00 to 0xff. */
+
+    uint8 RxFifo; /*!< Specifies the receive FIFO number for the hardware object.
+                      This paramter can be a set of @ref CAN_RxFifo */
 
     const Can_HwFilter *HwFilter; /*!< Reference to array of hardware filters structures*/
 
@@ -249,7 +236,9 @@ typedef struct _Can_HardwareObject
 typedef struct _Can_ConfigType
 {
     const Can_Controller *Controllers; /*!< Pointer to the controller structure */
+    uint8 ControllersCount;            /*!< Number of controllers */
     const Can_HardwareObject *Hohs;    /*!< Pointer to the hardware object structure */
+    uint8 HohsCount;                   /*!< Number of hardware objects */
 } Can_ConfigType;
 
 /**
@@ -263,6 +252,7 @@ typedef struct _Can_HwUnit
     uint8 HwUnitState;                        /*!< CAN hardware unit state */
     const Can_ConfigType *Config;             /*!< Pointer to the configuration structure */
     Can_ControllerStateType *ControllerState; /*!< CAN controller states */
+    uint8 DisableIntsLvl[ 2u ];               /*!< Disable interrupts counter */
 } Can_HwUnit;
 
 #endif /* CAN_TYPES_H__ */

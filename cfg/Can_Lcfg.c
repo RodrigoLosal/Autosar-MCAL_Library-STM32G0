@@ -22,13 +22,10 @@ const Can_ControllerBaudrateConfig BaudratesCtrl0[ CAN_NUMBER_OF_BAUDRATES_CTRL0
 {
     {
         .BaudRateConfigID = CAN_BAUDRATE_CTRL1_100K,
-        .BaudRate = 100000,
-        .PropSeg = 16,
         .Seg1 = 13,
         .Seg2 = 2,
         .SyncJumpWidth = 1,
         .Prescaler = 6,
-        .FdPropSeg = 16,
         .FdSeg1 = 13,
         .FdSeg2 = 2,
         .FdPrescaler = 6,
@@ -38,13 +35,10 @@ const Can_ControllerBaudrateConfig BaudratesCtrl0[ CAN_NUMBER_OF_BAUDRATES_CTRL0
     },
     {
         .BaudRateConfigID = CAN_BAUDRATE_CTRL1_500K,
-        .BaudRate = 1000000,
-        .PropSeg = 16,
         .Seg1 = 13,
         .Seg2 = 2,
         .SyncJumpWidth = 1,
         .Prescaler = 6,
-        .FdPropSeg = 16,
         .FdSeg1 = 13,
         .FdSeg2 = 2,
         .FdPrescaler = 6,
@@ -63,13 +57,10 @@ const Can_ControllerBaudrateConfig BaudratesCtrl1[ CAN_NUMBER_OF_BAUDRATES_CTRL1
 {
     {
         .BaudRateConfigID = CAN_BAUDRATE_CTRL0_100K,
-        .BaudRate = 100000,
-        .PropSeg = 16,
         .Seg1 = 13,
         .Seg2 = 2,
         .SyncJumpWidth = 1,
         .Prescaler = 6,
-        .FdPropSeg = 16,
         .FdSeg1 = 13,
         .FdSeg2 = 2,
         .FdPrescaler = 6,
@@ -79,13 +70,10 @@ const Can_ControllerBaudrateConfig BaudratesCtrl1[ CAN_NUMBER_OF_BAUDRATES_CTRL1
     },
     {
         .BaudRateConfigID = CAN_BAUDRATE_CTRL0_500K,
-        .BaudRate = 1000000,
-        .PropSeg = 16,
         .Seg1 = 13,
         .Seg2 = 2,
         .SyncJumpWidth = 1,
         .Prescaler = 6,
-        .FdPropSeg = 16,
         .FdSeg1 = 13,
         .FdSeg2 = 2,
         .FdPrescaler = 6,
@@ -180,7 +168,6 @@ const Can_HardwareObject Hohs[ CAN_NUMBER_OF_HOHS ] =
     {
         .CanObjectId = CAN_OBJ_HTH_TX00,
         .HandleType = CAN_FULL,
-        .HwObjectCount = 3,
         .IdType = CAN_ID_STANDARD,
         .ObjectPayloadLength = 8,
         .ObjectType = CAN_HOH_TYPE_TRANSMIT,
@@ -189,7 +176,6 @@ const Can_HardwareObject Hohs[ CAN_NUMBER_OF_HOHS ] =
     {
         .CanObjectId = CAN_OBJ_HRH_RX00,
         .HandleType = CAN_FULL,
-        .HwObjectCount = 3,
         .IdType = CAN_ID_STANDARD,
         .ObjectPayloadLength = 8,
         .ObjectType = CAN_HOH_TYPE_RECEIVE,
@@ -200,7 +186,6 @@ const Can_HardwareObject Hohs[ CAN_NUMBER_OF_HOHS ] =
     {
         .CanObjectId = CAN_OBJ_HRH_RX01,
         .HandleType = CAN_FULL,
-        .HwObjectCount = 3,
         .IdType = CAN_ID_STANDARD,
         .ObjectPayloadLength = 8,
         .ObjectType = CAN_HOH_TYPE_RECEIVE,

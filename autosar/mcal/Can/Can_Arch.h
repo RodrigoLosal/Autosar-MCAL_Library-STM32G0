@@ -275,6 +275,15 @@
  * @} */
 
 /**
+ * @defgroup CAN_RxFifo CAN Rx FIFO
+ *
+ * @{ */
+#define CAN_RX_FIFO0                   1u /*!< Rx FIFO 0 */
+#define CAN_RX_FIFO1                   2u /*!< Rx FIFO 1 */
+/**
+ * @} */
+
+/**
  * @defgroup CAN_Hohs CAN Hardware Object Handlers
  *
  * @{ */

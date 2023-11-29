@@ -13,7 +13,7 @@
 #include "Can_Cfg.h"
 #include "Can_Arch.h"
 #include "Bfx.h"
-#include "CanIf.h"
+#include "CanIf_Can.h"
 
 /* cppcheck-suppress misra-c2012-20.9 ; this is declared at Can_Cfg.h */
 #if CAN_DEV_ERROR_DETECT == STD_OFF
@@ -92,10 +92,10 @@
  * @defgroup DBTP_sizes DBTP register bit sizes
  *
  * @{ */
-#define DBTP_DSJW_SIZE       0u  /*!< Data Jump Width bitfiled size*/
-#define DBTP_DTSEG1_SIZE     8u  /*!< Data Time Segment 1 bitfiled size*/
-#define DBTP_DTSEG2_SIZE     4u  /*!< Data Time Segment 2 bitfiled size*/
-#define DBTP_DBRP_SIZE       16u /*!< Nominal Baud Rate Preescaler bitfiled size*/
+#define DBTP_DSJW_SIZE       4u /*!< Data Jump Width bitfiled size*/
+#define DBTP_DTSEG1_SIZE     5u /*!< Data Time Segment 1 bitfiled size*/
+#define DBTP_DTSEG2_SIZE     4u /*!< Data Time Segment 2 bitfiled size*/
+#define DBTP_DBRP_SIZE       5u /*!< Nominal Baud Rate Preescaler bitfiled size*/
 /**
  * @} */
 
@@ -116,6 +116,8 @@
  * @defgroup RXGFC_size RXGFC register bit sizes
  *
  * @{ */
+#define RXGFC_RRFE_BIT       0u /*!< Reject Remote Frames Extended */
+#define RXGFC_RRFS_BIT       1u /*!< Reject Remote Frames Standard */
 #define RXGFC_LSS_SIZE       5u /*!< List Size Standard */
 #define RXGFC_LSE_SIZE       4u /*!< List Size Extended */
 #define RXGFC_ANFS_SIZE      2u /*!< Accept Non-matching Frames Standard */
@@ -172,7 +174,7 @@
  * @defgroup TXEFS_sizes TXEFS register bit sizes
  *
  * @{ */
-#define TXEFS_EFGI_SIZE      0u /*!< Tx FIFO/Queue Get Index bitfiled size*/
+#define TXEFS_EFGI_SIZE      2u /*!< Tx FIFO/Queue Get Index bitfiled size*/
 #define TXEFS_EFFL_SIZE      3u /*!< Tx FIFO/Queue Fill Level bitfiled size*/
 /**
  * @} */
@@ -201,8 +203,9 @@
  * @{ */
 #define PSR_BO_BIT           7u /*!< Bus_Off bit */
 #define PSR_EP_BIT           5u /*!< Protocol_Error bit */
-/* cppcheck-suppress misra-c2012-20.5 ; the use of this define is precompile conditioned */
+/* cppcheck-suppress misra-c2012-2.5 ; the use of this define is precompile conditioned */
 #define PSR_LEC_BIT          0u /*!< Last_Error_Code bit */
+/* cppcheck-suppress misra-c2012-2.5 ; the use of this define is precompile conditioned */
 #define PSR_DLEC_BIT         8u /*!< Data_Last_Error_Code bit */
 /**
  * @} */
@@ -211,8 +214,9 @@
  * @defgroup PSRs_sizes PSR register bits
  *
  * @{ */
-/* cppcheck-suppress misra-c2012-20.5 ; the use of this define is precompile conditioned */
+/* cppcheck-suppress misra-c2012-2.5 ; the use of this define is precompile conditioned */
 #define PSR_LEC_SIZE         3u /*!< Last_Error_Code bitfield size */
+/* cppcheck-suppress misra-c2012-2.5 ; the use of this define is precompile conditioned */
 #define PSR_DLEC_SIZE        3u /*!< Data_Last_Error_Code bitfield size */
 /**
  * @} */
@@ -278,10 +282,10 @@
  * @defgroup STD_Filter_bits    Standard ID Filter bits
  *
  * @{ */
-#define FLSSA_SFID1_BIT      0u  /*!< Standard ID Filter 1 */
-#define FLSSA_SFID2_BIT      16u /*!< Standard ID Filter 2 */
-#define FLSSA_SFEC_BIT       30u /*!< Standard ID Filter Element Configuration */
-#define FLSSA_SFT_BIT        28u /*!< Standard ID Filter Type */
+#define FLSSA_SFID2_BIT      0u  /*!< Standard ID Filter 2 */
+#define FLSSA_SFID1_BIT      16u /*!< Standard ID Filter 1 */
+#define FLSSA_SFEC_BIT       27u /*!< Standard ID Filter Element Configuration */
+#define FLSSA_SFT_BIT        30u /*!< Standard ID Filter Type */
 /**
  * @} */
 
@@ -336,7 +340,7 @@ typedef struct _HwExtFilter
  * @brief  Autosar errors to report
  */
 /* clang-format off */
-static const uint8 AutosarError[] = { 
+static const Can_ErrorType AutosarError[] = { 
     0,
     CAN_ERROR_CHECK_STUFFING_FAILED,
     CAN_ERROR_CHECK_FORM_FAILED,
@@ -357,36 +361,52 @@ static Can_RegisterType *CanPeripherals[] = { CAN1, CAN2 };
  */
 static SramCan_RegisterType *SramCanPeripherals[] = { SRAMCAN1, SRAMCAN2 };
 
-static void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can_RegisterType *Can );
-static void Can_SetupConfiguredFilters( const Can_Controller *Controller, const Can_HardwareObject *HwObjects, Can_RegisterType *Can );
-static void Can_SetupBaudrateConfig( const Can_ControllerBaudrateConfig *Baudrate, Can_RegisterType *Can );
-static uint8 Can_GetClosestDlcWithPadding( uint8 Dlc, uint32 *RamBuffer, uint8 PaddingValue );
-static uint8 Can_GetTxPduId( const Can_Controller *Controller, PduIdType *CanPduId );
-static uint8 Can_GetMessage( HwObjectHandler *Fifo, const Can_Controller *Controller, PduInfoType *PduInfo, uint32 *CanId );
+/**
+ * @brief  Dlc defines to actual bytes.
+ */
+static const uint8 DlcToBytes[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 32, 48, 64 };
 
-static void Can_Isr_RxFifo0NewMessage( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_RxFifo0Full( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_RxFifo0MessageLost( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_RxFifo1NewMessage( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_RxFifo1Full( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_RxFifo1MessageLost( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_HighPriorityMessageRx( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_TransmissionCompleted( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_TransmissionCancellationFinished( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_TxEventFifoElementLost( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_TxEventFifoFull( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_TxEventFifoNewEntry( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_TxFifoEmpty( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_TimestampWraparound( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_MessageRamAccessFailure( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_TimeoutOccurred( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_ErrorLoggingOverflow( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_ErrorPassive( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_WarningStatus( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_BusOffStatus( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_WatchdogInterrupt( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_ProtocolErrorInArbitrationPhase( Can_HwUnit *HwUnit, uint8 Controller );
-static void Can_Isr_ProtocolErrorInDataPhase( Can_HwUnit *HwUnit, uint8 Controller );
+/**
+ * @brief  Fifo 0 to controller id decoder.
+ */
+static const uint8 Fifo0ToCtrlIds[] = { CAN_OBJ_HRH_RX00, CAN_OBJ_HRH_RX10 };
+
+/**
+ * @brief  Fifo 1 to controller id decoder.
+ */
+static const uint8 Fifo1ToCtrlIds[] = { CAN_OBJ_HRH_RX01, CAN_OBJ_HRH_RX11 };
+
+
+CAN_STATIC void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can_RegisterType *Can );
+CAN_STATIC void Can_SetupConfiguredFilters( const Can_ConfigType *Config, uint8 Controller );
+CAN_STATIC void Can_SetupBaudrateConfig( const Can_ControllerBaudrateConfig *Baudrate, Can_RegisterType *Can );
+CAN_STATIC uint8 Can_GetClosestDlcWithPadding( uint8 Dlc, uint32 *RamBuffer, uint8 PaddingValue );
+CAN_STATIC uint8 Can_GetTxPduId( const Can_Controller *Controller, PduIdType *CanPduId );
+CAN_STATIC void Can_GetMessage( volatile uint32 *Fifo, PduInfoType *PduInfo, uint32 *CanId );
+
+CAN_STATIC void Can_Isr_RxFifo0NewMessage( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_RxFifo0Full( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_RxFifo0MessageLost( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_RxFifo1NewMessage( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_RxFifo1Full( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_RxFifo1MessageLost( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_HighPriorityMessageRx( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_TransmissionCompleted( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_TransmissionCancellationFinished( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_TxEventFifoElementLost( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_TxEventFifoFull( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_TxEventFifoNewEntry( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_TxFifoEmpty( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_TimestampWraparound( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_MessageRamAccessFailure( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_TimeoutOccurred( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_ErrorLoggingOverflow( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_ErrorPassive( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_WarningStatus( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_BusOffStatus( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_WatchdogInterrupt( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_ProtocolErrorInArbitrationPhase( Can_HwUnit *HwUnit, uint8 Controller );
+CAN_STATIC void Can_Isr_ProtocolErrorInDataPhase( Can_HwUnit *HwUnit, uint8 Controller );
 
 /**
  * @brief    **Can low level Initialization**
@@ -418,7 +438,7 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
     for( uint8 i = 0u; i < ( sizeof( SramCan_RegisterType ) / sizeof( uint32 ) ); i++ )
     {
         /* Flush the allocated Message RAM area */
-        ( (uint32 *)SramCanPeripherals[ ControllerConfig->SramReference ] )[ i ] = 0x00000000u;
+        ( (uint32 *)SramCanPeripherals[ ControllerConfig->CanReference ] )[ i ] = 0x00000000u;
     }
 
     /* Exit from Sleep mode */
@@ -446,14 +466,14 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
     /* Enable configuration change */
     Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_CCE_BIT );
 
-    /* Set the no automatic retransmission */
-    Bfx_PutBit_u32u8u8( (uint32 *)&Can->CCCR, CCCR_DAR_BIT, ControllerConfig->AutoRetransmission );
+    /* Set the automatic retransmission */
+    Bfx_PutBit_u32u8u8( (uint32 *)&Can->CCCR, CCCR_DAR_BIT, !ControllerConfig->AutoRetransmission );
 
     /* Set the transmit pause feature */
     Bfx_PutBit_u32u8u8( (uint32 *)&Can->CCCR, CCCR_TXP_BIT, ControllerConfig->TransmitPause );
 
     /* Set the Protocol Exception Handling */
-    Bfx_PutBit_u32u8u8( (uint32 *)&Can->CCCR, CCCR_PXHD_BIT, ControllerConfig->ProtocolException );
+    Bfx_PutBit_u32u8u8( (uint32 *)&Can->CCCR, CCCR_PXHD_BIT, !ControllerConfig->ProtocolException );
 
     /* Set CAN Frame Format */
     Bfx_PutBit_u32u8u8( (uint32 *)&Can->CCCR, CCCR_FDOE_BIT, ControllerConfig->FrameFormat );
@@ -473,7 +493,7 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
     if( ControllerConfig->Mode == CAN_MODE_RESTRICTED_OPERATION )
     {
         /* Enable Restricted Operation mode */
-        Bfx_ClrBit_u32u8( (uint32 *)&Can->CCCR, CCCR_ASM_BIT );
+        Bfx_SetBit_u32u8( (uint32 *)&Can->CCCR, CCCR_ASM_BIT );
     }
     else if( ControllerConfig->Mode != CAN_MODE_NORMAL )
     {
@@ -508,7 +528,12 @@ void Can_Arch_Init( Can_HwUnit *HwUnit, const Can_ConfigType *Config, uint8 Cont
     Bfx_PutBit_u32u8u8( (uint32 *)&Can->TXBC, TXBC_TFQM_BIT, ControllerConfig->TxFifoQueueMode );
 
     /* Setup filter for Fifo 0 and Fifo 1*/
-    Can_SetupConfiguredFilters( Config->Controllers, Config->Hohs, Can );
+    Can_SetupConfiguredFilters( Config, Controller );
+
+    /* As per autosar reject all Std remote frames*/
+    Bfx_SetBit_u32u8( (uint32 *)&Can->RXGFC, RXGFC_RRFS_BIT );
+    /* As per autosar reject all Ext remote frames*/
+    Bfx_SetBit_u32u8( (uint32 *)&Can->RXGFC, RXGFC_RRFE_BIT );
 
     /* Setup the interrupt to line 0 or 1*/
     Can_SetupConfiguredInterrupts( &Config->Controllers[ Controller ], Can );
@@ -667,7 +692,7 @@ Std_ReturnType Can_Arch_SetControllerMode( Can_HwUnit *HwUnit, uint8 Controller,
                 Bfx_ClrBit_u32u8( (uint32 *)&Can->CCCR, CCCR_CSR_BIT );
 
                 /* Wait until FDCAN exits sleep mode */
-                while( Bfx_GetBit_u32u8_u8( Can->CCCR, CCCR_CSA_BIT ) == FALSE )
+                while( Bfx_GetBit_u32u8_u8( Can->CCCR, CCCR_CSA_BIT ) == TRUE )
                 {
                     /*Wee need to stablish a timeout counter to avois a potential endless loop,
                     according to AUTOSAR a Os tick shall be used, but for the moment it will
@@ -731,11 +756,19 @@ void Can_Arch_EnableControllerInterrupts( Can_HwUnit *HwUnit, uint8 Controller )
     /*Get the Can controller register structure*/
     Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
 
-    /* Enable Interrupt line 0 */
-    Bfx_SetBit_u32u8( (uint32 *)&Can->ILE, CAN_INTERRUPT_LINE0 );
-
-    /* Enable Interrupt line 1 */
-    Bfx_SetBit_u32u8( (uint32 *)&Can->ILE, CAN_INTERRUPT_LINE1 );
+    /*enable interrupts only if this function is called the same number of times than
+    disable interrupts*/
+    if( HwUnit->DisableIntsLvl[ Controller ] == 0u )
+    {
+        /* Enable Interrupt line 0 */
+        Bfx_SetBit_u32u8( (uint32 *)&Can->ILE, CAN_INTERRUPT_LINE0 );
+        /* Enable Interrupt line 1 */
+        Bfx_SetBit_u32u8( (uint32 *)&Can->ILE, CAN_INTERRUPT_LINE1 );
+    }
+    else
+    {
+        HwUnit->DisableIntsLvl[ Controller ]--;
+    }
 }
 
 /**
@@ -759,9 +792,14 @@ void Can_Arch_DisableControllerInterrupts( Can_HwUnit *HwUnit, uint8 Controller 
 
     /* Disable interrupt line 0 */
     Bfx_ClrBit_u32u8( (uint32 *)&Can->ILE, CAN_INTERRUPT_LINE0 );
-
     /* Disable interrupt line 1 */
     Bfx_ClrBit_u32u8( (uint32 *)&Can->ILE, CAN_INTERRUPT_LINE1 );
+
+    /*increase the number of disable int but keeping at maximum of 255*/
+    if( HwUnit->DisableIntsLvl[ Controller ] < 255u )
+    {
+        HwUnit->DisableIntsLvl[ Controller ]++;
+    }
 }
 
 /**
@@ -873,7 +911,7 @@ Std_ReturnType Can_Arch_GetControllerRxErrorCounter( Can_HwUnit *HwUnit, uint8 C
 
     /* Read the error counters register */
     *RxErrorCounterPtr = Bfx_GetBits_u32u8u8_u32( Can->ECR, ECR_REC_BIT, ECR_REC_SIZE );
-    Bfx_PutBit_u32u8u8( (uint32 *)RxErrorCounterPtr, 7u, Bfx_GetBit_u32u8_u8( Can->PSR, ECR_RP_BIT ) );
+    Bfx_PutBit_u32u8u8( (uint32 *)RxErrorCounterPtr, 7u, Bfx_GetBit_u32u8_u8( Can->ECR, ECR_RP_BIT ) );
 
     return E_NOT_OK;
 }
@@ -1029,7 +1067,7 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
         uint32 PutIndex = Bfx_GetBits_u32u8u8_u32( Can->TXFQS, TXFQS_TFQPI_BIT, TXFQS_TFQPI_SIZE );
 
         /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-        HwObjectHandler *HthObject = (HwObjectHandler *)SramCanPeripherals[ ControllerConfig->SramReference ]->TBSA;
+        HwObjectHandler *HthObject = (HwObjectHandler *)SramCanPeripherals[ ControllerConfig->CanReference ]->TBSA;
 
         /*get the message ID type*/
         uint8 IdType = Bfx_GetBit_u32u8_u8( PduInfo->id, MSG_ID_BIT );
@@ -1049,7 +1087,7 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
         }
 
         /* Store the PduId into FIFO events  */
-        Bfx_PutBits_u32u8u8u32( &HthObject[ PutIndex ].ObjHeader1, TX_BUFFER_MM_BIT, TX_BUFFER_MM_SIZE, PduInfo->swPduHandle );
+        Bfx_PutBits_u32u8u8u32( &HthObject[ PutIndex ].ObjHeader2, TX_BUFFER_MM_BIT, TX_BUFFER_MM_SIZE, PduInfo->swPduHandle );
 
         /* Get the type of frame to send */
         uint8 FrameType = Bfx_GetBit_u32u8_u8( PduInfo->id, MSG_FORMAT_BIT );
@@ -1088,7 +1126,7 @@ Std_ReturnType Can_Arch_Write( Can_HwUnit *HwUnit, Can_HwHandleType Hth, const C
         Bfx_PutBits_u32u8u8u32( &HthObject[ PutIndex ].ObjHeader2, TX_BUFFER_DLC_BIT, TX_BUFFER_DLC_SIZE, DataLenght );
 
         /* Write Tx payload with padding value to the message RAM */
-        for( uint8 Word = 0; Word < ( DataLenght / sizeof( uint32 ) ); Word++ )
+        for( uint8 Word = 0; Word < ( DlcToBytes[ DataLenght ] / sizeof( uint32 ) ); Word++ )
         {
             HthObject[ PutIndex ].ObjPayload[ Word ] = RamBuffer[ Word ];
         }
@@ -1153,19 +1191,20 @@ void Can_Arch_IsrMainHandler( Can_HwUnit *HwUnit, uint8 Controller )
     };
     /* clang-format on */
 
-    for( uint8 Interrupt = 0u; Interrupt < sizeof( IsrPointer ); Interrupt++ )
+    /*Go throu all interrupts potentianly enable*/
+    for( uint8 Interrupt = 0u; Interrupt < sizeof( IsrPointer ) / sizeof( IsrPointer[ 0 ] ); Interrupt++ )
     {
-        /* High Priority Message interrupt management */
+        /* If interrupt in turn is active */
         if( Bfx_GetBit_u32u8_u8( Can->IR, Interrupt ) == STD_ON )
         {
+            /*Double check if the interrupt is enable*/
             if( Bfx_GetBit_u32u8_u8( Can->IE, Interrupt ) == STD_ON )
             {
-                /* Clear the High Priority Message flag */
-                Bfx_SetBit_u32u8( (uint32 *)&Can->IR, Interrupt );
-
-                /* High Priority Message Callback */
+                /* Call its interrupt service rutine */
                 IsrPointer[ Interrupt ]( HwUnit, Controller );
             }
+            /* Clear the interrupt flag */
+            Bfx_SetBit_u32u8( (uint32 *)&Can->IR, Interrupt );
         }
     }
 }
@@ -1177,65 +1216,80 @@ void Can_Arch_IsrMainHandler( Can_HwUnit *HwUnit, uint8 Controller )
  * for the standard and extended ID's. The function will only set the filters if the HwFilter
  * pointer is not NULL.
  *
+ * @param    Config Pointer to the hardware unit configuration
  * @param    Controller CAN controller for which the status shall be changed.
- * @param    HwObjects Hardware objects configuration
- * @param    Can Register structure of the CAN controller
  */
-static void Can_SetupConfiguredFilters( const Can_Controller *Controller, const Can_HardwareObject *HwObjects, Can_RegisterType *Can )
+CAN_STATIC void Can_SetupConfiguredFilters( const Can_ConfigType *Config, uint8 Controller )
 {
-    uint8 StdFilterIndex     = 0u;
-    uint8 ExtFilterIndex     = 0u;
-    uint8 ControllerHwObjs[] = { 0, CAN_OBJ_HRH_RX00, CAN_OBJ_HRH_RX10 };
+    uint8 StdFilterIndex = 0u;
+    uint8 ExtFilterIndex = 0u;
 
-    for( uint8 Fifo = 1u; Fifo < 3u; Fifo++ )
+    const Can_Controller *ControllerConfig = &Config->Controllers[ Controller ];
+    /*Get the Can controller register structure*/
+    Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
+
+    for( uint8 Hoh = 0; Hoh < Config->HohsCount; Hoh++ )
     {
-        const Can_HardwareObject *HwObject = &HwObjects[ ControllerHwObjs[ Controller->ControllerId ] + Fifo ];
-        /* set the filter only if filters are availables*/
-        if( HwObject->HwFilter != NULL_PTR )
+        /*explore only those Hardware Objects for the Controller assigned*/
+        if( Config->Hohs[ Hoh ].ControllerRef->ControllerId == ControllerConfig->ControllerId )
         {
-            /* Set Filter configuration for FIFO */
-            for( uint8 Filter = 0; Filter < HwObject->HwFilterCount; Filter++ )
+            /*look only for Receive objects*/
+            if( Config->Hohs[ Hoh ].ObjectType == CAN_HOH_TYPE_RECEIVE )
             {
-                /* Set the filter ID, standard (11 bits) or extended (29 bits) */
-                if( ( HwObject->IdType == CAN_ID_STANDARD ) || ( ( HwObject->IdType == CAN_ID_MIXED ) && ( HwObject->HwFilter->HwFilterIdType == CAN_ID_STANDARD ) ) )
+                /* set the filter only if filters are availables*/
+                if( Config->Hohs[ Hoh ].HwFilter != NULL_PTR )
                 {
-                    uint32 *StdFilter            = (uint32 *)SramCanPeripherals[ HwObject->ControllerRef->SramReference ]->FLSSA[ StdFilterIndex ];
-                    const Can_HwFilter *HwFilter = &HwObject->HwFilter[ Filter ];
+                    /* Loop for all filters set */
+                    for( uint8 Filter = 0; Filter < Config->Hohs[ Hoh ].HwFilterCount; Filter++ )
+                    {
+                        /* Set the filter ID, standard (11 bits) or extended (29 bits) */
+                        if( ( Config->Hohs[ Hoh ].IdType == CAN_ID_STANDARD ) || ( ( Config->Hohs[ Hoh ].IdType == CAN_ID_MIXED ) && ( Config->Hohs[ Hoh ].HwFilter->HwFilterIdType == CAN_ID_STANDARD ) ) )
+                        {
+                            uint32 *StdFilter            = (uint32 *)&SramCanPeripherals[ ControllerConfig->CanReference ]->FLSSA[ StdFilterIndex ];
+                            const Can_HwFilter *HwFilter = &Config->Hohs[ Hoh ].HwFilter[ Filter ];
 
-                    Bfx_PutBits_u32u8u8u32( StdFilter, FLSSA_SFID1_BIT, RX_BUFFER_ID_11_BITS, HwFilter->HwFilterCode );
-                    Bfx_PutBits_u32u8u8u32( StdFilter, FLSSA_SFID2_BIT, RX_BUFFER_ID_11_BITS, HwFilter->HwFilterMask );
-                    Bfx_PutBits_u32u8u8u32( StdFilter, FLSSA_SFT_BIT, FLSSA_SFT_SIZE, HwFilter->HwFilterType );
-                    Bfx_PutBits_u32u8u8u32( StdFilter, FLSSA_SFEC_BIT, FLSSA_SFEC_SIZE, Fifo );
-                    StdFilterIndex++;
-                }
-                else if( ( HwObject->IdType == CAN_ID_EXTENDED ) || ( ( HwObject->IdType == CAN_ID_MIXED ) && ( HwObject->HwFilter->HwFilterIdType == CAN_ID_EXTENDED ) ) )
-                {
-                    HwExtFilter *ExtFilter       = (HwExtFilter *)SramCanPeripherals[ HwObject->ControllerRef->SramReference ]->FLESA[ ExtFilterIndex ];
-                    const Can_HwFilter *HwFilter = &HwObject->HwFilter[ Filter ];
+                            Bfx_PutBits_u32u8u8u32( StdFilter, FLSSA_SFID1_BIT, RX_BUFFER_ID_11_SIZE, HwFilter->HwFilterCode );
+                            Bfx_PutBits_u32u8u8u32( StdFilter, FLSSA_SFID2_BIT, RX_BUFFER_ID_11_SIZE, HwFilter->HwFilterMask );
+                            Bfx_PutBits_u32u8u8u32( StdFilter, FLSSA_SFEC_BIT, FLSSA_SFEC_SIZE, Config->Hohs[ Hoh ].RxFifo );
+                            Bfx_PutBits_u32u8u8u32( StdFilter, FLSSA_SFT_BIT, FLSSA_SFT_SIZE, HwFilter->HwFilterType );
+                            StdFilterIndex++;
+                        }
+                        else if( ( Config->Hohs[ Hoh ].IdType == CAN_ID_EXTENDED ) || ( ( Config->Hohs[ Hoh ].IdType == CAN_ID_MIXED ) && ( Config->Hohs[ Hoh ].HwFilter->HwFilterIdType == CAN_ID_EXTENDED ) ) )
+                        {
+                            HwExtFilter *ExtFilter       = (HwExtFilter *)&SramCanPeripherals[ ControllerConfig->CanReference ]->FLESA[ ExtFilterIndex ];
+                            const Can_HwFilter *HwFilter = &Config->Hohs[ Hoh ].HwFilter[ Filter ];
 
-                    Bfx_PutBits_u32u8u8u32( &ExtFilter->ExtFilterHeader1, FLESA_EFID_BIT, RX_BUFFER_ID_29_BITS, HwFilter->HwFilterCode );
-                    Bfx_PutBits_u32u8u8u32( &ExtFilter->ExtFilterHeader2, FLESA_EFID_BIT, RX_BUFFER_ID_29_BITS, HwFilter->HwFilterMask );
-                    Bfx_PutBits_u32u8u8u32( &ExtFilter->ExtFilterHeader2, FLESA_EFT_BIT, FLESA_EFT_SIZE, HwFilter->HwFilterType );
-                    Bfx_PutBits_u32u8u8u32( &ExtFilter->ExtFilterHeader1, FLESA_EFEC_BIT, FLESA_EFEC_SIZE, Fifo );
-                    ExtFilterIndex++;
-                }
-                else
-                {
-                    /*Do nothing*/
+                            Bfx_PutBits_u32u8u8u32( &ExtFilter->ExtFilterHeader1, FLESA_EFID_BIT, RX_BUFFER_ID_29_SIZE, HwFilter->HwFilterCode );
+                            Bfx_PutBits_u32u8u8u32( &ExtFilter->ExtFilterHeader2, FLESA_EFID_BIT, RX_BUFFER_ID_29_SIZE, HwFilter->HwFilterMask );
+                            Bfx_PutBits_u32u8u8u32( &ExtFilter->ExtFilterHeader2, FLESA_EFT_BIT, FLESA_EFT_SIZE, HwFilter->HwFilterType );
+                            Bfx_PutBits_u32u8u8u32( &ExtFilter->ExtFilterHeader1, FLESA_EFEC_BIT, FLESA_EFEC_SIZE, Config->Hohs[ Hoh ].RxFifo );
+                            ExtFilterIndex++;
+                        }
+                        else
+                        {
+                            /*Do nothing*/
+                        }
+                    }
                 }
             }
         }
     }
 
-    /* Standard filter elements number */
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_LSS_BIT, RXGFC_LSS_SIZE, StdFilterIndex );
-    /*Reject all messages that do not match with filters*/
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_ANFS_BIT, RXGFC_ANFS_SIZE, 3u );
+    if( StdFilterIndex != 0u )
+    {
+        /* Standard filter elements number */
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_LSS_BIT, RXGFC_LSS_SIZE, StdFilterIndex );
+        /*Reject all messages that do not match with filters*/
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_ANFS_BIT, RXGFC_ANFS_SIZE, 3u );
+    }
 
-    /* Extended filter elements number */
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_LSE_BIT, RXGFC_LSE_SIZE, ExtFilterIndex );
-    /*Reject all messages that do not match with filters*/
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_ANFE_BIT, RXGFC_ANFE_SIZE, 3u );
+    if( ExtFilterIndex != 0u )
+    {
+        /* Extended filter elements number */
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_LSE_BIT, RXGFC_LSE_SIZE, ExtFilterIndex );
+        /*Reject all messages that do not match with filters*/
+        Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->RXGFC, RXGFC_ANFE_BIT, RXGFC_ANFE_SIZE, 3u );
+    }
 }
 
 /**
@@ -1248,7 +1302,7 @@ static void Can_SetupConfiguredFilters( const Can_Controller *Controller, const 
  * @param    Baudrate: Baudrate configuration
  * @param    Can: Register structure of the CAN controller
  */
-static void Can_SetupBaudrateConfig( const Can_ControllerBaudrateConfig *Baudrate, Can_RegisterType *Can )
+CAN_STATIC void Can_SetupBaudrateConfig( const Can_ControllerBaudrateConfig *Baudrate, Can_RegisterType *Can )
 {
     /* Set the default nominal bit timing register */
     Bfx_PutBits_u32u8u8u32( (uint32 *)&Can->NBTP, NBTP_NSJW_BIT, NBTP_NSJW_SIZE, ( Baudrate->SyncJumpWidth - 1u ) );
@@ -1266,7 +1320,7 @@ static void Can_SetupBaudrateConfig( const Can_ControllerBaudrateConfig *Baudrat
     }
 
     /* set data bit rate switch */
-    Bfx_PutBit_u32u8u8( (uint32 *)Can->CCCR, CCCR_BRSE_BIT, Baudrate->FdTxBitRateSwitch );
+    Bfx_PutBit_u32u8u8( (uint32 *)&Can->CCCR, CCCR_BRSE_BIT, Baudrate->FdTxBitRateSwitch );
 }
 
 /**
@@ -1278,7 +1332,7 @@ static void Can_SetupBaudrateConfig( const Can_ControllerBaudrateConfig *Baudrat
  * @param    Controller: CAN controller for which the status shall be changed.
  * @param    Can: Pointer to the Can controller register structure
  */
-static void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can_RegisterType *Can )
+CAN_STATIC void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can_RegisterType *Can )
 {
     uint32 Line1ITs = 0u;
     uint32 Line0ITs = 0u;
@@ -1298,7 +1352,6 @@ static void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can
 
     /* Assign group of interrupts Tx Event Fifo to line 1*/
     Bfx_PutBit_u32u8u8( (uint32 *)&Can->ILS, CAN_IT_GROUP_MISC, (uint8)( ( Line1ITs & CAN_IT_LIST_MISC ) != 0 ) );
-
     /* Assign group of interrupts Bit line errors to line 1*/
     Bfx_PutBit_u32u8u8( (uint32 *)&Can->ILS, CAN_IT_GROUP_BIT_LINE_ERROR, (uint8)( ( Line1ITs & CAN_IT_LIST_BIT_LINE_ERROR ) != 0 ) );
 
@@ -1334,7 +1387,7 @@ static void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can
  *
  * @retval  DataLenght: Define with for data lenght to send
  */
-static uint8 Can_GetClosestDlcWithPadding( uint8 Dlc, uint32 *RamBuffer, uint8 PaddingValue )
+CAN_STATIC uint8 Can_GetClosestDlcWithPadding( uint8 Dlc, uint32 *RamBuffer, uint8 PaddingValue )
 {
     uint8 DataLenght = 0u;
     uint8 Counter;
@@ -1401,12 +1454,12 @@ static uint8 Can_GetClosestDlcWithPadding( uint8 Dlc, uint32 *RamBuffer, uint8 P
  *
  * @retval  Number of elements left in the Tx Event FIFO zone.
  */
-static uint8 Can_GetTxPduId( const Can_Controller *Controller, PduIdType *CanPduId )
+CAN_STATIC uint8 Can_GetTxPduId( const Can_Controller *Controller, PduIdType *CanPduId )
 {
     /*Get the Can controller register structure*/
     Can_RegisterType *Can = CanPeripherals[ Controller->CanReference ];
     /*Get the Sram Can controller register structure*/
-    SramCan_RegisterType *SramCan = SramCanPeripherals[ Controller->SramReference ];
+    SramCan_RegisterType *SramCan = SramCanPeripherals[ Controller->CanReference ];
 
     /* Calculate Tx event FIFO element address */
     uint8 GetIndex = Bfx_GetBits_u32u8u8_u32( Can->TXEFS, TXEFS_EFGI_BIT, TXEFS_EFGI_SIZE );
@@ -1428,53 +1481,39 @@ static uint8 Can_GetTxPduId( const Can_Controller *Controller, PduIdType *CanPdu
  * ObjPayload fields of the Rx FIFO element.
  *
  * @param    Fifo Pointer to the Rx FIFO element.
- * @param    Controller CAN controller for which the status shall be changed.
  * @param    PduInfo Pointer to the variable where the message will be stored.
  * @param    CanId Pointer to the variable where the message ID will be stored.
- *
- * @retval  Number of elements left in the Rx FIFO zone.
  */
-static uint8 Can_GetMessage( HwObjectHandler *Fifo, const Can_Controller *Controller, PduInfoType *PduInfo, uint32 *CanId )
+CAN_STATIC void Can_GetMessage( volatile uint32 *Fifo, PduInfoType *PduInfo, uint32 *CanId )
 {
-    static const uint8 DlcToBytes[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 32, 48, 64 };
-    /*Get the Can controller register structure*/
-    Can_RegisterType *Can = CanPeripherals[ Controller->CanReference ];
-
-    /* Get Rx FIFO Get index */
-    uint8 GetIndex = Bfx_GetBits_u32u8u8_u32( Can->RXF0S, RXF0S_F0GI_BIT, RXF0S_F0GI_SIZE );
+    /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
+    HwObjectHandler *HrhObject = (HwObjectHandler *)Fifo;
 
     /* Retrieve DataLength */
-    PduInfo->SduLength = Bfx_GetBits_u32u8u8_u32( Fifo[ GetIndex ].ObjHeader1, RX_BUFFER_DLC_BIT, RX_BUFFER_DLC_SIZE );
+    PduInfo->SduLength = Bfx_GetBits_u32u8u8_u32( HrhObject->ObjHeader2, RX_BUFFER_DLC_BIT, RX_BUFFER_DLC_SIZE );
     PduInfo->SduLength = DlcToBytes[ PduInfo->SduLength ];
+    /* Retrieve Rx payload */
+    PduInfo->SduDataPtr = (uint8 *)&HrhObject->ObjPayload;
 
     /*Retrieve message ID Type*/
-    uint8 IdType = Bfx_GetBit_u32u8_u8( Fifo[ GetIndex ].ObjHeader1, RX_BUFFER_XTD_BIT );
+    uint8 IdType = Bfx_GetBit_u32u8_u8( HrhObject->ObjHeader1, RX_BUFFER_XTD_BIT );
 
     /* Set the message ID, standard (11 bits) or extended (29 bits) */
     if( IdType == CAN_ID_STANDARD )
     {
-        *CanId = Bfx_GetBits_u32u8u8_u32( Fifo[ GetIndex ].ObjHeader1, RX_BUFFER_ID_11_BITS, RX_BUFFER_ID_11_SIZE );
+        *CanId = Bfx_GetBits_u32u8u8_u32( HrhObject->ObjHeader1, RX_BUFFER_ID_11_BITS, RX_BUFFER_ID_11_SIZE );
     }
     else
     {
-        *CanId = Bfx_GetBits_u32u8u8_u32( Fifo[ GetIndex ].ObjHeader1, RX_BUFFER_ID_29_BITS, RX_BUFFER_ID_29_SIZE );
+        *CanId = Bfx_GetBits_u32u8u8_u32( HrhObject->ObjHeader1, RX_BUFFER_ID_29_BITS, RX_BUFFER_ID_29_SIZE );
     }
     /* Bit indication for standart or extended */
     Bfx_PutBit_u32u8u8( CanId, MSG_ID_BIT, IdType );
 
     /* Set frame type*/
-    uint8 Format = Bfx_GetBit_u32u8_u8( Fifo[ GetIndex ].ObjHeader2, RX_BUFFER_FDF_BIT );
+    uint8 Format = Bfx_GetBit_u32u8_u8( HrhObject->ObjHeader2, RX_BUFFER_FDF_BIT );
     /* Bit indication for Classic or FD frame */
     Bfx_PutBit_u32u8u8( CanId, MSG_FORMAT_BIT, Format );
-
-    /* Retrieve Rx payload */
-    PduInfo->SduDataPtr = (uint8 *)&Fifo[ GetIndex ].ObjPayload;
-
-    /* Acknowledge the Rx FIFO 0 that the oldest element is read so that it increments the GetIndex */
-    Can->RXF0A = GetIndex;
-
-    /* Check that the Rx FIFO 0 is not empty */
-    return Bfx_GetBits_u32u8u8_u32( Can->RXF0S, RXF0S_F0FL_BIT, RXF0S_F0FL_SIZE );
 }
 
 
@@ -1489,24 +1528,32 @@ static uint8 Can_GetMessage( HwObjectHandler *Fifo, const Can_Controller *Contro
  *
  * @reqs    SWS_Can_00489, SWS_Can_00501, SWS_Can_00423, SWS_Can_00279
  */
-static void Can_Isr_RxFifo0NewMessage( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_RxFifo0NewMessage( Can_HwUnit *HwUnit, uint8 Controller )
 {
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the Can controller register structure*/
+    Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    HwObjectHandler *HrhObject = (HwObjectHandler *)SramCanPeripherals[ ControllerConfig->SramReference ]->F0SA;
+    HwObjectHandler *HrhObject = (HwObjectHandler *)SramCanPeripherals[ ControllerConfig->CanReference ]->F0SA;
 
     PduInfoType PduInfo;
     Can_HwType Mailbox;
 
     /* Set Hoh and controller Ids */
-    Mailbox.Hoh          = ( Controller == CAN_CONTROLLER_0 ) ? CAN_OBJ_HRH_RX00 : CAN_OBJ_HRH_RX10;
+    Mailbox.Hoh          = Fifo0ToCtrlIds[ Controller ];
     Mailbox.ControllerId = Controller;
 
+    /* Get Rx FIFO Get index */
+    uint8 Index = Bfx_GetBits_u32u8u8_u32( Can->RXF0S, RXF0S_F0GI_BIT, RXF0S_F0GI_SIZE );
+
     /* Read the oldest message arrived */
-    (void)Can_GetMessage( HrhObject, ControllerConfig, &PduInfo, &Mailbox.CanId );
+    Can_GetMessage( (uint32 *)&HrhObject[ Index ], &PduInfo, &Mailbox.CanId );
     /* Pass the messages to upper layer */
     CanIf_RxIndication( &Mailbox, &PduInfo );
+
+    /* Acknowledge the Rx FIFO 0 that the oldest element is read so that it increments the GetIndex */
+    Can->RXF0A = Index;
 }
 
 /**
@@ -1520,29 +1567,34 @@ static void Can_Isr_RxFifo0NewMessage( Can_HwUnit *HwUnit, uint8 Controller )
  *
  * @reqs    SWS_Can_00489, SWS_Can_00501, SWS_Can_00423, SWS_Can_00279
  */
-static void Can_Isr_RxFifo0Full( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_RxFifo0Full( Can_HwUnit *HwUnit, uint8 Controller )
 {
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the Can controller register structure*/
+    Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    HwObjectHandler *HrhObject = (HwObjectHandler *)SramCanPeripherals[ ControllerConfig->SramReference ]->F0SA;
+    HwObjectHandler *HrhObject = (HwObjectHandler *)SramCanPeripherals[ ControllerConfig->CanReference ]->F0SA;
 
     PduInfoType PduInfo;
     Can_HwType Mailbox;
-    uint8 Msgs;
+    uint8 Index;
 
-    do
+    /* Set Hoh and controller Ids, same for all messages */
+    Mailbox.Hoh          = Fifo0ToCtrlIds[ Controller ];
+    Mailbox.ControllerId = Controller;
+
+    while( Bfx_GetBits_u32u8u8_u32( Can->RXF0S, RXF0S_F0FL_BIT, RXF0S_F0FL_SIZE ) > 0u )
     {
-        /* Set Hoh and controller Ids, same for all messages */
-        Mailbox.Hoh          = ( Controller == CAN_CONTROLLER_0 ) ? CAN_OBJ_HRH_RX00 : CAN_OBJ_HRH_RX10;
-        Mailbox.ControllerId = Controller;
-
+        /* Get Rx FIFO Get index */
+        Index = Bfx_GetBits_u32u8u8_u32( Can->RXF0S, RXF0S_F0GI_BIT, RXF0S_F0GI_SIZE );
         /* Read the oldest message arrived */
-        Msgs = Can_GetMessage( HrhObject, ControllerConfig, &PduInfo, &Mailbox.CanId );
+        Can_GetMessage( (uint32 *)&HrhObject[ Index ], &PduInfo, &Mailbox.CanId );
         /* Pass the messages to upper layer */
         CanIf_RxIndication( &Mailbox, &PduInfo );
-        /*read all the messages untill the Fifo is empty*/
-    } while( Msgs > 0 );
+        /* Acknowledge the Rx FIFO 0 that the oldest element is read so that it increments the GetIndex */
+        Can->RXF0A = Index;
+    }
 }
 
 /**
@@ -1556,7 +1608,7 @@ static void Can_Isr_RxFifo0Full( Can_HwUnit *HwUnit, uint8 Controller )
  *
  * @reqs    SWS_Can_00395
  */
-static void Can_Isr_RxFifo0MessageLost( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_RxFifo0MessageLost( Can_HwUnit *HwUnit, uint8 Controller )
 {
     /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 #if CAN_ENABLE_SECURITY_EVENT_REPORTING == STD_OFF
@@ -1566,7 +1618,8 @@ static void Can_Isr_RxFifo0MessageLost( Can_HwUnit *HwUnit, uint8 Controller )
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    CanIf_ErrorNotification( ControllerConfig->ControllerId, CAN_ERROR_OVERLOAD );
+    Can_ErrorType Error = CAN_ERROR_OVERLOAD;
+    CanIf_ErrorNotification( ControllerConfig->ControllerId, Error );
 #endif
 
     Det_ReportRuntimeError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_ISR_RECEPTION, CAN_E_DATALOST );
@@ -1583,24 +1636,32 @@ static void Can_Isr_RxFifo0MessageLost( Can_HwUnit *HwUnit, uint8 Controller )
  *
  * @reqs    SWS_Can_00489, SWS_Can_00501, SWS_Can_00423, SWS_Can_00279
  */
-static void Can_Isr_RxFifo1NewMessage( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_RxFifo1NewMessage( Can_HwUnit *HwUnit, uint8 Controller )
 {
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the Can controller register structure*/
+    Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    HwObjectHandler *HrhObject = (HwObjectHandler *)SramCanPeripherals[ ControllerConfig->SramReference ]->F1SA;
+    HwObjectHandler *HrhObject = (HwObjectHandler *)SramCanPeripherals[ ControllerConfig->CanReference ]->F1SA;
 
     PduInfoType PduInfo;
     Can_HwType Mailbox;
 
     /* Set Hoh and controller Ids */
-    Mailbox.Hoh          = ( Controller == CAN_CONTROLLER_0 ) ? CAN_OBJ_HRH_RX01 : CAN_OBJ_HRH_RX11;
+    Mailbox.Hoh          = Fifo1ToCtrlIds[ Controller ];
     Mailbox.ControllerId = Controller;
 
+    /* Get Rx FIFO Get index */
+    uint8 Index = Bfx_GetBits_u32u8u8_u32( Can->RXF1S, RXF0S_F0GI_BIT, RXF0S_F0GI_SIZE );
+
     /* Read the oldest message arrived */
-    (void)Can_GetMessage( HrhObject, ControllerConfig, &PduInfo, &Mailbox.CanId );
+    Can_GetMessage( (uint32 *)&HrhObject[ Index ], &PduInfo, &Mailbox.CanId );
     /* Pass the messages to upper layer */
     CanIf_RxIndication( &Mailbox, &PduInfo );
+
+    /* Acknowledge the Rx FIFO 0 that the oldest element is read so that it increments the GetIndex */
+    Can->RXF1A = Index;
 }
 
 /**
@@ -1614,29 +1675,34 @@ static void Can_Isr_RxFifo1NewMessage( Can_HwUnit *HwUnit, uint8 Controller )
  *
  * @reqs    SWS_Can_00489, SWS_Can_00501, SWS_Can_00423, SWS_Can_00279
  */
-static void Can_Isr_RxFifo1Full( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_RxFifo1Full( Can_HwUnit *HwUnit, uint8 Controller )
 {
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
+    /*Get the Can controller register structure*/
+    Can_RegisterType *Can = CanPeripherals[ ControllerConfig->CanReference ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    HwObjectHandler *HrhObject = (HwObjectHandler *)SramCanPeripherals[ ControllerConfig->SramReference ]->F1SA;
+    HwObjectHandler *HrhObject = (HwObjectHandler *)SramCanPeripherals[ ControllerConfig->CanReference ]->F1SA;
 
     PduInfoType PduInfo;
     Can_HwType Mailbox;
-    uint8 Msgs;
+    uint8 Index;
 
-    do
+    /* Set Hoh and controller Ids, same for all messages */
+    Mailbox.Hoh          = Fifo1ToCtrlIds[ Controller ];
+    Mailbox.ControllerId = Controller;
+
+    while( Bfx_GetBits_u32u8u8_u32( Can->RXF1S, RXF0S_F0FL_BIT, RXF0S_F0FL_SIZE ) > 0u )
     {
-        /* Set Hoh and controller Ids, same for all messages */
-        Mailbox.Hoh          = ( Controller == CAN_CONTROLLER_0 ) ? CAN_OBJ_HRH_RX01 : CAN_OBJ_HRH_RX11;
-        Mailbox.ControllerId = Controller;
-
+        /* Get Rx FIFO Get index */
+        Index = Bfx_GetBits_u32u8u8_u32( Can->RXF1S, RXF0S_F0GI_BIT, RXF0S_F0GI_SIZE );
         /* Read the oldest message arrived */
-        Msgs = Can_GetMessage( HrhObject, ControllerConfig, &PduInfo, &Mailbox.CanId );
+        Can_GetMessage( (uint32 *)&HrhObject[ Index ], &PduInfo, &Mailbox.CanId );
         /* Pass the messages to upper layer */
         CanIf_RxIndication( &Mailbox, &PduInfo );
-        /*read all the messages untill the Fifo is empty*/
-    } while( Msgs > 0 );
+        /* Acknowledge the Rx FIFO 1 that the oldest element is read so that it increments the GetIndex */
+        Can->RXF1A = Index;
+    }
 }
 
 /**
@@ -1650,7 +1716,7 @@ static void Can_Isr_RxFifo1Full( Can_HwUnit *HwUnit, uint8 Controller )
  *
  * @reqs    SWS_Can_00395
  */
-static void Can_Isr_RxFifo1MessageLost( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_RxFifo1MessageLost( Can_HwUnit *HwUnit, uint8 Controller )
 {
     /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 #if CAN_ENABLE_SECURITY_EVENT_REPORTING == STD_OFF
@@ -1660,7 +1726,8 @@ static void Can_Isr_RxFifo1MessageLost( Can_HwUnit *HwUnit, uint8 Controller )
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    CanIf_ErrorNotification( ControllerConfig->ControllerId, CAN_ERROR_OVERLOAD );
+    Can_ErrorType Error = CAN_ERROR_OVERLOAD;
+    CanIf_ErrorNotification( ControllerConfig->ControllerId, Error );
 #endif
 
     Det_ReportRuntimeError( CAN_MODULE_ID, CAN_INSTANCE_ID, CAN_ID_ISR_RECEPTION, CAN_E_DATALOST );
@@ -1672,7 +1739,7 @@ static void Can_Isr_RxFifo1MessageLost( Can_HwUnit *HwUnit, uint8 Controller )
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
  */
-static void Can_Isr_HighPriorityMessageRx( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_HighPriorityMessageRx( Can_HwUnit *HwUnit, uint8 Controller )
 {
     (void)HwUnit;
     (void)Controller;
@@ -1692,7 +1759,7 @@ static void Can_Isr_HighPriorityMessageRx( Can_HwUnit *HwUnit, uint8 Controller 
  *
  * @reqs    SWS_Can_00016
  */
-static void Can_Isr_TransmissionCompleted( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_TransmissionCompleted( Can_HwUnit *HwUnit, uint8 Controller )
 {
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
@@ -1712,7 +1779,7 @@ static void Can_Isr_TransmissionCompleted( Can_HwUnit *HwUnit, uint8 Controller 
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
  */
-static void Can_Isr_TransmissionCancellationFinished( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_TransmissionCancellationFinished( Can_HwUnit *HwUnit, uint8 Controller )
 {
     (void)HwUnit;
     (void)Controller;
@@ -1729,7 +1796,7 @@ static void Can_Isr_TransmissionCancellationFinished( Can_HwUnit *HwUnit, uint8 
  *
  * @reqs    SWS_Can_91022
  */
-static void Can_Isr_TxEventFifoElementLost( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_TxEventFifoElementLost( Can_HwUnit *HwUnit, uint8 Controller )
 {
     /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 #if CAN_ENABLE_SECURITY_EVENT_REPORTING == STD_OFF
@@ -1739,7 +1806,8 @@ static void Can_Isr_TxEventFifoElementLost( Can_HwUnit *HwUnit, uint8 Controller
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
     /*Get the buffer to write as per autosar will be the transmit hardware objet from Sram*/
-    CanIf_ErrorNotification( ControllerConfig->ControllerId, CAN_ERROR_OVERLOAD );
+    Can_ErrorType Error = CAN_ERROR_OVERLOAD;
+    CanIf_ErrorNotification( ControllerConfig->ControllerId, Error );
 #endif
 }
 
@@ -1757,7 +1825,7 @@ static void Can_Isr_TxEventFifoElementLost( Can_HwUnit *HwUnit, uint8 Controller
  *
  * @reqs    SWS_Can_00016
  */
-static void Can_Isr_TxEventFifoFull( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_TxEventFifoFull( Can_HwUnit *HwUnit, uint8 Controller )
 {
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
@@ -1788,7 +1856,7 @@ static void Can_Isr_TxEventFifoFull( Can_HwUnit *HwUnit, uint8 Controller )
  *
  * @reqs    SWS_Can_00016
  */
-static void Can_Isr_TxEventFifoNewEntry( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_TxEventFifoNewEntry( Can_HwUnit *HwUnit, uint8 Controller )
 {
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
@@ -1816,7 +1884,7 @@ static void Can_Isr_TxEventFifoNewEntry( Can_HwUnit *HwUnit, uint8 Controller )
  *
  * @reqs    SWS_Can_00016
  */
-static void Can_Isr_TxFifoEmpty( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_TxFifoEmpty( Can_HwUnit *HwUnit, uint8 Controller )
 {
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
@@ -1839,7 +1907,7 @@ static void Can_Isr_TxFifoEmpty( Can_HwUnit *HwUnit, uint8 Controller )
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
  */
-static void Can_Isr_TimestampWraparound( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_TimestampWraparound( Can_HwUnit *HwUnit, uint8 Controller )
 {
     (void)HwUnit;
     (void)Controller;
@@ -1851,7 +1919,7 @@ static void Can_Isr_TimestampWraparound( Can_HwUnit *HwUnit, uint8 Controller )
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
  */
-static void Can_Isr_MessageRamAccessFailure( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_MessageRamAccessFailure( Can_HwUnit *HwUnit, uint8 Controller )
 {
     (void)HwUnit;
     (void)Controller;
@@ -1863,7 +1931,7 @@ static void Can_Isr_MessageRamAccessFailure( Can_HwUnit *HwUnit, uint8 Controlle
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
  */
-static void Can_Isr_TimeoutOccurred( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_TimeoutOccurred( Can_HwUnit *HwUnit, uint8 Controller )
 {
     (void)HwUnit;
     (void)Controller;
@@ -1875,7 +1943,7 @@ static void Can_Isr_TimeoutOccurred( Can_HwUnit *HwUnit, uint8 Controller )
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
  */
-static void Can_Isr_ErrorLoggingOverflow( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_ErrorLoggingOverflow( Can_HwUnit *HwUnit, uint8 Controller )
 {
     (void)HwUnit;
     (void)Controller;
@@ -1889,7 +1957,7 @@ static void Can_Isr_ErrorLoggingOverflow( Can_HwUnit *HwUnit, uint8 Controller )
  *
  * @reqs    SWS_Can_91023
  */
-static void Can_Isr_ErrorPassive( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_ErrorPassive( Can_HwUnit *HwUnit, uint8 Controller )
 {
     /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 #if CAN_ENABLE_SECURITY_EVENT_REPORTING == STD_OFF
@@ -1920,7 +1988,7 @@ static void Can_Isr_ErrorPassive( Can_HwUnit *HwUnit, uint8 Controller )
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
  */
-static void Can_Isr_WarningStatus( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_WarningStatus( Can_HwUnit *HwUnit, uint8 Controller )
 {
     (void)HwUnit;
     (void)Controller;
@@ -1937,7 +2005,7 @@ static void Can_Isr_WarningStatus( Can_HwUnit *HwUnit, uint8 Controller )
  *
  * @reqs    SWS_Can_00020, SWS_Can_00272, SWS_Can_00273, SWS_Can_00274
  */
-static void Can_Isr_BusOffStatus( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_BusOffStatus( Can_HwUnit *HwUnit, uint8 Controller )
 {
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
@@ -1976,7 +2044,7 @@ static void Can_Isr_BusOffStatus( Can_HwUnit *HwUnit, uint8 Controller )
  * @param    HwUnit: Pointer to the hardware unit configuration
  * @param    Controller: CAN controller for which the status shall be changed.
  */
-static void Can_Isr_WatchdogInterrupt( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_WatchdogInterrupt( Can_HwUnit *HwUnit, uint8 Controller )
 {
     (void)HwUnit;
     (void)Controller;
@@ -1993,12 +2061,13 @@ static void Can_Isr_WatchdogInterrupt( Can_HwUnit *HwUnit, uint8 Controller )
  *
  * @reqs    SWS_Can_91021, SWS_Can_91022, SWS_Can_91024
  */
-static void Can_Isr_ProtocolErrorInArbitrationPhase( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_ProtocolErrorInArbitrationPhase( Can_HwUnit *HwUnit, uint8 Controller )
 {
     /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 #if CAN_ENABLE_SECURITY_EVENT_REPORTING == STD_OFF
     (void)HwUnit;
     (void)Controller;
+    (void)AutosarError;
 #else
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
@@ -2022,12 +2091,13 @@ static void Can_Isr_ProtocolErrorInArbitrationPhase( Can_HwUnit *HwUnit, uint8 C
  *
  * @reqs    SWS_Can_91021, SWS_Can_91022, SWS_Can_91024
  */
-static void Can_Isr_ProtocolErrorInDataPhase( Can_HwUnit *HwUnit, uint8 Controller )
+CAN_STATIC void Can_Isr_ProtocolErrorInDataPhase( Can_HwUnit *HwUnit, uint8 Controller )
 {
     /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 #if CAN_ENABLE_SECURITY_EVENT_REPORTING == STD_OFF
     (void)HwUnit;
     (void)Controller;
+    (void)AutosarError;
 #else
     /* get controller configuration */
     const Can_Controller *ControllerConfig = &HwUnit->Config->Controllers[ Controller ];
