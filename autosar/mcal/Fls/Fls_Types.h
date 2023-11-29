@@ -33,13 +33,13 @@
 /**
   * @defgroup Flash Development errors.
   @{ */
-#define FLS_E_PARAM_CONFIG        0x01u /*!< API service called with wrong parameter */
-#define FLS_E_PARAM_ADDRESS       0x02u /*!< API service called with wrong parameter */
-#define FLS_E_PARAM_LENGTH        0x03u /*!< API service called with wrong parameter */
-#define FLS_E_PARAM_DATA          0x04u /*!< API service called with wrong parameter */
-#define FLS_E_UNINIT              0x05u /*!< API service called with wrong parameter */
-#define FLS_E_PARAM_POINTER       0x0au /*!< API service called with wrong parameter */
-#define FLS_E_ALREADY_INITIALIZED 0x0bu /*!< - */
+#define FLS_E_PARAM_CONFIG        0x00u /*!< API service called with wrong parameter */
+#define FLS_E_PARAM_ADDRESS       0x01u /*!< API service called with wrong parameter */
+#define FLS_E_PARAM_LENGTH        0x02u /*!< API service called with wrong parameter */
+#define FLS_E_PARAM_DATA          0x03u /*!< API service called with wrong parameter */
+#define FLS_E_UNINIT              0x04u /*!< API service called with wrong parameter */
+#define FLS_E_PARAM_POINTER       0x05u /*!< API service called with wrong parameter */
+#define FLS_E_ALREADY_INITIALIZED 0x06u /*!< - */
 /**
   @} */
 

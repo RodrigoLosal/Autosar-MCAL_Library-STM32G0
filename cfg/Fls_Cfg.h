@@ -19,9 +19,9 @@
  * @defgroup FLS_SWC_Ids FLS software version and Ids
  *
  * {@ */
-#define FLS_MODULE_ID            0u /*!< Fls Module ID */
-#define FLS_INSTANCE_ID          0u /*!< Fls Instance ID */
-#define FLS_VENDOR_ID            0u /*!< Fls Module Vendor ID */
+#define FLS_MODULE_ID            0x0Au /*!< Fls Module ID */
+#define FLS_INSTANCE_ID          0x0Au /*!< Fls Instance ID */
+#define FLS_VENDOR_ID            0u    /*!< Fls Module Vendor ID */
 /**
  * @} */
 

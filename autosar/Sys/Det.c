@@ -58,13 +58,10 @@ void Det_Init( const Det_ConfigType *ConfigPtr )
  */
 Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, uint8 ErrorId )
 {
-    (void)ApiId;
-    (void)ErrorId;
-
     static const char *ModuleName[] = {
-    "SPI", // #define SPI_MODULE_ID                       0u
-    "PWM", // #define PWM_MODULE_ID                       1u
-    "GPT", // #define GPT_MODULE_ID                       2u
+    "SPI",
+    "PWM",
+    "GPT",
     "DET",
     "CAN",
     "ADC",
@@ -72,12 +69,13 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     "MCU",
     "DIO",
     "PORT",
-    //"FLS",
+    "FLS",
     };
 
     static const char *InstanceName[] = {
-    "SPI", // #define SPI_INSTANCE_ID              0u
-    "PWM", // #define PWM_INSTANCE_ID              1u
+    "SPI",
+    "PWM",
+    "GPT",
     "DET",
     "CAN",
     "ADC",
@@ -85,11 +83,10 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     "MCU",
     "DIO",
     "PORT",
+    "FLS",
     };
 
-    /* cppcheck-suppress misra-c2012-9.5 ; Currently in development*/
     static const char *SpiApiName[] = {
-    /*Spi Api*/
     "Spi_Init()",
     "Spi_DeInit()",
     "Spi_WriteIB()",
@@ -107,7 +104,6 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     };
 
     static const char *PwmApiName[] = {
-    /*Pwm Api*/
     "Pwm_Init()",
     "Pwm_DeInit()",
     "Pwm_SetDutyCycle()",
@@ -124,7 +120,6 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     };
 
     static const char *GptApiName[] = {
-    /*Gpt Api*/
     "Gpt_GetVersionInfo()",
     "Gpt_Init()",
     "Gpt_DeInit()",
@@ -137,7 +132,6 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     };
 
     static const char *DetApiName[] = {
-    /*Det Api*/
     "Det_Init()",
     "Det_ReportError()",
     "Det_Start()",
@@ -147,7 +141,6 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     };
 
     static const char *CanApiName[] = {
-    /*Can Api*/
     "Can_Init()",
     "Can_DeInit()",
     "Can_ChangeBaudrate()",
@@ -173,7 +166,6 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     };
 
     static const char *AdcApiName[] = {
-    /*Adc Api*/
     "Adc_Init()",
     "Adc_SetupResultBuffer()",
     "Adc_DeInit()",
@@ -240,6 +232,20 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     "Port_RefreshPortDirection()",
     };
 
+    static const char *FlsApiName[] = {
+    "Fls_Init()",
+    "Fls_Erase()",
+    "Fls_Write()",
+    "Fls_Cancel()",
+    "Fls_GetStatus()",
+    "Fls_GetJobResults()",
+    "Fls_Read()",
+    "Fls_Compare()",
+    "Fls_SetMode()",
+    "Fls_GetVersionInfo()",
+    "Fls_BlankCheck()",
+    };
+
     static const char *SpiErrorName[] = {
     "SPI_E_PARAM_CHANNEL",
     "SPI_E_PARAM_JOB",
@@ -263,11 +269,6 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     "PWM_E_PERIPHERAL_NOT_PREPARED",
     "PWM_E_NOT_DISENGAGED",
     };
-
-    /*
-    static const char *GptErrorName[] = {
-    };
-    */
 
     static const char *DetErrorName[] = {
     "DET_E_PARAM_POINTER",
@@ -337,93 +338,83 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     "PORT_E_PARAM_POINTER",
     };
 
+    static const char *GptErrorName[] = {
+    "GPT_E_UNINIT",
+    "GPT_E_ALREADY_INITIALIZED",
+    "GPT_E_INIT_FAILED",
+    "GPT_E_PARAM_CHANNEL",
+    "GPT_E_PARAM_VALUE",
+    "GPT_E_PARAM_POINTER",
+    "GPT_E_PARAM_PREDEF_TIMER",
+    "GPT_E_PARAM_MODE",
+    };
 
-    const char *api;
+    static const char *FlsErrorName[] = {
+    "FLS_E_PARAM_CONFIG",
+    "FLS_E_PARAM_ADDRESS",
+    "FLS_E_PARAM_LENGTH",
+    "FLS_E_PARAM_DATA",
+    "FLS_E_UNINIT",
+    "FLS_E_PARAM_POINTER",
+    "FLS_E_ALREADY_INITIALIZED",
+    };
+
+    const char *api   = NULL;
+    const char *error = NULL;
     if( ModuleId == 0 )
     {
-        api = SpiApiName[ ApiId ];
-    }
-    else if( ModuleId == 1 )
-    {
-        api = PwmApiName[ ApiId ];
-    }
-    else if( ModuleId == 2 )
-    {
-        api = GptApiName[ ApiId ];
-    }
-    else if( ModuleId == 3 )
-    {
-        api = DetApiName[ ApiId ];
-    }
-    else if( ModuleId == 4 )
-    {
-        api = CanApiName[ ApiId ];
-    }
-    else if( ModuleId == 5 )
-    {
-        api = AdcApiName[ ApiId ];
-    }
-    else if( ModuleId == 6 )
-    {
-        api = NvicApiName[ ApiId ];
-    }
-    else if( ModuleId == 7 )
-    {
-        api = McuApiName[ ApiId ];
-    }
-    else if( ModuleId == 8 )
-    {
-        api = DioApiName[ ApiId ];
-    }
-    else if( ModuleId == 9 )
-    {
-        api = PortApiName[ ApiId ];
-    }
-    else
-    {
-        (void)printf( "Other error" );
-    }
-
-    const char *error;
-    if( ModuleId == 0 )
-    {
+        api   = SpiApiName[ ApiId ];
         error = SpiErrorName[ ErrorId ];
     }
     else if( ModuleId == 1 )
     {
+        api   = PwmApiName[ ApiId ];
         error = PwmErrorName[ ErrorId ];
     }
     else if( ModuleId == 2 )
     {
-        // error = GptErrorName[  ErrorId ];
+        api   = GptApiName[ ApiId ];
+        error = GptErrorName[ ErrorId ];
     }
     else if( ModuleId == 3 )
     {
+        api   = DetApiName[ ApiId ];
         error = DetErrorName[ ErrorId ];
     }
     else if( ModuleId == 4 )
     {
+        api   = CanApiName[ ApiId ];
         error = CanErrorName[ ErrorId ];
     }
     else if( ModuleId == 5 )
     {
+        api   = AdcApiName[ ApiId ];
         error = AdcErrorName[ ErrorId ];
     }
     else if( ModuleId == 6 )
     {
+        api   = NvicApiName[ ApiId ];
         error = NvicErrorName[ ErrorId ];
     }
     else if( ModuleId == 7 )
     {
+        api   = McuApiName[ ApiId ];
         error = McuErrorName[ ErrorId ];
     }
     else if( ModuleId == 8 )
     {
+        api   = DioApiName[ ApiId ];
         error = DioErrorName[ ErrorId ];
     }
     else if( ModuleId == 9 )
     {
+        api   = PortApiName[ ApiId ];
         error = PortErrorName[ ErrorId ];
+    }
+    else if( ModuleId == 10 )
+    {
+        api   = FlsApiName[ ApiId ];
+        error = FlsErrorName[ ErrorId ];
     }
     else
     {
@@ -434,7 +425,6 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
     (void)printf( "Instance: %s\n", InstanceName[ InstanceId ] );
     (void)printf( "Api: %s\n", api );
     (void)printf( "Error: %s\n", error );
-
 
     return E_OK;
 }

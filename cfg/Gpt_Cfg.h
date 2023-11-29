@@ -51,8 +51,8 @@
  * @defgroup GPT_SWC_Ids GPT software version and Ids
  *
  * {@ */
-#define GPT_MODULE_ID                       0u /*!< GPT Module ID */
-#define GPT_INSTANCE_ID                     0u /*!< GPT Instance ID */
+#define GPT_MODULE_ID                       2u /*!< GPT Module ID */
+#define GPT_INSTANCE_ID                     2u /*!< GPT Instance ID */
 #define GPT_VENDOR_ID                       0u /*!< GPT Module Vendor ID */
 /**
  * @} */

@@ -35,14 +35,14 @@
  * @defgroup MCU_Error_Type MCU Development Error Types
  *
  * @{ */
-#define MCU_E_PARAM_CONFIG          0x0Au /*!< API service called with wrong parameter */
-#define MCU_E_PARAM_CLOCK           0x0Bu /*!< API service called with wrong parameter */
-#define MCU_E_PARAM_MODE            0x0Cu /*!< API service called with wrong parameter */
-#define MCU_E_PARAM_RAMSECTION      0x0Du /*!< API service called with wrong parameter */
-#define MCU_E_PLL_NOT_LOCKED        0x0Eu /*!< API service called with wrong parameter */
-#define MCU_E_UNINIT                0x0Fu /*!< API service called with wrong parameter */
-#define MCU_E_PARAM_POINTER         0x10u /*!< API service called with wrong parameter */
-#define MCU_E_INIT_FAILED           0x11u /*!< API service called with wrong parameter */
+#define MCU_E_PARAM_CONFIG          0x00u /*!< API service called with wrong parameter */
+#define MCU_E_PARAM_CLOCK           0x01u /*!< API service called with wrong parameter */
+#define MCU_E_PARAM_MODE            0x02u /*!< API service called with wrong parameter */
+#define MCU_E_PARAM_RAMSECTION      0x03u /*!< API service called with wrong parameter */
+#define MCU_E_PLL_NOT_LOCKED        0x04u /*!< API service called with wrong parameter */
+#define MCU_E_UNINIT                0x05u /*!< API service called with wrong parameter */
+#define MCU_E_PARAM_POINTER         0x06u /*!< API service called with wrong parameter */
+#define MCU_E_INIT_FAILED           0x07u /*!< API service called with wrong parameter */
 /**
  * @} */
 

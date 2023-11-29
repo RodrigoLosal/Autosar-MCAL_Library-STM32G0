@@ -34,9 +34,9 @@
 #define DIO_ID_WRITE_PORT              0x03u /*!< *!< Dio_WritePort() api service id */
 #define DIO_ID_READ_CHANNEL_GRP        0x04u /*!< *!< Dio_ReadChannelGroup() api service id */
 #define DIO_ID_WRITE_CHANNEL_GRP       0x05u /*!< *!< Dio_WriteChannelGroup() api service id */
-#define DIO_ID_GET_VERSION_INFO        0x12u /*!< *!< Dio_GetVersionInfo() api service id */
-#define DIO_ID_FLIP_CHANNEL            0x11u /*!< *!< Dio_FlipChannel() api service id */
-#define DIO_ID_MASKED_WRITE_PORT       0x13u /*!< *!< Dio_MaskedWritePort() api service id */
+#define DIO_ID_GET_VERSION_INFO        0x06u /*!< *!< Dio_GetVersionInfo() api service id */
+#define DIO_ID_FLIP_CHANNEL            0x07u /*!< *!< Dio_FlipChannel() api service id */
+#define DIO_ID_MASKED_WRITE_PORT       0x08u /*!< *!< Dio_MaskedWritePort() api service id */
 /**
  * @} */
 
@@ -46,10 +46,10 @@
  * @reqs  SWS_Dio_91001
  *
  * @{ */
-#define DIO_E_PARAM_INVALID_CHANNEL_ID 0x0Au /*!< *!< Invalid Channel ID */
-#define DIO_E_PARAM_INVALID_PORT_ID    0x14u /*!< *!< Invalid Port ID */
-#define DIO_E_PARAM_INVALID_GROUP      0x1Fu /*!< *!< Invalid Group */
-#define DIO_E_PARAM_POINTER            0x20u /*!< *!< Invalid Pointer */
+#define DIO_E_PARAM_INVALID_CHANNEL_ID 0x00u /*!< *!< Invalid Channel ID */
+#define DIO_E_PARAM_INVALID_PORT_ID    0x01u /*!< *!< Invalid Port ID */
+#define DIO_E_PARAM_INVALID_GROUP      0x02u /*!< *!< Invalid Group */
+#define DIO_E_PARAM_POINTER            0x03u /*!< *!< Invalid Pointer */
 /**
  * @} */
 

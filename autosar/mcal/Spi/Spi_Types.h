@@ -52,12 +52,12 @@
  * @{ */
 #define SPI_E_PARAM_CHANNEL        0x00u /*!< API service called with wrong channel  */
 #define SPI_E_PARAM_JOB            0x01u /*!< API service called with wrong job */
-#define SPI_E_PARAM_SEQ            0x0Cu /*!< API service called with wrong sequence */
-#define SPI_E_PARAM_LENGTH         0x0Du /*!< API service called with wrong length for EB */
-#define SPI_E_PARAM_UNIT           0x0Eu /*!< API service called with wrong hardware unit */
-#define SPI_E_PARAM_POINTER        0x10u /*!< APIs called with an unexpected value for the pointer */
-#define SPI_E_UNINIT               0x1Au /*!< API service used without module initialization */
-#define SPI_E_ALREADY_INITIALIZED  0x4Au /*!< API SPI_Init service called while the SPI driver has been already initialized*/
+#define SPI_E_PARAM_SEQ            0x02u /*!< API service called with wrong sequence */
+#define SPI_E_PARAM_LENGTH         0x03u /*!< API service called with wrong length for EB */
+#define SPI_E_PARAM_UNIT           0x04u /*!< API service called with wrong hardware unit */
+#define SPI_E_PARAM_POINTER        0x05u /*!< APIs called with an unexpected value for the pointer */
+#define SPI_E_UNINIT               0x06u /*!< API service used without module initialization */
+#define SPI_E_ALREADY_INITIALIZED  0x07u /*!< API SPI_Init service called while the SPI driver has been already initialized*/
 /**
  * @} */
 

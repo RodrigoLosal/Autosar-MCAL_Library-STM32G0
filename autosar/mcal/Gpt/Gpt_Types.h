@@ -32,14 +32,14 @@
  *
  * @reqs    SWS_Gpt_91000
  * @{ */
-#define GPT_E_UNINIT                0x0Au /*!< API service called without the module initialization */
-#define GPT_E_ALREADY_INITIALIZED   0x0Du /*!< API service for initialization called when already initialized */
-#define GPT_E_INIT_FAILED           0x0Eu /*!< API error return code: Init function failed */
-#define GPT_E_PARAM_CHANNEL         0x14u /*!< API parameter checking: invalid channel */
-#define GPT_E_PARAM_VALUE           0x15u /*!< API parameter checking: invalid value */
-#define GPT_E_PARAM_POINTER         0x16u /*!< API parameter checking: invalid pointer */
-#define GPT_E_PARAM_PREDEF_TIMER    0x17u /*!< API parameter checking: invalid Predef Timer */
-#define GPT_E_PARAM_MODE            0x1Fu /*!< API parameter checking: invalid mode */
+#define GPT_E_UNINIT                0x00u /*!< API service called without the module initialization */
+#define GPT_E_ALREADY_INITIALIZED   0x01u /*!< API service for initialization called when already initialized */
+#define GPT_E_INIT_FAILED           0x02u /*!< API error return code: Init function failed */
+#define GPT_E_PARAM_CHANNEL         0x03u /*!< API parameter checking: invalid channel */
+#define GPT_E_PARAM_VALUE           0x04u /*!< API parameter checking: invalid value */
+#define GPT_E_PARAM_POINTER         0x05u /*!< API parameter checking: invalid pointer */
+#define GPT_E_PARAM_PREDEF_TIMER    0x06u /*!< API parameter checking: invalid Predef Timer */
+#define GPT_E_PARAM_MODE            0x07u /*!< API parameter checking: invalid mode */
 /**
  * @} */
 
