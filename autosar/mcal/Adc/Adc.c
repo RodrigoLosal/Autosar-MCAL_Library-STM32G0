@@ -12,7 +12,7 @@
 #include "Adc_Arch.h"
 #include "Adc_Cfg.h"
 
-#if ADC_DEV_ERROR_DETECT == FALSE
+#if ADC_DEV_ERROR_DETECT == FALSE /* cppcheck-suppress misra-c2012-20.9 ; declared at Adc_Cfg.h */
 #define Det_ReportError( ModuleId, InstanceId, ApiId, ErrorId ) (void)0
 #else
 #include "Det.h"
@@ -35,7 +35,7 @@ static Adc_Det_Str Det_Adc =
 {
 .Adc_InitState         = FALSE,
 .Adc_ModuleID          = ADC_MODULE_ID,
-.Adc_SetupResultBuffer = FALSE,
+.Adc_SetupResltBuffer  = FALSE,
 .GroupNotifFunctionPtr = NULL_PTR,
 .PwrState              = 0,
 .PreparePwrStateFlag   = FALSE };
@@ -137,7 +137,6 @@ void Adc_DeInit( void )
 #if ADC_ENABLE_START_STOP_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_StartGroupConversion( Adc_GroupType Group )
 {
-    Std_ReturnType RetValue = E_NOT_OK;
     if( Group > 10 ) /*(Size tbd)*/
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_PARAM_GROUP );
@@ -150,7 +149,7 @@ void Adc_StartGroupConversion( Adc_GroupType Group )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_UNINIT );
     }
-    else if( Det_Adc.Adc_SetupResultBuffer == FALSE )
+    else if( Det_Adc.Adc_SetupResltBuffer == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_BUFFER_UNINIT );
     }
@@ -265,7 +264,7 @@ void Adc_EnableHardwareTrigger( Adc_GroupType Group )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_UNINIT );
     }
-    else if( Det_Adc.Adc_SetupResultBuffer == FALSE )
+    else if( Det_Adc.Adc_SetupResltBuffer == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_BUFFER_UNINIT );
     }
@@ -427,12 +426,12 @@ Adc_StreamNumSampleType Adc_GetStreamLastPointer( Adc_GroupType Group, Adc_Value
     if( Group > 10 ) /*(Size tbd)*/
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_GET_STREAM_LAST_POINTER, ADC_E_PARAM_GROUP );
-        PtrToSamplePtr = NULL_PTR;
+        *PtrToSamplePtr = NULL_PTR;
     }
     else if( Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_GET_STREAM_LAST_POINTER, ADC_E_UNINIT );
-        PtrToSamplePtr = NULL_PTR;
+        *PtrToSamplePtr = NULL_PTR;
     }
     else
     {
@@ -498,7 +497,6 @@ Std_ReturnType Adc_SetPowerState( Adc_PowerStateRequestResultType *Result )
     {
     }
     return Adc_Arch_SetPowerState( &HwUnit_Adc, Result );
-
 }
 
 /**

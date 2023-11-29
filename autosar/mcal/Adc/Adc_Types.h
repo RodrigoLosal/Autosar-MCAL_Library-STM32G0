@@ -381,7 +381,7 @@ typedef struct _Adc_Det_Str
 {
     boolean *Adc_InitState;
     uint8 *Adc_ModuleID;
-    boolean *Adc_SetupResultBuffer;
+    boolean *Adc_SetupResltBuffer;
     uint8 *GroupNotifFunctionPtr;
     uint8 *PwrState;
     boolean *PreparePwrStateFlag;
