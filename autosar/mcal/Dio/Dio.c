@@ -24,31 +24,24 @@
  * process in the Dio_Cfg.h file.
  */
 #include "Std_Types.h"
-#include "Registers.h"
-#include "Bfx.h"
 #include "Dio.h"
+#include "Dio_Arch.h"
 
+/* cppcheck-suppress misra-c2012-20.9 ; this is declared at dio_Cfg.h */
+#if DIO_DEV_ERROR_DETECT == STD_OFF
 /**
-  * @defgroup Values-Dio to represent repeating numbers or replace numbers by definitions.
-  @{ */
-#define VALUE_F (Dio_LevelType)0xF /*!< Defines the value 0xF */
-#define SIX     6u                 /*!< Defines the value of 6 */
-#define FOUR    4u                 /*!< Defines the value of 4 */
-/**
-  @} */
-
-/**
- * @brief  Pointer type variable to define the Ports.
- */
-static Dio_RegisterType *Dios_Port[ SIX ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF };
-
-/**
- * @brief  temporary macro to be remove when Det is implemented
+ * @param   ModuleId    module id number
+ * @param   InstanceId  Instance Id
+ * @param   ApiId       Pai id
+ * @param   ErrorId     Error code
  *
- * @param   condition sentence to validate if true
- * @param   error if not true send this error
+ * @reqs    SWS_Dio_00194
  */
-#define assert_det( condition, error ) (void)0
+#define Det_ReportError( ModuleId, InstanceId, ApiId, ErrorId ) (void)0
+#else
+#include "Det.h"
+#endif
+
 
 /**
  * @brief Read Channel
@@ -59,18 +52,27 @@ static Dio_RegisterType *Dios_Port[ SIX ] = { DIOA, DIOB, DIOC, DIOD, DIOE, DIOF
  * @param ChannelId ID of DIO channel.
  *
  * @retval Returns the value of the specified DIO channel.
+ *
+ * @reqs    SWS_Dio_00133, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00011, SWS_Dio_00012,SWS_Dio_00074
  */
 Dio_LevelType Dio_ReadChannel( Dio_ChannelType ChannelId )
 {
-    Dio_RegisterType *Dio = Dios_Port[ ChannelId >> FOUR ];
-    Dio_LevelType Pin     = ChannelId & VALUE_F;
+    Dio_LevelType Value = STD_OFF;
 
-    assert_det( ChannelId <= DIO_PIN_PA_00 && ChannelId >= DIO_PIN_PD_06 ||
-                ChannelId <= DIO_PIN_PD_08 && ChannelId >= DIO_PIN_PD_09 ||
-                ChannelId <= DIO_PIN_PF_00 && ChannelId >= DIO_PIN_PF_04 ||
-                , DIO_E_PARAM_INVALID_CHANNEL_ID );
+    if( ChannelId < DioConfig.NumberOfChannels )
+    {
+        Value = Dio_Arch_ReadChannel( DioConfig.Channels[ ChannelId ].Port, DioConfig.Channels[ ChannelId ].Pin );
+    }
+    else
+    {
+        /* If development error detection is enabled, the services Dio_ReadChannel, shall check
+        the “ChannelId” parameter to be valid within the current configuration. If the “ChannelId”
+        parameter is invalid, the functions shall report the error code DIO_E_PARAM_INVALID_CHANNEL_ID
+        to the DET */
+        Det_ReportError( DIO_MODULE_ID, DIO_INSTANCE_ID, DIO_ID_READ_CHANNEL, DIO_E_PARAM_INVALID_CHANNEL_ID );
+    }
 
-    return Bfx_GetBit_u32u8_u8( Dio->IDR, Pin );
+    return Value;
 }
 
 /**
@@ -82,20 +84,26 @@ Dio_LevelType Dio_ReadChannel( Dio_ChannelType ChannelId )
  *
  * @param ChannelId ID of DIO channel.
  * @param Level Value to be written.
+ *
+ * @reqs    SWS_Dio_00134, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00006, SWS_Dio_00119, SWS_Dio_00074
  */
 void Dio_WriteChannel( Dio_ChannelType ChannelId, Dio_LevelType Level )
 {
-    Dio_RegisterType *Dio = Dios_Port[ ChannelId >> FOUR ];
-    Dio_PortType Pin      = ChannelId & VALUE_F;
-
-    assert_det( ChannelId <= DIO_PIN_PA_00 && ChannelId >= DIO_PIN_PD_06 ||
-                ChannelId <= DIO_PIN_PD_08 && ChannelId >= DIO_PIN_PD_09 ||
-                ChannelId <= DIO_PIN_PF_00 && ChannelId >= DIO_PIN_PF_04 ||
-                , DIO_E_PARAM_INVALID_CHANNEL_ID );
-
-    Bfx_PutBit_u32u8u8( (uint32 *)&Dio->ODR, Pin, Level );
+    if( ChannelId < DioConfig.NumberOfChannels )
+    {
+        Dio_Arch_WriteChannel( DioConfig.Channels[ ChannelId ].Port, DioConfig.Channels[ ChannelId ].Pin, Level );
+    }
+    else
+    {
+        /* If development error detection is enabled, the services Dio_ReadChannel, shall check
+        the “ChannelId” parameter to be valid within the current configuration. If the “ChannelId”
+        parameter is invalid, the functions shall report the error code DIO_E_PARAM_INVALID_CHANNEL_ID
+        to the DET */
+        Det_ReportError( DIO_MODULE_ID, DIO_INSTANCE_ID, DIO_ID_WRITE_CHANNEL, DIO_E_PARAM_INVALID_CHANNEL_ID );
+    }
 }
 
+#if DIO_FLIP_CHANNEL_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 /**
  * @brief Flip Channel
  *
@@ -107,21 +115,29 @@ void Dio_WriteChannel( Dio_ChannelType ChannelId, Dio_LevelType Level )
  * @param ChannelId ID of DIO channel.
  *
  * @retval Returns the level of a channel after flipping the level.
+ *
+ * @reqs    SWS_Dio_00190, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00083, SWS_Dio_00084, SWS_Dio_00074
  */
 Dio_LevelType Dio_FlipChannel( Dio_ChannelType ChannelId )
 {
-    Dio_RegisterType *Dio = Dios_Port[ ChannelId >> FOUR ];
-    Dio_PortType Pin      = ChannelId & VALUE_F;
+    Dio_LevelType Value = STD_OFF;
 
-    Bfx_ToggleBitMask_u32u32( (uint32 *)&Dio->ODR, ( 1u << Pin ) );
+    if( ChannelId < DioConfig.NumberOfChannels )
+    {
+        Value = Dio_Arch_FlipChannel( DioConfig.Channels[ ChannelId ].Port, DioConfig.Channels[ ChannelId ].Pin );
+    }
+    else
+    {
+        /* If development error detection is enabled, the services Dio_ReadChannel, shall check
+        the “ChannelId” parameter to be valid within the current configuration. If the “ChannelId”
+        parameter is invalid, the functions shall report the error code DIO_E_PARAM_INVALID_CHANNEL_ID
+        to the DET */
+        Det_ReportError( DIO_MODULE_ID, DIO_INSTANCE_ID, DIO_ID_FLIP_CHANNEL, DIO_E_PARAM_INVALID_CHANNEL_ID );
+    }
 
-    assert_det( ChannelId <= DIO_PIN_PA_00 && ChannelId >= DIO_PIN_PD_06 ||
-                ChannelId <= DIO_PIN_PD_08 && ChannelId >= DIO_PIN_PD_09 ||
-                ChannelId <= DIO_PIN_PF_00 && ChannelId >= DIO_PIN_PF_04 ||
-                , DIO_E_PARAM_INVALID_CHANNEL_ID );
-
-    return Bfx_GetBit_u32u8_u8( Dio->IDR, Pin );
+    return Value;
 }
+#endif
 
 /**
  * @brief Read Port
@@ -132,14 +148,27 @@ Dio_LevelType Dio_FlipChannel( Dio_ChannelType ChannelId )
  * @param PortId ID of DIO Port.
  *
  * @retval Returns the level of all channels on that port.
+ *
+ * @reqs    SWS_Dio_00135, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00013, SWS_Dio_00012, SWS_Dio_00075
  */
 Dio_PortLevelType Dio_ReadPort( Dio_PortType PortId )
 {
-    Dio_RegisterType *Port = Dios_Port[ PortId ];
+    Dio_PortLevelType Value = STD_OFF;
 
-    assert_det( PortId <= PORTS_A && PortId >= PORTS_F, DIO_E_PARAM_INVALID_PORT_ID );
+    if( PortId < DioConfig.NumberOfPorts )
+    {
+        Value = Dio_Arch_ReadPort( PortId );
+    }
+    else
+    {
+        /* If development error detection is enabled, the services Dio_ReadChannel, shall check
+        the “ChannelId” parameter to be valid within the current configuration. If the “ChannelId”
+        parameter is invalid, the functions shall report the error code DIO_E_PARAM_INVALID_CHANNEL_ID
+        to the DET */
+        Det_ReportError( DIO_MODULE_ID, DIO_INSTANCE_ID, DIO_ID_READ_PORT, DIO_E_PARAM_INVALID_PORT_ID );
+    }
 
-    return (Dio_PortLevelType)Port->IDR;
+    return Value;
 }
 
 /**
@@ -150,14 +179,23 @@ Dio_PortLevelType Dio_ReadPort( Dio_PortType PortId )
  *
  * @param PortId ID of DIO Port.
  * @param Level Value to be written.
+ *
+ * @reqs    SWS_Dio_00136, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00004, SWS_Dio_00075
  */
 void Dio_WritePort( Dio_PortType PortId, Dio_PortLevelType Level )
 {
-    Dio_RegisterType *Port = Dios_Port[ PortId ];
-
-    assert_det( PortId <= PORTS_A && PortId >= PORTS_F, DIO_E_PARAM_INVALID_PORT_ID );
-
-    Port->ODR = Level;
+    if( PortId < DioConfig.NumberOfPorts )
+    {
+        Dio_Arch_WritePort( PortId, Level );
+    }
+    else
+    {
+        /* If development error detection is enabled, the services Dio_ReadChannel, shall check
+        the “ChannelId” parameter to be valid within the current configuration. If the “ChannelId”
+        parameter is invalid, the functions shall report the error code DIO_E_PARAM_INVALID_CHANNEL_ID
+        to the DET */
+        Det_ReportError( DIO_MODULE_ID, DIO_INSTANCE_ID, DIO_ID_WRITE_PORT, DIO_E_PARAM_INVALID_PORT_ID );
+    }
 }
 
 /**
@@ -170,17 +208,25 @@ void Dio_WritePort( Dio_PortType PortId, Dio_PortLevelType Level )
  * @param ChannelGroupIdPtr Pointer to ChannelGroup.
  *
  * @retval Returns the level of a subset of the adjacent bits of a port (channel group).
+ *
+ * @reqs    SWS_Dio_00137, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00014, SWS_Dio_00012, SWS_Dio_00114
  */
 Dio_PortLevelType Dio_ReadChannelGroup( const Dio_ChannelGroupType *ChannelGroupIdPtr )
 {
     Dio_PortLevelType GroupLevel = 0;
-    const Dio_RegisterType *Port = Dios_Port[ ChannelGroupIdPtr->port ];
 
-    assert_det( ChannelGroupIdPtr != NULL_PTR, DIO_E_PARAM_INVALID_GROUP );
-
-    GroupLevel = ( Port->IDR ) & ( ChannelGroupIdPtr->mask );
-
-    Bfx_ShiftBitRt_u32u8( (uint32 *)&GroupLevel, ChannelGroupIdPtr->offset );
+    if( ( ChannelGroupIdPtr != NULL_PTR ) && ( ChannelGroupIdPtr->port < DioConfig.NumberOfPorts ) )
+    {
+        GroupLevel = Dio_Arch_ReadChannelGroup( ChannelGroupIdPtr );
+    }
+    else
+    {
+        /* If development error detection is enabled, the functions Dio_ReadChannelGroup shall check
+        the “ChannelGroupIdPtr” parameter to be valid within the current configuration.
+        If the “ChannelGroupIdPtr” parameter is invalid, the functions shall report the error code
+        DIO_E_PARAM_INVALID_GROUP to the DET*/
+        Det_ReportError( DIO_MODULE_ID, DIO_INSTANCE_ID, DIO_ID_READ_CHANNEL_GRP, DIO_E_PARAM_INVALID_GROUP );
+    }
 
     return GroupLevel;
 }
@@ -196,16 +242,27 @@ Dio_PortLevelType Dio_ReadChannelGroup( const Dio_ChannelGroupType *ChannelGroup
  *
  * @param ChannelGroupIdPtr Pointer to ChannelGroup.
  * @param Level Value to be written.
+ *
+ * @reqs    SWS_Dio_00138, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00008, SWS_Dio_00114
  */
 void Dio_WriteChannelGroup( const Dio_ChannelGroupType *ChannelGroupIdPtr, Dio_PortLevelType Level )
 {
-    Dio_RegisterType *Port = Dios_Port[ ChannelGroupIdPtr->port ];
-
-    assert_det( ChannelGroupIdPtr != NULL_PTR, DIO_E_PARAM_INVALID_GROUP );
-
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&Port->ODR, ChannelGroupIdPtr->offset, ChannelGroupIdPtr->mask, Level );
+    if( ( ChannelGroupIdPtr != NULL_PTR ) && ( ChannelGroupIdPtr->port < DioConfig.NumberOfPorts ) )
+    {
+        Dio_Arch_WriteChannelGroup( ChannelGroupIdPtr, Level );
+    }
+    else
+    {
+        /* If development error detection is enabled, the services Dio_ReadChannel, shall check
+        the “ChannelId” parameter to be valid within the current configuration. If the “ChannelId”
+        parameter is invalid, the functions shall report the error code DIO_E_PARAM_INVALID_CHANNEL_ID
+        to the DET */
+        Det_ReportError( DIO_MODULE_ID, DIO_INSTANCE_ID, DIO_ID_WRITE_CHANNEL_GRP, DIO_E_PARAM_INVALID_GROUP );
+    }
 }
 
+/* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if DIO_GET_VERSION_INFO_API == STD_ON
 /**
  * @brief Get Version Info
  *
@@ -213,23 +270,29 @@ void Dio_WriteChannelGroup( const Dio_ChannelGroupType *ChannelGroupIdPtr, Dio_P
  *
  * @param versioninfo Pointer to where to store the version information of this module.
  *
- * @retval Returns a variable for testing purposes .
+ * @reqs    SWS_Dio_00139, SWS_Dio_00189
  */
-Dio_PortLevelType Dio_GetVersionInfo( Std_VersionInfoType *versioninfo )
+void Dio_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
-    Dio_PortLevelType Level = 0;
-
-    assert_det( versioninfo != NULL_PTR, DIO_E_PARAM_POINTER );
-
-    versioninfo->vendorID         = 0;
-    versioninfo->moduleID         = 0;
-    versioninfo->sw_major_version = 0;
-    versioninfo->sw_minor_version = 0;
-    versioninfo->sw_patch_version = 0;
-
-    return Level;
+    if( versioninfo != NULL_PTR )
+    {
+        versioninfo->vendorID         = 0;
+        versioninfo->moduleID         = 0;
+        versioninfo->sw_major_version = 0;
+        versioninfo->sw_minor_version = 0;
+        versioninfo->sw_patch_version = 0;
+    }
+    else
+    {
+        /* If DET is enabled for the DIO Driver module, the function Dio_GetVersionInfo shall raise
+        DIO_E_PARAM_POINTER, if the argument is NULL pointer and return without any action */
+        Det_ReportError( DIO_MODULE_ID, DIO_INSTANCE_ID, DIO_ID_GET_VERSION_INFO, DIO_E_PARAM_POINTER );
+    }
 }
+#endif
 
+/* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
+#if DIO_MASKED_WRITE_PORT_API == STD_ON
 /**
  * @brief Masked Write Port
  *
@@ -239,12 +302,22 @@ Dio_PortLevelType Dio_GetVersionInfo( Std_VersionInfoType *versioninfo )
  * @param PortId ID of DIO Port.
  * @param Level Value to be written.
  * @param Mask Channels to be masked in the port.
+ *
+ * @reqs    SWS_Dio_00300, SWS_Dio_00051, SWS_Dio_00089, SWS_Dio_00075
  */
 void Dio_MaskedWritePort( Dio_PortType PortId, Dio_PortLevelType Level, Dio_PortLevelType Mask )
 {
-    Dio_RegisterType *Port = Dios_Port[ PortId ];
-
-    assert_det( PortId <= PORTS_A && PortId >= PORTS_F, DIO_E_PARAM_INVALID_PORT_ID );
-
-    Port->ODR = Mask & ( ( Port->ODR ) | Level );
+    if( PortId < DioConfig.NumberOfPorts )
+    {
+        Dio_Arch_MaskedWritePort( PortId, Level, Mask );
+    }
+    else
+    {
+        /* If development error detection is enabled, the services Dio_ReadChannel, shall check
+        the “ChannelId” parameter to be valid within the current configuration. If the “ChannelId”
+        parameter is invalid, the functions shall report the error code DIO_E_PARAM_INVALID_CHANNEL_ID
+        to the DET */
+        Det_ReportError( DIO_MODULE_ID, DIO_INSTANCE_ID, DIO_ID_MASKED_WRITE_PORT, DIO_E_PARAM_INVALID_PORT_ID );
+    }
 }
+#endif

@@ -1,298 +1,309 @@
 /**
  * @file    test_Dio.c
- * @brief   **This file contains the unit testing of DIO driver.**
+ * @brief   **Unit testing for Dio Driver**
+ * @author  Diego Perez
  *
- * The file is designed to test the functions of DIO as entablished at the official
- * documentation of AUTOSAR.
+ * group of unit test cases for Dio.h file
  */
 #include "unity.h"
-#include "Registers.h"
-#include "Bfx_32bits.h"
+#include "Dio_Cfg.h"
 #include "Dio.h"
+#include "mock_Dio_Arch.h"
+#include "mock_Det.h"
 
-/*mock microcontroller registers with its initial values*/
-/*                               Reserverd1            IDR   ODR   BSRR    Reserved2       BRR*/
-Dio_RegisterType DIOA_BASE = { { 0x00, 0x00, 0x00, 0x00 }, 0x00, 0x00, 0x00, { 0x00, 0x00, 0x00 }, 0x00 };
-Dio_RegisterType DIOB_BASE = { { 0x00, 0x00, 0x00, 0x00 }, 0x00, 0x00, 0x00, { 0x00, 0x00, 0x00 }, 0x00 };
-Dio_RegisterType DIOC_BASE = { { 0x00, 0x00, 0x00, 0x00 }, 0x00, 0x00, 0x00, { 0x00, 0x00, 0x00 }, 0x00 };
-Dio_RegisterType DIOD_BASE = { { 0x00, 0x00, 0x00, 0x00 }, 0x00, 0x00, 0x00, { 0x00, 0x00, 0x00 }, 0x00 };
-Dio_RegisterType DIOE_BASE = { { 0x00, 0x00, 0x00, 0x00 }, 0x00, 0x00, 0x00, { 0x00, 0x00, 0x00 }, 0x00 };
-Dio_RegisterType DIOF_BASE = { { 0x00, 0x00, 0x00, 0x00 }, 0x00, 0x00, 0x00, { 0x00, 0x00, 0x00 }, 0x00 };
+#define DIO_CHANNEL_INVALID 100u /*!< invalid channel */
+#define DIO_PORT_INVALID    100u /*!< invalid port */
 
 
-/**
-  * @defgroup Bit-operations support macros to read and write bits.
-  @{ */
-#define GET_1_BIT( reg, bit )              ( ( ( reg ) >> ( bit ) ) & 0x01u )               /*!< This macro will return the logical state of \
-                                                                                            the input data for the requested bit position. */
-#define GET_BITS( reg, BitStartPn, BitLn ) ( reg >> BitStartPn ) & ( ( 1u << BitLn ) - 1u ) /*!< This macro will return the logical state of the \
-                                                                                            input data for the requested bits positions. */
-/**
-  @} */
-
-/**
- * @brief   **setUp**
- *
- * This function is required by Ceedling to run any code before the test cases.
- */
+/*this function is required by Ceedling to run any code before the test cases*/
 void setUp( void )
 {
 }
 
-/**
- * @brief   **tearDown**
- *
- * This function is required by Ceedling to run any code before the test cases.
- */
+/*this function is required by Ceedling to run any code after the test cases*/
 void tearDown( void )
 {
 }
 
-
 /**
- * @brief   **Test of Dio_WriteChannel function for DIO_PIN_PA_07**
+ * @brief   **Test for Dio_ReadChannel**
  *
- * This test will check that the specified Level will be written to the specified port.
+ * This test case verifies that Dio_ReadChannel() returns the correct value
+ * when a valid channel is passed as parameter.
  */
-void test__Dio_WriteChannel__pin_A07( void )
+void test__Dio_ReadChannel__invalid_channel( void )
 {
-    Dio_LevelType PinLevel;
-    Dio_WriteChannel( DIO_PIN_PA_07, STD_HIGH );
-    PinLevel = GET_1_BIT( DIOA->ODR, 1u );
-    TEST_ASSERT_EQUAL_MESSAGE( 0u, PinLevel, "Dio result was not the supposed value" );
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Dio_LevelType Level = Dio_ReadChannel( DIO_CHANNEL_INVALID );
+    TEST_ASSERT_EQUAL_MESSAGE( STD_OFF, Level, "Dio_ReadChannel() should return STD_OFF" );
 }
 
 /**
- * @brief   **Test of Dio_WriteChannel function for DIO_PIN_PB_02**
+ * @brief   **Test for Dio_ReadChannel**
  *
- * This test will check that the specified Level will be written to the specified port.
+ * This test case verifies that Dio_ReadChannel() returns the correct value
+ * when a valid channel is passed as parameter.
  */
-void test__Dio_WriteChannel__pin_B02( void )
+void test__Dio_ReadChannel__valid_channel( void )
 {
-    Dio_LevelType PinLevel;
-    Dio_WriteChannel( DIO_PIN_PB_02, STD_HIGH );
-    PinLevel = GET_1_BIT( DIOB->ODR, 1u );
-    TEST_ASSERT_EQUAL_MESSAGE( 0u, PinLevel, "Dio result was not the supposed value" );
+    Dio_Arch_ReadChannel_IgnoreAndReturn( STD_ON );
+
+    Dio_LevelType Level = Dio_ReadChannel( DIO_CHANNEL_RED_LED );
+    TEST_ASSERT_EQUAL_MESSAGE( STD_ON, Level, "Dio_ReadChannel() should return STD_ON" );
 }
 
 /**
- * @brief   **Test of Dio_ReadChannel function for DIO_PIN_PA_07**
+ * @brief   **Test for Dio_WriteChannel**
  *
- * This test will check that the function returns the value of the specified DIO channel.
+ * This test case verifies that Dio_WriteChannel() returns the correct value
+ * when a valid channel is passed as parameter.
  */
-void test__Dio_ReadChannel__pin_A07( void )
+void test__Dio_WriteChannel__invalid_channel( void )
 {
-    Dio_LevelType PinLevel;
-    PinLevel = Dio_ReadChannel( DIO_PIN_PA_07 );
-    TEST_ASSERT_EQUAL_MESSAGE( 0u, PinLevel, "Dio result was not the supposed value" );
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Dio_WriteChannel( DIO_CHANNEL_INVALID, STD_ON );
 }
 
 /**
- * @brief   **Test of Dio_ReadChannel function for DIO_PIN_PB_02**
+ * @brief   **Test for Dio_WriteChannel**
  *
- * This test will check that the function returns the value of the specified DIO channel.
+ * This test case verifies that Dio_WriteChannel() returns the correct value
+ * when a valid channel is passed as parameter.
  */
-void test__Dio_ReadChannel__pin_B02( void )
+void test__Dio_WriteChannel__valid_channel( void )
 {
-    Dio_LevelType PinLevel;
-    PinLevel = Dio_ReadChannel( DIO_PIN_PB_02 );
-    TEST_ASSERT_EQUAL_MESSAGE( 0u, PinLevel, "Dio result was not the supposed value" );
+    Dio_Arch_WriteChannel_Ignore( );
+
+    Dio_WriteChannel( DIO_CHANNEL_RED_LED, STD_ON );
 }
 
 /**
- * @brief   **Test of Dio_FlipChannel function for DIO_PIN_PA_07**
+ * @brief   **Test for Dio_ReadPort**
  *
- * This test will check that the function returns the value of the specified DIO channel inverted.
+ * This test case verifies that Dio_ReadPort() returns the correct value
+ * when a valid port is passed as parameter.
  */
-void test__Dio_FlipChannel__pin_A07( void )
+void test__Dio_ReadPort__invalid_port( void )
 {
-    Dio_LevelType PinLevel;
-    PinLevel = Dio_FlipChannel( DIO_PIN_PA_07 );
-    TEST_ASSERT_EQUAL_MESSAGE( 0u, PinLevel, "Dio result was not the supposed value" );
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Dio_PortLevelType Level = Dio_ReadPort( DIO_PORT_INVALID );
+    TEST_ASSERT_EQUAL_MESSAGE( STD_OFF, Level, "Dio_ReadPort() should return 0x00" );
 }
 
 /**
- * @brief   **Test of Dio_FlipChannel function for DIO_PIN_PD_03**
+ * @brief   **Test for Dio_ReadPort**
  *
- * This test will check that the function returns the value of the specified DIO channel inverted.
+ * This test case verifies that Dio_ReadPort() returns the correct value
+ * when a valid port is passed as parameter.
  */
-void test__Dio_FlipChannel__pin_D03( void )
+void test__Dio_ReadPort__valid_port( void )
 {
-    Dio_LevelType PinLevel;
-    PinLevel = Dio_FlipChannel( DIO_PIN_PD_03 );
-    TEST_ASSERT_EQUAL_MESSAGE( 0u, PinLevel, "Dio result was not the supposed value" );
+    Dio_Arch_ReadPort_IgnoreAndReturn( 0xAA );
+
+    Dio_PortLevelType Level = Dio_ReadPort( DIO_PORT_A );
+    TEST_ASSERT_EQUAL_MESSAGE( 0xAA, Level, "Dio_ReadPort() should return 0x00" );
 }
 
 /**
- * @brief   **Test of Dio_ReadPort function for PORT_B**
+ * @brief   **Test for Dio_WritePort**
  *
- * This test will check that the function returns the value for all channels of the specified Port.
+ * This test case verifies that Dio_WritePort() returns the correct value
+ * when a valid port is passed as parameter.
  */
-void test__Dio_ReadPort_B( void )
+void test__Dio_WritePort__invalid_port( void )
 {
-    Dio_LevelType PinLevel;
-    PinLevel = Dio_ReadPort( PORTS_B );
-    TEST_ASSERT_EQUAL_MESSAGE( 0u, PinLevel, "Dio result was not the supposed value" );
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Dio_WritePort( DIO_PORT_INVALID, 0x00 );
 }
 
 /**
- * @brief   **Test of Dio_ReadPort function for PORT_D**
+ * @brief   **Test for Dio_WritePort**
  *
- * This test will check that the function returns the value for all channels of the specified Port.
+ * This test case verifies that Dio_WritePort() returns the correct value
+ * when a valid port is passed as parameter.
  */
-void test__Dio_ReadPort_D( void )
+void test__Dio_WritePort__valid_port( void )
 {
-    Dio_LevelType PinLevel;
-    PinLevel = Dio_ReadPort( PORTS_D );
-    TEST_ASSERT_EQUAL_MESSAGE( 0u, PinLevel, "Dio result was not the supposed value" );
+    Dio_Arch_WritePort_Ignore( );
+
+    Dio_WritePort( DIO_PORT_A, 0x00 );
 }
 
 /**
- * @brief   **Test of Dio_WritePort function for PORT_B**
+ * @brief   **Test for Dio_ReadChannelGroup**
  *
- * This test will check that the function is setting the value specified by the Level parameter
- * for the specified port.
+ * This test case verifies that Dio_ReadChannelGroup() returns the correct value
+ * when a valid group is passed as parameter.
  */
-void test__Dio_WritePort_B( void )
+void test__Dio_ReadChannelGroup__invalid_group( void )
 {
-    Dio_WritePort( PORTS_B, 0x05 );
-    TEST_ASSERT_EQUAL_MESSAGE( 5u, DIOB->ODR, "Dio result was not the supposed value" );
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Dio_PortLevelType Level = Dio_ReadChannelGroup( NULL_PTR );
+    TEST_ASSERT_EQUAL_MESSAGE( 0, Level, "Dio_ReadChannelGroup() should return 0x00" );
 }
 
 /**
- * @brief   **Test of Dio_WritePort function for PORT_C**
+ * @brief   **Test for Dio_ReadChannelGroup**
  *
- * This test will check that the function is setting the value specified by the Level parameter
- * for the specified port.
+ * This test case verifies that Dio_ReadChannelGroup() returns the correct value
+ * when a valid group is passed as parameter.
  */
-void test__Dio_WritePort_C( void )
+void test__Dio_ReadChannelGroup__invalid_port( void )
 {
-    Dio_WritePort( PORTS_C, 0x04 );
-    TEST_ASSERT_EQUAL_MESSAGE( 4u, DIOC->ODR, "Dio result was not the supposed value" );
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Dio_PortLevelType Level = Dio_ReadChannelGroup( DIO_GROUP_INVALID );
+    TEST_ASSERT_EQUAL_MESSAGE( 0, Level, "Dio_ReadChannelGroup() should return 0x00" );
 }
 
 /**
- * @brief   **Test of Dio_WriteChannelGroup function**
+ * @brief   **Test for Dio_ReadChannelGroup**
  *
- * This test will check that the function has set a subset of the adjacent bits of
- * a port (channel group) to a specified level. Also this function will perform
- * the masking of the channel group and in addition the function will perform the
- * shift so that the values written by the function are aligned with the LSB.
+ * This test case verifies that Dio_ReadChannelGroup() returns the correct value
+ * when a valid group is passed as parameter.
  */
-void test__Dio_WriteChannelGroup_PortD( void )
+void test__Dio_ReadChannelGroup__valid_group( void )
 {
-    Dio_ChannelGroupType ChannelGroup;
-    Dio_LevelType PinLevel;
+    Dio_Arch_ReadChannelGroup_IgnoreAndReturn( 0x01 );
 
-    ChannelGroup.mask   = 17;
-    ChannelGroup.offset = 0x03;
-    ChannelGroup.port   = PORTS_D;
-    Dio_WriteChannelGroup( &ChannelGroup, 0x03 );
-
-    PinLevel = GET_BITS( DIOD->ODR, ChannelGroup.offset, ChannelGroup.mask );
-    TEST_ASSERT_EQUAL_MESSAGE( 3u, PinLevel, "Dio result was not the supposed value" );
+    Dio_PortLevelType Level = Dio_ReadChannelGroup( DIO_GROUP_LCD_DATA );
+    TEST_ASSERT_EQUAL_MESSAGE( 0x01, Level, "Dio_ReadChannelGroup() should return 0x00" );
 }
 
 /**
- * @brief   **Test of Dio_WriteChannelGroup function**
+ * @brief   **Test for Dio_WriteChannelGroup**
  *
- * This test will check that the function has set a subset of the adjacent bits of
- * a port (channel group) to a specified level. Also this function will perform
- * the masking of the channel group and in addition the function will perform the
- * shift so that the values written by the function are aligned with the LSB.
+ * This test case verifies that Dio_WriteChannelGroup() returns the correct value
+ * when a valid group is passed as parameter.
  */
-void test__Dio_WriteChannelGroup_PortF( void )
+void test__Dio_WriteChannelGroup__invalid_group( void )
 {
-    Dio_ChannelGroupType ChannelGroup;
-    Dio_LevelType PinLevel;
+    Det_ReportError_IgnoreAndReturn( E_OK );
 
-    ChannelGroup.mask   = 12;
-    ChannelGroup.offset = 0x05;
-    ChannelGroup.port   = PORTS_F;
-    Dio_WriteChannelGroup( &ChannelGroup, 0x05 );
-
-    PinLevel = GET_BITS( DIOF->ODR, ChannelGroup.offset, ChannelGroup.mask );
-    TEST_ASSERT_EQUAL_MESSAGE( 5u, PinLevel, "Dio result was not the supposed value" );
+    Dio_WriteChannelGroup( NULL_PTR, 0x00 );
 }
 
 /**
- * @brief   **Test of Dio_ReadChannelGroup function**
+ * @brief   **Test for Dio_WriteChannelGroup**
  *
- * This test will check that the function has performed the channel group masking and
- * that the offset has been performed so that the values read by the function are
- * aligned with the LSB.
+ * This test case verifies that Dio_WriteChannelGroup() returns the correct value
+ * when a valid group is passed as parameter.
  */
-void test__Dio_ReadChannelGroup_PortD( void )
+void test__Dio_WriteChannelGroup__invalid_port( void )
 {
-    Dio_ChannelGroupType ChannelGroup;
-    Dio_LevelType PinLevel;
+    Det_ReportError_IgnoreAndReturn( E_OK );
 
-    ChannelGroup.mask   = 17;
-    ChannelGroup.offset = 0x03;
-    ChannelGroup.port   = PORTS_D;
-
-    PinLevel = Dio_ReadChannelGroup( &ChannelGroup );
-    TEST_ASSERT_EQUAL_MESSAGE( 0u, PinLevel, "Dio result was not the supposed value" );
+    Dio_WriteChannelGroup( DIO_GROUP_INVALID, 0x00 );
 }
 
 /**
- * @brief   **Test of Dio_ReadChannelGroup function**
+ * @brief   **Test for Dio_WriteChannelGroup**
  *
- * This test will check that the function has performed the channel group masking and
- * that the offset has been performed so that the values read by the function are
- * aligned with the LSB.
+ * This test case verifies that Dio_WriteChannelGroup() returns the correct value
+ * when a valid group is passed as parameter.
  */
-void test__Dio_ReadChannelGroup_PortF( void )
+void test__Dio_WriteChannelGroup__valid_group( void )
 {
-    Dio_ChannelGroupType ChannelGroup;
-    Dio_LevelType PinLevel;
+    Dio_Arch_WriteChannelGroup_Ignore( );
 
-    ChannelGroup.mask   = 12;
-    ChannelGroup.offset = 0x05;
-    ChannelGroup.port   = PORTS_F;
-
-    PinLevel = Dio_ReadChannelGroup( &ChannelGroup );
-    TEST_ASSERT_EQUAL_MESSAGE( 0u, PinLevel, "Dio result was not the supposed value" );
+    Dio_WriteChannelGroup( DIO_GROUP_LCD_DATA, 0x00 );
 }
 
 /**
- * @brief   **Test of Dio_GetVersionInfo function**
+ * @brief   **Test for Dio_FlipChannel**
  *
- * This function will check that the specified value is set for the channels on
- * the specified port.
+ * This test case verifies that Dio_FlipChannel() returns the correct value
+ * when a valid channel is passed as parameter.
  */
-void test__Dio_MaskedWritePort_C( void )
+void test__Dio_FlipChannel__invalid_channel( void )
 {
-    Dio_MaskedWritePort( PORTS_C, 0x05, 0x03 );
-    TEST_ASSERT_EQUAL_MESSAGE( 1u, DIOC->ODR, "Dio result was not the supposed value" );
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Dio_LevelType Level = Dio_FlipChannel( DIO_CHANNEL_INVALID );
+    TEST_ASSERT_EQUAL_MESSAGE( STD_OFF, Level, "Dio_FlipChannel() should return STD_OFF" );
 }
 
 /**
- * @brief   **Test of Dio_GetVersionInfo function**
+ * @brief   **Test for Dio_FlipChannel**
  *
- * This function will check that the specified value is set for the channels on
- * the specified port.
+ * This test case verifies that Dio_FlipChannel() returns the correct value
+ * when a valid channel is passed as parameter.
  */
-void test__Dio_MaskedWritePort_A( void )
+void test__Dio_FlipChannel__valid_channel( void )
 {
-    Dio_MaskedWritePort( PORTS_A, 0x06, 0x04 );
-    TEST_ASSERT_EQUAL_MESSAGE( 4u, DIOA->ODR, "Dio result was not the supposed value" );
+    Dio_Arch_FlipChannel_IgnoreAndReturn( STD_ON );
+
+    Dio_LevelType Level = Dio_FlipChannel( DIO_CHANNEL_RED_LED );
+    TEST_ASSERT_EQUAL_MESSAGE( STD_ON, Level, "Dio_FlipChannel() should return STD_OFF" );
 }
 
 /**
- * @brief   **Test of Dio_GetVersionInfo function**
+ * @brief   **Test for Dio_MaskedWritePort**
  *
- * This function to check that all members on VersionInfo structure have a value. In
- * this case the function it was modified to return one in case that the members
- * have a value.
+ * This test case verifies that Dio_MaskedWritePort() returns the correct value
+ * when a valid port is passed as parameter.
  */
-void test__Port_GetVersionInfo( void )
+void test__Dio_MaskedWritePort__invalid_port( void )
 {
-    Std_VersionInfoType test;
-    Dio_GetVersionInfo( &test );
-    TEST_ASSERT_EQUAL_HEX32( 0, test.moduleID );
-    TEST_ASSERT_EQUAL_HEX32( 0, test.sw_major_version );
-    TEST_ASSERT_EQUAL_HEX32( 0, test.sw_minor_version );
-    TEST_ASSERT_EQUAL_HEX32( 0, test.sw_patch_version );
-    TEST_ASSERT_EQUAL_HEX32( 0, test.vendorID );
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Dio_MaskedWritePort( DIO_PORT_INVALID, 0x00, 0x00 );
+}
+
+/**
+ * @brief   **Test for Dio_MaskedWritePort**
+ *
+ * This test case verifies that Dio_MaskedWritePort() returns the correct value
+ * when a valid port is passed as parameter.
+ */
+void test__Dio_MaskedWritePort__valid_port( void )
+{
+    Dio_Arch_MaskedWritePort_Ignore( );
+
+    Dio_MaskedWritePort( DIO_PORT_A, 0xAA, 0x00 );
+}
+
+/**
+ * @brief   **Test for Dio_MaskedWritePort**
+ *
+ * This test case verifies that Dio_MaskedWritePort() returns the correct value
+ * when a valid port is passed as parameter.
+ */
+void test__Dio_MaskedWritePort__ivalid_port( void )
+{
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Dio_MaskedWritePort( DIO_PORT_INVALID, 0x00, 0x00 );
+}
+
+/**
+ * @brief   **Test for Dio_GetVersionInfo**
+ *
+ * This test case verifies that Dio_GetVersionInfo() returns the correct value
+ */
+void test__Dio_GetVersionInfo__valid_pointer( void )
+{
+    Std_VersionInfoType VersionInfo;
+    Dio_GetVersionInfo( &VersionInfo );
+
+    TEST_ASSERT_EQUAL_MESSAGE( DIO_SW_MAJOR_VERSION, VersionInfo.sw_major_version, "Dio_GetVersionInfo() should return DIO_SW_MAJOR_VERSION" );
+    TEST_ASSERT_EQUAL_MESSAGE( DIO_SW_MINOR_VERSION, VersionInfo.sw_minor_version, "Dio_GetVersionInfo() should return DIO_SW_MINOR_VERSION" );
+    TEST_ASSERT_EQUAL_MESSAGE( DIO_SW_PATCH_VERSION, VersionInfo.sw_patch_version, "Dio_GetVersionInfo() should return DIO_SW_PATCH_VERSION" );
+}
+
+/**
+ * @brief   **Test for Dio_GetVersionInfo**
+ *
+ * This test case verifies that Dio_GetVersionInfo() returns the correct value
+ */
+void test__Dio_GetVersionInfo__invalid_pointer( void )
+{
+    Det_ReportError_IgnoreAndReturn( E_OK );
+
+    Dio_GetVersionInfo( NULL_PTR );
 }

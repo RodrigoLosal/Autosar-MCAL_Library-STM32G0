@@ -7,7 +7,6 @@
  * The file is implemnted as a means of abstraction from the hardware,
  * this way we can avoid to include Arch headers in the actual driver header,
  * making the low level interfaces available for upper layers.
- *
  */
 #ifndef FLASH_TYPES_H__
 #define FLASH_TYPES_H__
@@ -66,25 +65,12 @@
   @} */
 
 /**
- * @brief   Fls_ConfigType.
- *
- * A pointer to such a structure is provided to the flash driver initialization routine
- * for configuration of the driver and flash memory hardware.
- *
- * @reqs    SWS_Fls_00368
- */
-typedef struct _Fls_ConfigType
-{
-    uint32 dummy; /*!< dummy element for the moment */
-} Fls_ConfigType;
-
-/**
  * @brief   Fls_AddressType.
  *
  * Used as address offset from the configured flash base address
  * to access a certain flash memory area.
  *
- * @reqs    SWS_Fls_00369
+ * @reqs    SWS_Fls_00369, SWS_Fls_00216
  */
 typedef uint32 Fls_AddressType;
 
@@ -96,6 +82,39 @@ typedef uint32 Fls_AddressType;
  * @reqs    SWS_Fls_00370
  */
 typedef uint32 Fls_LengthType;
+
+
+/**
+ * @brief   Fls_ConfigType.
+ *
+ * A pointer to such a structure is provided to the flash driver initialization routine
+ * for configuration of the driver and flash memory hardware.
+ *
+ * @reqs    SWS_Fls_00368
+ */
+typedef struct _Fls_ConfigType
+{
+    Fls_AddressType MemoryBaseAddress; /*!<Variable to use to erase start address*/
+    Fls_AddressType EraseStartAddress; /*!<Variable to use to erase end address*/
+    Fls_LengthType FlsSectorSize;      /*!<Variable to use to flash sector boundary*/
+    uint16 FlsNumberOfSectors;         /*!<Variable to describe the sector in Flash*/
+    Fls_LengthType MaxReadMode;        /*!<Maximum elemnt to read*/
+    Fls_LengthType MaxWriteMode;       /*!<Maximum element to write*/
+    Fls_LengthType num_bytes;          /*!<Num of bytes to read, write, erase, compare*/
+    uint32 dummy;                      /*!< dummy element for the moment */
+} Fls_ConfigType;
+
+/**
+ * @brief **Hardware control unit structure**
+ *
+ * This structure contains the hardware unit configuration and the state of the hardware
+ * unit pointers to controller structures.
+ */
+typedef struct _Fls_HwUnit
+{
+    const Fls_ConfigType *Config; /*!< Pointer to the configuration structure */
+    uint8 HwUnitState;            /*!< FLS hardware unit state                */
+} Fls_HwUnit;
 
 
 #endif

@@ -9,20 +9,35 @@
  * The tick duration of a timer channel depends on channel specific settings (part of GPT driver)
  * as well as on system clock and settings of the clock tree controlled by the MCU module.
  */
-#include "Bfx.h"
 #include "Std_Types.h"
 #include "Registers.h"
 #include "Gpt.h"
+#include "Gpt_Arch.h"
+
+/* cppcheck-suppress misra-c2012-20.9 ; this is declared at Mcu_Cfg.h */
+#if MCU_DEV_ERROR_DETECT == STD_OFF
+/**
+ * @param   ModuleId    Module ID number
+ * @param   InstanceId  Instance Id
+ * @param   ApiId       Api id
+ * @param   ErrorId     Error code
+ */
+#define Det_ReportError( ModuleId, InstanceId, ApiId, ErrorId ) (void)0
+#else
+#include "Det.h"
+#endif
 
 /**
- * @brief Global GPT register array.
+ * @brief  Variable for the initial value of the port configuration array.
  */
-static Gpt_RegisterType *channels[ GPT_NUMBER_OF_CHANNELS ] = { TIM6, TIM7 }; /* cppcheck-suppress misra-config ; The define is already available through Gpt.h */
-
-/**
- * @brief  Variable for the initial value of the GPT configuration array.
- */
-static const Gpt_ConfigType *LocalGptConfigPtr = NULL_PTR;
+/* clang-format off */
+/* cppcheck-suppress misra-c2012-8.4 ; qualifier is declared at Mcu.h */
+GPT_STATIC Gpt_HwUnit HwUnit_Gpt =
+{
+    .HwUnitState = GPT_STATE_UNINIT,
+    .Config      = NULL_PTR
+};
+/* clang-format on */
 
 /**
  * @brief Initialize the GPT registers to the configuration stored on ConfigPtr.
@@ -34,20 +49,26 @@ static const Gpt_ConfigType *LocalGptConfigPtr = NULL_PTR;
  *
  * @param ConfigPtr       Pointer to ConfigPtr struct array.
  *
- * @reqs   SWS_Gpt_00280
+ * @reqs   SWS_Gpt_00280, SWS_Gpt_00006, SWS_Gpt_00107, SWS_Gpt_00068, SWS_Gpt_00258, SWS_Gpt_00307
  */
 void Gpt_Init( const Gpt_ConfigType *ConfigPtr )
 {
-    Gpt_RegisterType *channel;
-
-    for( uint8 ChannelsToInit = 0; ChannelsToInit < GPT_NUMBER_OF_CHANNELS; ChannelsToInit++ )
+    if( HwUnit_Gpt.HwUnitState != GPT_STATE_UNINIT )
     {
-        channel = channels[ ( &ConfigPtr[ ChannelsToInit ] )->GptChannelId ];
-        Bfx_SetBitMask_u32u32( (uint32 *)&channel->PSC, (uint32)( &ConfigPtr[ ChannelsToInit ] )->GptChannelPrescaler );                 /*Writing the value of the prescaler on TIMx_PSC*/
-        Bfx_PutBit_u32u8u8( (uint32 *)&channel->CR1, GPT_ONE_PULSE_MODE_BIT, (uint32)( &ConfigPtr[ ChannelsToInit ] )->GptChannelMode ); /*Writing the OPM: bit of TIMx_CR1 for continuous or one-pulse mode*/
-        Bfx_ClrBit_u32u8( (uint32 *)&channel->SR, GPT_INTERRUPT_FLAG_BIT ); /*Clearing the Status Register Flag*/                        /*Clearing the update interrupt flag of TIMx_SR*/
+        /* If development error detection for the GPT module is enabled:
+        The function Gpt_Init shall raise the error GPT_E_ALREADY_INITIALIZED if the parameter
+        versionInfo is a null pointer */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_INIT, GPT_E_ALREADY_INITIALIZED );
     }
-    LocalGptConfigPtr = ConfigPtr;
+    else
+    {
+        for( uint32 ChannelsToInit = 0; ChannelsToInit < ConfigPtr->NumberOfChannels; ChannelsToInit++ )
+        {
+            Gpt_Arch_Init( ConfigPtr, ChannelsToInit );
+        }
+        HwUnit_Gpt.Config      = ConfigPtr;
+        HwUnit_Gpt.HwUnitState = GPT_STATE_INIT;
+    }
 }
 
 /**
@@ -56,19 +77,24 @@ void Gpt_Init( const Gpt_ConfigType *ConfigPtr )
  * The function deinitializes the hardware used by the GPT driver (depending on configuration) to
  * the power on reset state. Values of registers which are not writeable are excluded.
  *
- * @reqs   SWS_Gpt_00281
+ * @reqs   SWS_Gpt_00281, SWS_Gpt_00008, SWS_Gpt_00105, SWS_Gpt_00162, SWS_Gpt_00194, SWS_Gpt_00220
  */
 #if GPT_DEINIT_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_DeInit( void )
 {
-    Gpt_RegisterType *channel;
-
-    for( uint8 ChannelsToDeinit = 0; ChannelsToDeinit < GPT_NUMBER_OF_CHANNELS; ChannelsToDeinit++ )
+    if( HwUnit_Gpt.HwUnitState != GPT_STATE_INIT )
     {
-        channel = channels[ ChannelsToDeinit ];
-        Bfx_SetBits_u32u8u8u8( (uint32 *)&channel->PSC, GPT_PRESCALER_LSB, GPT_PRESCALER_MSB, RESET );   /*Clearing the value of the prescaler on TIMx_PSC*/
-        Bfx_ClrBit_u32u8( (uint32 *)&channel->SR, GPT_INTERRUPT_FLAG_BIT );                              /*Clearing the update interrupt flag of TIMx_SR*/
-        Bfx_SetBits_u32u8u8u8( (uint32 *)&channel->ARR, GPT_AUTO_RELOAD_LSB, GPT_AUTO_RELOAD_MSB, SET ); /*Setting back the reset value of TIMx_ARR*/
+        /* If development error detection is enabled for the GPT module: If the driver is not
+        initialized, the function Gpt_DeInit shall raise the error GPT_E_UNINIT. */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_DEINIT, GPT_E_UNINIT );
+    }
+    else
+    {
+        for( uint32 ChannelsToDeinit = 0; ChannelsToDeinit < HwUnit_Gpt.Config->NumberOfChannels; ChannelsToDeinit++ )
+        {
+            Gpt_Arch_DeInit( HwUnit_Gpt.Config, ChannelsToDeinit );
+        }
+        HwUnit_Gpt.HwUnitState = GPT_STATE_UNINIT;
     }
 }
 #endif
@@ -83,16 +109,31 @@ void Gpt_DeInit( void )
  *
  * @retval  Returns the current number of ticks already elapsed.
  *
- * @reqs   SWS_Gpt_00282
+ * @reqs   SWS_Gpt_00282, SWS_Gpt_00010, SWS_Gpt_00361, SWS_Gpt_00195, SWS_Gpt_00222, SWS_Gpt_00210
  */
 #if GPT_TIME_ELAPSED_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Gpt_ValueType Gpt_GetTimeElapsed( Gpt_ChannelType Channel )
 {
-    Gpt_RegisterType *channel;
+    Gpt_ValueType Result = 0;
 
-    channel = channels[ Channel ];
-
-    return channel->CNT;
+    if( HwUnit_Gpt.HwUnitState != GPT_STATE_INIT )
+    {
+        /* If development error detection is enabled for GPT module: If the driver is not
+        initialized, the function Gpt_GetTimeElapsed shall raise the error GPT_E_UNINIT. */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_GET_TIME_ELAPSED, GPT_E_UNINIT );
+    }
+    else if( Channel >= HwUnit_Gpt.Config->NumberOfChannels )
+    {
+        /* If development error detection is enabled for GPT module: If the parameter Channel is
+        invalid (not within the range specified by configuration), the function Gpt_GetTimeElapsed
+        shall raise the error GPT_E_PARAM_CHANNEL. */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_GET_TIME_ELAPSED, GPT_E_PARAM_CHANNEL );
+    }
+    else
+    {
+        Result = Gpt_Arch_GetTimeElapsed( HwUnit_Gpt.Config, Channel );
+    }
+    return Result;
 }
 #endif
 
@@ -106,16 +147,31 @@ Gpt_ValueType Gpt_GetTimeElapsed( Gpt_ChannelType Channel )
  *
  * @retval  Returns the remaining number of ticks before the timer overflows.
  *
- * @reqs   SWS_Gpt_00282
+ * @reqs   SWS_Gpt_00283, SWS_Gpt_00083, SWS_Gpt_00196, SWS_Gpt_00223, SWS_Gpt_00211
  */
 #if GPT_TIME_REMAINING_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 Gpt_ValueType Gpt_GetTimeRemaining( Gpt_ChannelType Channel )
 {
-    Gpt_RegisterType *channel;
+    Gpt_ValueType Result = 0;
 
-    channel = channels[ Channel ];
-
-    return channel->ARR - channel->CNT;
+    if( HwUnit_Gpt.HwUnitState != GPT_STATE_INIT )
+    {
+        /* If development error detection is enabled for GPT module: If the driver is not initialized,
+         the function Gpt_GetTimeRemaining shall raise the error GPT_E_UNINIT. */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_GET_TIME_REMAINING, GPT_E_UNINIT );
+    }
+    else if( Channel >= HwUnit_Gpt.Config->NumberOfChannels )
+    {
+        /* If development error detection is enabled for GPT module: If the parameter Channel is
+        invalid (not within the range specified by configuration), the function Gpt_GetTimeRemaining
+        shall raise the error GPT_E_PARAM_CHANNEL. */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_GET_TIME_REMAINING, GPT_E_PARAM_CHANNEL );
+    }
+    else
+    {
+        Result = Gpt_Arch_GetTimeRemaining( HwUnit_Gpt.Config, Channel );
+    }
+    return Result;
 }
 #endif
 
@@ -128,15 +184,34 @@ Gpt_ValueType Gpt_GetTimeRemaining( Gpt_ChannelType Channel )
  * @param Channel       Numeric identifier of the GPT channel.
  * @param Value         Target time in number of ticks.
  *
- * @reqs   SWS_Gpt_00284
+ * @reqs   SWS_Gpt_00284, SWS_Gpt_00274, SWS_Gpt_00275, SWS_Gpt_00212, SWS_Gpt_00218, SWS_Gpt_00224
  */
 void Gpt_StartTimer( Gpt_ChannelType Channel, Gpt_ValueType Value )
 {
-    Gpt_RegisterType *channel;
-    channel = channels[ Channel ];
-    Bfx_SetBits_u32u8u8u8( (uint32 *)&channel->ARR, GPT_AUTO_RELOAD_LSB, GPT_AUTO_RELOAD_MSB, RESET ); /*Clearing the reset value of TIMx_ARR*/
-    Bfx_SetBitMask_u32u32( (uint32 *)&channel->ARR, Value );                                           /*Writing the value of Period on TIMx_ARR*/
-    Bfx_SetBit_u32u8( (uint32 *)&channel->CR1, GPT_COUNTER_ENABLE_BIT );                               /*Setting the CEN: bit of TIMx_CR1*/
+    if( HwUnit_Gpt.HwUnitState != GPT_STATE_INIT )
+    {
+        /* If development error detection is enabled for GPT module: If the driver is not initialized,
+        the function Gpt_StartTimer shall raise the error GPT_E_UNINIT. */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_START_TIMER, GPT_E_UNINIT );
+    }
+    else if( Channel >= HwUnit_Gpt.Config->NumberOfChannels )
+    {
+        /* If development error detection is enabled for GPT module: If the parameter Channel is
+        invalid (not within the range specified by configuration), the function Gpt_StartTimer shall
+        raise the error GPT_E_PARAM_CHANNEL. */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_START_TIMER, GPT_E_PARAM_CHANNEL );
+    }
+    else if( ( Value == 0 ) || ( Value < GPT_ARR_MAX ) )
+    {
+        /* If development error detection is enabled for GPT module: The function Gpt_StartTimer
+        shall raise the error GPT_E_PARAM_VALUE if the parameter Value is "0" or not within the
+        allowed range (exceeding the maximum timer resolution). */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_START_TIMER, GPT_E_PARAM_VALUE );
+    }
+    else
+    {
+        Gpt_Arch_StartTimer( HwUnit_Gpt.Config, Channel, Value );
+    }
 }
 
 /**
@@ -146,13 +221,27 @@ void Gpt_StartTimer( Gpt_ChannelType Channel, Gpt_ValueType Value )
  *
  * @param Channel       Numeric identifier of the GPT channel.
  *
- * @reqs   SWS_Gpt_00285
+ * @reqs   SWS_Gpt_00285, SWS_Gpt_00013, SWS_Gpt_00099, SWS_Gpt_00213, SWS_Gpt_00225
  */
 void Gpt_StopTimer( Gpt_ChannelType Channel )
 {
-    Gpt_RegisterType *channel;
-    channel = channels[ Channel ];
-    Bfx_ClrBit_u32u8( (uint32 *)&channel->CR1, GPT_COUNTER_ENABLE_BIT ); /*Clearing the CEN: bit of TIMx_CR1*/
+    if( HwUnit_Gpt.HwUnitState != GPT_STATE_INIT )
+    {
+        /* If development error detection is enabled for GPT module: If the driver is not initialized,
+        the function Gpt_StopTimer shall raise the error GPT_E_UNINIT. */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_STOP_TIMER, GPT_E_UNINIT );
+    }
+    else if( Channel >= HwUnit_Gpt.Config->NumberOfChannels )
+    {
+        /* If development error detection is enabled for GPT module: If the parameter Channel is
+        invalid (not within the range specified by configuration), the function Gpt_StopTimer shall
+        raise the error GPT_E_PARAM_CHANNEL. */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_STOP_TIMER, GPT_E_PARAM_CHANNEL );
+    }
+    else
+    {
+        Gpt_Arch_StopTimer( HwUnit_Gpt.Config, Channel );
+    }
 }
 
 /**
@@ -163,16 +252,26 @@ void Gpt_StopTimer( Gpt_ChannelType Channel )
  *
  * @param versioninfo             Pointer to Std_VersionInfoType struct.
  *
- * @reqs   SWS_Gpt_00279
+ * @reqs   SWS_Gpt_00279, SWS_Gpt_00338
  */
 #if GPT_VERSION_INFO_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
-    versioninfo->moduleID         = 0;
-    versioninfo->sw_major_version = 0;
-    versioninfo->sw_minor_version = 0;
-    versioninfo->sw_patch_version = 0;
-    versioninfo->vendorID         = 0;
+    if( versioninfo == NULL_PTR )
+    {
+        /* If development error detection for the GPT module is enabled:
+        The function Gpt_GetVersionInfo shall raise the error GPT_E_PARAM_POINTER if the parameter
+        versionInfo is a null pointer */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_GET_VERSION_INFO, GPT_E_PARAM_POINTER );
+    }
+    else
+    {
+        versioninfo->moduleID         = GPT_MODULE_ID;
+        versioninfo->sw_major_version = GPT_SW_MAJOR_VERSION;
+        versioninfo->sw_minor_version = GPT_SW_MINOR_VERSION;
+        versioninfo->sw_patch_version = GPT_SW_PATCH_VERSION;
+        versioninfo->vendorID         = GPT_VENDOR_ID;
+    }
 }
 #endif
 
@@ -184,14 +283,35 @@ void Gpt_GetVersionInfo( Std_VersionInfoType *versioninfo )
  *
  * @param Channel       Numeric identifier of the GPT channel.
  *
- * @reqs   SWS_Gpt_00286
+ * @reqs   SWS_Gpt_00286, SWS_Gpt_00199, SWS_Gpt_00226, SWS_Gpt_00214, SWS_Gpt_00377
  */
 #if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_EnableNotification( Gpt_ChannelType Channel )
 {
-    Gpt_RegisterType *channel;
-    channel = channels[ Channel ];
-    Bfx_ClrBit_u32u8( (uint32 *)&channel->CR1, GPT_UPDATE_DISABLE_BIT ); /*Clearing the UDIS: bit of TIMx_CR1*/
+    if( HwUnit_Gpt.HwUnitState != GPT_STATE_INIT )
+    {
+        /* If development error detection is enabled for GPT module: If the driver is not initialized,
+        the function Gpt_EnableNotification shall raise the error GPT_E_UNINIT. */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_ENABLE_NOTIFICATION, GPT_E_UNINIT );
+    }
+    else if( Channel >= HwUnit_Gpt.Config->NumberOfChannels )
+    {
+        /* If development error detection is enabled for GPT module: If the parameter Channel is
+        invalid (not within the range specified by configuration), the function
+        Gpt_EnableNotification shall raise the error GPT_E_PARAM_CHANNEL. */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_ENABLE_NOTIFICATION, GPT_E_PARAM_CHANNEL );
+    }
+    else if( HwUnit_Gpt.Config->Channels->GptNotification == NULL_PTR )
+    {
+        /* If development error detection is enabled for GPT module: If no valid notification function
+        is configured (GptNotification), the function Gpt_EnableNotification shall raise the error
+        GPT_E_PARAM_CHANNEL. */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_ENABLE_NOTIFICATION, GPT_E_PARAM_CHANNEL );
+    }
+    else
+    {
+        Gpt_Arch_EnableNotification( HwUnit_Gpt.Config, Channel );
+    }
 }
 #endif
 
@@ -203,14 +323,34 @@ void Gpt_EnableNotification( Gpt_ChannelType Channel )
  *
  * @param Channel       Numeric identifier of the GPT channel.
  *
- * @reqs   SWS_Gpt_00287
+ * @reqs   SWS_Gpt_00287, SWS_Gpt_00200, SWS_Gpt_00227, SWS_Gpt_00217
  */
 #if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_DisableNotification( Gpt_ChannelType Channel )
 {
-    Gpt_RegisterType *channel;
-    channel = channels[ Channel ];
-    Bfx_SetBit_u32u8( (uint32 *)&channel->CR1, GPT_UPDATE_DISABLE_BIT ); /*Setting the UDIS: bit of TIMx_CR1*/
+    if( HwUnit_Gpt.HwUnitState != GPT_STATE_INIT )
+    {
+        /* If development error detection is enabled for GPT module: If the driver is not initialized,
+        the function Gpt_DisableNotification shall raise the error GPT_E_UNINIT. */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_DISABLE_NOTIFICATION, GPT_E_UNINIT );
+    }
+    else if( Channel >= HwUnit_Gpt.Config->NumberOfChannels )
+    {
+        /* If development error detection is enabled for GPT module: If the driver is not initialized,
+        the function Gpt_DisableNotification shall raise the error GPT_E_UNINIT. */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_DISABLE_NOTIFICATION, GPT_E_PARAM_CHANNEL );
+    }
+    else if( HwUnit_Gpt.Config->Channels->GptNotification == NULL_PTR )
+    {
+        /* If development error detection is enabled for GPT module: If no valid notification function
+        is configured (GptNotification), the function Gpt_DisableNotification shall raise the error
+        GPT_E_PARAM_CHANNEL. */
+        Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_DISABLE_NOTIFICATION, GPT_E_PARAM_CHANNEL );
+    }
+    else
+    {
+        Gpt_Arch_DisableNotification( HwUnit_Gpt.Config, Channel );
+    }
 }
 #endif
 
@@ -222,16 +362,12 @@ void Gpt_DisableNotification( Gpt_ChannelType Channel )
  * and shall be implemented by the user. The callback notifications Gpt_Notification_<channel> shall
  * be configurable as pointers to user defined functions within the configuration structure.
  *
- * @reqs   SWS_Gpt_00292
+ * @reqs   SWS_Gpt_00292, SWS_Gpt_00086, SWS_Gpt_00209, SWS_Gpt_00093, SWS_Gpt_00233, SWS_Gpt_00206
  */
 #if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_Notification_Channel0( void )
 {
-    if( Bfx_GetBit_u32u8_u8( TIM6->SR, GPT_INTERRUPT_FLAG_BIT ) == TRUE ) /*Checking if the update interrupt flag of TIMx_SR is set*/
-    {
-        LocalGptConfigPtr->GptNotification[ GPT_CHANNEL_0 ]( );
-        Bfx_ClrBit_u32u8( (uint32 *)&TIM6->SR, GPT_INTERRUPT_FLAG_BIT ); /*Clearing the update interrupt flag of TIMx_SR*/
-    }
+    Gpt_Arch_Notification_Channel0( HwUnit_Gpt.Config );
 }
 #endif
 
@@ -243,15 +379,11 @@ void Gpt_Notification_Channel0( void )
  * and shall be implemented by the user. The callback notifications Gpt_Notification_<channel> shall
  * be configurable as pointers to user defined functions within the configuration structure.
  *
- * @reqs   SWS_Gpt_00292
+ * @reqs   SWS_Gpt_00292, SWS_Gpt_00086, SWS_Gpt_00209, SWS_Gpt_00093, SWS_Gpt_00233, SWS_Gpt_00206
  */
 #if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_Notification_Channel1( void )
 {
-    if( Bfx_GetBit_u32u8_u8( TIM7->SR, GPT_INTERRUPT_FLAG_BIT ) == TRUE ) /*Checking if the update interrupt flag of TIMx_SR is set*/
-    {
-        LocalGptConfigPtr->GptNotification[ GPT_CHANNEL_1 ]( );
-        Bfx_ClrBit_u32u8( (uint32 *)&TIM7->SR, GPT_INTERRUPT_FLAG_BIT ); /*Clearing the update interrupt flag of TIMx_SR*/
-    }
+    Gpt_Arch_Notification_Channel0( HwUnit_Gpt.Config );
 }
 #endif

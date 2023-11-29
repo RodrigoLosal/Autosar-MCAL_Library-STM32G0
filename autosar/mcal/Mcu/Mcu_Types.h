@@ -47,6 +47,18 @@
  * @} */
 
 /**
+ * @defgroup MCU_STATIC MCU static define for testing purposes
+ *
+ * @{ */
+#ifndef UTEST
+#define MCU_STATIC static /*!< Add static when no testing */
+#else
+#define MCU_STATIC /*!< remove static for testing purposes */
+#endif
+/**
+ * @} */
+
+/**
  * @brief   **Status value returned by the function Mcu_GetPllStatus of the MCU module**
  *
  * @reqs    SWS_Mcu_00250
@@ -140,7 +152,6 @@ typedef struct _Mcu_ConfigType
     Mcu_ModeType McuMode;          /*!< Specifies the identification (ID) for a MCU mode         */
     Mcu_RamSectionType RamSection; /*!< Specifies the identification (ID) for a RAM section      */
     Mcu_PllStatusType PllStatus;   /*!< Stores the status of PLL (locked, unlocked or undefined) */
-    uint32 dummy;                  /*!< dummy element for the moment */
 } Mcu_ConfigType;
 
 /**
@@ -152,7 +163,7 @@ typedef struct _Mcu_ConfigType
 typedef struct _Mcu_HwUnit
 {
     const Mcu_ConfigType *Config; /*!< Pointer to the configuration structure */
-    uint8 HwUnitState;            /*!< MCU hardware unit state                */
+    Mcu_StatusType HwUnitState;   /*!< MCU hardware unit state                */
 } Mcu_HwUnit;
 
 #endif

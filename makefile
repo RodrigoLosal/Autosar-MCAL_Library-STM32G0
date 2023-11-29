@@ -2,9 +2,10 @@
 TARGET = mcal
 
 #---Files to compile
-SRCS = main.c startup.c Nvic.c Nvic_Lcfg.c Port.c Port_Cfg.c Crc.c Dio.c Gpt.c Gpt_Cfg.c
-SRCS += Can.c Can_Lcfg.c Can_Arch.c Pwm.c Pwm_Lcfg.c Pwm_Arch.c Spi.c Spi_Lcfg.c Spi_Arch.c Det.c Det_Lcfg.c
-SRCS += Mcu.c Mcu_Lcfg.c Mcu_Arch.c Fls.c Fls_Lcfg.c Adc.c Adc_Arch.c
+SRCS = main.c startup.c Nvic.c Nvic_Lcfg.c Port.c Port_Lcfg.c Port_Arch.c Crc.c Dio.c Dio_Arch.c Dio_Lcfg.c 
+SRCS += Gpt.c Gpt_Arch.c Gpt_Lcfg.c Can.c Can_Lcfg.c Can_Arch.c Pwm.c Pwm_Lcfg.c Pwm_Arch.c Spi.c Spi_Lcfg.c Spi_Arch.c 
+SRCS += Det.c Det_Lcfg.c Mcu.c Mcu_Lcfg.c Mcu_Arch.c Fls.c Fls_Lcfg.c Fls_Arch.c Adc.c Adc_Arch.c
+SRCS += CanIf.c CanIf_Lcfg.c
 
 #---Linker script
 LINKER = linker.ld
@@ -16,12 +17,14 @@ MCAL_MODULES = Can Dio Fls Gpt Mcu Nvic Port Spi Pwm Adc
 SRC_PATHS  = .
 SRC_PATHS += $(addprefix autosar/mcal/,$(MCAL_MODULES))
 SRC_PATHS += autosar/libs
+SRC_PATHS += autosar/Com
 SRC_PATHS += cfg
 SRC_PATHS += autosar/Sys
 #direcotrios con archivos .h
 INC_PATHS  = .
 INC_PATHS += autosar
 INC_PATHS += autosar/libs
+INC_PATHS += autosar/Com
 INC_PATHS += autosar/mcal
 INC_PATHS += $(addprefix autosar/mcal/,$(MCAL_MODULES))
 INC_PATHS += autosar/mcal/regs

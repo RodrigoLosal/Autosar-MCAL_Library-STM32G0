@@ -22,7 +22,6 @@ Mcu_ResetType Mcu_Arch_GetResetReason( Mcu_HwUnit *HwUnit );
 Mcu_RawResetType Mcu_Arch_GetResetRawValue( Mcu_HwUnit *HwUnit );
 void Mcu_Arch_PerformReset( Mcu_HwUnit *HwUnit );
 void Mcu_Arch_SetMode( Mcu_HwUnit *HwUnit, Mcu_ModeType McuMode );
-void Mcu_Arch_GetVersionInfo( Mcu_HwUnit *HwUnit, Std_VersionInfoType *versioninfo );
 Mcu_RamStateType Mcu_Arch_GetRamState( Mcu_HwUnit *HwUnit );
 
 #endif
