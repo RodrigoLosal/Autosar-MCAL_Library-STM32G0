@@ -11,6 +11,7 @@
 #include "Adc.h"
 #include "Adc_Arch.h"
 #include "Adc_Cfg.h"
+#include "Adc_Lcfg.h"
 
 #if ADC_DEV_ERROR_DETECT == FALSE /* cppcheck-suppress misra-c2012-20.9 ; declared at Adc_Cfg.h */
 #define Det_ReportError( ModuleId, InstanceId, ApiId, ErrorId ) (void)0
@@ -59,7 +60,7 @@ void Adc_Init( const Adc_ConfigType *ConfigPtr )
     {
         Adc_Arch_Init( &HwUnit_Adc, ConfigPtr );
         *Det_Adc.Adc_InitState = TRUE;
-        HwUnit_Adc.Config     = ConfigPtr;
+        HwUnit_Adc.Config      = ConfigPtr;
     }
 }
 
@@ -97,7 +98,7 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
     }
     else
     {
-        RetValue              = Adc_Arch_SetupResultBuffer( &HwUnit_Adc, Group, DataBufferPtr );
+        RetValue               = Adc_Arch_SetupResultBuffer( &HwUnit_Adc, Group, DataBufferPtr );
         *Det_Adc.Adc_InitState = TRUE;
     }
     return RetValue;
