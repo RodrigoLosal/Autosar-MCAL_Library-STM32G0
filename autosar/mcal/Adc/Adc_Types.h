@@ -352,12 +352,12 @@ typedef enum
  */
 typedef struct _Adc_Det_Str
 {
-    boolean *Adc_InitState;
-    uint8 *Adc_ModuleID;
-    boolean *Adc_SetupResltBuffer;
-    uint8 *GroupNotifFunctionPtr;
-    uint8 *PwrState;
-    boolean *PreparePwrStateFlag;
+    boolean *Adc_InitState;        /*!<Flag to inform if the Adc module was initialiced*/
+    uint8 *Adc_ModuleID;           /*!<Adc module identificator*/
+    boolean *Adc_SetupResltBuffer; /*!<Buffer to store the setup result*/
+    uint8 *GroupNotifFunctionPtr;  /*!<Pointer of a group notifications*/
+    uint8 *PwrState;               /*!<To store the current power state*/
+    boolean *PreparePwrStateFlag;  /*!<To inform if the prepare power state was succesfully init*/
 } Adc_Det_Str;
 
 /**
@@ -370,9 +370,9 @@ typedef struct _Adc_Det_Str
  */
 typedef struct
 {
-    Adc_TriggerSourceType Adc_TriggerSource; /*Type for configuring the trigger source for an ADC
+    Adc_TriggerSourceType Adc_TriggerSource; /*!<Type for configuring the trigger source for an ADC
                                                Channel group*/
-    Adc_GroupConvModeType Adc_GroupConvMode; /*Type for configuring the conversion mode of an ADC
+    Adc_GroupConvModeType Adc_GroupConvMode; /*!<Type for configuring the conversion mode of an ADC
                                                Channel group*/
 } Adc_ConfigType;
 

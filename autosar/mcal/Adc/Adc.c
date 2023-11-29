@@ -14,6 +14,12 @@
 #include "Adc_Lcfg.h"
 
 #if ADC_DEV_ERROR_DETECT == FALSE /* cppcheck-suppress misra-c2012-20.9 ; declared at Adc_Cfg.h */
+/**
+ * @param   ModuleId    Module ID number
+ * @param   InstanceId  Instance Id
+ * @param   ApiId       Api id
+ * @param   ErrorId     Error code
+ */
 #define Det_ReportError( ModuleId, InstanceId, ApiId, ErrorId ) (void)0
 #else
 #include "Det.h"
