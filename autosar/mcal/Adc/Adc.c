@@ -51,14 +51,14 @@ static Adc_Det_Str Det_Adc =
  */
 void Adc_Init( const Adc_ConfigType *ConfigPtr )
 {
-    if( Det_Adc.Adc_InitState == TRUE )
+    if( *Det_Adc.Adc_InitState == TRUE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_ALREADY_INITIALIZED );
     }
     else
     {
         Adc_Arch_Init( &HwUnit_Adc, ConfigPtr );
-        Det_Adc.Adc_InitState = TRUE;
+        *Det_Adc.Adc_InitState = TRUE;
         HwUnit_Adc.Config     = ConfigPtr;
     }
 }
@@ -87,7 +87,7 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_RESULT_BUFFER, ADC_E_PARAM_GROUP );
     }
-    else if( Det_Adc.Adc_InitState == FALSE )
+    else if( *Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_RESULT_BUFFER, ADC_E_UNINIT );
     }
@@ -98,7 +98,7 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
     else
     {
         RetValue              = Adc_Arch_SetupResultBuffer( &HwUnit_Adc, Group, DataBufferPtr );
-        Det_Adc.Adc_InitState = TRUE;
+        *Det_Adc.Adc_InitState = TRUE;
     }
     return RetValue;
 }
@@ -113,14 +113,14 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
 #if ADC_DE_INIT_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DeInit( void )
 {
-    if( Det_Adc.Adc_InitState == FALSE )
+    if( *Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ID_DE_INIT, ADC_E_UNINIT );
     }
     else
     {
         Adc_Arch_DeInit( &HwUnit_Adc );
-        Det_Adc.Adc_InitState = FALSE;
+        *Det_Adc.Adc_InitState = FALSE;
     }
 }
 #endif
@@ -145,11 +145,11 @@ void Adc_StartGroupConversion( Adc_GroupType Group )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_WRONG_TRIGG_SRC );
     }
-    else if( Det_Adc.Adc_InitState == FALSE )
+    else if( *Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_UNINIT );
     }
-    else if( Det_Adc.Adc_SetupResltBuffer == FALSE )
+    else if( *Det_Adc.Adc_SetupResltBuffer == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_BUFFER_UNINIT );
     }
@@ -180,7 +180,7 @@ void Adc_StopGroupConversion( Adc_GroupType Group )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_STOP_GROUP_CONVERSION, ADC_E_WRONG_TRIGG_SRC );
     }
-    else if( Det_Adc.Adc_InitState == FALSE )
+    else if( *Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_STOP_GROUP_CONVERSION, ADC_E_UNINIT );
     }
@@ -216,7 +216,7 @@ Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBuffe
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_READ_GROUP, ADC_E_PARAM_GROUP );
     }
-    else if( Det_Adc.Adc_InitState == FALSE )
+    else if( *Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_READ_GROUP, ADC_E_UNINIT );
     }
@@ -260,11 +260,11 @@ void Adc_EnableHardwareTrigger( Adc_GroupType Group )
             Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_WRONG_CONV_MODE );
         }
     }
-    else if( Det_Adc.Adc_InitState == FALSE )
+    else if( *Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_UNINIT );
     }
-    else if( Det_Adc.Adc_SetupResltBuffer == FALSE )
+    else if( *Det_Adc.Adc_SetupResltBuffer == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_BUFFER_UNINIT );
     }
@@ -306,7 +306,7 @@ void Adc_DisableHardwareTrigger( Adc_GroupType Group )
             Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_HARDWARE_TRIGGER, ADC_E_WRONG_CONV_MODE );
         }
     }
-    else if( Det_Adc.Adc_InitState == FALSE )
+    else if( *Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_HARDWARE_TRIGGER, ADC_E_UNINIT );
     }
@@ -337,7 +337,7 @@ void Adc_EnableGroupNotification( Adc_GroupType Group )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_GROUP_NOTIFICATION, ADC_E_NOTIF_CAPABILITY );
     }
-    else if( Det_Adc.Adc_InitState == FALSE )
+    else if( *Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_GROUP_NOTIFICATION, ADC_E_UNINIT );
     }
@@ -368,7 +368,7 @@ void Adc_DisableGroupNotification( Adc_GroupType Group )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_GROUP_NOTIFICATION, ADC_E_NOTIF_CAPABILITY );
     }
-    else if( Det_Adc.Adc_InitState == FALSE )
+    else if( *Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_GROUP_NOTIFICATION, ADC_E_UNINIT );
     }
@@ -393,7 +393,7 @@ void Adc_DisableGroupNotification( Adc_GroupType Group )
 Adc_StatusType Adc_GetGroupStatus( Adc_GroupType Group )
 {
     Adc_StatusType RetValue = ADC_IDLE;
-    if( Det_Adc.Adc_InitState == FALSE )
+    if( *Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_GET_GROUP_STATUS, ADC_E_UNINIT );
     }
@@ -481,15 +481,15 @@ void Adc_GetVersionInfo( Std_VersionInfoType *versioninfo )
  */
 Std_ReturnType Adc_SetPowerState( Adc_PowerStateRequestResultType *Result )
 {
-    if( Det_Adc.Adc_InitState == FALSE )
+    if( *Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_SET_POWER_STATE, ADC_E_UNINIT );
     }
-    else if( Det_Adc.PwrState > 10 ) /*(Size tbd)*/
+    else if( *Det_Adc.PwrState > 10 ) /*(Size tbd)*/
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_SET_POWER_STATE, ADC_E_POWER_STATE_NOT_SUPPORTED );
     }
-    else if( Det_Adc.PreparePwrStateFlag == FALSE ) /*(Size tbd)*/
+    else if( *Det_Adc.PreparePwrStateFlag == FALSE ) /*(Size tbd)*/
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_SET_POWER_STATE, ADC_E_PERIPHERAL_NOT_PREPARED );
     }
@@ -517,7 +517,7 @@ Std_ReturnType Adc_SetPowerState( Adc_PowerStateRequestResultType *Result )
 Std_ReturnType Adc_GetCurrentPowerState( Adc_PowerStateType *CurrentPowerState, Adc_PowerStateRequestResultType *Result )
 {
     Std_ReturnType RetValue = E_NOT_OK;
-    if( Det_Adc.Adc_InitState == FALSE )
+    if( *Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_GET_CURRENT_POWER_STATE, ADC_E_UNINIT );
     }
@@ -546,7 +546,7 @@ Std_ReturnType Adc_GetCurrentPowerState( Adc_PowerStateType *CurrentPowerState, 
 Std_ReturnType Adc_GetTargetPowerState( Adc_PowerStateType *TargetPowerState, Adc_PowerStateRequestResultType *Result )
 {
     Std_ReturnType RetValue = E_NOT_OK;
-    if( Det_Adc.Adc_InitState == FALSE )
+    if( *Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_GET_TARGET_POWER_STATE, ADC_E_UNINIT );
     }
@@ -579,11 +579,11 @@ Std_ReturnType Adc_GetTargetPowerState( Adc_PowerStateType *TargetPowerState, Ad
 Std_ReturnType Adc_PreparePowerState( Adc_PowerStateType PowerState, Adc_PowerStateRequestResultType *Result )
 {
     Std_ReturnType RetValue = E_NOT_OK;
-    if( Det_Adc.Adc_InitState == FALSE )
+    if( *Det_Adc.Adc_InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_PREPARE_POWER_STATE, ADC_E_UNINIT );
     }
-    else if( Det_Adc.PwrState > 10 ) /*(Size tbd)*/
+    else if( *Det_Adc.PwrState > 10 ) /*(Size tbd)*/
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_PREPARE_POWER_STATE, ADC_E_POWER_STATE_NOT_SUPPORTED );
     }

@@ -69,22 +69,6 @@
  * @} */
 
 /**
- * @brief **Adc configuration structure**
- *
- * Data structure containing the set of configuration parameters required for initializing the ADC
- * Driver and ADC HW Unit(s). (Elements tbd)
- *
- * @reqs    SWS_Adc_00505
- */
-typedef struct
-{
-    Adc_TriggerSourceType Adc_TriggerSource; /*Type for configuring the trigger source for an ADC
-                                               Channel group*/
-    Adc_GroupConvModeType Adc_GroupConvMode; /*Type for configuring the conversion mode of an ADC
-                                               Channel group*/
-} Adc_ConfigType;
-
-/**
  * @brief   Numeric ID of an ADC channel. (Size tbd)
  *
  * @reqs    SWS_Adc_00506
@@ -361,17 +345,6 @@ typedef enum
 } Adc_PowerStateRequestResultType;
 
 /**
- * @brief **Hardware control unit structure**
- *
- * This structure contains the hardware unit configuration and the state of the hardware unit
- * pointers to control structures.
- */
-typedef struct _Adc_HwUnit
-{
-    const Adc_ConfigType *Config; /*!< Pointer to the configuration structure */
-} Adc_HwUnit;
-
-/**
  * @brief **DET structure**
  *
  * This structure contains the variables for the control of development error tracings for the Adc
@@ -386,5 +359,32 @@ typedef struct _Adc_Det_Str
     uint8 *PwrState;
     boolean *PreparePwrStateFlag;
 } Adc_Det_Str;
+
+/**
+ * @brief **Adc configuration structure**
+ *
+ * Data structure containing the set of configuration parameters required for initializing the ADC
+ * Driver and ADC HW Unit(s). (Elements tbd)
+ *
+ * @reqs    SWS_Adc_00505
+ */
+typedef struct
+{
+    Adc_TriggerSourceType Adc_TriggerSource; /*Type for configuring the trigger source for an ADC
+                                               Channel group*/
+    Adc_GroupConvModeType Adc_GroupConvMode; /*Type for configuring the conversion mode of an ADC
+                                               Channel group*/
+} Adc_ConfigType;
+
+/**
+ * @brief **Hardware control unit structure**
+ *
+ * This structure contains the hardware unit configuration and the state of the hardware unit
+ * pointers to control structures.
+ */
+typedef struct _Adc_HwUnit
+{
+    const Adc_ConfigType *Config; /*!< Pointer to the configuration structure */
+} Adc_HwUnit;
 
 #endif /* ADC_TYPES_H__ */
