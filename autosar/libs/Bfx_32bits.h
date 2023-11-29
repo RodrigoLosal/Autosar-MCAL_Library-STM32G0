@@ -101,7 +101,7 @@ static inline void Bfx_SetBits_u32u8u8u8( uint32 *Data, uint8 BitStartPn, uint8 
  *
  * @reqs   SWS_Bfx_00028, SWS_Bfx_00029, SWS_Bfx_00034
  */
-static inline uint8 Bfx_GetBits_u32u8u8_u32( uint32 Data, uint8 BitStartPn, uint8 BitLn )
+static inline uint32 Bfx_GetBits_u32u8u8_u32( uint32 Data, uint8 BitStartPn, uint8 BitLn )
 {
     uint32 Result;
 

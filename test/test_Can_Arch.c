@@ -3,7 +3,9 @@
  * @brief   **Unit testing for Can Architeture Driver**
  * @author  Diego Perez
  *
- * group of unit test cases for Can_Arch.h file
+ * group of unit test cases for Can_Arch.h file, code coverage only reach 95% due to some 
+ * limitations on the testihng frame work, is not possible to emulate the register that change
+ * its value by hardware
  */
 #include "unity.h"
 #include "Registers.h"
@@ -62,7 +64,7 @@ void Can_SetupConfiguredFilters( const Can_ConfigType *Config, uint8 Controller 
 void Can_SetupConfiguredInterrupts( const Can_Controller *Controller, Can_RegisterType *Can );
 uint8 Can_GetClosestDlcWithPadding( uint8 Dlc, uint32 *RamBuffer, uint8 PaddingValue );
 uint8 Can_GetTxPduId( const Can_Controller *Controller, PduIdType *CanPduId );
-uint8 Can_GetTxPduId( const Can_Controller *Controller, PduIdType *CanPduId );
+void Can_GetMessage( volatile uint32 *Fifo, PduInfoType *PduInfo, uint32 *CanId );
 void Can_Isr_RxFifo0NewMessage( Can_HwUnit *HwUnit, uint8 Controller );
 void Can_Isr_RxFifo0Full( Can_HwUnit *HwUnit, uint8 Controller );
 void Can_Isr_RxFifo0MessageLost( Can_HwUnit *HwUnit, uint8 Controller );
@@ -591,10 +593,10 @@ void test__Can_Arch_GetControllerTxErrorCounter__get_tx_error_counter( void )
 }
 /**
  * @brief   Test case Write funtion with full buffer
- * 
+ *
  * This test case will try to trnasmit a message but it will rejected due to Tx buffer is full
  * fucntion shall return a CAN_BUSY
-*/
+ */
 void test__Can_Arch_Write__tx_fifo_full( void )
 {
     CAN1->TXFQS = 0x00100000;
@@ -606,10 +608,10 @@ void test__Can_Arch_Write__tx_fifo_full( void )
 
 /**
  * @brief   Test case Write funtion std id and classic frame
- * 
+ *
  * This test case will to transmit a message with standard id and classic frame
  * fucntion shall return a E_OK
-*/
+ */
 void test__Can_Arch_write__transmit_standard_id_classic_frame( void )
 {
     uint8 message[ 8 ] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 };
@@ -636,10 +638,10 @@ void test__Can_Arch_write__transmit_standard_id_classic_frame( void )
 
 /**
  * @brief   Test case Write funtion ext id and fd frame with padding
- * 
+ *
  * This test case will to transmit a message with extended id and fd frame and two bytes padding
  * function shall return a E_OK
-*/
+ */
 void test__Can_Arch_write__transmit_extended_id_fd_frame( void )
 {
     uint8 message[ 64 ] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
@@ -671,10 +673,10 @@ void test__Can_Arch_write__transmit_extended_id_fd_frame( void )
 
 /**
  * @brief   Test case Write funtion ext id and fd frame with padding plus BRS
- * 
+ *
  * This test case will to transmit a message with extended id and fd frame and two bytes padding
  * function shall return a E_OK
-*/
+ */
 void test__Can_Arch_write__transmit_extended_id_fd_frame_with_brs( void )
 {
     uint8 message[ 64 ] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
@@ -752,6 +754,34 @@ void test__Can_Arch_GetIngressTimeStamp__void_test( void )
     Can_TimeStampType TimeStamp;
     Can_HwHandleType Hth = 0;
     Can_Arch_GetIngressTimeStamp( &HwUnit, Hth, &TimeStamp );
+}
+
+/**
+ * @brief   Test case for calling a given subrutine
+ *
+ * This test case will check that the subrutine is called when the interrupt is triggered
+ * and the subrutine is set in the HwUnit.
+ */
+void test__Can_Arch_IsrMainHandler__call_subrutine( void )
+{
+    CAN1->IR = 0x00100000;
+    CAN1->IE = 0x00100000;
+
+    Can_Arch_IsrMainHandler( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+/**
+ * @brief   Test case for not calling a given subrutine
+ *
+ * This test case will check that the subrutine is not called when the interrupt is triggered
+ * and the subrutine is not set in the HwUnit.
+ */
+void test__Can_Arch_IsrMainHandler__call_no_subrutine( void )
+{
+    CAN1->IR = 0x00000008;
+    CAN1->IE = 0x00000000;
+
+    Can_Arch_IsrMainHandler( &HwUnit, CAN_CONTROLLER_0 );
 }
 
 /**
@@ -1565,6 +1595,58 @@ void test__Can_GetTxPduId__get_the_oldes_pdu_id( void )
 }
 
 /**
+ * @brief   Get the most oldest sdu id std classic message
+ *
+ * This test case will check that the function returns by reference the correct PduId and the number
+ * of elements left in the FIFO
+ */
+void test__Can_GetMessage__standard_message( void )
+{
+    PduInfoType PduInfo;
+    Can_IdType CanId;
+    uint8 Data[ 8 ] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 };
+
+    CAN1->RXF0S          = 0x00010001;
+    SRAMCAN1->F0SA[ 0u ] = 0x048C0000;
+    SRAMCAN1->F0SA[ 1u ] = 0x00080000;
+    SRAMCAN1->F0SA[ 2u ] = 0x04030201;
+    SRAMCAN1->F0SA[ 3u ] = 0x08070605;
+
+    Can_GetMessage( SRAMCAN1->F0SA, &PduInfo, &CanId );
+
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0x00000123, CanId, "Wrong index" );
+    TEST_ASSERT_EQUAL_MESSAGE( 8, PduInfo.SduLength, "Wrong SDU length" );
+    TEST_ASSERT_EQUAL_MEMORY_MESSAGE( Data, PduInfo.SduDataPtr, 8u, "Wrong SDU data" );
+}
+
+/**
+ * @brief   Get the most oldest sdu id ext fd message
+ *
+ * This test case will check that the function returns by reference the correct PduId and the number
+ * of elements left in the FIFO
+ */
+void test__Can_GetMessage__ext_fd_message( void )
+{
+    PduInfoType PduInfo;
+    Can_IdType CanId;
+    uint8 Data[ 12 ] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
+                         0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C };
+
+    CAN1->RXF0S          = 0x00010001;
+    SRAMCAN1->F0SA[ 0u ] = 0x41234567;
+    SRAMCAN1->F0SA[ 1u ] = 0x00290000;
+    SRAMCAN1->F0SA[ 2u ] = 0x04030201;
+    SRAMCAN1->F0SA[ 3u ] = 0x08070605;
+    SRAMCAN1->F0SA[ 4u ] = 0x0C0B0A09;
+
+    Can_GetMessage( SRAMCAN1->F0SA, &PduInfo, &CanId );
+
+    TEST_ASSERT_EQUAL_HEX32_MESSAGE( 0xC1234567, CanId, "Wrong index" );
+    TEST_ASSERT_EQUAL_MESSAGE( 12, PduInfo.SduLength, "Wrong SDU length" );
+    TEST_ASSERT_EQUAL_MEMORY_MESSAGE( Data, PduInfo.SduDataPtr, 12u, "Wrong SDU data" );
+}
+
+/**
  * @brief   test to check that the CanIf_TxConfirmation is called
  *
  * This test case will check that the CanIf_TxConfirmation is called when the TXEFS register is
@@ -1589,6 +1671,19 @@ void test__Can_Isr_RxFifo0MessageLost__call_can_if_error_notification( void )
     Det_ReportRuntimeError_IgnoreAndReturn( E_OK );
 
     Can_Isr_RxFifo0MessageLost( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+/**
+ * @brief   Empty test to cover 100% code coverage
+ *
+ * There is only the case of none messgae in the FIFO 0 to test since there is a register decremented
+ * by hardware that can not be emulated
+ */
+void test__Can_Isr_RxFifo0Full__non_testable( void )
+{
+    CAN1->RXF0S = 0x00000000;
+    CanIf_RxIndication_Ignore( );
+    Can_Isr_RxFifo0Full( &HwUnit, CAN_CONTROLLER_0 );
 }
 
 /**
@@ -1619,6 +1714,19 @@ void test__Can_Isr_RxFifo1MessageLost__call_can_if_error_notification( void )
 }
 
 /**
+ * @brief   Empty test to cover 100% code coverage
+ *
+ * There is only the case of none messgae in the FIFO 1 to test since there is a register decremented
+ * by hardware that can not be emulated
+ */
+void test__Can_Isr_RxFifo1Full__non_testable( void )
+{
+    CAN1->RXF1S = 0x00000000;
+    CanIf_RxIndication_Ignore( );
+    Can_Isr_RxFifo1Full( &HwUnit, CAN_CONTROLLER_0 );
+}
+
+/**
  * @brief   void test for Can_Isr_HighPriorityMessageRx
  *
  * empty test case to complete 100% code coverage
@@ -1638,6 +1746,12 @@ void test__Can_Isr_TransmissionCancellationFinished__void_test( void )
     Can_Isr_TransmissionCancellationFinished( &HwUnit, CAN_CONTROLLER_0 );
 }
 
+/**
+ * @brief   Test to verify if CanIf_TxConfirmation fucntion is called
+ *
+ * This test case will check that the CanIf_TxConfirmation is called when the TXEFS register is
+ * updated with the correct value, wich is tested in Can_GetTxPduId
+ */
 void test__Can_Isr_TransmissionCompleted__call_tx_confirmation( void )
 {
     CanIf_TxConfirmation_Ignore( );
@@ -1645,6 +1759,12 @@ void test__Can_Isr_TransmissionCompleted__call_tx_confirmation( void )
     Can_Isr_TransmissionCompleted( &HwUnit, CAN_CONTROLLER_0 );
 }
 
+/**
+ * @brief   test to check that the CanIf_ErrorNotification is called
+ *
+ * This test case will check that the CanIf_ErrorNotification is called when an tx event fifo
+ * is not attneded for some reason
+ */
 void test__Can_Isr_TxEventFifoElementLost__call_can_if_error_notification( void )
 {
     CanIf_ErrorNotification_Ignore( );
@@ -1653,6 +1773,12 @@ void test__Can_Isr_TxEventFifoElementLost__call_can_if_error_notification( void 
     Can_Isr_TxEventFifoElementLost( &HwUnit, CAN_CONTROLLER_0 );
 }
 
+/**
+ * @brief   Test to verify if CanIf_TxConfirmation fucntion is called
+ *
+ * This test case will check that the CanIf_TxConfirmation is called when the TXEFS register is
+ * updated with the correct value, wich is tested in Can_GetTxPduId
+ */
 void test__Can_Isr_TxEventFifoNewEntry__call_tx_confirmation( void )
 {
     CanIf_TxConfirmation_Ignore( );
