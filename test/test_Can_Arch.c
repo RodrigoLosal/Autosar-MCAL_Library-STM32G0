@@ -3,7 +3,7 @@
  * @brief   **Unit testing for Can Architeture Driver**
  * @author  Diego Perez
  *
- * group of unit test cases for Can_Arch.h file, code coverage only reach 95% due to some 
+ * group of unit test cases for Can_Arch.h file, code coverage only reach 95% due to some
  * limitations on the testihng frame work, is not possible to emulate the register that change
  * its value by hardware
  */
