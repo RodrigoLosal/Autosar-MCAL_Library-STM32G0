@@ -345,22 +345,6 @@ typedef enum
 } Adc_PowerStateRequestResultType;
 
 /**
- * @brief **DET structure**
- *
- * This structure contains the variables for the control of development error tracings for the Adc
- * module.
- */
-typedef struct _Adc_Det_Str
-{
-    boolean *Adc_InitState;        /*!<Flag to inform if the Adc module was initialiced*/
-    uint8 *Adc_ModuleID;           /*!<Adc module identificator*/
-    boolean *Adc_SetupResltBuffer; /*!<Buffer to store the setup result*/
-    uint8 *GroupNotifFunctionPtr;  /*!<Pointer of a group notifications*/
-    uint8 *PwrState;               /*!<To store the current power state*/
-    boolean *PreparePwrStateFlag;  /*!<To inform if the prepare power state was succesfully init*/
-} Adc_Det_Str;
-
-/**
  * @brief **Adc configuration structure**
  *
  * Data structure containing the set of configuration parameters required for initializing the ADC
@@ -384,7 +368,13 @@ typedef struct
  */
 typedef struct _Adc_HwUnit
 {
-    const Adc_ConfigType *Config; /*!< Pointer to the configuration structure */
+    const Adc_ConfigType *Config;   /*!< Pointer to the configuration structure */
+    boolean *InitState;         /*!<Flag to inform if the Adc module was initialiced*/
+    uint8 *ModuleID;            /*!<Adc module identificator*/
+    boolean *SetupResltBuffer;  /*!<Buffer to store the setup result*/
+    uint8 *GroupNotifFunctionPtr;   /*!<Pointer of a group notifications*/
+    uint8 *PwrState;                /*!<To store the current power state*/
+    boolean *PreparePwrStateFlag;   /*!<To inform if the prepare power state was succesfully init*/
 } Adc_HwUnit;
 
 /**
