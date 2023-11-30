@@ -368,13 +368,13 @@ typedef struct
  */
 typedef struct _Adc_HwUnit
 {
-    const Adc_ConfigType *Config;   /*!< Pointer to the configuration structure */
-    boolean *InitState;         /*!<Flag to inform if the Adc module was initialiced*/
-    uint8 *ModuleID;            /*!<Adc module identificator*/
-    boolean *SetupResltBuffer;  /*!<Buffer to store the setup result*/
-    uint8 *GroupNotifFunctionPtr;   /*!<Pointer of a group notifications*/
-    uint8 *PwrState;                /*!<To store the current power state*/
-    boolean *PreparePwrStateFlag;   /*!<To inform if the prepare power state was succesfully init*/
+    const Adc_ConfigType *Config; /*!< Pointer to the configuration structure */
+    boolean *InitState;           /*!<Flag to inform if the Adc module was initialiced*/
+    uint8 *ModuleID;              /*!<Adc module identificator*/
+    boolean *SetupResltBuffer;    /*!<Buffer to store the setup result*/
+    uint8 *GroupNotifFunctionPtr; /*!<Pointer of a group notifications*/
+    uint8 *PwrState;              /*!<To store the current power state*/
+    boolean *PreparePwrStateFlag; /*!<To inform if the prepare power state was succesfully init*/
 } Adc_HwUnit;
 
 /**
@@ -382,17 +382,17 @@ typedef struct _Adc_HwUnit
  */
 typedef enum
 {
-    GROUP_0 = 0,    /*!< ID 0 ADC Channel group*/
-    GROUP_1,        /*!< ID 1 ADC Channel group*/
-    GROUP_2,        /*!< ID 2 ADC Channel group*/
-    GROUP_3,        /*!< ID 3 ADC Channel group*/
-    GROUP_4,        /*!< ID 4 ADC Channel group*/
-    GROUP_5,        /*!< ID 5 ADC Channel group*/
-    GROUP_6,        /*!< ID 6 ADC Channel group*/
-    GROUP_7,        /*!< ID 7 ADC Channel group*/
-    GROUP_8,        /*!< ID 8 ADC Channel group*/
-    GROUP_9,        /*!< ID 9 ADC Channel group*/
-    GROUP_10        /*!< ID 10 ADC Channel group*/
+    GROUP_0 = 0, /*!< ID 0 ADC Channel group*/
+    GROUP_1,     /*!< ID 1 ADC Channel group*/
+    GROUP_2,     /*!< ID 2 ADC Channel group*/
+    GROUP_3,     /*!< ID 3 ADC Channel group*/
+    GROUP_4,     /*!< ID 4 ADC Channel group*/
+    GROUP_5,     /*!< ID 5 ADC Channel group*/
+    GROUP_6,     /*!< ID 6 ADC Channel group*/
+    GROUP_7,     /*!< ID 7 ADC Channel group*/
+    GROUP_8,     /*!< ID 8 ADC Channel group*/
+    GROUP_9,     /*!< ID 9 ADC Channel group*/
+    GROUP_10     /*!< ID 10 ADC Channel group*/
 } Group_IDType;
 
 /**
@@ -400,17 +400,17 @@ typedef enum
  */
 typedef enum
 {
-    PWR_STATE_0 = 0,    /*!< Power state 0*/
-    PWR_STATE_1,        /*!< Power state 1*/
-    PWR_STATE_2,        /*!< Power state 2*/
-    PWR_STATE_3,        /*!< Power state 3*/
-    PWR_STATE_4,        /*!< Power state 4*/
-    PWR_STATE_5,        /*!< Power state 5*/
-    PWR_STATE_6,        /*!< Power state 6*/
-    PWR_STATE_7,        /*!< Power state 7*/
-    PWR_STATE_8,        /*!< Power state 8*/
-    PWR_STATE_9,        /*!< Power state 9*/
-    PWR_STATE_10        /*!< Power state 10*/
+    PWR_STATE_0 = 0, /*!< Power state 0*/
+    PWR_STATE_1,     /*!< Power state 1*/
+    PWR_STATE_2,     /*!< Power state 2*/
+    PWR_STATE_3,     /*!< Power state 3*/
+    PWR_STATE_4,     /*!< Power state 4*/
+    PWR_STATE_5,     /*!< Power state 5*/
+    PWR_STATE_6,     /*!< Power state 6*/
+    PWR_STATE_7,     /*!< Power state 7*/
+    PWR_STATE_8,     /*!< Power state 8*/
+    PWR_STATE_9,     /*!< Power state 9*/
+    PWR_STATE_10     /*!< Power state 10*/
 } PowerStateType;
 
 #endif /* ADC_TYPES_H__ */
