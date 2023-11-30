@@ -465,7 +465,11 @@ void Adc_GetVersionInfo( Std_VersionInfoType *versioninfo )
     }
     else
     {
-        (void)versioninfo;
+        versioninfo->moduleID         = ADC_MODULE_ID;
+        versioninfo->vendorID         = ADC_VENDOR_ID;
+        versioninfo->sw_major_version = ADC_SW_MAJOR_VERSION;
+        versioninfo->sw_minor_version = ADC_SW_MINOR_VERSION;
+        versioninfo->sw_patch_version = ADC_SW_PATCH_VERSION;
     }
 }
 #endif
