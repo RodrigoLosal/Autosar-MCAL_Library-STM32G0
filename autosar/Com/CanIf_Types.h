@@ -86,20 +86,6 @@
  * @} */
 
 /**
- * @brief Configuration structure for the CAN interface.
- *
- * This type defines a data structure for the post build parameters of the CAN interface for all
- * underlying CAN drivers. At initialization the CanIf gets a pointer to a structure of this type
- * to get access to its configuration data, which is necessary for initialization.
- *
- * @reqs    SWS_CANIF_00144
- */
-typedef struct _CanIf_ConfigType
-{
-    uint32 dummy; /*!< dummy element*/
-} CanIf_ConfigType;
-
-/**
  * @brief Pdu mode type.
  *
  * The PduMode of a channel defines its transmit or receive activity. Communication direction
@@ -135,5 +121,45 @@ typedef enum _CanIf_NotifStatusType
     CANIF_TX_RX_NOTIFICATION = 0x01 /*!< The requested Rx/Tx CAN L-PDU was successfully transmitted
                                         or received. */
 } CanIf_NotifStatusType;
+
+/**
+ * @brief CanIf controller type.
+ *
+ * This container contains the configuration (parameters) of an adressed CAN controller by an
+ * underlying CAN Driver module. This container is configurable per CAN controller
+ */
+typedef struct _CanIf_CtrlCfgType
+{
+    uint8 CtrlId; /*!< Each controller of all connected CAN Driver modules shall be assigned to one
+                  specific ControllerId of the  CanIf. Range: 0..number of configured controllers
+                  of all CAN Driver modules */
+
+    boolean CtrlWakeupSupport; /*!< This parameter defines if a respective controller of the referenced CAN Driver
+                               modules is queriable for wake up events*/
+
+    const Can_Controller *CanCtrlRef; /*!< This parameter references to the logical handle of the underlying CAN controller
+                                    from the CAN Driver module to be served by the CAN Interface module. */
+} CanIf_CtrlCfgType;
+
+/**
+ * @brief Configuration structure for the CAN interface.
+ *
+ * This type defines a data structure for the post build parameters of the CAN interface for all
+ * underlying CAN drivers. At initialization the CanIf gets a pointer to a structure of this type
+ * to get access to its configuration data, which is necessary for initialization.
+ *
+ * @reqs    SWS_CANIF_00144
+ */
+typedef struct _CanIf_ConfigType
+{
+    const CanIf_CtrlCfgType *CtrlCfgs; /*!< Can controllers configuration array */
+
+    uint8 NumberOfCanControllers; /*!< Number of controllers */
+
+    uint8 MaxRxPduCfg; /*!< Maximum number of Pdus. */
+
+    uint8 MaxTxPduCfg; /*!< Maximum number of Pdus */
+
+} CanIf_ConfigType;
 
 #endif /* CANIF_TYPES_H__ */
