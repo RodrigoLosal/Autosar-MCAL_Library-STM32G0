@@ -30,6 +30,7 @@
     - test/support/Dio_Lcfg.c
     - test/support/Pwm_Lcfg.c
     - test/support/Port_Lcfg.c
+    - test/support/CanIf_Lcfg.c
 
 # Global defines applicable only when you run the code using ceedling
 :defines:
@@ -66,7 +67,6 @@
     - autosar/mcal/Mcu/Mcu_Arch.c
     - autosar/mcal/Adc/Adc.c
     - autosar/mcal/Adc/Adc_Arch.c
-    - autosar/Com/CanIf.c
   :utilities:
     - gcovr
   :reports:
