@@ -54,6 +54,11 @@
   :uncovered_ignore_list:
     - main.c #
     - startup.c #
+    - autosar/mcal/Port/Port.c
+    - autosar/mcal/Port/Port_Arch.c
+    - autosar/mcal/Dio/Dio.c
+    - autosar/mcal/Dio/Dio_Arch.c
+    - autosar/mcal/Can/Can_Arch.c
     - autosar/mcal/Gpt/Gpt.c
     - autosar/mcal/Gpt/Gpt_Arch.c
     - autosar/mcal/Pwm/Pwm_Arch.c
