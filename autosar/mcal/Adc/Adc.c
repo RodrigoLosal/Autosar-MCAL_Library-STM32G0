@@ -84,13 +84,13 @@ void Adc_Init( const Adc_ConfigType *ConfigPtr )
 Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr )
 {
     Std_ReturnType RetValue = E_NOT_OK;
-    if( Group > GROUP_10 ) /*(Size tbd)*/
-    {
-        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_RESULT_BUFFER, ADC_E_PARAM_GROUP );
-    }
-    else if( *HwUnit_Adc.InitState == FALSE )
+    if( *HwUnit_Adc.InitState == FALSE ) 
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_RESULT_BUFFER, ADC_E_UNINIT );
+    }
+    else if(  Group > GROUP_10 ) /*(Size tbd)*/
+    {
+        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_RESULT_BUFFER, ADC_E_PARAM_GROUP );
     }
     else if( DataBufferPtr == NULL_PTR )
     {
@@ -98,7 +98,7 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
     }
     else
     {
-        RetValue               = Adc_Arch_SetupResultBuffer( &HwUnit_Adc, Group, DataBufferPtr );
+        RetValue              = Adc_Arch_SetupResultBuffer( &HwUnit_Adc, Group, DataBufferPtr );
         *HwUnit_Adc.InitState = TRUE;
     }
     return RetValue;
@@ -138,17 +138,17 @@ void Adc_DeInit( void )
 #if ADC_ENABLE_START_STOP_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_StartGroupConversion( Adc_GroupType Group )
 {
-    if( Group > 10 ) /*(Size tbd)*/
+    if( *HwUnit_Adc.InitState == FALSE ) 
     {
-        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_PARAM_GROUP );
+        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_UNINIT );
     }
     else if( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_HW )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_WRONG_TRIGG_SRC );
     }
-    else if( *HwUnit_Adc.InitState == FALSE )
+    else if( Group > GROUP_10 ) /*(Size tbd)*/
     {
-        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_UNINIT );
+        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_PARAM_GROUP );
     }
     else if( *HwUnit_Adc.SetupResltBuffer == FALSE )
     {
@@ -173,17 +173,17 @@ void Adc_StartGroupConversion( Adc_GroupType Group )
 #if ADC_ENABLE_START_STOP_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_StopGroupConversion( Adc_GroupType Group )
 {
-    if( Group > GROUP_10 ) /*(Size tbd)*/
+    if( *HwUnit_Adc.InitState == FALSE ) 
     {
-        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_STOP_GROUP_CONVERSION, ADC_E_PARAM_GROUP );
+        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_STOP_GROUP_CONVERSION, ADC_E_UNINIT );
     }
     else if( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_HW )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_STOP_GROUP_CONVERSION, ADC_E_WRONG_TRIGG_SRC );
     }
-    else if( *HwUnit_Adc.InitState == FALSE )
+    else if( Group > GROUP_10 ) /*(Size tbd)*/
     {
-        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_STOP_GROUP_CONVERSION, ADC_E_UNINIT );
+        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_STOP_GROUP_CONVERSION, ADC_E_PARAM_GROUP );
     }
     else
     {
@@ -213,13 +213,13 @@ void Adc_StopGroupConversion( Adc_GroupType Group )
 Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBufferPtr )
 {
     Std_ReturnType RetValue = E_NOT_OK;
-    if( Group > GROUP_10 ) /*(Size tbd)*/
-    {
-        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_READ_GROUP, ADC_E_PARAM_GROUP );
-    }
-    else if( *HwUnit_Adc.InitState == FALSE )
+    if( *HwUnit_Adc.InitState == FALSE )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_READ_GROUP, ADC_E_UNINIT );
+    }
+    else if(  Group > GROUP_10 ) /*(Size tbd)*/
+    {
+        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_READ_GROUP, ADC_E_PARAM_GROUP );
     }
     else
     {
@@ -242,9 +242,9 @@ Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBuffe
 #if ADC_HW_TRIGGER_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_EnableHardwareTrigger( Adc_GroupType Group )
 {
-    if( Group > GROUP_10 ) /*(Size tbd)*/
+    if( *HwUnit_Adc.InitState == FALSE ) 
     {
-        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_PARAM_GROUP );
+        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_UNINIT );
     }
     else if( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_SW )
     {
@@ -261,9 +261,9 @@ void Adc_EnableHardwareTrigger( Adc_GroupType Group )
             Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_WRONG_CONV_MODE );
         }
     }
-    else if( *HwUnit_Adc.InitState == FALSE )
+    else if( Group > GROUP_10 ) /*(Size tbd)*/
     {
-        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_UNINIT );
+        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_PARAM_GROUP );
     }
     else if( *HwUnit_Adc.SetupResltBuffer == FALSE )
     {
@@ -288,9 +288,9 @@ void Adc_EnableHardwareTrigger( Adc_GroupType Group )
 #if ADC_HW_TRIGGER_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DisableHardwareTrigger( Adc_GroupType Group )
 {
-    if( Group > GROUP_10 ) /*(Size tbd)*/
+    if( *HwUnit_Adc.InitState == FALSE ) 
     {
-        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_HARDWARE_TRIGGER, ADC_E_PARAM_GROUP );
+        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_HARDWARE_TRIGGER, ADC_E_UNINIT );
     }
     else if( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_SW )
     {
@@ -307,9 +307,9 @@ void Adc_DisableHardwareTrigger( Adc_GroupType Group )
             Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_HARDWARE_TRIGGER, ADC_E_WRONG_CONV_MODE );
         }
     }
-    else if( *HwUnit_Adc.InitState == FALSE )
+    else if( Group > GROUP_10 ) /*(Size tbd)*/
     {
-        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_HARDWARE_TRIGGER, ADC_E_UNINIT );
+        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_HARDWARE_TRIGGER, ADC_E_PARAM_GROUP );
     }
     else
     {
@@ -330,17 +330,17 @@ void Adc_DisableHardwareTrigger( Adc_GroupType Group )
 #if ADC_GRP_NOTIF_CAPABILITY == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_EnableGroupNotification( Adc_GroupType Group )
 {
-    if( Group > GROUP_10 ) /*(Size tbd)*/
+    if( *HwUnit_Adc.InitState == FALSE ) 
     {
-        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_GROUP_NOTIFICATION, ADC_E_PARAM_GROUP );
+        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_GROUP_NOTIFICATION, ADC_E_UNINIT );
     }
     else if( GroupNotifFunctionPtr == NULL_PTR )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_GROUP_NOTIFICATION, ADC_E_NOTIF_CAPABILITY );
     }
-    else if( *HwUnit_Adc.InitState == FALSE )
+    else if( Group > GROUP_10 ) /*(Size tbd)*/
     {
-        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_GROUP_NOTIFICATION, ADC_E_UNINIT );
+        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_GROUP_NOTIFICATION, ADC_E_PARAM_GROUP );
     }
     else
     {
@@ -361,17 +361,17 @@ void Adc_EnableGroupNotification( Adc_GroupType Group )
 #if ADC_GRP_NOTIF_CAPABILITY == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DisableGroupNotification( Adc_GroupType Group )
 {
-    if( Group > GROUP_10 ) /*(Size tbd)*/
+    if( *HwUnit_Adc.InitState == FALSE ) 
     {
-        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_GROUP_NOTIFICATION, ADC_E_PARAM_GROUP );
+        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_GROUP_NOTIFICATION, ADC_E_UNINIT );
     }
     else if( GroupNotifFunctionPtr == NULL_PTR )
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_GROUP_NOTIFICATION, ADC_E_NOTIF_CAPABILITY );
     }
-    else if( *HwUnit_Adc.InitState == FALSE )
+    else if( Group > GROUP_10 ) /*(Size tbd)*/
     {
-        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_GROUP_NOTIFICATION, ADC_E_UNINIT );
+        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_GROUP_NOTIFICATION, ADC_E_PARAM_GROUP );
     }
     else
     {
@@ -424,14 +424,14 @@ Adc_StatusType Adc_GetGroupStatus( Adc_GroupType Group )
 Adc_StreamNumSampleType Adc_GetStreamLastPointer( Adc_GroupType Group, Adc_ValueGroupType **PtrToSamplePtr )
 {
     Adc_StreamNumSampleType RetValue = 0;
-    if( Group > GROUP_10 ) /*(Size tbd)*/
-    {
-        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_GET_STREAM_LAST_POINTER, ADC_E_PARAM_GROUP );
-        *PtrToSamplePtr = NULL_PTR;
-    }
-    else if( HwUnit_Adc.InitState == FALSE )
+    if( HwUnit_Adc.InitState == FALSE ) 
     {
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_GET_STREAM_LAST_POINTER, ADC_E_UNINIT );
+        *PtrToSamplePtr = NULL_PTR;
+    }
+    else if( Group > GROUP_10 ) /*(Size tbd)*/
+    {
+        Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_GET_STREAM_LAST_POINTER, ADC_E_PARAM_GROUP );
         *PtrToSamplePtr = NULL_PTR;
     }
     else
