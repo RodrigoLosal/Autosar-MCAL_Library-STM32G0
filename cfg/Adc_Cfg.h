@@ -69,7 +69,7 @@
  * @brief Switches the development error detection and notification on or off.
  * @typedef EcucBooleanParamDef
  */
-#define ADC_DEV_ERROR_DETECT            TRUE
+#define ADC_DEV_ERROR_DETECT            STD_ON
 
 extern const Adc_ConfigType AdcConfig;
 
