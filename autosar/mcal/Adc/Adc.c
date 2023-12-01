@@ -52,7 +52,7 @@ static Adc_HwUnit HwUnit_Adc =
  */
 void Adc_Init( const Adc_ConfigType *ConfigPtr )
 {
-    if( *HwUnit_Adc.InitState == TRUE )
+    if( HwUnit_Adc.InitState == TRUE )
     {
         /*If called before the module has been initialized, the function Adc_DeInit shall raise
         development error ADC_E_UNINIT and return without any action.*/
@@ -61,7 +61,7 @@ void Adc_Init( const Adc_ConfigType *ConfigPtr )
     else
     {
         Adc_Arch_Init( &HwUnit_Adc, ConfigPtr );
-        *HwUnit_Adc.InitState = TRUE;
+        HwUnit_Adc.InitState = TRUE;
         HwUnit_Adc.Config     = ConfigPtr;
     }
 }
@@ -87,7 +87,7 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
 {
     Std_ReturnType RetValue = E_NOT_OK;
 
-    if( *HwUnit_Adc.InitState == FALSE )
+    if( HwUnit_Adc.InitState == FALSE )
     {
         /*When called prior to initializing the driver, the function Adc_SetupResultBuffer shall
         raise development error ADC_E_UNINIT.*/
@@ -108,7 +108,7 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
     else
     {
         RetValue              = Adc_Arch_SetupResultBuffer( &HwUnit_Adc, Group, DataBufferPtr );
-        *HwUnit_Adc.InitState = TRUE;
+        HwUnit_Adc.InitState = TRUE;
     }
     return RetValue;
 }
@@ -123,7 +123,7 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
 #if ADC_DE_INIT_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DeInit( void )
 {
-    if( *HwUnit_Adc.InitState == FALSE )
+    if( HwUnit_Adc.InitState == FALSE )
     {
         /*If called before the module has been initialized, the function Adc_DeInit shall raise
         development error ADC_E_UNINIT and return without any action.*/
@@ -132,7 +132,7 @@ void Adc_DeInit( void )
     else
     {
         Adc_Arch_DeInit( &HwUnit_Adc );
-        *HwUnit_Adc.InitState = FALSE;
+        HwUnit_Adc.InitState = FALSE;
     }
 }
 #endif
@@ -149,7 +149,7 @@ void Adc_DeInit( void )
 #if ADC_ENABLE_START_STOP_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_StartGroupConversion( Adc_GroupType Group )
 {
-    if( *HwUnit_Adc.InitState == FALSE )
+    if( HwUnit_Adc.InitState == FALSE )
     {
         /*when called prior to initializing the driver, the function Adc_StartGroupConversion shall
         raise development error ADC_E_UNINIT.*/
@@ -168,7 +168,7 @@ void Adc_StartGroupConversion( Adc_GroupType Group )
         raise development error ADC_E_PARAM_GROUP and return without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_PARAM_GROUP );
     }
-    else if( *HwUnit_Adc.SetupResltBuffer == FALSE )
+    else if( HwUnit_Adc.SetupResltBuffer == FALSE )
     {
         /*When called prior to initializing the result buffer pointer with function
         Adc_SetupResultBuffer, the function Adc_StartGroupConversion shall raise development error
@@ -194,7 +194,7 @@ void Adc_StartGroupConversion( Adc_GroupType Group )
 #if ADC_ENABLE_START_STOP_GROUP_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_StopGroupConversion( Adc_GroupType Group )
 {
-    if( *HwUnit_Adc.InitState == FALSE )
+    if( HwUnit_Adc.InitState == FALSE )
     {
         /*If called prior to initializing the module, function Adc_StopGroupConversion shall raise
         development error ADC_E_UNINIT and return without any action.*/
@@ -242,7 +242,7 @@ Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBuffe
 {
     Std_ReturnType RetValue = E_NOT_OK;
 
-    if( *HwUnit_Adc.InitState == FALSE )
+    if( HwUnit_Adc.InitState == FALSE )
     {
         /*when called prior to initializing the driver, the function Adc_ReadGroup shall raise
         development error ADC_E_UNINIT and return E_NOT_OK.*/
@@ -275,7 +275,7 @@ Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBuffe
 #if ADC_HW_TRIGGER_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_EnableHardwareTrigger( Adc_GroupType Group )
 {
-    if( *HwUnit_Adc.InitState == FALSE )
+    if( HwUnit_Adc.InitState == FALSE )
     {
         /*If called prior to initializing the driver, the function Adc_EnableHardwareTrigger shall
         raise development error ADC_E_UNINIT and return without any action.*/
@@ -310,7 +310,7 @@ void Adc_EnableHardwareTrigger( Adc_GroupType Group )
         development error ADC_E_PARAM_GROUP and return without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_PARAM_GROUP );
     }
-    else if( *HwUnit_Adc.SetupResltBuffer == FALSE )
+    else if( HwUnit_Adc.SetupResltBuffer == FALSE )
     {
         /*when called prior to initializing the result buffer pointer with function
         Adc_SetupResultBuffer, the function Adc_EnableHardwareTrigger shall raise development error
@@ -336,7 +336,7 @@ void Adc_EnableHardwareTrigger( Adc_GroupType Group )
 #if ADC_HW_TRIGGER_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DisableHardwareTrigger( Adc_GroupType Group )
 {
-    if( *HwUnit_Adc.InitState == FALSE )
+    if( HwUnit_Adc.InitState == FALSE )
     {
         /*if called prior to initializing the ADC module, Adc_DisableHardwareTrigger shall raise
         development error ADC_E_UNINIT and return without any action.*/
@@ -390,7 +390,7 @@ void Adc_DisableHardwareTrigger( Adc_GroupType Group )
 #if ADC_GRP_NOTIF_CAPABILITY == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_EnableGroupNotification( Adc_GroupType Group )
 {
-    if( *HwUnit_Adc.InitState == FALSE )
+    if( HwUnit_Adc.InitState == FALSE )
     {
         /*if called prior to initializing the ADC module, Adc_EnableGroupNotification shall raise
         development error ADC_E_UNINIT and return without any action.*/
@@ -427,7 +427,7 @@ void Adc_EnableGroupNotification( Adc_GroupType Group )
 #if ADC_GRP_NOTIF_CAPABILITY == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is defined on the Adc_Cfg.h file */
 void Adc_DisableGroupNotification( Adc_GroupType Group )
 {
-    if( *HwUnit_Adc.InitState == FALSE )
+    if( HwUnit_Adc.InitState == FALSE )
     {
         /*if called prior to initializing the ADC module, Adc_DisableGroupNotification shall raise
         development error ADC_E_UNINIT and return without any action.*/
@@ -468,7 +468,7 @@ Adc_StatusType Adc_GetGroupStatus( Adc_GroupType Group )
 {
     Adc_StatusType RetValue = ADC_IDLE;
 
-    if( *HwUnit_Adc.InitState == FALSE )
+    if( HwUnit_Adc.InitState == FALSE )
     {
         /*If called prior to initializing the ADC module, Adc_GetGroupStatus shall raise
         development error ADC_E_UNINIT and return ADC_IDLE without any action.*/
@@ -573,20 +573,20 @@ Std_ReturnType Adc_SetPowerState( Adc_PowerStateRequestResultType *Result )
 {
     Std_ReturnType RetValue = E_NOT_OK;
 
-    if( *HwUnit_Adc.InitState == FALSE )
+    if( HwUnit_Adc.InitState == FALSE )
     {
         /*The API shall report the DET error ADC_E_UNINIT in case this API is called before having
         initialized the HW unit.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_SET_POWER_STATE, ADC_E_UNINIT );
     }
-    else if( *HwUnit_Adc.PwrState > GROUP_10 ) /*(Size tbd)*/
+    else if( HwUnit_Adc.PwrState > GROUP_10 ) /*(Size tbd)*/
     {
         /*The API shall report the DET error ADC_E_POWER_STATE_NOT_SUPPORTED in case this API is
         called with an unsupported power state or the peripheral does not support low power states
         at all.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_SET_POWER_STATE, ADC_E_POWER_STATE_NOT_SUPPORTED );
     }
-    else if( *HwUnit_Adc.PreparePwrStateFlag == FALSE ) /*(Size tbd)*/
+    else if( HwUnit_Adc.PreparePwrStateFlag == FALSE ) /*(Size tbd)*/
     {
         /*The API shall report the DET error ADC_E_PERIPHERAL_NOT_PREPARED in case the HW unit has
         not been previously prepared for the target power state by use of the API
@@ -619,7 +619,7 @@ Std_ReturnType Adc_GetCurrentPowerState( Adc_PowerStateType *CurrentPowerState, 
 {
     Std_ReturnType RetValue = E_NOT_OK;
 
-    if( *HwUnit_Adc.InitState == FALSE )
+    if( HwUnit_Adc.InitState == FALSE )
     {
         /*The API shall report the DET error ADC_E_UNINIT in case this API is called before having
         initialized the HW unit.*/
@@ -651,7 +651,7 @@ Std_ReturnType Adc_GetTargetPowerState( Adc_PowerStateType *TargetPowerState, Ad
 {
     Std_ReturnType RetValue = E_NOT_OK;
 
-    if( *HwUnit_Adc.InitState == FALSE )
+    if( HwUnit_Adc.InitState == FALSE )
     {
         /*The API shall report the DET error ADC_E_UNINIT in case this API is called before having
         initialized the HW unit.*/
@@ -687,13 +687,13 @@ Std_ReturnType Adc_PreparePowerState( Adc_PowerStateType PowerState, Adc_PowerSt
 {
     Std_ReturnType RetValue = E_NOT_OK;
 
-    if( *HwUnit_Adc.InitState == FALSE )
+    if( HwUnit_Adc.InitState == FALSE )
     {
         /*The API shall report the DET error ADC_E_UNINIT in case this API is called before having
         initialized the HW unit.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_PREPARE_POWER_STATE, ADC_E_UNINIT );
     }
-    else if( *HwUnit_Adc.PwrState > PWR_STATE_10 ) /*(Size tbd)*/
+    else if( HwUnit_Adc.PwrState > PWR_STATE_10 ) /*(Size tbd)*/
     {
         /*The API shall report the DET error ADC_E_POWER_STATE_NOT_SUPPORTED in case this API is
         called with an unsupported power state is requested or the peripheral does not support low

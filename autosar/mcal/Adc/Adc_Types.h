@@ -369,12 +369,12 @@ typedef struct
 typedef struct _Adc_HwUnit
 {
     const Adc_ConfigType *Config; /*!< Pointer to the configuration structure */
-    boolean *InitState;           /*!<Flag to inform if the Adc module was initialiced*/
-    uint8 *ModuleID;              /*!<Adc module identificator*/
-    boolean *SetupResltBuffer;    /*!<Buffer to store the setup result*/
-    uint8 *GroupNotifFunctionPtr; /*!<Pointer of a group notifications*/
-    uint8 *PwrState;              /*!<To store the current power state*/
-    boolean *PreparePwrStateFlag; /*!<To inform if the prepare power state was succesfully init*/
+    boolean InitState;           /*!<Flag to inform if the Adc module was initialiced*/
+    uint8 ModuleID;              /*!<Adc module identificator*/
+    boolean SetupResltBuffer;    /*!<Buffer to store the setup result*/
+    uint8 GroupNotifFunctionPtr; /*!<Pointer of a group notifications*/
+    uint8 PwrState;              /*!<To store the current power state*/
+    boolean PreparePwrStateFlag; /*!<To inform if the prepare power state was succesfully init*/
 } Adc_HwUnit;
 
 /**
