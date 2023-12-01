@@ -15,8 +15,7 @@
 #ifndef PORT_H__
 #define PORT_H__
 
-#include "Port_Types.h"
-#include "Port_Cfg.h" /* cppcheck-suppress misra-c2012-20.1 ; it is necesary to use a define for this function */
+#include "Port_Cfg.h"
 
 void Port_Init( const Port_ConfigType *ConfigPtr );
 
