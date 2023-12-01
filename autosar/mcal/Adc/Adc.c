@@ -35,7 +35,7 @@ static Adc_HwUnit HwUnit_Adc =
     .InitState             = FALSE,
     .ModuleID              = ADC_MODULE_ID,
     .SetupResltBuffer      = FALSE,
-    .GroupNotifFunctionPtr = NULL_PTR,
+    .GroupNotifFunctionPtr = 0,
     .PwrState              = 0,
     .PreparePwrStateFlag   = FALSE 
 };
@@ -62,7 +62,7 @@ void Adc_Init( const Adc_ConfigType *ConfigPtr )
     {
         Adc_Arch_Init( &HwUnit_Adc, ConfigPtr );
         HwUnit_Adc.InitState = TRUE;
-        HwUnit_Adc.Config     = ConfigPtr;
+        HwUnit_Adc.Config    = ConfigPtr;
     }
 }
 
@@ -107,7 +107,7 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
     }
     else
     {
-        RetValue              = Adc_Arch_SetupResultBuffer( &HwUnit_Adc, Group, DataBufferPtr );
+        RetValue             = Adc_Arch_SetupResultBuffer( &HwUnit_Adc, Group, DataBufferPtr );
         HwUnit_Adc.InitState = TRUE;
     }
     return RetValue;
