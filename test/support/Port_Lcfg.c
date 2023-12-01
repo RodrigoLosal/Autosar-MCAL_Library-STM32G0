@@ -9,32 +9,47 @@
  * the right way
  */
 #include "Std_Types.h"
-#include "Port_Types.h"
-#include "Port_Arch.h"
 #include "Port_Cfg.h"
-
+#include "Port_Arch.h"
 
 /**
  * @brief   **Port array with settings to configure**
  *
  * Array with the settings to configure the ports, this array shall be set by the user according to
  * the application needs, the user shall set the number of elements in the array in the
- * PORT_PIN_NUMBER_OF_PORTS macro, each index is not limited  to a scpecific port, the user can
- * configure the pins in any order, the only restriction is that the index shall be unique for each
- * pin, the user can use the PORTS_<pin_name>_PORT_<n>_PIN_<n> macros to set the index, the MSB
- * indicates the port index from the PortConfig array and the LSB indicates the pin number
+ * PORT_PIN_NUMBER_OF_PORTS macro
  */
 /* clang-format off */
-const Port_ConfigType PortConfig[ PORT_PIN_NUMBER_OF_PORTS ] =
+const Port_PinConfigType PinsConfig[ PORT_PIN_NUMBER_OF_PORTS ] =
 {
     {
-        .Port        = PORTS_C,
-        .Pins        = PORTS_PIN_00 | PORTS_PIN_01 | PORTS_PIN_02 | PORTS_PIN_03 | PORTS_PIN_04 | PORTS_PIN_05 | PORTS_PIN_06 | PORTS_PIN_07,
-        .Pull        = PORTS_NOPULL,
-        .OutputDrive = PORTS_PUSH_PULL,
-        .Speed       = PORTS_LOW_SPEED,
-        .Mode        = PORTS_MODE_OUTPUT
+        .Pin         = 5,
+        .Port        = PORT_C,
+        .Pull        = PORT_NOPULL,
+        .OutputDrive = PORT_PUSH_PULL,
+        .Speed       = PORT_LOW_SPEED,
+        .Mode        = PORT_MODE_OUTPUT,
+        .DirChange      = TRUE,
+        .ModeChange= TRUE
+    },
+    {
+        .Pin         = 7,
+        .Port        = PORT_C,
+        .Pull        = PORT_NOPULL,
+        .OutputDrive = PORT_PUSH_PULL,
+        .Speed       = PORT_LOW_SPEED,
+        .Mode        = PORT_MODE_OUTPUT,
+        .DirChange      = FALSE,
+        .ModeChange= FALSE
     }
     /*add more elements as needed but this shall match with PORT_PIN_NUMBER_OF_PORTS macro*/ 
+};
+/* clang-format on */
+
+/* clang-format off */
+const Port_ConfigType PortConfig =
+{
+    .PortPins = PinsConfig,
+    .NumbersOfPins = PORT_PIN_NUMBER_OF_PORTS
 };
 /* clang-format on */

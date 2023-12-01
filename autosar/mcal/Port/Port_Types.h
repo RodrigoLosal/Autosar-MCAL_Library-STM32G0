@@ -13,6 +13,18 @@
 #include "Std_Types.h"
 
 /**
+ * @defgroup PORT_STATIC CAN static define for testing purposes
+ *
+ * @{ */
+#ifndef UTEST
+#define PORT_STATIC static /*!< Add static when no testing */
+#else
+#define PORT_STATIC /*!< remove static for testing purposes */
+#endif
+/**
+ * @} */
+
+/**
  * @defgroup PORT_errors Driver erros
  *
  * PORTS Driver Errors messages, this values are intended to use with DET functionality
