@@ -157,7 +157,7 @@ void Adc_StartGroupConversion( Adc_GroupType Group )
     }
     else if( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_HW )
     {
-        /*When called on a group with trigger source configured as hardware, function 
+        /*When called on a group with trigger source configured as hardware, function
         Adc_StartGroupConversion shall raise development error ADC_E_WRONG_TRIGG_SRC and return
         without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_WRONG_TRIGG_SRC );
@@ -571,6 +571,8 @@ void Adc_GetVersionInfo( Std_VersionInfoType *versioninfo )
  */
 Std_ReturnType Adc_SetPowerState( Adc_PowerStateRequestResultType *Result )
 {
+    Std_ReturnType RetValue = E_NOT_OK;
+
     if( *HwUnit_Adc.InitState == FALSE )
     {
         /*The API shall report the DET error ADC_E_UNINIT in case this API is called before having
@@ -593,8 +595,9 @@ Std_ReturnType Adc_SetPowerState( Adc_PowerStateRequestResultType *Result )
     }
     else
     {
-        return Adc_Arch_SetPowerState( &HwUnit_Adc, Result );
+        RetValue = Adc_Arch_SetPowerState( &HwUnit_Adc, Result );
     }
+    return RetValue;
 }
 
 /**
