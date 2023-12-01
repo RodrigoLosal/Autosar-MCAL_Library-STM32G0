@@ -198,11 +198,11 @@ void Port_GetVersionInfo( Std_VersionInfoType *versioninfo )
     }
     else
     {
-        versioninfo->moduleID         = 0;
-        versioninfo->sw_major_version = 0;
-        versioninfo->sw_minor_version = 0;
-        versioninfo->sw_patch_version = 0;
-        versioninfo->vendorID         = 0;
+        versioninfo->moduleID         = PORT_MODULE_ID;
+        versioninfo->sw_major_version = PORT_SW_MAJOR_VERSION;
+        versioninfo->sw_minor_version = PORT_SW_MINOR_VERSION;
+        versioninfo->sw_patch_version = PORT_SW_PATCH_VERSION;
+        versioninfo->vendorID         = PORT_VENDOR_ID;
     }
 }
 #endif
