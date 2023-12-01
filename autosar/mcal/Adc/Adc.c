@@ -54,6 +54,8 @@ void Adc_Init( const Adc_ConfigType *ConfigPtr )
 {
     if( *HwUnit_Adc.InitState == TRUE )
     {
+        /*If called before the module has been initialized, the function Adc_DeInit shall raise
+        development error ADC_E_UNINIT and return without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ID_INIT, ADC_E_ALREADY_INITIALIZED );
     }
     else
@@ -87,14 +89,20 @@ Std_ReturnType Adc_SetupResultBuffer( Adc_GroupType Group, Adc_ValueGroupType *D
 
     if( *HwUnit_Adc.InitState == FALSE )
     {
+        /*When called prior to initializing the driver, the function Adc_SetupResultBuffer shall
+        raise development error ADC_E_UNINIT.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_RESULT_BUFFER, ADC_E_UNINIT );
     }
     else if( Group > GROUP_10 ) /*(Size tbd)*/
     {
+        /*If the channel group ID is non-existing, the function Adc_SetupResultBuffer shall raise
+        development error ADC_E_PARAM_GROUP and return without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_RESULT_BUFFER, ADC_E_PARAM_GROUP );
     }
     else if( DataBufferPtr == NULL_PTR )
     {
+        /*When called with a NULL_PTR as DataBufferPtr, the function Adc_SetupResultBuffer shall
+        raise development error ADC_E_PARAM_POINTER.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_RESULT_BUFFER, ADC_E_PARAM_POINTER );
     }
     else
@@ -117,6 +125,8 @@ void Adc_DeInit( void )
 {
     if( *HwUnit_Adc.InitState == FALSE )
     {
+        /*If called before the module has been initialized, the function Adc_DeInit shall raise
+        development error ADC_E_UNINIT and return without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ID_DE_INIT, ADC_E_UNINIT );
     }
     else
@@ -141,18 +151,28 @@ void Adc_StartGroupConversion( Adc_GroupType Group )
 {
     if( *HwUnit_Adc.InitState == FALSE )
     {
+        /*when called prior to initializing the driver, the function Adc_StartGroupConversion shall
+        raise development error ADC_E_UNINIT.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_UNINIT );
     }
     else if( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_HW )
     {
+        /*When called on a group with trigger source configured as hardware, function 
+        Adc_StartGroupConversion shall raise development error ADC_E_WRONG_TRIGG_SRC and return
+        without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_WRONG_TRIGG_SRC );
     }
     else if( Group > GROUP_10 ) /*(Size tbd)*/
     {
+        /*When called with a non-existing channel group ID, function Adc_StartGroupConversion shall
+        raise development error ADC_E_PARAM_GROUP and return without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_PARAM_GROUP );
     }
     else if( *HwUnit_Adc.SetupResltBuffer == FALSE )
     {
+        /*When called prior to initializing the result buffer pointer with function
+        Adc_SetupResultBuffer, the function Adc_StartGroupConversion shall raise development error
+        ADC_E_BUFFER_UNINIT.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_START_GROUP_CONVERSION, ADC_E_BUFFER_UNINIT );
     }
     else
@@ -176,14 +196,21 @@ void Adc_StopGroupConversion( Adc_GroupType Group )
 {
     if( *HwUnit_Adc.InitState == FALSE )
     {
+        /*If called prior to initializing the module, function Adc_StopGroupConversion shall raise
+        development error ADC_E_UNINIT and return without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_STOP_GROUP_CONVERSION, ADC_E_UNINIT );
     }
     else if( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_HW )
     {
+        /*If the group has a trigger source configured as hardware, function
+        Adc_StopGroupConversion shall raise development error ADC_E_WRONG_TRIGG_SRC and return
+        without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_STOP_GROUP_CONVERSION, ADC_E_WRONG_TRIGG_SRC );
     }
     else if( Group > GROUP_10 ) /*(Size tbd)*/
     {
+        /*if the group ID is non-existing, the function Adc_StopGroupConversion shall raise
+        development error ADC_E_PARAM_GROUP and return without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_STOP_GROUP_CONVERSION, ADC_E_PARAM_GROUP );
     }
     else
@@ -217,10 +244,14 @@ Std_ReturnType Adc_ReadGroup( Adc_GroupType Group, Adc_ValueGroupType *DataBuffe
 
     if( *HwUnit_Adc.InitState == FALSE )
     {
+        /*when called prior to initializing the driver, the function Adc_ReadGroup shall raise
+        development error ADC_E_UNINIT and return E_NOT_OK.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_READ_GROUP, ADC_E_UNINIT );
     }
     else if( Group > GROUP_10 ) /*(Size tbd)*/
     {
+        /*If the group ID is non-existing, the function Adc_ReadGroup shall raise development error
+        ADC_E_PARAM_GROUP and return E_NOT_OK.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_READ_GROUP, ADC_E_PARAM_GROUP );
     }
     else
@@ -246,29 +277,44 @@ void Adc_EnableHardwareTrigger( Adc_GroupType Group )
 {
     if( *HwUnit_Adc.InitState == FALSE )
     {
+        /*If called prior to initializing the driver, the function Adc_EnableHardwareTrigger shall
+        raise development error ADC_E_UNINIT and return without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_UNINIT );
     }
     else if( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_SW )
     {
+        /*If the group is configured for software API trigger mode, the function
+        Adc_EnableHardwareTrigger shall raise development error ADC_E_WRONG_TRIGG_SRC and return
+        without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_WRONG_TRIGG_SRC );
     }
     else if( AdcConfig.Adc_GroupConvMode == ADC_CONV_MODE_CONTINUOUS )
     {
         if( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_SW )
         {
+            /*SW groups configured in continuous conversion mode shall raise development error
+            ADC_E_WRONG_TRIGG_SRC instead of the next condition.*/
             Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_WRONG_TRIGG_SRC );
         }
         else
         {
+            /*If a HW group is erroneously configured for continuous conversion mode, the function
+            Adc_EnableHardwareTrigger shall raise development error ADC_E_WRONG_CONV_MODE and
+            return without any action.*/
             Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_WRONG_CONV_MODE );
         }
     }
     else if( Group > GROUP_10 ) /*(Size tbd)*/
     {
+        /*if the channel group ID is invalid, the function Adc_EnableHardwareTrigger shall raise
+        development error ADC_E_PARAM_GROUP and return without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_PARAM_GROUP );
     }
     else if( *HwUnit_Adc.SetupResltBuffer == FALSE )
     {
+        /*when called prior to initializing the result buffer pointer with function
+        Adc_SetupResultBuffer, the function Adc_EnableHardwareTrigger shall raise development error
+        ADC_E_BUFFER_UNINIT.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_HARDWARE_TRIGGER, ADC_E_BUFFER_UNINIT );
     }
     else
@@ -292,25 +338,37 @@ void Adc_DisableHardwareTrigger( Adc_GroupType Group )
 {
     if( *HwUnit_Adc.InitState == FALSE )
     {
+        /*if called prior to initializing the ADC module, Adc_DisableHardwareTrigger shall raise
+        development error ADC_E_UNINIT and return without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_HARDWARE_TRIGGER, ADC_E_UNINIT );
     }
     else if( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_SW )
     {
+        /*if the group is configured for software API trigger mode, the function
+        Adc_DisableHardwareTrigger shall raise development error ADC_E_WRONG_TRIGG_SRC and return
+        without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_HARDWARE_TRIGGER, ADC_E_WRONG_TRIGG_SRC );
     }
     else if( AdcConfig.Adc_GroupConvMode == ADC_CONV_MODE_CONTINUOUS )
     {
         if( AdcConfig.Adc_TriggerSource == ADC_TRIGG_SRC_SW )
         {
+            /*SW groups configured in continuous conversion mode shall raise development error
+            ADC_E_WRONG_TRIGG_SRC instead of the next condition*/
             Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_HARDWARE_TRIGGER, ADC_E_WRONG_TRIGG_SRC );
         }
         else
         {
+            /*if a HW group is erroneously configured for continuous conversion mode, the function
+            Adc_DisableHardwareTrigger shall raise development error ADC_E_WRONG_CONV_MODE and
+            return without any action.*/
             Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_HARDWARE_TRIGGER, ADC_E_WRONG_CONV_MODE );
         }
     }
     else if( Group > GROUP_10 ) /*(Size tbd)*/
     {
+        /*If the channel group ID is non-existing, the function Adc_DisableHardwareTrigger shall
+        raise development error ADC_E_PARAM_GROUP and return without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_HARDWARE_TRIGGER, ADC_E_PARAM_GROUP );
     }
     else
@@ -334,14 +392,20 @@ void Adc_EnableGroupNotification( Adc_GroupType Group )
 {
     if( *HwUnit_Adc.InitState == FALSE )
     {
+        /*if called prior to initializing the ADC module, Adc_EnableGroupNotification shall raise
+        development error ADC_E_UNINIT and return without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_GROUP_NOTIFICATION, ADC_E_UNINIT );
     }
     else if( GroupNotifFunctionPtr == NULL_PTR )
     {
+        /*if the  is NULL, the function Adc_EnableGroupNotification shall raise development error
+        ADC_E_NOTIF_CAPABILITY and return without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_GROUP_NOTIFICATION, ADC_E_NOTIF_CAPABILITY );
     }
     else if( Group > GROUP_10 ) /*(Size tbd)*/
     {
+        /*if the channel group ID is non-existing, the function Adc_EnableGroupNotification shall
+        raise development error ADC_E_PARAM_GROUP and return without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_ENABLE_GROUP_NOTIFICATION, ADC_E_PARAM_GROUP );
     }
     else
@@ -365,14 +429,21 @@ void Adc_DisableGroupNotification( Adc_GroupType Group )
 {
     if( *HwUnit_Adc.InitState == FALSE )
     {
+        /*if called prior to initializing the ADC module, Adc_DisableGroupNotification shall raise
+        development error ADC_E_UNINIT and return without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_GROUP_NOTIFICATION, ADC_E_UNINIT );
     }
     else if( GroupNotifFunctionPtr == NULL_PTR )
     {
+        /*if the group notification function pointer is NULL, the function
+        Adc_DisableGroupNotification shall raise development error ADC_E_NOTIF_CAPABILITY and
+        return without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_GROUP_NOTIFICATION, ADC_E_NOTIF_CAPABILITY );
     }
     else if( Group > GROUP_10 ) /*(Size tbd)*/
     {
+        /*If the channel group ID is non-existing, the function Adc_DisableGroupNotification shall
+        raise development error ADC_E_PARAM_GROUP and return without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_DISABLE_GROUP_NOTIFICATION, ADC_E_PARAM_GROUP );
     }
     else
@@ -399,6 +470,8 @@ Adc_StatusType Adc_GetGroupStatus( Adc_GroupType Group )
 
     if( *HwUnit_Adc.InitState == FALSE )
     {
+        /*If called prior to initializing the ADC module, Adc_GetGroupStatus shall raise
+        development error ADC_E_UNINIT and return ADC_IDLE without any action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_GET_GROUP_STATUS, ADC_E_UNINIT );
     }
     else
@@ -430,11 +503,17 @@ Adc_StreamNumSampleType Adc_GetStreamLastPointer( Adc_GroupType Group, Adc_Value
 
     if( HwUnit_Adc.InitState == FALSE )
     {
+        /*if called prior to initializing the driver, the function Adc_GetStreamLastPointer shall
+        raise development error ADC_E_UNINIT, set the pointer, passed as parameter
+        (PtrToSamplePtr), to NULL and return 0 without any further action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_GET_STREAM_LAST_POINTER, ADC_E_UNINIT );
         *PtrToSamplePtr = NULL_PTR;
     }
     else if( Group > GROUP_10 ) /*(Size tbd)*/
     {
+        /*If the group ID is non-existent, the function Adc_GetStreamLastPointer shall raise
+        development error ADC_E_PARAM_GROUP, set the pointer, passed as parameter (PtrToSamplePtr),
+        to NULL and return 0 without any further action.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_GET_STREAM_LAST_POINTER, ADC_E_PARAM_GROUP );
         *PtrToSamplePtr = NULL_PTR;
     }
@@ -459,6 +538,8 @@ void Adc_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
     if( versioninfo == NULL_PTR )
     {
+        /*The function Adc_GetVersionInfo shall check the parameter versioninfo for not being NULL
+        and shall raise the development error ADC_E_PARAM_POINTER if the check fails.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_GET_VERSION_INFO, ADC_E_PARAM_POINTER );
     }
     else
@@ -492,14 +573,22 @@ Std_ReturnType Adc_SetPowerState( Adc_PowerStateRequestResultType *Result )
 {
     if( *HwUnit_Adc.InitState == FALSE )
     {
+        /*The API shall report the DET error ADC_E_UNINIT in case this API is called before having
+        initialized the HW unit.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_SET_POWER_STATE, ADC_E_UNINIT );
     }
     else if( *HwUnit_Adc.PwrState > GROUP_10 ) /*(Size tbd)*/
     {
+        /*The API shall report the DET error ADC_E_POWER_STATE_NOT_SUPPORTED in case this API is
+        called with an unsupported power state or the peripheral does not support low power states
+        at all.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_SET_POWER_STATE, ADC_E_POWER_STATE_NOT_SUPPORTED );
     }
     else if( *HwUnit_Adc.PreparePwrStateFlag == FALSE ) /*(Size tbd)*/
     {
+        /*The API shall report the DET error ADC_E_PERIPHERAL_NOT_PREPARED in case the HW unit has
+        not been previously prepared for the target power state by use of the API
+        Adc_PreparePowerState().*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_SET_POWER_STATE, ADC_E_PERIPHERAL_NOT_PREPARED );
     }
     else
@@ -529,6 +618,8 @@ Std_ReturnType Adc_GetCurrentPowerState( Adc_PowerStateType *CurrentPowerState, 
 
     if( *HwUnit_Adc.InitState == FALSE )
     {
+        /*The API shall report the DET error ADC_E_UNINIT in case this API is called before having
+        initialized the HW unit.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_GET_CURRENT_POWER_STATE, ADC_E_UNINIT );
     }
     else
@@ -559,6 +650,8 @@ Std_ReturnType Adc_GetTargetPowerState( Adc_PowerStateType *TargetPowerState, Ad
 
     if( *HwUnit_Adc.InitState == FALSE )
     {
+        /*The API shall report the DET error ADC_E_UNINIT in case this API is called before having
+        initialized the HW unit.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_GET_TARGET_POWER_STATE, ADC_E_UNINIT );
     }
     else
@@ -590,13 +683,18 @@ Std_ReturnType Adc_GetTargetPowerState( Adc_PowerStateType *TargetPowerState, Ad
 Std_ReturnType Adc_PreparePowerState( Adc_PowerStateType PowerState, Adc_PowerStateRequestResultType *Result )
 {
     Std_ReturnType RetValue = E_NOT_OK;
-    
+
     if( *HwUnit_Adc.InitState == FALSE )
     {
+        /*The API shall report the DET error ADC_E_UNINIT in case this API is called before having
+        initialized the HW unit.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_PREPARE_POWER_STATE, ADC_E_UNINIT );
     }
     else if( *HwUnit_Adc.PwrState > PWR_STATE_10 ) /*(Size tbd)*/
     {
+        /*The API shall report the DET error ADC_E_POWER_STATE_NOT_SUPPORTED in case this API is
+        called with an unsupported power state is requested or the peripheral does not support low
+        power states at all.*/
         Det_ReportError( ADC_MODULE_ID, ADC_INSTANCE_ID, ADC_PREPARE_POWER_STATE, ADC_E_POWER_STATE_NOT_SUPPORTED );
     }
     else
