@@ -30,6 +30,11 @@
 /**
  * @} */
 
+#define CANIF_CONTROLLER_0                     0u /*!< Controller 0 */
+
+#define CANIF_NUMBER_OF_TX_PDUS                5u /*!< Controller 1 */
+#define CANIF_NUMBER_OF_RX_PDUS                5u /*!< Controller 1 */
+
 /**
  * @brief Enable support for Bus Mirroring.
  * * @typedef EcucBooleanParamDef
@@ -78,5 +83,6 @@
  */
 #define CANIF_VERSION_INFO_API                 STD_ON
 
+extern const CanIf_ConfigType CanIfConfig;
 
 #endif /* CANIF_CFG_H__ */

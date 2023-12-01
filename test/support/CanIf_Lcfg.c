@@ -10,10 +10,17 @@
  */
 #include "Std_Types.h"
 #include "CanIf_Cfg.h"
+#include "Can.h"
 
+/**
+ * @brief Can driver configuration.
+ */
 /* clang-format off */
 const CanIf_ConfigType CanIfConfig =
 {
-    .dummy = 0x11223344,
+    .CtrlCfgs = NULL_PTR,
+    .NumberOfCanControllers = 2,
+    .MaxRxPduCfg = CANIF_NUMBER_OF_TX_PDUS,
+    .MaxTxPduCfg = CANIF_NUMBER_OF_RX_PDUS    
 };
 /* clang-format off */
