@@ -39,7 +39,7 @@
 /**
  * @brief Pointer to the configuration structure.
  */
-static const CanIf_ConfigType *LocalConfigPtr = NULL_PTR;
+CAN_STATIC const CanIf_ConfigType *LocalConfigPtr = NULL_PTR;
 
 /**
  * @brief Initializes the CAN interface.
@@ -52,7 +52,7 @@ static const CanIf_ConfigType *LocalConfigPtr = NULL_PTR;
  */
 void CanIf_Init( const CanIf_ConfigType *ConfigPtr )
 {
-    (void)ConfigPtr;
+    LocalConfigPtr = ConfigPtr;
 }
 
 /**
@@ -101,14 +101,14 @@ Std_ReturnType CanIf_SetControllerMode( uint8 ControllerId, Can_ControllerStateT
         /*All CanIf API services other than CanIf_Init() and CanIf_GetVersionInfo() shall not execute
         their normal operation and return E_NOT_OK unless the CanIf has been initialized with a
         preceding call of CanIf_Init */
-        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_SET_CONTROLLER_MODE, CANIF_E_UNINIT );
+        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_SET_CTRL_MODE, CANIF_E_UNINIT );
     }
     else if( ControllerId > LocalConfigPtr->NumberOfCanControllers )
     {
         /*If parameter ControllerId of CanIf_SetControllerMode() has an invalid value, the CanIf
         shall report development error code CANIF_E_PARAM_CONTROLLERID to the Det_ReportError
         service of the DET module, when CanIf_SetControllerMode() is called*/
-        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_SET_CONTROLLER_MODE, CANIF_E_PARAM_CONTROLLERID );
+        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_SET_CTRL_MODE, CANIF_E_PARAM_CONTROLLERID );
     }
     else if( ( ControllerMode < CAN_CS_STARTED ) || ( ControllerMode > CAN_CS_SLEEP ) )
     {
@@ -116,7 +116,7 @@ Std_ReturnType CanIf_SetControllerMode( uint8 ControllerId, Can_ControllerStateT
         CAN_CS_STARTED, CAN_CS_SLEEP or CAN_CS_STOPPED), the CanIfshall report development error
         code CANIF_E_PARAM_CTRLMODE to the Det_ReportError service of the DET module, when
         CanIf_SetControllerMode() is called */
-        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_SET_CONTROLLER_MODE, CANIF_E_PARAM_CTRLMODE );
+        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_SET_CTRL_MODE, CANIF_E_PARAM_CTRLMODE );
     }
     else
     {
@@ -150,21 +150,21 @@ Std_ReturnType CanIf_GetControllerMode( uint8 ControllerId, Can_ControllerStateT
         /*All CanIf API services other than CanIf_Init() and CanIf_GetVersionInfo() shall not execute
         their normal operation and return E_NOT_OK unless the CanIf has been initialized with a
         preceding call of CanIf_Init */
-        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_SET_CONTROLLER_MODE, CANIF_E_UNINIT );
+        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_CTRL_MODE, CANIF_E_UNINIT );
     }
     else if( ControllerId > LocalConfigPtr->NumberOfCanControllers )
     {
         /*If parameter ControllerId of CanIf_SetControllerMode() has an invalid value, the CanIf
         shall report development error code CANIF_E_PARAM_CONTROLLERID to the Det_ReportError
         service of the DET module, when CanIf_SetControllerMode() is called*/
-        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_SET_CONTROLLER_MODE, CANIF_E_PARAM_CONTROLLERID );
+        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_CTRL_MODE, CANIF_E_PARAM_CONTROLLERID );
     }
     else if( ControllerModePtr == NULL_PTR )
     {
         /*If parameter ControllerModePtr of CanIf_GetControllerMode() has an invalid value (NULL_PTR),
         the CanIf shall report development error code CANIF_E_PARAM_POINTER to the Det_ReportError
         service of the DET module, when CanIf_GetControllerMode() is called*/
-        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_CONTROLLER_MODE, CANIF_E_PARAM_POINTER );
+        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_CTRL_MODE, CANIF_E_PARAM_POINTER );
     }
     else
     {
@@ -250,7 +250,7 @@ Std_ReturnType CanIf_Transmit( PduIdType TxPduId, const PduInfoType *PduInfoPtr 
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_TRANSMIT, CANIF_E_UNINIT );
     }
-    else if( TxPduId > LocalConfigPtr->MaxTxPduCfg )
+    else if( TxPduId >= LocalConfigPtr->MaxTxPduCfg )
     {
         /*If parameter TxPduId of CanIf_Transmit() has an invalid value, CanIf shall report
         development error code CANIF_E_INVALID_TXPDUID to the Det_ReportError service of the DET, when
@@ -265,10 +265,11 @@ Std_ReturnType CanIf_Transmit( PduIdType TxPduId, const PduInfoType *PduInfoPtr 
     }
     else
     {
-        /*Get the bit indicating if the message is in FD format*/
-        uint8 FdFlag = Bfx_GetBit_u32u8_u8( TxPduId, 30u );
+        /*Get the bit indicating if the message is in FD format, this will extracted from
+        the configuration TxPduIds array where we gonna extract FdFlag*/
+        // if( ( ( PduInfoPtr->SduLength > 8 ) && ( FdFlag == STD_OFF ) ) || ( ( PduInfoPtr->SduLength > 64 ) && ( FdFlag == STD_ON ) ) )
 
-        if( ( ( PduInfoPtr->SduLength > 8 ) && ( FdFlag == STD_OFF ) ) || ( ( PduInfoPtr->SduLength > 64 ) && ( FdFlag == STD_ON ) ) )
+        if( PduInfoPtr->SduLength > 8 ) /*this is momentary while we define the TxPduIds arrays*/
         {
             /*When CanIf_Transmit() is called with PduInfoPtr->SduLength exceeding the maximum length
             of the PDU referenced by TxPduId:
@@ -316,7 +317,7 @@ Std_ReturnType CanIf_ReadRxPduData( PduIdType CanIfRxSduId, PduInfoType *CanIfRx
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_READ_RX_PDU_DATA, CANIF_E_UNINIT );
     }
-    else if( CanIfRxSduId > LocalConfigPtr->MaxRxPduCfg )
+    else if( CanIfRxSduId >= LocalConfigPtr->MaxRxPduCfg )
     {
         /*If parameter CanIfRxSduId of CanIf_ReadRxPduData() has an invalid value, e.g. not configured
         to be stored within CanIf via CanIfRxPduReadData, CanIf shall report development error code
@@ -368,7 +369,7 @@ CanIf_NotifStatusType CanIf_ReadTxNotifStatus( PduIdType CanIfTxSduId )
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_READ_TX_NOTIF_STATUS, CANIF_E_UNINIT );
     }
-    else if( CanIfTxSduId > LocalConfigPtr->MaxTxPduCfg )
+    else if( CanIfTxSduId >= LocalConfigPtr->MaxTxPduCfg )
     {
         /*If parameter CanIfTxSduId of CanIf_ReadTxNotifStatus() is out of range or if no status
         information was configured for this CAN Tx L-SDU, CanIf shall report development error code
@@ -411,7 +412,7 @@ CanIf_NotifStatusType CanIf_ReadRxNotifStatus( PduIdType CanIfRxSduId )
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_READ_RX_NOTIF_STATUS, CANIF_E_UNINIT );
     }
-    else if( CanIfRxSduId > LocalConfigPtr->MaxRxPduCfg )
+    else if( CanIfRxSduId >= LocalConfigPtr->MaxRxPduCfg )
     {
         /*If parameter CanIfRxSduId of CanIf_ReadRxNotifStatus() is out of range or if status for
         CanRxPduId was requested whereas CanIfRxPduReadData is disabled or if no status information
@@ -454,7 +455,7 @@ Std_ReturnType CanIf_SetPduMode( uint8 ControllerId, CanIf_PduModeType PduModeRe
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_SET_PDU_MODE, CANIF_E_UNINIT );
     }
-    else if( ControllerId > LocalConfigPtr->NumberOfCanControllers )
+    else if( ControllerId >= LocalConfigPtr->NumberOfCanControllers )
     {
         /*If CanIf_SetPduMode() is called with invalid ControllerId, CanIf shall report development
         error code CANIF_E_PARAM_CONTROLLERID to the Det_ReportError service of the DET module*/
@@ -500,7 +501,7 @@ Std_ReturnType CanIf_GetPduMode( uint8 ControllerId, CanIf_PduModeType *PduModeP
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_PDU_MODE, CANIF_E_UNINIT );
     }
-    else if( ControllerId > LocalConfigPtr->NumberOfCanControllers )
+    else if( ControllerId >= LocalConfigPtr->NumberOfCanControllers )
     {
         /*If CanIf_GetPduMode() is called with invalid ControllerId, CanIf shall report development
         error code CANIF_E_PARAM_CONTROLLERID to the Det_ReportError service of the DET module.*/
@@ -575,7 +576,7 @@ void CanIf_SetDynamicTxId( PduIdType CanIfTxSduId, Can_IdType CanId )
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_SET_DYNAMIC_TX_ID, CANIF_E_UNINIT );
     }
-    else if( CanIfTxSduId > LocalConfigPtr->MaxTxPduCfg )
+    else if( CanIfTxSduId >= LocalConfigPtr->MaxTxPduCfg )
     {
         /*If parameter CanIfTxSduId of CanIf_SetDynamicTxId() has an invalid value, CanIf shall report
         development error code CANIF_E_INVALID_TXPDUID to the Det_ReportError service of the DET module,
@@ -618,11 +619,12 @@ CanIf_NotifStatusType CanIf_GetTxConfirmationState( uint8 ControllerId )
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_TX_CONFIRM_STATE, CANIF_E_UNINIT );
     }
-    else if( ControllerId > LocalConfigPtr->NumberOfCanControllers )
+    else if( ControllerId >= LocalConfigPtr->NumberOfCanControllers )
     {
         /*If parameter ControllerId of CanIf_GetTxConfirmationState() has an invalid value, the CanIf
         shall report development error code CANIF_E_PARAM_CONTROLLERID to the Det_ReportError
         service of the DET module, when CanIf_GetTxConfirmationState() is called.*/
+        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_TX_CONFIRM_STATE, CANIF_E_PARAM_CONTROLLERID );
     }
     else
     {
@@ -659,7 +661,7 @@ Std_ReturnType CanIf_SetBaudrate( uint8 ControllerId, uint16 BaudRateConfigID )
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_SET_BAUDRATE, CANIF_E_UNINIT );
     }
-    else if( ControllerId > LocalConfigPtr->NumberOfCanControllers )
+    else if( ControllerId >= LocalConfigPtr->NumberOfCanControllers )
     {
         /*If CanIf_SetBaudrate() is called with invalid ControllerId, CanIf shall report development
         error code CANIF_E_PARAM_CONTROLLERID to the Det_ReportError service of the DET module.*/
@@ -701,7 +703,7 @@ Std_ReturnType CanIf_GetControllerRxErrorCounter( uint8 ControllerId, uint8 *RxE
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_CTRL_RX_ERR_CNT, CANIF_E_UNINIT );
     }
-    else if( ControllerId > LocalConfigPtr->NumberOfCanControllers )
+    else if( ControllerId >= LocalConfigPtr->NumberOfCanControllers )
     {
         /*If parameter ControllerId of CanIf_GetControllerRxErrorCounter() has an invalid value, the
         CanIf shall report development error code CANIF_E_PARAM_CONTROLLERID to the Det_ReportError
@@ -750,7 +752,7 @@ Std_ReturnType CanIf_GetControllerTxErrorCounter( uint8 ControllerId, uint8 *TxE
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_CTRL_TX_ERR_CNT, CANIF_E_UNINIT );
     }
-    else if( ControllerId < LocalConfigPtr->NumberOfCanControllers )
+    else if( ControllerId >= LocalConfigPtr->NumberOfCanControllers )
     {
         /*If parameter ControllerId of CanIf_GetControllerTxErrorCounter() has an invalid value, the
         CanIf shall report development error code CANIF_E_PARAM_CONTROLLERID to the Det_ReportError
@@ -846,7 +848,7 @@ Std_ReturnType CanIf_GetCurrentTime( uint8 Controller, Can_TimeStampType *timeSt
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_CURRENT_TIME, CANIF_E_UNINIT );
     }
-    else if( Controller > LocalConfigPtr->NumberOfCanControllers )
+    else if( Controller >= LocalConfigPtr->NumberOfCanControllers )
     {
         /*If development error detection is enabled: the function shall check the parameter Controller
         for being valid. If the check fails, the function shall raise the development error
@@ -889,7 +891,7 @@ void CanIf_EnableEgressTimeStamp( PduIdType TxPduId )
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_ENABLE_EGRESS_TS, CANIF_E_UNINIT );
     }
-    else if( TxPduId > LocalConfigPtr->MaxTxPduCfg )
+    else if( TxPduId >= LocalConfigPtr->MaxTxPduCfg )
     {
         /*If development error detection is enabled: the function shall check the parameter TxPduId
         for being valid. If the check fails, the function shall raise the development error
@@ -927,7 +929,7 @@ Std_ReturnType CanIf_GetEgressTimeStamp( PduIdType TxPduId, Can_TimeStampType *t
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_EGRESS_TS, CANIF_E_UNINIT );
     }
-    else if( TxPduId > LocalConfigPtr->MaxTxPduCfg )
+    else if( TxPduId >= LocalConfigPtr->MaxTxPduCfg )
     {
         /*If development error detection is enabled: the function shall check the parameter TxPduId
         for being valid. If the check fails, the function shall raise the development error
@@ -976,7 +978,7 @@ Std_ReturnType CanIf_GetIngressTimeStamp( PduIdType RxPduId, Can_TimeStampType *
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_INGRESS_TS, CANIF_E_UNINIT );
     }
-    else if( RxPduId > LocalConfigPtr->MaxRxPduCfg )
+    else if( RxPduId >= LocalConfigPtr->MaxRxPduCfg )
     {
         /*If development error detection is enabled: the function shall check the parameter RxPduId
         for being valid. If the check fails, the function shall raise the development error
@@ -1019,7 +1021,7 @@ void CanIf_TxConfirmation( PduIdType CanTxPduId )
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_TX_CONFIRMATION, CANIF_E_UNINIT );
     }
-    else if( CanTxPduId > LocalConfigPtr->MaxTxPduCfg )
+    else if( CanTxPduId >= LocalConfigPtr->MaxTxPduCfg )
     {
         /*If parameter CanTxPduId of CanIf_TxConfirmation() has an invalid value, the CanIf shall
         report development error code CANIF_E_INVALID_TXPDUID to the Det_ReportError service of the
@@ -1052,7 +1054,7 @@ void CanIf_RxIndication( const Can_HwType *Mailbox, const PduInfoType *PduInfoPt
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_RX_INDICATION, CANIF_E_UNINIT );
     }
-    else if( ( PduInfoPtr == NULL_PTR ) || ( PduInfoPtr->SduDataPtr == NULL_PTR ) )
+    else if( ( PduInfoPtr == NULL_PTR ) || ( Mailbox == NULL_PTR ) )
     {
         /*If parameter PduInfoPtr or Mailbox of CanIf_RxIndication() has an invalid value, CanIf shall
         report development error code CANIF_E_PARAM_POINTER to the Det_ReportError service of the
@@ -1098,7 +1100,7 @@ void CanIf_ControllerBusOff( uint8 ControllerId )
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_CTRL_BUS_OFF, CANIF_E_UNINIT );
     }
-    else if( ControllerId > LocalConfigPtr->NumberOfCanControllers )
+    else if( ControllerId >= LocalConfigPtr->NumberOfCanControllers )
     {
         /*If parameter ControllerId of CanIf_ControllerBusOff() has an invalid value, CanIf shall
         report development error code CANIF_E_PARAM_CONTROLLERID to the Det_ReportError service
@@ -1131,19 +1133,19 @@ void CanIf_ControllerModeIndication( uint8 ControllerId, Can_ControllerStateType
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_CTRL_MODE_INDICATION, CANIF_E_UNINIT );
     }
-    else if( ControllerId > LocalConfigPtr->NumberOfCanControllers )
+    else if( ControllerId >= LocalConfigPtr->NumberOfCanControllers )
     {
         /*If parameter ControllerId of CanIf_ControllerErrorStatePassive() has an invalid value, the
         CanIf shall report development error code CANIF_E_PARAM_CONTROLLERID to the Det_ReportError
         service of the DET module, when CanIf_ControllerErrorStatePassive() is called.*/
-        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_CTRL_ERR_ST_PASIVE, CANIF_E_PARAM_CONTROLLERID );
+        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_CTRL_MODE_INDICATION, CANIF_E_PARAM_CONTROLLERID );
     }
     else if( ( ControllerMode < CAN_CS_STARTED ) || ( ControllerMode > CAN_CS_SLEEP ) )
     {
         /*If parameter ControllerMode of CanIf_ControllerModeIndication() has an invalid value, CanIf
         shall report development error code CANIF_E_PARAM_CONTROLLERMODE to the Det_ReportError service
         of the DET module, when CanIf_ControllerModeIndication() is called.*/
-        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_CTRL_MODE_INDICATION, CANIF_E_PARAM_CONTROLLERMODE );
+        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_CTRL_MODE_INDICATION, CANIF_E_PARAM_CTRLMODE );
     }
     else
     {
@@ -1174,7 +1176,7 @@ void CanIf_ControllerErrorStatePassive( uint8 ControllerId, uint16 RxErrorCounte
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_CTRL_ERR_ST_PASIVE, CANIF_E_UNINIT );
     }
-    else if( ControllerId > LocalConfigPtr->NumberOfCanControllers )
+    else if( ControllerId >= LocalConfigPtr->NumberOfCanControllers )
     {
         /*If parameter ControllerId of CanIf_ControllerErrorStatePassive() has an invalid value, the
         CanIf shall report development error code CANIF_E_PARAM_CONTROLLERID to the Det_ReportError
@@ -1210,7 +1212,7 @@ void CanIf_ErrorNotification( uint8 ControllerId, Can_ErrorType CanError )
         preceding call of CanIf_Init */
         Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_PDU_MODE, CANIF_E_UNINIT );
     }
-    else if( ControllerId > LocalConfigPtr->NumberOfCanControllers )
+    else if( ControllerId >= LocalConfigPtr->NumberOfCanControllers )
     {
         /*If parameter ControllerId of CanIf_ErrorNotification() has an invalid value, the CanIf
         shall report development error code CANIF_E_PARAM_CONTROLLERID to the Det_ReportError
