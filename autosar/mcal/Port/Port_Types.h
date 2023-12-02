@@ -18,13 +18,13 @@
  * PORTS Driver Errors messages, this values are intended to use with DET functionality
  *
  * @{ */
-#define PORT_E_PARAM_PIN               0x00u /*!< Invalid Port Pin ID requested        */
-#define PORT_E_DIRECTION_UNCHANGEABLE  0x01u /*!< Port Pin not configured as changeable */
-#define PORT_E_INIT_FAILED             0x02u /*!< Invalid configuration set            */
-#define PORT_E_PARAM_INVALID_MODE      0x03u /*!< Invalid Port Pin mode specified      */
-#define PORT_E_MODE_UNCHANGEABLE       0x04u /*!< Port Pin mode is not configurable    */
-#define PORT_E_UNINIT                  0x05u /*!< Port driver not initialized          */
-#define PORT_E_PARAM_POINTER           0x06u /*!< Invalid Port Pin ID requested        */
+#define PORT_E_PARAM_PIN               0x0Au /*!< Invalid Port Pin ID requested        */
+#define PORT_E_DIRECTION_UNCHANGEABLE  0x0Bu /*!< Port Pin not configured as changeable */
+#define PORT_E_INIT_FAILED             0x0Cu /*!< Invalid configuration set            */
+#define PORT_E_PARAM_INVALID_MODE      0x0Du /*!< Invalid Port Pin mode specified      */
+#define PORT_E_MODE_UNCHANGEABLE       0x0Eu /*!< Port Pin mode is not configurable    */
+#define PORT_E_UNINIT                  0x0Fu /*!< Port driver not initialized          */
+#define PORT_E_PARAM_POINTER           0x10u /*!< Invalid Port Pin ID requested        */
 /**
  * @} */
 
@@ -33,8 +33,8 @@
  *
  * @{ */
 #define PORT_ID_INIT                   0x00u /*!< Port_Init() api service id */
-#define PORT_ID_SET_PIN_DIRECTION      0x01u /*!< Port_SetPinDirection() api service id */
-#define PORT_ID_SET_PIN_MODE           0x02u /*!< Port_SetPinMode() api service id */
+#define PORT_ID_SET_PIN_DIRECTION      0x10u /*!< Port_SetPinDirection() api service id */
+#define PORT_ID_SET_PIN_MODE           0x0fu /*!< Port_SetPinMode() api service id */
 #define PORT_ID_GET_VERSION_INFO       0x03u /*!< Port_GetVersionInfo() api service id */
 #define PORT_ID_REFRESH_PORT_DIRECTION 0x04u /*!< Port_RefreshPortDirection() api service id */
 /**

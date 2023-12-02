@@ -26,7 +26,7 @@
  * @defgroup DET_Error_Type Det Developtment Error Types
  *
  * @{ */
-#define DET_E_PARAM_POINTER           0x00u /*!< Det_GetVersionInfo called with null parameter pointer */
+#define DET_E_PARAM_POINTER           0x01u /*!< Det_GetVersionInfo called with null parameter pointer */
 /**
  * @} */
 

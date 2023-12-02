@@ -30,10 +30,10 @@
  * @defgroup NVIC_Error_Typse Nvic Developtmnet Error Types
  *
  * @{ */
-#define NVIC_E_PARAM_IRQ          0x00u /*!< API Service called with wrong parameter */
-#define NVIC_E_PARAM_PRIORITY     0x01u /*!< API Service called with wrong parameter */
-#define NVIC_E_NMI_ENTRY          0x02u /*!< NMI vector called unnecesary */
-#define NVIC_E_HARDFAULT_ENTRY    0x03u /*!< HardFault vector called unnecesary */
+#define NVIC_E_PARAM_IRQ          0x01u /*!< API Service called with wrong parameter */
+#define NVIC_E_PARAM_PRIORITY     0x02u /*!< API Service called with wrong parameter */
+#define NVIC_E_NMI_ENTRY          0x03u /*!< NMI vector called unnecesary */
+#define NVIC_E_HARDFAULT_ENTRY    0x04u /*!< HardFault vector called unnecesary */
 /**
  * @} */
 
