@@ -87,7 +87,7 @@ void Port_Arch_SetPinDirection( const Port_PinConfigType *PortConfigPtr, Port_Pi
 {
     Port_RegisterType *PortReg = PortPeripherals[ PortConfigPtr->Port ];
 
-    Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->MODER, PortConfigPtr->Pin, TWO_BITS, Direction );
+    Bfx_PutBits_u32u8u8u32( (uint32 *)&PortReg->MODER, ( PortConfigPtr->Pin << MUL_BY_TWO ), TWO_BITS, Direction );
 }
 
 /**

@@ -57,9 +57,6 @@
 #define PORT_MODE_ALT_AF5    0x25u /*!< Alternarive funcion 5 */
 #define PORT_MODE_ALT_AF6    0x26u /*!< Alternarive funcion 6 */
 #define PORT_MODE_ALT_AF7    0x27u /*!< Alternarive funcion 7 */
-#define PORT_MODE_ALT_AF8    0x28u /*!< Alternarive funcion 8 */
-#define PORT_MODE_ALT_AF9    0x29u /*!< Alternarive funcion 9 */
-#define PORT_MODE_ALT_AF10   0x2Au /*!< Alternarive funcion 10 */
 /**
  * @}*/
 
