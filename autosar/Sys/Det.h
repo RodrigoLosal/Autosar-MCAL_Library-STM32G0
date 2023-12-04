@@ -42,6 +42,21 @@ typedef struct _Det_ConfigType
     uint32 dummy; /*!< dummy element for the moment */
 } Det_ConfigType;
 
+/**
+ * @brief **Module Config type**
+ *
+ * 	Configuration array for structure of Det Error
+ *
+ * @reqs SWS_Det_00009
+ */
+typedef struct
+{
+    const char **apiName;   /*!< Api Name */
+    const char **errorName; /*!< Error Name*/
+} Module;
+
+#define MAX_MODULE_ID 10u /*!< Maximum index for the modules array */
+
 #include "Det_Cfg.h" /* cppcheck-suppress misra-c2012-20.1 ; Include should be add it after a ConfigType */
 
 void Det_Init( const Det_ConfigType *ConfigPtr );
