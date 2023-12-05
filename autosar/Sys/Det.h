@@ -51,8 +51,10 @@ typedef struct _Det_ConfigType
  */
 typedef struct
 {
-    const char **apiName;   /*!< Api Name */
-    const char **errorName; /*!< Error Name*/
+    const char **apiName;            /*!< Api Name */
+    const char **errorName;          /*!< Error Name*/
+    const char **errorNameRuntime;   /*!< Runtime Error Name*/
+    const char **errorNameTransient; /*!< Transient Error Name*/
 } Module;
 
 #define MAX_MODULE_ID 10u /*!< Maximum index for the modules array */

@@ -424,9 +424,7 @@ static Module modules[] =
     { McuApiName, McuErrorName },
     { DioApiName, DioErrorName },
     { PortApiName, PortErrorName },
-    { FlsApiName, FlsErrorName },
-    { FlsApiName, FlsErrorNameRuntime },
-    { FlsApiName, FlsErrorNameTransient }
+    { FlsApiName, FlsErrorName ,FlsErrorNameRuntime,FlsErrorNameTransient}
 };
 
 /**
@@ -467,7 +465,7 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
 {
     if( ( ModuleId <= MAX_MODULE_ID ) )
     {
-        (void)printf( "Error: %s In %s Module in function %s with the Instance %s\n", 
+        (void)printf( "Report Error: %s In %s Module in function %s with the Instance %s\n", 
                     modules[ ModuleId ].errorName[ ErrorId ],
                     ModuleName[ ModuleId ],
                     modules[ ModuleId ].apiName[ ApiId ], 
@@ -517,8 +515,8 @@ Std_ReturnType Det_ReportRuntimeError( uint16 ModuleId, uint8 InstanceId, uint8 
 {
     if( ( ModuleId <= MAX_MODULE_ID ) )
     {
-        (void)printf( "Error: %s In %s Module in function %s with the Instance %s\n", 
-                    modules[ ModuleId ].errorName[ ErrorId ],
+        (void)printf( "Runtime Error: %s In %s Module in function %s with the Instance %s\n", 
+                    modules[ ModuleId ].errorNameRuntime[ ErrorId ],
                     ModuleName[ ModuleId ],
                     modules[ ModuleId ].apiName[ ApiId ], 
                     ModuleName[ InstanceId ]);
@@ -559,8 +557,8 @@ Std_ReturnType Det_ReportTransientFault( uint16 ModuleId, uint8 InstanceId, uint
 {
     if( ( ModuleId <= MAX_MODULE_ID ) )
     {
-        (void)printf( "Fault: %s In %s Module in function %s with the Instance %s\n", 
-                    modules[ ModuleId ].errorName[ FaultId ],
+        (void)printf( "Transient Fault: %s In %s Module in function %s with the Instance %s\n", 
+                    modules[ ModuleId ].errorNameTransient[ FaultId ],
                     ModuleName[ ModuleId ],
                     modules[ ModuleId ].apiName[ ApiId ], 
                     ModuleName[ InstanceId ]);
@@ -587,7 +585,7 @@ void Det_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
     if( versioninfo == NULL_PTR )
     {
-        /*If Det is enabled, the parameter versioninfo shall be checked for being NULL. The error SPI_E_PARAM_POINTER
+        /*If Det is enabled, the parameter versioninfo shall be checked for being NULL. The error DET_E_PARAM_POINTER
         shall be reported in case the value is a NULL pointer*/
         Det_ReportError( DET_MODULE_ID, DET_INSTANCE_ID, DET_ID_GET_VERSION_INFO, DET_E_PARAM_POINTER );
     }
