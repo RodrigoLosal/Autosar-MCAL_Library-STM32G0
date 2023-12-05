@@ -19,8 +19,7 @@
  * {@ */
 #define DET_MODULE_ID        3u /*!< Det Module ID */
 #define DET_INSTANCE_ID      3u /*!< Det Instance ID */
-#define DET_APILD_ID         0u /*!< Det Apild ID */
-#define DET_FAULT_ID         0u /*!< Det Fault ID */
+#define DET_VENDOR_ID        0u /*!< Det Module Vendor ID */
 /**
  * @} */
 
