@@ -802,14 +802,14 @@ Std_ReturnType CanIf_EnableBusMirroring( uint8 ControllerId, boolean MirroringAc
         /*All CanIf API services other than CanIf_Init() and CanIf_GetVersionInfo() shall not execute
         their normal operation and return E_NOT_OK unless the CanIf has been initialized with a
         preceding call of CanIf_Init */
-        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_CTRL_RX_ERR_CNT, CANIF_E_UNINIT );
+        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_ENABLE_BUS_MIRROR, CANIF_E_UNINIT );
     }
     else if( ControllerId > LocalConfigPtr->NumberOfCanControllers )
     {
         /*If parameter ControllerId of CanIf_EnableBusMirroring() has an invalid value, the CanIf
         shall report development error code CANIF_E_PARAM_CONTROLLERID to the Det_ReportError
         service of the DET, when CanIf_EnableBusMirroring() is called.*/
-        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_CTRL_RX_ERR_CNT, CANIF_E_PARAM_CONTROLLERID );
+        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_ENABLE_BUS_MIRROR, CANIF_E_PARAM_CONTROLLERID );
     }
     else
     {
@@ -1210,21 +1210,21 @@ void CanIf_ErrorNotification( uint8 ControllerId, Can_ErrorType CanError )
         /*All CanIf API services other than CanIf_Init() and CanIf_GetVersionInfo() shall not execute
         their normal operation and return E_NOT_OK unless the CanIf has been initialized with a
         preceding call of CanIf_Init */
-        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_PDU_MODE, CANIF_E_UNINIT );
+        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_ERR_NOTIF, CANIF_E_UNINIT );
     }
     else if( ControllerId >= LocalConfigPtr->NumberOfCanControllers )
     {
         /*If parameter ControllerId of CanIf_ErrorNotification() has an invalid value, the CanIf
         shall report development error code CANIF_E_PARAM_CONTROLLERID to the Det_ReportError
         service of the DET module, when CanIf_ErrorNotification() is called.*/
-        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_PDU_MODE, CANIF_E_PARAM_CONTROLLERID );
+        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_ERR_NOTIF, CANIF_E_PARAM_CONTROLLERID );
     }
     else if( CanError > CAN_ERROR_BUS_LOCK )
     {
         /*If parameter CanError of CanIf_ErrorNotification() has an invalid value, the CanIf shall
         report development error code CANIF_E_PARAM_CAN_ERROR to the Det_ReportError service of the
         DET module, when CanIf_ErrorNotification() is called*/
-        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_GET_PDU_MODE, CANIF_E_PARAM_CAN_ERROR );
+        Det_ReportError( CANIF_MODULE_ID, CANIF_INSTANCE_ID, CANIF_ID_ERR_NOTIF, CANIF_E_PARAM_CAN_ERROR );
     }
     else
     {
