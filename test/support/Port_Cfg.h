@@ -58,8 +58,13 @@
  */
 #define PORT_PIN_NUMBER_OF_PORTS   2
 
-#define PORT_PIN_LCD_CS            0
-#define PORT_PIN_LCD_RS            1
+/**
+ * @defgroup PORT_pins_in_use  Port IDs in use by the driver
+ * @{ */
+#define PORT_PIN_LCD_CS            0    /**< Port ID for LCD chip select */
+#define PORT_PIN_LCD_RS            1    /**< Port ID for LCD register select */
+/**
+ * @} */
 
 /*external reference to Port_Config array*/
 extern const Port_ConfigType PortConfig;
