@@ -12,11 +12,8 @@
  * and the structure of the PORT driver and DIO driver within the MCAL software layer. To use some
  * functions check the Port_Cfg.h file to configured the values.
  */
-#include "Bfx.h"
 #include "Std_Types.h"
-#include "Registers.h"
 #include "Port.h"
-#include "Port_Types.h"
 #include "Port_Arch.h"
 
 /* cppcheck-suppress misra-c2012-20.9 ; this is declared at Can_Cfg.h */
@@ -31,6 +28,17 @@
 #else
 #include "Det.h"
 #endif
+
+/**
+ * @defgroup max_port_values  max number of Mcu ports, pins and altern modes
+ *
+ * @{ */
+/* cppcheck-suppress misra-c2012-2.5 ; use when DET is active */
+#define MAX_PIN_MODES 4u /*!< Max values on pin modes */
+/* cppcheck-suppress misra-c2012-2.5 ; use when DET is active */
+#define MAX_ALT_MODES 11u /*!< Max values on altern modes */
+/**
+ * @}*/
 
 /**
  * @brief  Variable for the initial value of the port configuration array.
@@ -60,7 +68,10 @@ void Port_Init( const Port_ConfigType *ConfigPtr )
     }
     else
     {
-        Port_Arch_Init( ConfigPtr );
+        for( uint8 Port = 0u; Port < ConfigPtr->NumbersOfPins; Port++ )
+        {
+            Port_Arch_Init( &ConfigPtr->PortPins[ Port ] );
+        }
         /*make the port configuration accesible for other functions*/
         Port_ConfigPtr = ConfigPtr;
     }
@@ -89,14 +100,14 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
         if the parameter Port_ConfigPtr is a null value.*/
         Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_SET_PIN_DIRECTION, PORT_E_UNINIT );
     }
-    else if( ( GET_HIGH_BYTE( Pin ) < MAX_PORT_NUMBER ) && ( GET_LOW_NIBBLE( Pin ) < STD_HIGH ) )
+    else if( Pin >= Port_ConfigPtr->NumbersOfPins )
     {
         /* If development error detection for the PORT module is enabled:
         The function Port_SetPinDirection shall raise the error PORT_E_PARAM_PIN
         if an incorrect port pin ID has been passed.*/
         Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_SET_PIN_DIRECTION, PORT_E_PARAM_PIN );
     }
-    else if( Port_ConfigPtr[ GET_HIGH_BYTE( Pin ) ].DirChange == FALSE )
+    else if( Port_ConfigPtr->PortPins[ Pin ].DirChange == FALSE )
     {
         /* If development error detection for the PORT module is enabled:
         The function Port_SetPinDirection shall raise the error PORT_E_DIRECTION_UNCHANGEABLE
@@ -105,7 +116,7 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
     }
     else
     {
-        Port_Arch_SetPinDirection( Pin, Direction, Port_ConfigPtr );
+        Port_Arch_SetPinDirection( &Port_ConfigPtr->PortPins[ Pin ], Direction );
     }
 }
 #endif
@@ -126,6 +137,9 @@ void Port_SetPinDirection( Port_PinType Pin, Port_PinDirectionType Direction )
 #if PORT_SET_PIN_MODE_API == STD_ON
 void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
 {
+    uint8 PinMode = GET_HIGH_NIBBLE( Mode );
+    uint8 AltMode = GET_LOW_NIBBLE( Mode );
+
     if( Port_ConfigPtr == NULL_PTR )
     {
         /* If development error detection for the PORT module is enabled:
@@ -133,30 +147,30 @@ void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
         if the parameter Port_ConfigPtr is a null value.*/
         Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_SET_PIN_MODE, PORT_E_UNINIT );
     }
-    else if( ( GET_HIGH_BYTE( Pin ) < MAX_PORT_NUMBER ) && ( GET_LOW_NIBBLE( Pin ) < STD_HIGH ) )
+    else if( Pin >= Port_ConfigPtr->NumbersOfPins )
     {
         /* If development error detection for the PORT module is enabled:
         The function Port_SetPinMode shall raise the error PORT_E_PARAM_PIN
         if an incorrect port pin ID has been passed.*/
         Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_SET_PIN_MODE, PORT_E_PARAM_PIN );
     }
-    else if( ( GET_HIGH_NIBBLE( Pin ) < MAX_PIN_MODES ) && ( GET_LOW_NIBBLE( Mode ) < MAX_ALT_MODES ) )
-    {
-        /* If development error detection for the PORT module is enabled:
-        The function Port_SetPinMode shall raise the error PORT_E_PARAM_PIN
-        if an incorrect port pin ID has been passed.*/
-        Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_SET_PIN_MODE, PORT_E_PARAM_INVALID_MODE );
-    }
-    else if( Port_ConfigPtr[ GET_HIGH_BYTE( Pin ) ].ModeChange == FALSE )
+    else if( Port_ConfigPtr->PortPins[ Pin ].ModeChange == FALSE )
     {
         /* If development error detection for the Can module is enabled:
         The function Port_SetPinMode shall raise the error PORT_E_MODE_UNCHANGEABLE
         if the mode is unchangeable.*/
         Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_SET_PIN_MODE, PORT_E_MODE_UNCHANGEABLE );
     }
+    else if( ( PinMode > MAX_PIN_MODES ) || ( AltMode > MAX_ALT_MODES ) )
+    {
+        /* If development error detection for the PORT module is enabled:
+        The function Port_SetPinMode shall raise the error PORT_E_PARAM_PIN
+        if an incorrect port pin ID has been passed.*/
+        Det_ReportError( PORT_MODULE_ID, PORT_INSTANCE_ID, PORT_ID_SET_PIN_MODE, PORT_E_PARAM_INVALID_MODE );
+    }
     else
     {
-        Port_Arch_SetPinMode( Pin, Mode, Port_ConfigPtr );
+        Port_Arch_SetPinMode( &Port_ConfigPtr->PortPins[ Pin ], PinMode, AltMode );
     }
 }
 #endif
@@ -184,11 +198,11 @@ void Port_GetVersionInfo( Std_VersionInfoType *versioninfo )
     }
     else
     {
-        versioninfo->moduleID         = 0;
-        versioninfo->sw_major_version = 0;
-        versioninfo->sw_minor_version = 0;
-        versioninfo->sw_patch_version = 0;
-        versioninfo->vendorID         = 0;
+        versioninfo->moduleID         = PORT_MODULE_ID;
+        versioninfo->sw_major_version = PORT_SW_MAJOR_VERSION;
+        versioninfo->sw_minor_version = PORT_SW_MINOR_VERSION;
+        versioninfo->sw_patch_version = PORT_SW_PATCH_VERSION;
+        versioninfo->vendorID         = PORT_VENDOR_ID;
     }
 }
 #endif
@@ -212,6 +226,9 @@ void Port_RefreshPortDirection( void )
     }
     else
     {
-        Port_Arch_RefreshPortDirection( Port_ConfigPtr );
+        for( uint8 Port = 0u; Port < Port_ConfigPtr->NumbersOfPins; Port++ )
+        {
+            Port_Arch_RefreshPortDirection( &Port_ConfigPtr->PortPins[ Port ] );
+        }
     }
 }

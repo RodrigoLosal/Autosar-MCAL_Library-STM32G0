@@ -11,6 +11,8 @@
 #ifndef PORT_CFG_H_
 #define PORT_CFG_H_
 
+#include "Port_Types.h"
+
 /**
  * @defgroup PORT_SWC_Ids PORT software version and Ids
  *
@@ -54,9 +56,12 @@
  * and shall be set by the user according to the number of elements defined in Port_Config array
  * shall be greater than zero
  */
-#define PORT_PIN_NUMBER_OF_PORTS   1
+#define PORT_PIN_NUMBER_OF_PORTS   2
+
+#define PORT_PIN_LCD_CS            0
+#define PORT_PIN_LCD_RS            1
 
 /*external reference to Port_Config array*/
-extern const Port_ConfigType PortConfig[ PORT_PIN_NUMBER_OF_PORTS ];
+extern const Port_ConfigType PortConfig;
 
 #endif /* PORT_CFG_H_ */
