@@ -461,6 +461,7 @@ void Det_Init( const Det_ConfigType *ConfigPtr )
  *
  * @reqs    SWS_Det_00009
  */
+/* cppcheck-suppress misra-c2012-8.7 ; Its been used in other files*/
 Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, uint8 ErrorId )
 {
     if( ( ModuleId <= MAX_MODULE_ID ) )
