@@ -7,7 +7,7 @@ misra-c2012-2.5:autosar/mcal/Dio/Dio.h
 misra-c2012-2.5:autosar/mcal/Dio/Dio_Types.h
 misra-c2012-2.5:autosar/mcal/Port/Port_Types.h
 misra-c2012-2.5:autosar/mcal/Port/Port_Arch.h
-misra-c2012-2.5:autosar/mcal/Can/Can.h
+misra-c2012-2.5:autosar/mcal/Can/Can_Types.h
 misra-c2012-2.5:autosar/mcal/Can/Can_Arch.h
 misra-c2012-2.5:autosar/mcal/Pwm/Pwm.h
 misra-c2012-2.5:autosar/mcal/Fls/Fls.h

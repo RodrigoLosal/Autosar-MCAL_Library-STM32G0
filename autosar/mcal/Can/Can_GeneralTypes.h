@@ -95,7 +95,7 @@ typedef enum _Can_ControllerStateType
 typedef enum _Can_ErrorType
 {                                     /* cppcheck-suppress misra-c2012-2.4 ; the enum name it is neccesary */
     CAN_ERROR_BIT_MONITORING1 = 0x01, /*!< A 0 was transmitted and a 1 was read back*/
-    CAN_ERROR_BIT_MONITORING2,        /*!< A 1 was transmitted and a 0 was read back*/
+    CAN_ERROR_BIT_MONITORING0,        /*!< A 1 was transmitted and a 0 was read back*/
     CAN_ERROR_BIT,                    /*!< The HW reports a CAN bit error but cannot report distinguish
                                           between CAN_ERROR_BIT_MONITORING1 and CAN_ERROR_BIT_MONITORING0*/
     CAN_ERROR_CHECK_ACK_FAILED,       /*!< Acknowledgement check failed*/

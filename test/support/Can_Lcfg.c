@@ -23,8 +23,8 @@ const Can_Controller Controllers[ CAN_NUMBER_OF_CONTROLLERS ] =
         .FrameFormat = CAN_FRAME_CLASSIC,
         .BaudrateConfigsCount = CAN_NUMBER_OF_BAUDRATES_CTRL0
     },
-    { 
-        .FrameFormat = CAN_FRAME_FD_NO_BRS,
+    {
+        .FrameFormat = CAN_FRAME_FD, 
         .BaudrateConfigsCount = CAN_NUMBER_OF_BAUDRATES_CTRL1
     } 
 };

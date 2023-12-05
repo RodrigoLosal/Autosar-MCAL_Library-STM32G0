@@ -43,7 +43,8 @@
 /**
  * @brief  Variable for the initial value of the port configuration array.
  */
-static const Port_ConfigType *Port_ConfigPtr = NULL_PTR;
+/* cppcheck-suppress misra-c2012-8.4 ; qualifier is declared at Can.h */
+PORT_STATIC const Port_ConfigType *Port_ConfigPtr = NULL_PTR;
 
 /**
  * @brief Initialize the GPIO pins to the configuration store on ConfigPTR.
@@ -189,7 +190,7 @@ void Port_SetPinMode( Port_PinType Pin, Port_PinModeType Mode )
 #if PORT_VERSION_INFO_API == STD_ON
 void Port_GetVersionInfo( Std_VersionInfoType *versioninfo )
 {
-    if( versioninfo != NULL_PTR )
+    if( versioninfo == NULL_PTR )
     {
         /* If development error detection for the Can module is enabled:
         The function Port_GetVersionInfo shall raise the error PORT_E_PARAM_POINTER

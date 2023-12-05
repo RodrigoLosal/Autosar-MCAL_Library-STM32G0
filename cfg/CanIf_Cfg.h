@@ -78,5 +78,6 @@
  */
 #define CANIF_VERSION_INFO_API                 STD_ON
 
+extern const CanIf_ConfigType CanIfConfig;
 
 #endif /* CANIF_CFG_H__ */

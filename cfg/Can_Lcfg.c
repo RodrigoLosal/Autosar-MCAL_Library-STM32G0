@@ -14,13 +14,147 @@
 
 
 /**
+ * @brief Array with baudrate values for controller 0
+ *
+ */
+/* clang-format off */
+const Can_ControllerBaudrateConfig BaudratesCtrl0[ CAN_NUMBER_OF_BAUDRATES_CTRL0 ] =
+{
+    {
+        .BaudRateConfigID = CAN_BAUDRATE_CTRL1_100K,
+        .Seg1 = 13,
+        .Seg2 = 2,
+        .SyncJumpWidth = 1,
+        .Prescaler = 6,
+        .FdSeg1 = 13,
+        .FdSeg2 = 2,
+        .FdPrescaler = 6,
+        .FdSspOffset = 0,
+        .FdSyncJumpWidth = 1,
+        .FdTxBitRateSwitch = STD_OFF
+    },
+    {
+        .BaudRateConfigID = CAN_BAUDRATE_CTRL1_500K,
+        .Seg1 = 13,
+        .Seg2 = 2,
+        .SyncJumpWidth = 1,
+        .Prescaler = 6,
+        .FdSeg1 = 13,
+        .FdSeg2 = 2,
+        .FdPrescaler = 6,
+        .FdSspOffset = 0,
+        .FdSyncJumpWidth = 1,
+        .FdTxBitRateSwitch = STD_OFF
+    } 
+};
+
+/**
+ * @brief Array with baudrate values for controller 0
+ * 
+*/
+/* clang-format off */
+const Can_ControllerBaudrateConfig BaudratesCtrl1[ CAN_NUMBER_OF_BAUDRATES_CTRL1 ] =
+{
+    {
+        .BaudRateConfigID = CAN_BAUDRATE_CTRL0_100K,
+        .Seg1 = 13,
+        .Seg2 = 2,
+        .SyncJumpWidth = 1,
+        .Prescaler = 6,
+        .FdSeg1 = 13,
+        .FdSeg2 = 2,
+        .FdPrescaler = 6,
+        .FdSspOffset = 0,
+        .FdSyncJumpWidth = 1,
+        .FdTxBitRateSwitch = STD_OFF
+    },
+    {
+        .BaudRateConfigID = CAN_BAUDRATE_CTRL0_500K,
+        .Seg1 = 13,
+        .Seg2 = 2,
+        .SyncJumpWidth = 1,
+        .Prescaler = 6,
+        .FdSeg1 = 13,
+        .FdSeg2 = 2,
+        .FdPrescaler = 6,
+        .FdSspOffset = 0,
+        .FdSyncJumpWidth = 1,
+        .FdTxBitRateSwitch = STD_OFF
+    } 
+};
+
+
+/**
  * @brief Array with the configuration for each controller.
  */
 /* clang-format off */
 const Can_Controller Controllers[ CAN_NUMBER_OF_CONTROLLERS ] =
 {
+    {
+        .ControllerId = CAN_CONTROLLER_0,
+        .Mode = CAN_MODE_NORMAL,
+        .ClockDivider = CAN_CLOCK_DIV1,
+        .FrameFormat = CAN_FRAME_CLASSIC,
+        .TransmitPause = STD_OFF,
+        .ProtocolException = STD_OFF,
+        .AutoRetransmission = STD_ON,
+        .TxFifoQueueMode = CAN_TX_FIFO_OPERATION,
+        .ActiveITs = CAN_IT_RX_FIFO0_NEW_MESSAGE | CAN_IT_RX_FIFO1_NEW_MESSAGE | CAN_IT_TX_COMPLETE,
+        .DefaultBaudrate = &BaudratesCtrl0[ CAN_BAUDRATE_CTRL0_100K ],
+        .BaudrateConfigs = BaudratesCtrl0,
+        .BaudrateConfigsCount = CAN_NUMBER_OF_BAUDRATES_CTRL0,
+        .CanReference = CAN_FDCAN1
+    },
+    {
+        .ControllerId = CAN_CONTROLLER_1,
+        .Mode = CAN_MODE_NORMAL,
+        .ClockDivider = CAN_CLOCK_DIV1,
+        .FrameFormat = CAN_FRAME_CLASSIC,
+        .TransmitPause = STD_OFF,
+        .ProtocolException = STD_OFF,
+        .AutoRetransmission = STD_ON,
+        .TxFifoQueueMode = CAN_TX_FIFO_OPERATION,
+        .ActiveITs = CAN_IT_RX_FIFO0_NEW_MESSAGE | CAN_IT_RX_FIFO1_NEW_MESSAGE | CAN_IT_TX_COMPLETE,
+        .DefaultBaudrate = &BaudratesCtrl1[ CAN_BAUDRATE_CTRL1_500K ],
+        .BaudrateConfigs = BaudratesCtrl1,
+        .BaudrateConfigsCount = CAN_NUMBER_OF_BAUDRATES_CTRL1,
+        .CanReference = CAN_FDCAN2
+    }
+};
+/* clang-format on */
+
+/* clang-format off */
+const Can_HwFilter Fifo0Filters[ CAN_N_OF_FIFO0_FILTERS ] =
+{
     { 
-        .FrameFormat = CAN_FRAME_CLASSIC 
+        .HwFilterCode   = 0x00000000,
+        .HwFilterMask   = 0x00000000,
+        .HwFilterType   = CAN_FILTER_TYPE_RANGE,
+        .HwFilterIdType = CAN_ID_STANDARD 
+    },
+    { 
+        .HwFilterCode   = 0x00000000,
+        .HwFilterMask   = 0x00000000,
+        .HwFilterType   = CAN_FILTER_TYPE_RANGE,
+        .HwFilterIdType = CAN_ID_STANDARD 
+    } 
+};
+/* clang-format on */
+
+/* clang-format off */
+const Can_HwFilter Fifo1Filters[ CAN_N_OF_FIFO1_FILTERS ] =
+{
+    { 
+        .HwFilterCode   = 0x00000000,
+        .HwFilterMask   = 0x00000000,
+        .HwFilterType   = CAN_FILTER_TYPE_RANGE,
+        .HwFilterIdType = CAN_ID_STANDARD 
+    },
+    { 
+        .HwFilterCode   = 0x00000000,
+        .HwFilterMask   = 0x00000000,
+        .HwFilterType   = CAN_FILTER_TYPE_RANGE,
+        .HwFilterIdType = CAN_ID_STANDARD 
     } 
 };
 /* clang-format on */
@@ -31,8 +165,33 @@ const Can_Controller Controllers[ CAN_NUMBER_OF_CONTROLLERS ] =
 /* clang-format off */
 const Can_HardwareObject Hohs[ CAN_NUMBER_OF_HOHS ] =
 {
-    { 
-        .ObjectType = CAN_HOH_TYPE_TRANSMIT 
+    {
+        .CanObjectId = CAN_OBJ_HTH_TX00,
+        .HandleType = CAN_FULL,
+        .IdType = CAN_ID_STANDARD,
+        .ObjectPayloadLength = 8,
+        .ObjectType = CAN_HOH_TYPE_TRANSMIT,
+        .ControllerRef = &Controllers[ CAN_CONTROLLER_0 ]
+    },
+    {
+        .CanObjectId = CAN_OBJ_HRH_RX00,
+        .HandleType = CAN_FULL,
+        .IdType = CAN_ID_STANDARD,
+        .ObjectPayloadLength = 8,
+        .ObjectType = CAN_HOH_TYPE_RECEIVE,
+        .ControllerRef = &Controllers[ CAN_CONTROLLER_0 ],
+        .HwFilter = Fifo0Filters,
+        .HwFilterCount = CAN_N_OF_FIFO0_FILTERS
+    },
+    {
+        .CanObjectId = CAN_OBJ_HRH_RX01,
+        .HandleType = CAN_FULL,
+        .IdType = CAN_ID_STANDARD,
+        .ObjectPayloadLength = 8,
+        .ObjectType = CAN_HOH_TYPE_RECEIVE,
+        .ControllerRef = &Controllers[ CAN_CONTROLLER_0 ],
+        .HwFilter = Fifo1Filters,
+        .HwFilterCount = CAN_N_OF_FIFO1_FILTERS
     } 
 };
 /* clang-format on */
@@ -43,6 +202,7 @@ const Can_HardwareObject Hohs[ CAN_NUMBER_OF_HOHS ] =
 /* clang-format off */
 const Can_ConfigType CanConfig =
 {
-    .Hohs         = NULL_PTR 
+    .Controllers = Controllers,
+    .Hohs         = Hohs 
 };
 /* clang-format on */
