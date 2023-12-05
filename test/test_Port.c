@@ -6,10 +6,10 @@
 
 /**
  * @defgroup    PORT_defines  This are defines used in the test cases
-* @{ */
-#define PORT_PIN_INVALID     0xFFu  /**< Invalid port pin ID */
-#define PORT_PINMODE_INVALID 0xF0u  /**< Invalid port pin mode */
-#define PORT_ALTMODE_INVALID 0x0Fu  /**< Invalid port pin alt mode */
+ * @{ */
+#define PORT_PIN_INVALID     0xFFu /**< Invalid port pin ID */
+#define PORT_PINMODE_INVALID 0xF0u /**< Invalid port pin mode */
+#define PORT_ALTMODE_INVALID 0x0Fu /**< Invalid port pin alt mode */
 /**
  * @} */
 

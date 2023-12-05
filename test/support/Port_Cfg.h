@@ -61,8 +61,8 @@
 /**
  * @defgroup PORT_pins_in_use  Port IDs in use by the driver
  * @{ */
-#define PORT_PIN_LCD_CS            0    /**< Port ID for LCD chip select */
-#define PORT_PIN_LCD_RS            1    /**< Port ID for LCD register select */
+#define PORT_PIN_LCD_CS            0 /**< Port ID for LCD chip select */
+#define PORT_PIN_LCD_RS            1 /**< Port ID for LCD register select */
 /**
  * @} */
 
