@@ -26,14 +26,14 @@ extern void initialise_monitor_handles( void );
  * @brief  Array of module ID names
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
-static const char *ModuleName[] = { "SPI", "PWM", "GPT", "DET", "CAN", "ADC", "NVIC", "MCU", "DIO", "PORT", "FLS" };
+static const char *ModuleName[ 11 ] = { "SPI", "PWM", "GPT", "DET", "CAN", "ADC", "NVIC", "MCU", "DIO", "PORT", "FLS" };
 
 /**
  * @brief  Array of Spi Api function names
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *SpiApiName[] =
+static const char *SpiApiName[ 14 ] =
 {
     [SPI_ID_INIT]                = "Spi_Init()",
     [SPI_ID_DE_INIT]             = "Spi_DeInit()",
@@ -57,7 +57,7 @@ static const char *SpiApiName[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *SpiErrorName[] =
+static const char *SpiErrorName[ 75 ] =
 {
     [SPI_E_PARAM_CHANNEL]       = "SPI_E_PARAM_CHANNEL",
     [SPI_E_PARAM_JOB]           = "SPI_E_PARAM_JOB",
@@ -75,7 +75,7 @@ static const char *SpiErrorName[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *PwmApiName[] =
+static const char *PwmApiName[ 13 ] =
 {
     [PWM_ID_INIT]                    = "Pwm_Init()",
     [PWM_ID_DE_INIT]                 = "Pwm_DeInit()",
@@ -98,7 +98,7 @@ static const char *PwmApiName[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *PwmErrorName[] = 
+static const char *PwmErrorName[ 26 ] = 
 {
     [PWM_E_INIT_FAILED]               = "PWM_E_INIT_FAILED",
     [PWM_E_UNINIT]                    = "PWM_E_UNINIT",
@@ -118,7 +118,7 @@ static const char *PwmErrorName[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *GptApiName[] = 
+static const char *GptApiName[ 9 ] = 
 {
     [GPT_ID_GET_VERSION_INFO]     = "Gpt_GetVersionInfo()",
     [GPT_ID_INIT]                 = "Gpt_Init()",
@@ -137,7 +137,7 @@ static const char *GptApiName[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *GptErrorName[] = 
+static const char *GptErrorName[ 32 ] = 
 {
     [GPT_E_UNINIT]              = "GPT_E_UNINIT",
     [GPT_E_ALREADY_INITIALIZED] = "GPT_E_ALREADY_INITIALIZED",
@@ -182,7 +182,7 @@ static const char *DetErrorName[ 2 ] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *CanApiName[] = 
+static const char *CanApiName[ 54 ] = 
 {
     [CAN_ID_INIT]                = "Can_Init()",
     [CAN_ID_DE_INIT]             = "Can_DeInit()",
@@ -214,7 +214,7 @@ static const char *CanApiName[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *CanErrorName[] = 
+static const char *CanErrorName[ 11 ] = 
 {
     [CAN_E_PARAM_POINTER]     = "CAN_E_PARAM_POINTER",
     [CAN_E_PARAM_HANDLE]      = "CAN_E_PARAM_HANDLE",
@@ -233,7 +233,7 @@ static const char *CanErrorName[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *AdcApiName[] = 
+static const char *AdcApiName[ 21 ] = 
 {
     [ADC_ID_INIT]                       = "Adc_Init()",
     [ADC_RESULT_BUFFER]                 = "Adc_SetupResultBuffer()",
@@ -261,7 +261,7 @@ static const char *AdcApiName[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *AdcErrorName[] = 
+static const char *AdcErrorName[ 30 ] = 
 {
     [ADC_E_UNINIT]                    = "ADC_E_UNINIT",
     [ADC_E_ALREADY_INITIALIZED]       = "ADC_E_ALREADY_INITIALIZED",
@@ -285,7 +285,7 @@ static const char *AdcErrorName[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *NvicApiName[] = 
+static const char *NvicApiName[ 9 ] = 
 {
     [NVIC_ID_SET_PRIORITY]      = "CDD_Nvic_SetPriority()",
     [NVIC_ID_GET_PRIORITY]      = "CDD_Nvic_GetPriority()",
@@ -304,7 +304,7 @@ static const char *NvicApiName[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *NvicErrorName[] = 
+static const char *NvicErrorName[ 5 ] = 
 {
     [NVIC_E_PARAM_IRQ]       = "NVIC_E_PARAM_IRQ",
     [NVIC_E_PARAM_PRIORITY]  = "NVIC_E_PARAM_PRIORITY",
@@ -318,7 +318,7 @@ static const char *NvicErrorName[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *McuApiName[] = 
+static const char *McuApiName[ 11 ] = 
 {
     [MCU_ID_INIT]                 = "Mcu_Init()",
     [MCU_ID_INIT_RAM]             = "Mcu_InitRamSection()",
@@ -339,7 +339,7 @@ static const char *McuApiName[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *McuErrorName[] = 
+static const char *McuErrorName[ 18 ] = 
 {
     [MCU_E_PARAM_CONFIG]     = "MCU_E_PARAM_CONFIG",
     [MCU_E_PARAM_CLOCK]      = "MCU_E_PARAM_CLOCK",
@@ -357,7 +357,7 @@ static const char *McuErrorName[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *DioApiName[] = 
+static const char *DioApiName[ 20 ] = 
 {
     [DIO_ID_READ_CHANNEL]      = "Dio_ReadChannel()",
     [DIO_ID_WRITE_CHANNEL]     = "Dio_WriteChannel()",
@@ -376,7 +376,7 @@ static const char *DioApiName[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *DioErrorName[] = 
+static const char *DioErrorName[ 33 ] = 
 {
     [DIO_E_PARAM_INVALID_CHANNEL_ID] = "DIO_E_PARAM_INVALID_CHANNEL_ID",
     [DIO_E_PARAM_INVALID_PORT_ID]    = "DIO_E_PARAM_INVALID_PORT_ID",
@@ -390,7 +390,7 @@ static const char *DioErrorName[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *PortApiName[] = 
+static const char *PortApiName[ 17 ] = 
 {
     [PORT_ID_INIT]                   = "Port_Init()",
     [PORT_ID_SET_PIN_DIRECTION]      = "Port_SetPinDirection()",
@@ -405,7 +405,7 @@ static const char *PortApiName[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *PortErrorName[] = 
+static const char *PortErrorName[ 17 ] = 
 {
     [PORT_E_PARAM_PIN]              = "PORT_E_PARAM_PIN",
     [PORT_E_DIRECTION_UNCHANGEABLE] = "PORT_E_DIRECTION_UNCHANGEABLE",
@@ -422,7 +422,7 @@ static const char *PortErrorName[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *FlsApiName[] = 
+static const char *FlsApiName[ 17 ] = 
 {
     [FLS_ID_INIT]           = "Fls_Init()",
     [FLS_ID_ERASE]          = "Fls_Erase()",
@@ -443,7 +443,7 @@ static const char *FlsApiName[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *FlsErrorName[] = 
+static const char *FlsErrorName[ 12 ] = 
 {
     [FLS_E_PARAM_CONFIG]        = "FLS_E_PARAM_CONFIG",
     [FLS_E_PARAM_ADDRESS]       = "FLS_E_PARAM_ADDRESS",
@@ -460,7 +460,7 @@ static const char *FlsErrorName[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *FlsErrorNameRuntime[] =
+static const char *FlsErrorNameRuntime[ 10 ] =
 {
     [FLS_E_BUSY]                = "FLS_E_BUSY",
     [FLS_E_VERIFY_ERASE_FAILED] = "FLS_E_VERIFY_ERASE_FAILED",
@@ -474,7 +474,7 @@ static const char *FlsErrorNameRuntime[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static const char *FlsErrorNameTransient[] =
+static const char *FlsErrorNameTransient[ 6 ] =
 {
     [FLS_E_ERASE_FAILED]        = "FLS_E_ERASE_FAILED",
     [FLS_E_WRITE_FAILED]        = "FLS_E_WRITE_FAILED",
@@ -489,7 +489,7 @@ static const char *FlsErrorNameTransient[] =
  */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
-static Module modules[] =
+static Module modules[ 11 ] =
 {
     { SpiApiName, SpiErrorName },
     { PwmApiName, PwmErrorName },
