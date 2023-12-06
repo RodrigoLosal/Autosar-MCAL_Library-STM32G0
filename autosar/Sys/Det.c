@@ -22,9 +22,15 @@
 
 extern void initialise_monitor_handles( void );
 
+/**
+ * @brief  Array of module ID names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 static const char *ModuleName[] = { "SPI", "PWM", "GPT", "DET", "CAN", "ADC", "NVIC", "MCU", "DIO", "PORT", "FLS" };
 
+/**
+ * @brief  Array of Spi Api function names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *SpiApiName[] =
@@ -46,7 +52,9 @@ static const char *SpiApiName[] =
 };
 /* clang-format on */
 
-
+/**
+ * @brief  Array of Spi Error names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *SpiErrorName[] =
@@ -62,6 +70,9 @@ static const char *SpiErrorName[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Pwm Api function names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *PwmApiName[] =
@@ -82,6 +93,9 @@ static const char *PwmApiName[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Pwm Error names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *PwmErrorName[] = 
@@ -99,6 +113,9 @@ static const char *PwmErrorName[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Gpt Api function names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *GptApiName[] = 
@@ -115,6 +132,9 @@ static const char *GptApiName[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Gpt Error names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *GptErrorName[] = 
@@ -130,6 +150,9 @@ static const char *GptErrorName[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Det Api function names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *DetApiName[ 6 ] = 
@@ -143,6 +166,9 @@ static const char *DetApiName[ 6 ] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Det Error names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *DetErrorName[ 2 ] = 
@@ -151,6 +177,9 @@ static const char *DetErrorName[ 2 ] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Can Api function names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *CanApiName[] = 
@@ -180,6 +209,9 @@ static const char *CanApiName[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Can Error names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *CanErrorName[] = 
@@ -196,6 +228,9 @@ static const char *CanErrorName[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Adc Api function names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *AdcApiName[] = 
@@ -221,6 +256,9 @@ static const char *AdcApiName[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Adc Error names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *AdcErrorName[] = 
@@ -242,6 +280,9 @@ static const char *AdcErrorName[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Nvic Api function names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *NvicApiName[] = 
@@ -258,6 +299,9 @@ static const char *NvicApiName[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Nvic Error names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *NvicErrorName[] = 
@@ -269,6 +313,9 @@ static const char *NvicErrorName[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Mcu Api function names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *McuApiName[] = 
@@ -287,6 +334,9 @@ static const char *McuApiName[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Mcu Error names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *McuErrorName[] = 
@@ -302,6 +352,9 @@ static const char *McuErrorName[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Dio Api function names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *DioApiName[] = 
@@ -318,6 +371,9 @@ static const char *DioApiName[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Dio Error names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *DioErrorName[] = 
@@ -329,6 +385,9 @@ static const char *DioErrorName[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Port Api function names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *PortApiName[] = 
@@ -341,6 +400,9 @@ static const char *PortApiName[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Port Error names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *PortErrorName[] = 
@@ -355,6 +417,9 @@ static const char *PortErrorName[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Fls Api function names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *FlsApiName[] = 
@@ -373,6 +438,9 @@ static const char *FlsApiName[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Fls Error names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *FlsErrorName[] = 
@@ -387,6 +455,9 @@ static const char *FlsErrorName[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Fls Runtime Error names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *FlsErrorNameRuntime[] =
@@ -398,6 +469,9 @@ static const char *FlsErrorNameRuntime[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of Fls Transient Error names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static const char *FlsErrorNameTransient[] =
@@ -410,6 +484,9 @@ static const char *FlsErrorNameTransient[] =
 };
 /* clang-format on */
 
+/**
+ * @brief  Array of modules Api and Error(Runtime and transient) names
+ */
 /* cppcheck-suppress misra-c2012-8.9 ; Has to be global due to the compiler can place them in the Flash Memory*/
 /* clang-format off */
 static Module modules[] =
@@ -426,6 +503,7 @@ static Module modules[] =
     { PortApiName, PortErrorName },
     { FlsApiName, FlsErrorName ,FlsErrorNameRuntime,FlsErrorNameTransient}
 };
+/* clang-format on */
 
 /**
  * @brief    **Det Initialization**
@@ -466,11 +544,11 @@ Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
 {
     if( ( ModuleId <= MAX_MODULE_ID ) )
     {
-        (void)printf( "Report Error: %s In %s Module in function %s with the Instance %s\n", 
-                    modules[ ModuleId ].errorName[ ErrorId ],
-                    ModuleName[ ModuleId ],
-                    modules[ ModuleId ].apiName[ ApiId ], 
-                    ModuleName[ InstanceId ]);
+        (void)printf( "Report Error: %s In %s Module in function %s with the Instance %s\n",
+                      modules[ ModuleId ].errorName[ ErrorId ],
+                      ModuleName[ ModuleId ],
+                      modules[ ModuleId ].apiName[ ApiId ],
+                      ModuleName[ InstanceId ] );
     }
     else
     {
@@ -516,11 +594,11 @@ Std_ReturnType Det_ReportRuntimeError( uint16 ModuleId, uint8 InstanceId, uint8 
 {
     if( ( ModuleId <= MAX_MODULE_ID ) )
     {
-        (void)printf( "Runtime Error: %s In %s Module in function %s with the Instance %s\n", 
-                    modules[ ModuleId ].errorNameRuntime[ ErrorId ],
-                    ModuleName[ ModuleId ],
-                    modules[ ModuleId ].apiName[ ApiId ], 
-                    ModuleName[ InstanceId ]);
+        (void)printf( "Runtime Error: %s In %s Module in function %s with the Instance %s\n",
+                      modules[ ModuleId ].errorNameRuntime[ ErrorId ],
+                      ModuleName[ ModuleId ],
+                      modules[ ModuleId ].apiName[ ApiId ],
+                      ModuleName[ InstanceId ] );
     }
     else
     {
@@ -558,11 +636,11 @@ Std_ReturnType Det_ReportTransientFault( uint16 ModuleId, uint8 InstanceId, uint
 {
     if( ( ModuleId <= MAX_MODULE_ID ) )
     {
-        (void)printf( "Transient Fault: %s In %s Module in function %s with the Instance %s\n", 
-                    modules[ ModuleId ].errorNameTransient[ FaultId ],
-                    ModuleName[ ModuleId ],
-                    modules[ ModuleId ].apiName[ ApiId ], 
-                    ModuleName[ InstanceId ]);
+        (void)printf( "Transient Fault: %s In %s Module in function %s with the Instance %s\n",
+                      modules[ ModuleId ].errorNameTransient[ FaultId ],
+                      ModuleName[ ModuleId ],
+                      modules[ ModuleId ].apiName[ ApiId ],
+                      ModuleName[ InstanceId ] );
     }
     else
     {
