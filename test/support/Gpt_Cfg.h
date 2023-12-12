@@ -61,4 +61,6 @@
 /*External reference to Gpt_Config array*/
 extern const Gpt_ConfigType GptConfig;
 
+void DumFunc( void );
+
 #endif /* GPT_CFG_H_ */

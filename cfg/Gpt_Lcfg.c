@@ -51,3 +51,12 @@ const Gpt_ConfigType GptConfig =
     .NumberOfChannels   = GPT_NUMBER_OF_CHANNELS
 };
 // clang-format on
+
+/**
+ * @brief   **Dummy Function to test Gpt_Notification_Channelx**
+ *
+ * Empty function to test as a callback inside the Gpt_Notification_Channelx interrupt function.
+ */
+void DumFunc( void )
+{
+}

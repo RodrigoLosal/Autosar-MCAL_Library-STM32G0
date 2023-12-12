@@ -67,6 +67,7 @@
     - autosar/mcal/Adc/Adc.c
     - autosar/mcal/Adc/Adc_Arch.c
     - autosar/Com/CanIf.c
+    - autosar/mcal/Gpt/Gpt_Arch.c
   :utilities:
     - gcovr
   :reports:

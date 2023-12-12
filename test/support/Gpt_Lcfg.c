@@ -27,7 +27,7 @@ const Gpt_ChannelConfigType GptChannelConfig[ GPT_NUMBER_OF_CHANNELS ] =
         .GptReference           = GPT_TIM6,
         .GptChannelMode         = TEST_GPT_CH_MODE_CONTINUOUS,
         .GptChannelPrescaler    = 0x0000FFFF,
-        .GptNotification        = NULL_PTR
+        .GptNotification        = DumFunc
     },
     {
         .GptChannelId           = GPT_CHANNEL_1,
@@ -51,3 +51,12 @@ const Gpt_ConfigType GptConfig =
     .NumberOfChannels           = GPT_NUMBER_OF_CHANNELS
 };
 // clang-format on
+
+/**
+ * @brief   **Dummy Function to test Gpt_Notification_Channelx**
+ *
+ * Empty function to test as a callback inside the Gpt_Notification_Channelx interrupt function.
+ */
+void DumFunc( void )
+{
+}
