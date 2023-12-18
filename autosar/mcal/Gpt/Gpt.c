@@ -201,7 +201,7 @@ void Gpt_StartTimer( Gpt_ChannelType Channel, Gpt_ValueType Value )
         raise the error GPT_E_PARAM_CHANNEL. */
         Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_START_TIMER, GPT_E_PARAM_CHANNEL );
     }
-    else if( ( Value == 0 ) || ( Value < GPT_ARR_MAX ) )
+    else if( ( Value == 0 ) || ( Value > GPT_ARR_MAX ) )
     {
         /* If development error detection is enabled for GPT module: The function Gpt_StartTimer
         shall raise the error GPT_E_PARAM_VALUE if the parameter Value is "0" or not within the
@@ -384,6 +384,6 @@ void Gpt_Notification_Channel0( void )
 #if GPT_ENABLE_DISABLE_NOTIFICATION_API == STD_ON /* cppcheck-suppress misra-c2012-20.9 ; it is necesary to use a define for this function */
 void Gpt_Notification_Channel1( void )
 {
-    Gpt_Arch_Notification_Channel0( HwUnit_Gpt.Config );
+    Gpt_Arch_Notification_Channel1( HwUnit_Gpt.Config );
 }
 #endif

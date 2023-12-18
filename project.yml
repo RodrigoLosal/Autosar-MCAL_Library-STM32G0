@@ -29,6 +29,8 @@
     - test/support/Mcu_Lcfg.c
     - test/support/Dio_Lcfg.c
     - test/support/Gpt_Lcfg.c
+    - test/support/CanIf_Lcfg.c
+    - test/support/Port_Lcfg.c
 
 # Global defines applicable only when you run the code using ceedling
 :defines:
