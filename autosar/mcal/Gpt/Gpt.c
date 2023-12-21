@@ -301,7 +301,7 @@ void Gpt_EnableNotification( Gpt_ChannelType Channel )
         Gpt_EnableNotification shall raise the error GPT_E_PARAM_CHANNEL. */
         Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_ENABLE_NOTIFICATION, GPT_E_PARAM_CHANNEL );
     }
-    else if( HwUnit_Gpt.Config->Channels->GptNotification == NULL_PTR )
+    else if( HwUnit_Gpt.Config->Channels[ Channel ].GptNotification == NULL_PTR )
     {
         /* If development error detection is enabled for GPT module: If no valid notification function
         is configured (GptNotification), the function Gpt_EnableNotification shall raise the error
@@ -340,7 +340,7 @@ void Gpt_DisableNotification( Gpt_ChannelType Channel )
         the function Gpt_DisableNotification shall raise the error GPT_E_UNINIT. */
         Det_ReportError( GPT_MODULE_ID, GPT_INSTANCE_ID, GPT_ID_DISABLE_NOTIFICATION, GPT_E_PARAM_CHANNEL );
     }
-    else if( HwUnit_Gpt.Config->Channels->GptNotification == NULL_PTR )
+    else if( HwUnit_Gpt.Config->Channels[ Channel ].GptNotification == NULL_PTR )
     {
         /* If development error detection is enabled for GPT module: If no valid notification function
         is configured (GptNotification), the function Gpt_DisableNotification shall raise the error

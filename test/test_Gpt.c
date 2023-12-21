@@ -34,10 +34,6 @@ void tearDown( void )
 
 void test__Gpt_Init__valid_pointer( void )
 {
-    Gpt_Arch_Init_Ignore( );
-
-    Gpt_Init( &GptConfig );
-
     TEST_ASSERT_EQUAL_MESSAGE( HwUnit_Gpt.HwUnitState, GPT_STATE_INIT, "Expected HwUnitState changed to GPT_STATE_INIT" );
 }
 
@@ -65,9 +61,6 @@ void test__Gpt_DeInit__run_before_Gpt_Init( void )
  */
 void test__Gpt_DeInit__run_after_Gpt_Init( void )
 {
-    Gpt_Arch_Init_Ignore( );
-    Gpt_Init( &GptConfig );
-
     Gpt_Arch_DeInit_Ignore( );
     Gpt_DeInit( );
 
@@ -103,9 +96,6 @@ void test__Gpt_GetTimeElapsed__run_after_Gpt_Init_invalid_Channel( void )
     Gpt_ChannelType Channel   = GPT_INVALID_CHANNEL;
     Gpt_ValueType ReturnValue = E_NOT_OK;
 
-    Gpt_Arch_Init_Ignore( );
-    Gpt_Init( &GptConfig );
-
     Gpt_Arch_GetTimeElapsed_IgnoreAndReturn( E_OK );
     ReturnValue = Gpt_GetTimeElapsed( Channel );
 
@@ -122,9 +112,6 @@ void test__Gpt_GetTimeElapsed__run_after_Gpt_Init_valid_Channel( void )
 {
     Gpt_ChannelType Channel   = GPT_CHANNEL_1;
     Gpt_ValueType ReturnValue = E_NOT_OK;
-
-    Gpt_Arch_Init_Ignore( );
-    Gpt_Init( &GptConfig );
 
     Gpt_Arch_GetTimeElapsed_IgnoreAndReturn( E_OK );
     ReturnValue = Gpt_GetTimeElapsed( Channel );
@@ -161,9 +148,6 @@ void test__Gpt_GetTimeRemaining__run_after_Gpt_Init_invalid_Channel( void )
     Gpt_ChannelType Channel   = GPT_INVALID_CHANNEL;
     Gpt_ValueType ReturnValue = E_NOT_OK;
 
-    Gpt_Arch_Init_Ignore( );
-    Gpt_Init( &GptConfig );
-
     Gpt_Arch_GetTimeRemaining_IgnoreAndReturn( E_OK );
     ReturnValue = Gpt_GetTimeRemaining( Channel );
 
@@ -180,9 +164,6 @@ void test__Gpt_GetTimeRemaining__run_after_Gpt_Init_valid_Channel( void )
 {
     Gpt_ChannelType Channel   = GPT_CHANNEL_1;
     Gpt_ValueType ReturnValue = E_NOT_OK;
-
-    Gpt_Arch_Init_Ignore( );
-    Gpt_Init( &GptConfig );
 
     Gpt_Arch_GetTimeRemaining_IgnoreAndReturn( E_OK );
     ReturnValue = Gpt_GetTimeRemaining( Channel );
@@ -219,9 +200,6 @@ void test__Gpt_StartTimer__run_after_Gpt_Init_invalid_Channel_valid_Value( void 
     Gpt_ChannelType Channel = GPT_INVALID_CHANNEL;
     Gpt_ValueType Value     = GPT_ARR_MAX;
 
-    Gpt_Arch_Init_Ignore( );
-    Gpt_Init( &GptConfig );
-
     Det_ReportError_IgnoreAndReturn( E_OK );
     Gpt_StartTimer( Channel, Value );
 }
@@ -237,9 +215,6 @@ void test__Gpt_StartTimer__run_after_Gpt_Init_valid_Channel_invalid_Value_Min( v
 {
     Gpt_ChannelType Channel = GPT_CHANNEL_0;
     Gpt_ValueType Value     = GPT_INVALID_ARR_VALUE_MIN;
-
-    Gpt_Arch_Init_Ignore( );
-    Gpt_Init( &GptConfig );
 
     Det_ReportError_IgnoreAndReturn( E_OK );
     Gpt_StartTimer( Channel, Value );
@@ -257,9 +232,6 @@ void test__Gpt_StartTimer__run_after_Gpt_Init_valid_Channel_invalid_Value_Max( v
     Gpt_ChannelType Channel = GPT_CHANNEL_0;
     Gpt_ValueType Value     = GPT_INVALID_ARR_VALUE_MAX;
 
-    Gpt_Arch_Init_Ignore( );
-    Gpt_Init( &GptConfig );
-
     Det_ReportError_IgnoreAndReturn( E_OK );
     Gpt_StartTimer( Channel, Value );
 }
@@ -275,9 +247,6 @@ void test__Gpt_StartTimer__run_after_Gpt_Init_valid_Channel_valid_Value( void )
 {
     Gpt_ChannelType Channel = GPT_CHANNEL_0;
     Gpt_ValueType Value     = GPT_ARR_MAX;
-
-    Gpt_Arch_Init_Ignore( );
-    Gpt_Init( &GptConfig );
 
     Gpt_Arch_StartTimer_Ignore( );
     Gpt_StartTimer( Channel, Value );
@@ -310,9 +279,6 @@ void test__Gpt_StopTimer__run_after_Gpt_Init_invalid_Channel( void )
 {
     Gpt_ChannelType Channel = GPT_INVALID_CHANNEL;
 
-    Gpt_Arch_Init_Ignore( );
-    Gpt_Init( &GptConfig );
-
     Det_ReportError_IgnoreAndReturn( E_OK );
     Gpt_StopTimer( Channel );
 }
@@ -327,9 +293,6 @@ void test__Gpt_StopTimer__run_after_Gpt_Init_invalid_Channel( void )
 void test__Gpt_StopTimer__run_after_Gpt_Init_valid_Channel( void )
 {
     Gpt_ChannelType Channel = GPT_CHANNEL_1;
-
-    Gpt_Arch_Init_Ignore( );
-    Gpt_Init( &GptConfig );
 
     Gpt_Arch_StopTimer_Ignore( );
     Gpt_StopTimer( Channel );
@@ -394,9 +357,6 @@ void test__Gpt_EnableNotification__run_after_Gpt_Init_invalid_Channel( void )
 {
     Gpt_ChannelType Channel = GPT_INVALID_CHANNEL;
 
-    Gpt_Arch_Init_Ignore( );
-    Gpt_Init( &GptConfig );
-
     Det_ReportError_IgnoreAndReturn( E_OK );
     Gpt_EnableNotification( Channel );
 }
@@ -413,8 +373,21 @@ void test__Gpt_EnableNotification__run_after_Gpt_Init_valid_Channel_invalid_Poin
 {
     Gpt_ChannelType Channel = GPT_CHANNEL_1;
 
-    Gpt_Arch_Init_Ignore( );
-    Gpt_Init( &GptConfig );
+    Det_ReportError_IgnoreAndReturn( E_OK );
+    Gpt_EnableNotification( Channel );
+}
+
+/**
+ * @brief   **Test Gpt_EnableNotification with module initialized, valid Channel and valid function pointer**
+ *
+ * The test runs Gpt_EnableNotification function after the Gpt module is initialized, with a valid
+ * Channel and a valid function pointer in the config variable GptNotification, just to check the
+ * branch which executes the Arch Function for this case. This is a non-return function, so no check
+ * value-change validation is performed.
+ */
+void test__Gpt_EnableNotification__run_after_Gpt_Init_valid_Channel_valid_Pointer( void )
+{
+    Gpt_ChannelType Channel = GPT_CHANNEL_0;
 
     Gpt_Arch_EnableNotification_Ignore( );
     Gpt_EnableNotification( Channel );
@@ -447,9 +420,6 @@ void test__Gpt_DisableNotification__run_after_Gpt_Init_invalid_Channel( void )
 {
     Gpt_ChannelType Channel = GPT_INVALID_CHANNEL;
 
-    Gpt_Arch_Init_Ignore( );
-    Gpt_Init( &GptConfig );
-
     Det_ReportError_IgnoreAndReturn( E_OK );
     Gpt_DisableNotification( Channel );
 }
@@ -466,8 +436,21 @@ void test__Gpt_DisableNotification__run_after_Gpt_Init_valid_Channel_invalid_Poi
 {
     Gpt_ChannelType Channel = GPT_CHANNEL_1;
 
-    Gpt_Arch_Init_Ignore( );
-    Gpt_Init( &GptConfig );
+    Det_ReportError_IgnoreAndReturn( E_OK );
+    Gpt_DisableNotification( Channel );
+}
+
+/**
+ * @brief   **Test Gpt_DisableNotification with module initialized, valid Channel and valid function pointer**
+ *
+ * The test runs Gpt_DisableNotification function after the Gpt module is initialized, with a valid
+ * Channel and a valid function pointer in the config variable GptNotification, just to check the
+ * branch which executes the Arch function for this case. This is a non-return function, so no check
+ * value-change validation is performed.
+ */
+void test__Gpt_DisableNotification__run_after_Gpt_Init_valid_Channel_valid_Pointer( void )
+{
+    Gpt_ChannelType Channel = GPT_CHANNEL_0;
 
     Gpt_Arch_DisableNotification_Ignore( );
     Gpt_DisableNotification( Channel );
