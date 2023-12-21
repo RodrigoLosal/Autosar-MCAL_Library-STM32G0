@@ -66,7 +66,6 @@
     - autosar/mcal/Mcu/Mcu_Arch.c
     - autosar/mcal/Adc/Adc.c
     - autosar/mcal/Adc/Adc_Arch.c
-
   :utilities:
     - gcovr
   :reports:
