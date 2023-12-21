@@ -55,6 +55,8 @@
   :uncovered_ignore_list:
     - main.c #
     - startup.c #
+    - autosar/mcal/Gpt/Gpt.c
+    - autosar/mcal/Gpt/Gpt_Arch.c
     - autosar/mcal/Pwm/Pwm_Arch.c
     - autosar/mcal/Det/Det.c
     - autosar/mcal/Fls/Fls.c
@@ -64,9 +66,7 @@
     - autosar/mcal/Mcu/Mcu_Arch.c
     - autosar/mcal/Adc/Adc.c
     - autosar/mcal/Adc/Adc_Arch.c
-    - autosar/Com/CanIf.c
-    - autosar/mcal/Gpt/Gpt.c
-    - autosar/mcal/Gpt/Gpt_Arch.c
+
   :utilities:
     - gcovr
   :reports:
